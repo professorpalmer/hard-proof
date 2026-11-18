@@ -1,0 +1,344 @@
+[
+ {
+  "flow_id": "hp2-mine-pm-01",
+  "folder": "~/Projects/hp-work/mine/pm-01",
+  "model": "opus",
+  "flow": "flow_2b5780d82755",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_7081ba566b8f"
+  ],
+  "seconds": 212,
+  "cost_usd": 2.596,
+  "slice": "pm-01",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-mn-01",
+  "folder": "~/Projects/hp-work/mine/mn-01",
+  "model": "opus",
+  "flow": "flow_bc8c33c1668d",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_845a7c352eaf"
+  ],
+  "seconds": 266,
+  "cost_usd": 3.502,
+  "slice": "mn-01",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-pm-00",
+  "folder": "~/Projects/hp-work/mine/pm-00",
+  "model": "opus",
+  "flow": "flow_efc3bbe1613f",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_a1be24d4d00a"
+  ],
+  "seconds": 227,
+  "cost_usd": 2.684,
+  "slice": "pm-00",
+  "candidates": 4
+ },
+ {
+  "flow_id": "hp2-mine-pm-02",
+  "folder": "~/Projects/hp-work/mine/pm-02",
+  "model": "opus",
+  "flow": "flow_562b04d7086b",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_817bdbfa80d7"
+  ],
+  "seconds": 177,
+  "cost_usd": 2.268,
+  "slice": "pm-02",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-pm-03",
+  "folder": "~/Projects/hp-work/mine/pm-03",
+  "model": "opus",
+  "flow": "flow_c0fcff6b6799",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_748fccf1e68f"
+  ],
+  "seconds": 327,
+  "cost_usd": 3.641,
+  "slice": "pm-03",
+  "candidates": 8
+ },
+ {
+  "flow_id": "hp2-mine-pm-04",
+  "folder": "~/Projects/hp-work/mine/pm-04",
+  "model": "opus",
+  "flow": "flow_917cc55b3fa5",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_eea8a7665dbb"
+  ],
+  "seconds": 250,
+  "cost_usd": 2.815,
+  "slice": "pm-04",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-pm-05",
+  "folder": "~/Projects/hp-work/mine/pm-05",
+  "model": "opus",
+  "flow": "flow_454d2e01b219",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_c20ce5e9b0f9"
+  ],
+  "seconds": 313,
+  "cost_usd": 3.594,
+  "slice": "pm-05",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-pm-06",
+  "folder": "~/Projects/hp-work/mine/pm-06",
+  "model": "opus",
+  "flow": "flow_d4266c56adf5",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_e3b4100210c0"
+  ],
+  "seconds": 198,
+  "cost_usd": 2.61,
+  "slice": "pm-06",
+  "candidates": 4
+ },
+ {
+  "flow_id": "hp2-mine-pm-07",
+  "folder": "~/Projects/hp-work/mine/pm-07",
+  "model": "opus",
+  "flow": "flow_ef0f1f08c6de",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_b50568916740"
+  ],
+  "seconds": 183,
+  "cost_usd": 2.439,
+  "slice": "pm-07",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-pm-08",
+  "folder": "~/Projects/hp-work/mine/pm-08",
+  "model": "opus",
+  "flow": "flow_66d68cfd9ffe",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_0092d5263d15"
+  ],
+  "seconds": 227,
+  "cost_usd": 2.586,
+  "slice": "pm-08",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-pm-09",
+  "folder": "~/Projects/hp-work/mine/pm-09",
+  "model": "opus",
+  "flow": "flow_d740d03a59c0",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_0153eb998f94"
+  ],
+  "seconds": 279,
+  "cost_usd": 3.25,
+  "slice": "pm-09",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-pm-10",
+  "folder": "~/Projects/hp-work/mine/pm-10",
+  "model": "opus",
+  "flow": "flow_4376aa7290bf",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_026c1a14b077"
+  ],
+  "seconds": 219,
+  "cost_usd": 3.033,
+  "slice": "pm-10",
+  "candidates": 4
+ },
+ {
+  "flow_id": "hp2-mine-pm-11",
+  "folder": "~/Projects/hp-work/mine/pm-11",
+  "model": "opus",
+  "flow": "flow_6199bece33ab",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_ff5d71762ea3"
+  ],
+  "seconds": 201,
+  "cost_usd": 2.787,
+  "slice": "pm-11",
+  "candidates": 7
+ },
+ {
+  "flow_id": "hp2-mine-mn-00",
+  "folder": "~/Projects/hp-work/mine/mn-00",
+  "model": "opus",
+  "flow": "flow_9497479215e7",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_b38b0ebf2c24"
+  ],
+  "seconds": 293,
+  "cost_usd": 3.11,
+  "slice": "mn-00",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-mn-02",
+  "folder": "~/Projects/hp-work/mine/mn-02",
+  "model": "opus",
+  "flow": "flow_fae0e0446100",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_f6b72ce1b1e7"
+  ],
+  "seconds": 224,
+  "cost_usd": 2.653,
+  "slice": "mn-02",
+  "candidates": 5
+ },
+ {
+  "flow_id": "hp2-mine-mn-03",
+  "folder": "~/Projects/hp-work/mine/mn-03",
+  "model": "opus",
+  "flow": "flow_6266e807fff2",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_544dbf8bcc49"
+  ],
+  "seconds": 366,
+  "cost_usd": 3.829,
+  "slice": "mn-03",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-mn-04",
+  "folder": "~/Projects/hp-work/mine/mn-04",
+  "model": "opus",
+  "flow": "flow_f95c11af11d4",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_43f2ecddd703"
+  ],
+  "seconds": 201,
+  "cost_usd": 2.398,
+  "slice": "mn-04",
+  "candidates": 6
+ },
+ {
+  "flow_id": "hp2-mine-mn-05",
+  "folder": "~/Projects/hp-work/mine/mn-05",
+  "model": "opus",
+  "flow": "flow_3bc297eac7b9",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_4c695a717b4b"
+  ],
+  "seconds": 220,
+  "cost_usd": 2.532,
+  "slice": "mn-05",
+  "candidates": 8
+ },
+ {
+  "flow_id": "hp2-mine-mn-06",
+  "folder": "~/Projects/hp-work/mine/mn-06",
+  "model": "opus",
+  "flow": "flow_bc42c9b9465d",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_f62fb1e45a55"
+  ],
+  "seconds": 300,
+  "cost_usd": 3.284,
+  "slice": "mn-06",
+  "candidates": 3
+ }
+]

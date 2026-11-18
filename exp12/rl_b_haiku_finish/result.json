@@ -1,0 +1,47 @@
+{
+ "start": "rl_b_haiku_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept",
+  "NewEntriesInStarterOrder"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_cf34207f2f6c",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 69,
+    "cost_usd": 0.56
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept",
+    "NewEntriesInStarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept",
+  "NewEntriesInStarterOrder"
+ ],
+ "questions": 0
+}

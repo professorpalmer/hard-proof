@@ -1,0 +1,355 @@
+{
+ "bug": "4ac63244",
+ "title": "Cursor SDK probe checks one fixed directory level instead of the Node upward walk",
+ "repo": "Puppetmaster",
+ "function": "_find_cursor_sdk_install",
+ "kind": "path or glob",
+ "stages": [
+  {
+   "flow_id": "hp2-5219b461fd",
+   "folder": "~/Projects/hp-work/p/5219b461fd",
+   "model": "opus",
+   "flow": "flow_770c9cd4a14d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_53e00d13d513"
+   ],
+   "seconds": 162,
+   "cost_usd": 0.0,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-c6b4ef3de0",
+   "folder": "~/Projects/hp-work/p/c6b4ef3de0",
+   "model": "sonnet",
+   "flow": "flow_2965602dc691",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_861ddcdc4b62"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.408,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-d946d6602d",
+   "folder": "~/Projects/hp-work/p/d946d6602d",
+   "model": "sonnet",
+   "flow": "flow_34d5724ca34d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2fc5941c6055"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.399,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-1709a66ce4",
+   "folder": "~/Projects/hp-work/p/1709a66ce4",
+   "model": "sonnet",
+   "flow": "flow_2d1715e3e813",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8a7a01eaa205"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.445,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-9295f38124",
+   "folder": "~/Projects/hp-work/p/9295f38124",
+   "model": "sonnet",
+   "flow": "flow_3c11e8b877dd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_46f41083bfc3"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.399,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-54158ef109",
+   "folder": "~/Projects/hp-work/p/54158ef109",
+   "model": "sonnet",
+   "flow": "flow_380b92d6ad54",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e273915199de"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.402,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-08939b4e41",
+   "folder": "~/Projects/hp-work/p/08939b4e41",
+   "model": "sonnet",
+   "flow": "flow_3d990f416ae4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_df82708f0b6d"
+   ],
+   "seconds": 47,
+   "cost_usd": 0.482,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-aa99e574e4",
+   "folder": "~/Projects/hp-work/p/aa99e574e4",
+   "model": "sonnet",
+   "flow": "flow_a6f3886da7af",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_048231207512"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.383,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-d50da3757f",
+   "folder": "~/Projects/hp-work/p/d50da3757f",
+   "model": "sonnet",
+   "flow": "flow_ca7d5d98131b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d211b2f653cd"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.402,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-e866a0669e",
+   "folder": "~/Projects/hp-work/p/e866a0669e",
+   "model": "sonnet",
+   "flow": "flow_6897a1d1b8b8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b472eec7f87f"
+   ],
+   "seconds": 70,
+   "cost_usd": 0.541,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-09287c9932",
+   "folder": "~/Projects/hp-work/p/09287c9932",
+   "model": "sonnet",
+   "flow": "flow_ea680394463f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_38954a9cb6a5"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.38,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-2e4c3d9cff",
+   "folder": "~/Projects/hp-work/p/2e4c3d9cff",
+   "model": "sonnet",
+   "flow": "flow_d9f34e8e9281",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ac07cb7fcd21"
+   ],
+   "seconds": 51,
+   "cost_usd": 0.496,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-2d7703241b",
+   "folder": "~/Projects/hp-work/p/2d7703241b",
+   "model": "sonnet",
+   "flow": "flow_1ac2e8b9453d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e6744632449f"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.39,
+   "stage": "A4"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "dir dir unset",
+    "shown": "root=dir package=dir PUPPETMASTER_HOME=unset"
+   },
+   "design_a": {
+    "encoded": "root",
+    "shown": "root"
+   },
+   "design_b": {
+    "encoded": "package",
+    "shown": "package"
+   },
+   "ref": {
+    "encoded": "root",
+    "shown": "root"
+   },
+   "pre": {
+    "ok": true,
+    "out": "root"
+   },
+   "post": {
+    "ok": true,
+    "out": "root"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "none dir abs:dir",
+    "shown": "root=none package=dir PUPPETMASTER_HOME=abs:dir"
+   },
+   "design_a": {
+    "encoded": "package",
+    "shown": "package"
+   },
+   "design_b": {
+    "encoded": "env",
+    "shown": "env"
+   },
+   "ref": {
+    "encoded": "package",
+    "shown": "package"
+   },
+   "pre": {
+    "ok": true,
+    "out": "package"
+   },
+   "post": {
+    "ok": true,
+    "out": "package"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "dir absent abs:dir",
+    "shown": "root=dir package=absent PUPPETMASTER_HOME=abs:dir"
+   },
+   "design_a": {
+    "encoded": "root",
+    "shown": "root"
+   },
+   "design_b": {
+    "encoded": "env",
+    "shown": "env"
+   },
+   "ref": {
+    "encoded": "root",
+    "shown": "root"
+   },
+   "pre": {
+    "ok": true,
+    "out": "root"
+   },
+   "post": {
+    "ok": true,
+    "out": "root"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 17,
+   "made": 17,
+   "killed": 16,
+   "survived": [
+    "line 21: delete `return None`"
+   ],
+   "kill_rate": 0.941
+  },
+  "quotes": {
+   "quotes": 9,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "NoneWhenNotFound",
+  "SomeWhenFound",
+  "ReturnedExists",
+  "ChecksRootAndPackage",
+  "HonorsOverride"
+ ],
+ "cost_usd": 5.13,
+ "seconds": 524
+}

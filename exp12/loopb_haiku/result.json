@@ -1,0 +1,92 @@
+{
+ "start": "b_haiku",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_41be618b38e8",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 48,
+    "cost_usd": 0.5
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 0, model 0, enabled); id 2 (adapter 0, model 1, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]",
+    "design B result: [id 2 (adapter 0, model 1, disabled); id 1 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]",
+   "law_author": {
+    "flow": "flow_3c0043502c05",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 41,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewInStarterOrder": "\u2200 (c : Config) (st r rest : List Entry), f c st r = r ++ rest \u2192 rest.map (fun e => e.id) = ((st.filter (absent r)).map (fun e => e.id))"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_2f75364647f1",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 54,
+    "cost_usd": 0.49
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept",
+    "NewInStarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept",
+  "NewInStarterOrder"
+ ],
+ "questions": 1
+}

@@ -1,0 +1,16 @@
+{
+ "flow_id": "hp2-tool-hpflow-2",
+ "folder": "~/Projects/hard-proof/tool",
+ "model": "opus",
+ "flow": "flow_45a8dce3f2e3",
+ "flow_status": "done",
+ "visits": 1,
+ "verdicts": [
+  "PASS"
+ ],
+ "jobs": [
+  "job_35038af08879"
+ ],
+ "seconds": 297,
+ "cost_usd": 1.917
+}

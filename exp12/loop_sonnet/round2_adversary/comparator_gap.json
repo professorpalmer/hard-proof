@@ -1,0 +1,7 @@
+{
+  "challenge_module": "SyncGapChallenge",
+  "solution_module": "SyncGapSolution",
+  "theorem_names": ["SyncGap.a_passes", "SyncGap.b_passes", "SyncGap.starter_distinct", "SyncGap.differ"],
+  "definition_names": ["SyncGap.designA", "SyncGap.designB", "SyncGap.config", "SyncGap.starter", "SyncGap.registry"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

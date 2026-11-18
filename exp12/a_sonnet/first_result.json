@@ -1,0 +1,24 @@
+{
+ "name": "a_sonnet",
+ "model": "claude-sonnet-5-5",
+ "flow": {
+  "flow": "flow_210ff1220a79",
+  "status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "seconds": 74,
+  "cost_usd": 0.57
+ },
+ "pilot_gate": "accept",
+ "laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled"
+ ]
+}

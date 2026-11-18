@@ -1,0 +1,203 @@
+{
+ "start": "a_sonnet",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_889840c13b6f",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 41,
+    "cost_usd": 0.45
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 1, model 1, disabled)]",
+    "design B result: [id 2 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 1, model 1, disabled)]",
+   "law_author": {
+    "flow": "flow_06940f20dcc3",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 35,
+    "cost_usd": 0.45
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 \u2200 new, f c st r = r ++ new \u2192 List.Sublist (new.map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_a3bc722d9c00",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 81,
+    "cost_usd": 0.58
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, enabled)]",
+    "input: registry=[id 1 (adapter 1, model 1, enabled)]",
+    "design A result: [id 1 (adapter 1, model 1, enabled)]",
+    "design B result: [id 1 (adapter 1, model 1, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, enabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, enabled)]",
+   "law_author": {
+    "flow": "flow_14db561ae3bd",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 36,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NoDuplicateId": "\u2200 c st r, DistinctIds st \u2192 \u2200 i, hasId r i = true \u2192 (f c st r).countP (fun e => e.id == i) = r.countP (fun e => e.id == i)"
+   }
+  },
+  {
+   "round": 3,
+   "adversary": {
+    "flow": "flow_2a612d4b7df9",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 68,
+    "cost_usd": 0.48
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateId"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+   "law_author": {
+    "flow": "flow_6a808e12e196",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 30,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "OneRowPerAbsent": "\u2200 c st r, DistinctIds st \u2192 (f c st r).length = r.length + (st.filter (absent r)).length"
+   }
+  },
+  {
+   "round": 4,
+   "adversary": {
+    "flow": "flow_0ecc58c0f253",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 128,
+    "cost_usd": 0.76
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateId",
+    "OneRowPerAbsent"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled",
+  "NewInStarterOrder",
+  "NoDuplicateId",
+  "OneRowPerAbsent"
+ ],
+ "questions": 3
+}

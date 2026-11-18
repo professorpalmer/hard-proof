@@ -1,0 +1,34 @@
+/-
+Hard Proof, experiment 11. GENERATED FILE (human-owned).
+
+A decision-table domain: 14 boolean inputs, a rule with 128 leaves. Seed 1.
+-/
+
+namespace Tbl
+
+/-- The inputs of one decision. -/
+structure Case where
+  b0 : Bool
+  b1 : Bool
+  b2 : Bool
+  b3 : Bool
+  b4 : Bool
+  b5 : Bool
+  b6 : Bool
+  b7 : Bool
+  b8 : Bool
+  b9 : Bool
+  b10 : Bool
+  b11 : Bool
+  b12 : Bool
+  b13 : Bool
+deriving DecidableEq, Repr
+
+/-- A rule: one answer for each case. -/
+abbrev Decide := Case → Bool
+
+/-- The reference rule. -/
+def ref : Decide := fun c =>
+  (if c.b2 then (if c.b4 then (if c.b0 then (if c.b9 then (if c.b13 then true else (if c.b11 then true else (if c.b7 then true else true))) else (if c.b7 then (if c.b11 then (if c.b13 then true else true) else (if c.b12 then false else true)) else (if c.b12 then (if c.b8 then true else false) else (if c.b3 then (if c.b1 then false else true) else false)))) else (if c.b6 then true else (if c.b11 then (if c.b3 then (if c.b7 then (if c.b13 then (if c.b1 then false else (if c.b5 then (if c.b8 then (if c.b12 then true else (if c.b9 then true else true)) else true) else true)) else false) else (if c.b1 then true else (if c.b12 then true else (if c.b5 then false else (if c.b9 then (if c.b10 then false else false) else false))))) else (if c.b10 then (if c.b8 then false else false) else (if c.b9 then (if c.b8 then (if c.b1 then true else true) else false) else (if c.b12 then (if c.b5 then (if c.b8 then (if c.b13 then false else false) else (if c.b7 then true else true)) else (if c.b7 then true else true)) else (if c.b1 then true else false))))) else (if c.b13 then (if c.b9 then (if c.b8 then (if c.b5 then true else (if c.b10 then (if c.b12 then (if c.b7 then true else false) else (if c.b1 then false else true)) else true)) else (if c.b7 then false else true)) else (if c.b3 then false else false)) else true)))) else (if c.b6 then (if c.b7 then true else (if c.b3 then true else true)) else false)) else (if c.b13 then (if c.b11 then (if c.b6 then (if c.b12 then (if c.b8 then true else true) else (if c.b7 then (if c.b4 then (if c.b1 then (if c.b9 then false else false) else (if c.b10 then true else (if c.b8 then (if c.b9 then false else true) else false))) else (if c.b0 then (if c.b1 then true else true) else (if c.b10 then (if c.b8 then true else false) else false))) else (if c.b0 then (if c.b1 then true else true) else (if c.b3 then (if c.b10 then true else true) else (if c.b4 then (if c.b8 then true else false) else (if c.b10 then (if c.b1 then (if c.b5 then false else true) else (if c.b5 then (if c.b8 then true else true) else (if c.b8 then false else true))) else (if c.b1 then true else (if c.b5 then false else false)))))))) else false) else (if c.b0 then (if c.b5 then (if c.b8 then (if c.b10 then true else true) else false) else (if c.b12 then (if c.b9 then true else (if c.b7 then (if c.b8 then false else true) else false)) else (if c.b8 then false else (if c.b4 then false else false)))) else (if c.b5 then (if c.b9 then (if c.b10 then false else (if c.b3 then (if c.b1 then false else false) else false)) else (if c.b4 then (if c.b8 then (if c.b1 then false else true) else (if c.b6 then true else true)) else (if c.b8 then false else (if c.b1 then false else true)))) else (if c.b1 then (if c.b10 then (if c.b7 then false else (if c.b9 then true else false)) else (if c.b6 then false else true)) else (if c.b7 then false else (if c.b8 then (if c.b12 then false else (if c.b3 then false else false)) else (if c.b4 then (if c.b12 then true else false) else (if c.b6 then (if c.b10 then true else false) else false)))))))) else (if c.b5 then (if c.b8 then (if c.b9 then true else (if c.b0 then true else (if c.b12 then true else (if c.b10 then false else false)))) else (if c.b1 then false else true)) else (if c.b9 then true else false))))
+
+end Tbl

@@ -1,0 +1,56 @@
+{
+ "start": "rl_b_sonnet_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "StarterOrder"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_91d67a4242bb",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 114,
+    "cost_usd": 0.7
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd",
+    "StarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "StarterOrder"
+ ],
+ "questions": 0
+}

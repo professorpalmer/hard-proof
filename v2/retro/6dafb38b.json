@@ -1,0 +1,125 @@
+{
+ "bug": "6dafb38b",
+ "title": "conflicting replayed Codex usage records give an order-dependent total",
+ "repo": "Puppetmaster",
+ "function": "attempt_usage",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-0d8e965bb8",
+   "folder": "~/Projects/hp-work/p/0d8e965bb8",
+   "model": "opus",
+   "flow": "flow_e5f880025e84",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dbcd58edb440"
+   ],
+   "seconds": 276,
+   "cost_usd": 1.887,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-02441faa43",
+   "folder": "~/Projects/hp-work/p/02441faa43",
+   "model": "sonnet",
+   "flow": "flow_f14cbeacd9ce",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6555259ce905"
+   ],
+   "seconds": 64,
+   "cost_usd": 0.507,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-f704f6216d",
+   "folder": "~/Projects/hp-work/p/f704f6216d",
+   "model": "sonnet",
+   "flow": "flow_2dadf7d12a73",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_83a6e88eec78"
+   ],
+   "seconds": 51,
+   "cost_usd": 0.515,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "SumsUniqueRequests",
+   "input": {
+    "encoded": "nb pf 3 r E S st ~ ~ ~ r T O st s1 u:i1,i0,i0,i0,i0 ~ r T O st i1 u:i2,i0,i0,i0,i0 ~",
+    "shown": "nb pf 3 r E S st ~ ~ ~ r T O st s1 u:i1,i0,i0,i0,i0 ~ r T O st i1 u:i2,i0,i0,i0,i0 ~"
+   },
+   "ref": {
+    "encoded": "attempt srollout_token_usage_records ~ st 1 [1,0,0,0,0] [] []",
+    "shown": "attempt srollout_token_usage_records ~ st 1 [1,0,0,0,0] [] []"
+   },
+   "pre": {
+    "ok": true,
+    "out": "attempt srollout_token_usage_records ~ st 1 [1,0,0,0,0] [] []"
+   },
+   "post": {
+    "ok": true,
+    "out": "attempt srollout_token_usage_records ~ st 1 [~,0,0,0,0] [input_tokens] [response_id_replay_conflict]"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 68,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 14,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 514,
+   "first_difference": {
+    "input": "b 0 pf 9 r E S sa s1 ~ ~ r T A i2 s u:i-3,i0,i1,i1,i4 u:i-3,i0,i1,i1,i4 r T A ~ sr2 u:i2,i2,i2,i4,o2 u:i2,i2,i2,i4,o2 j3 r T A sa i1 u:i1,i4,i1,i4,i1 u:i1,i4,i1,i4,i1 r E S ~ i0 ~ ~ r T A sa s1 u:i3,i9223372036854775808,i1,o2,i4 u:i3,i2,i0,i1000000000000,i3 r T A ~ i1 ~ u:i4,i1,i0,i9223372036854775808,i1 r T A i1 ~ u:i1,i3,i3,i2,o0 ~",
+    "lean_ref": "attempt srollout_token_usage_records ~ sa 1 [1,4,1,4,1] [] [cache_write_input_tokens,cached_input_tokens,input_tokens,output_tokens,reasoning_output_tokens,cached_exceeds_input]",
+    "python": "attempt srollout_token_usage_records ~ sa 1 [~,~,1,~,~] [cached_input_tokens,input_tokens,output_tokens,reasoning_output_tokens] [response_id_replay_conflict,cache_write_input_tokens]"
+   }
+  }
+ },
+ "first_laws": [
+  "ScopeValues",
+  "NotOneNewTurnUnlinked",
+  "NoRolloutUnlinked",
+  "NoneBaselineIsEmpty",
+  "SumsUniqueRequests",
+  "UnknownCounterUnknownTotal",
+  "ReplayIsSameRequest",
+  "SnapshotsNeverAdd"
+ ],
+ "cost_usd": 2.91,
+ "seconds": 391
+}

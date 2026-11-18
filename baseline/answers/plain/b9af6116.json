@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "Laws 6 and 7 fix every case with b0=false or b2=true. For b0=true and b2=false, Laws 1,0,2 (b4=true) and Laws 3,4,5 (b4=false) cover all b5, b3, b1 splits, so every case is fixed."}

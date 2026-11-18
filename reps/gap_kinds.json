@@ -1,0 +1,147 @@
+{
+ "lock, 3 laws": {
+  "certificates": 16,
+  "kinds": {
+   "first difference after a release event": 16
+  },
+  "detail": [
+   {
+    "run": "exp6/haiku",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "exp6/sonnet",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "exp6/opus",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/haiku_1",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/haiku_2",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/haiku_3",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/haiku_4",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/haiku_5",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/sonnet_1",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/sonnet_2",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/sonnet_3",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/sonnet_4",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap/sonnet_5",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap_opus/opus_1",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap_opus/opus_2",
+    "kind": "first difference after a release event"
+   },
+   {
+    "run": "reps/exp6_gap_opus/opus_3",
+    "kind": "first difference after a release event"
+   }
+  ]
+ },
+ "sync, 7 laws": {
+  "certificates": 16,
+  "kinds": {
+   "row order": 12,
+   "a row two times": 4
+  },
+  "detail": [
+   {
+    "run": "exp8/c_haiku",
+    "kind": "row order"
+   },
+   {
+    "run": "exp8/c_sonnet",
+    "kind": "row order"
+   },
+   {
+    "run": "exp8/c_opus",
+    "kind": "a row two times"
+   },
+   {
+    "run": "reps/exp8c_gap/haiku_1",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/haiku_2",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/haiku_3",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/haiku_4",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/haiku_5",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/sonnet_1",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/sonnet_2",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/sonnet_3",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap/sonnet_4",
+    "kind": "a row two times"
+   },
+   {
+    "run": "reps/exp8c_gap/sonnet_5",
+    "kind": "row order"
+   },
+   {
+    "run": "reps/exp8c_gap_opus/opus_1",
+    "kind": "a row two times"
+   },
+   {
+    "run": "reps/exp8c_gap_opus/opus_2",
+    "kind": "a row two times"
+   },
+   {
+    "run": "reps/exp8c_gap_opus/opus_3",
+    "kind": "row order"
+   }
+  ]
+ }
+}

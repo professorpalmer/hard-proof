@@ -1,0 +1,166 @@
+"""Shared parts of hpflow: files, hashes, shell calls, the repro runner and the cost rule."""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import shutil
+import signal
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+MODELS = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5"}
+ADAPTER = "claude-code"
+DEFAULT_CONCURRENCY = 5
+COST_NOTE = ("Cost is API-equivalent, as the provider tool reports it. "
+             "Plan billing can apply, so the real charge can be lower.")
+TOOL_DIR = Path(__file__).resolve().parent.parent
+
+
+class UsageError(Exception):
+    """A bad argument or a missing input. Exit code 2."""
+
+
+class StepError(Exception):
+    """A step that failed. Exit code 1."""
+
+
+def model_id(name: str) -> str:
+    """Map a short model name to its id. A full model id passes through."""
+    return MODELS.get(name, name)
+
+
+def digest(*parts: Any) -> str:
+    """A name made of digits only. A digit name cannot hold a word or the name of a function."""
+    h = hashlib.sha256("|".join(str(p) for p in parts).encode()).hexdigest()
+    return str(int(h[:16], 16)).zfill(20)
+
+
+def read_json(path: Path, default: Any = None) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return default
+
+
+def write_json(path: Path, data: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def kill_group(p: subprocess.Popen) -> None:
+    """End the whole process group of `p`. A child that a command starts must not live on after a timeout."""
+    try:
+        os.killpg(p.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        pass
+
+
+def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: float = 600, shell: bool = False,
+              env: Optional[Dict[str, str]] = None) -> Tuple[Optional[int], str, str]:
+    """Run a command in its own process group. At the timeout the whole group ends.
+
+    Returns (exit code, stdout, stderr). The exit code is None after a timeout.
+    """
+    try:
+        p = subprocess.Popen(cmd, cwd=str(cwd) if cwd else None, shell=shell, env=env, stdin=subprocess.DEVNULL,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+    except OSError as e:
+        return 127, "", str(e)
+    try:
+        out, err = p.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        kill_group(p)
+        out, err = p.communicate()
+        return None, out or "", err or ""
+    except BaseException:
+        kill_group(p)
+        p.wait()
+        raise
+    # The leader can exit while a child of its group still runs. That child must end too.
+    kill_group(p)
+    return p.returncode, out, err
+
+
+def sh(cmd: List[str], cwd: Optional[Path] = None, timeout: float = 600) -> Tuple[int, str]:
+    code, out, err = run_group(cmd, cwd, timeout)
+    if code is None:
+        return 124, "timeout"
+    return code, out + err
+
+
+def git(repo: Path, *args: str, timeout: float = 600) -> Tuple[int, str]:
+    code, out, err = run_group(["git", "-C", str(repo), *args], timeout=timeout)
+    if code is None:
+        return 124, "timeout"
+    return code, out if code == 0 else out + err
+
+
+def copy_tree(src: Path, dest: Path) -> None:
+    """Copy a folder. On macOS `cp -Rc` makes a clone, which is fast and uses no space."""
+    if sys.platform == "darwin" and not dest.exists():
+        code, _ = sh(["cp", "-Rc", str(src), str(dest)])
+        if code == 0:
+            return
+        shutil.rmtree(dest, ignore_errors=True)
+    shutil.copytree(src, dest, dirs_exist_ok=True)
+
+
+RUNNER = r'''
+import sys, json, traceback
+sys.path.insert(0, sys.argv[1])
+sys.dont_write_bytecode = True
+ns = {}
+try:
+    exec(compile(open(sys.argv[2]).read(), sys.argv[2], "exec"), ns)
+    out = ns["run"]()
+    print(json.dumps({"ok": True, "result": out if isinstance(out, str) else repr(out)}))
+except BaseException as e:
+    print(json.dumps({"ok": False, "error": type(e).__name__, "message": str(e)[:300],
+                      "where": traceback.format_exc().splitlines()[-3:]}))
+'''
+
+MISSING = ("ImportError", "AttributeError", "ModuleNotFoundError", "NameError")
+
+
+def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60) -> Dict[str, Any]:
+    """Run `run()` of a snippet file with `tree` first on the import path. A separate process, no bytecode."""
+    home.mkdir(parents=True, exist_ok=True)
+    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str(tree), str(snippet)], tree, timeout,
+                               env={"PATH": "/usr/bin:/bin", "HOME": str(home), "PYTHONDONTWRITEBYTECODE": "1"})
+    if code is None:
+        return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
+    line = [x for x in out.splitlines() if x.startswith("{")]
+    try:
+        return json.loads(line[-1]) if line else {"ok": False, "error": "no output", "message": err[-300:]}
+    except ValueError:
+        return {"ok": False, "error": "no output", "message": line[-1][:300]}
+
+
+def apply_cost_rule(steps: List[Dict[str, Any]]) -> Dict[str, float]:
+    """Set `cost_usd` of each visit and return the cost of each node.
+
+    The provider tool reports the cost of a resumed session as the total of the session so far.
+    So the cost of a node is the largest value of its visits, and the cost of one visit is the
+    difference from the visit before it.
+    """
+    node_cost: Dict[str, float] = {}
+    for s in steps:
+        reported = s.get("reported_usd")
+        if reported is None:
+            continue
+        before = node_cost.get(s["node"], 0.0)
+        s["cost_usd"] = round(max(0.0, reported - before), 6)
+        node_cost[s["node"]] = max(before, reported)
+    return {k: round(v, 6) for k, v in node_cost.items()}
+
+
+def is_test_file(path: str) -> bool:
+    parts = Path(path).parts
+    name = parts[-1] if parts else path
+    return (any(p in ("tests", "test", "testing") for p in parts[:-1]) or name.startswith("test_")
+            or name.endswith("_test.py") or name == "conftest.py")

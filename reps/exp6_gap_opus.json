@@ -1,0 +1,66 @@
+{
+ "task": "exp6_gap_opus",
+ "seconds": 128,
+ "runs": [
+  {
+   "task": "exp6_gap_opus",
+   "model": "opus",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp6_gap_opus/opus_1",
+   "flow": "flow_93eca171a86f",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 85,
+   "cost_usd": 1.2,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  },
+  {
+   "task": "exp6_gap_opus",
+   "model": "opus",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/exp6_gap_opus/opus_2",
+   "flow": "flow_2d7d635969c3",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 84,
+   "cost_usd": 1.19,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  },
+  {
+   "task": "exp6_gap_opus",
+   "model": "opus",
+   "rep": 3,
+   "dir": "~/Projects/hard-proof/reps/exp6_gap_opus/opus_3",
+   "flow": "flow_f65c2609ec0e",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 117,
+   "cost_usd": 1.38,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  }
+ ]
+}

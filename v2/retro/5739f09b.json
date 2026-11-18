@@ -1,0 +1,441 @@
+{
+ "bug": "5739f09b",
+ "title": "Worker resume takes the VERDICT artifact as the session receipt",
+ "repo": "Puppetmaster",
+ "function": "_resolve",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-c195f8136a",
+   "folder": "~/Projects/hp-work/p/c195f8136a",
+   "model": "opus",
+   "flow": "flow_9f00fc945631",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a1d26b706b6d"
+   ],
+   "seconds": 344,
+   "cost_usd": 2.384,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-f2a8e5b439",
+   "folder": "~/Projects/hp-work/p/f2a8e5b439",
+   "model": "sonnet",
+   "flow": "flow_d8ac3cd04291",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bfda2370f404"
+   ],
+   "seconds": 60,
+   "cost_usd": 0.504,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-f754c4f916",
+   "folder": "~/Projects/hp-work/p/f754c4f916",
+   "model": "sonnet",
+   "flow": "flow_9946260d9adc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_215448b8ae9a"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.425,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-5a2038ca82",
+   "folder": "~/Projects/hp-work/p/5a2038ca82",
+   "model": "sonnet",
+   "flow": "flow_a5f175ea1953",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_18978fa84319"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.425,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-ed5a342f1f",
+   "folder": "~/Projects/hp-work/p/ed5a342f1f",
+   "model": "sonnet",
+   "flow": "flow_f58c90dbe5d1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8c10ca463ad4"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.467,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-68f4f38677",
+   "folder": "~/Projects/hp-work/p/68f4f38677",
+   "model": "sonnet",
+   "flow": "flow_93a0610f5be4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6cd6ac52d5f1"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.41,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-becf478fe2",
+   "folder": "~/Projects/hp-work/p/becf478fe2",
+   "model": "sonnet",
+   "flow": "flow_21a663a20dc5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c4adf989341f"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.49,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-e9ffbe06f8",
+   "folder": "~/Projects/hp-work/p/e9ffbe06f8",
+   "model": "sonnet",
+   "flow": "flow_a82c7050a744",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_125d67310543"
+   ],
+   "seconds": 74,
+   "cost_usd": 0.557,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-e029ceb780",
+   "folder": "~/Projects/hp-work/p/e029ceb780",
+   "model": "sonnet",
+   "flow": "flow_d739219e0b22",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_963121d274ee"
+   ],
+   "seconds": 375,
+   "cost_usd": 1.703,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-b849738eb7",
+   "folder": "~/Projects/hp-work/p/b849738eb7",
+   "model": "sonnet",
+   "flow": "flow_297cc70af011",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_943befc46886"
+   ],
+   "seconds": 49,
+   "cost_usd": 0.481,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-8b521a69a8",
+   "folder": "~/Projects/hp-work/p/8b521a69a8",
+   "model": "sonnet",
+   "flow": "flow_ccfee84542f5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6c6f3b1ef87e"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.463,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-ba90118797",
+   "folder": "~/Projects/hp-work/p/ba90118797",
+   "model": "sonnet",
+   "flow": "flow_46a0e7b0728c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_295c3df12ba4"
+   ],
+   "seconds": 39,
+   "cost_usd": 0.491,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-d30d2c0796",
+   "folder": "~/Projects/hp-work/p/d30d2c0796",
+   "model": "sonnet",
+   "flow": "flow_914d109614d2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5448e99262e3"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.401,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-1be1eb49c1",
+   "folder": "~/Projects/hp-work/p/1be1eb49c1",
+   "model": "sonnet",
+   "flow": "flow_59464089205f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_03ed12363dcb"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.447,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-dcdbede871",
+   "folder": "~/Projects/hp-work/p/dcdbede871",
+   "model": "sonnet",
+   "flow": "flow_7691a0dafe4d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d0355aa4ebed"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.466,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ResolvedNeedsLocalStore",
+   "input": {
+    "encoded": "n s49 n R0 s99.111.100.101.120 n n",
+    "shown": "{ store := none,"
+   },
+   "ref": {
+    "encoded": "V s99.111.100.101.120 s49 n n",
+    "shown": "HP.Output.resolved \"codex\" \"1\" none none"
+   },
+   "pre": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s49 n n"
+   },
+   "post": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s49 n n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "ResolvedNeedsLocalStore",
+   "input": {
+    "encoded": "n s53 n R0 s99.111.100.101.120 L1 s49.45.53 n",
+    "shown": "{ store := none,"
+   },
+   "ref": {
+    "encoded": "V s99.111.100.101.120 s53 n n",
+    "shown": "HP.Output.resolved \"codex\" \"5\" none none"
+   },
+   "pre": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s53 n n"
+   },
+   "post": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s53 n n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "ResolvedNeedsLocalStore",
+   "input": {
+    "encoded": "S L1 s106 L1 s106 s116 s114 s99.111.100.101.120 s s L1 s106 s116 t s99.111.100.101.120 e2 s55 n s n n R2 s106 n n s99.111.100.101.120 L1 s53.45.55 n",
+    "shown": "{ store := some { jobs := [\"j\"],"
+   },
+   "ref": {
+    "encoded": "V s99.111.100.101.120 s55 s106 s116",
+    "shown": "HP.Output.resolved \"codex\" \"7\" (some \"j\") (some \"t\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s55 s106 s116"
+   },
+   "post": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s55 s106 s116"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "n s97.98.99 n R0 s99.111.100.101.120 n n",
+    "shown": "{ store := none,"
+   },
+   "design_a": {
+    "encoded": "U s114 R0 n n",
+    "shown": "HP.Output.unavailable \"r\" (HP.ResumeFrom.none) none none"
+   },
+   "design_b": {
+    "encoded": "V s99.111.100.101.120 s97.98.99 n n",
+    "shown": "HP.Output.resolved \"codex\" \"abc\" none none"
+   },
+   "ref": {
+    "encoded": "V s99.111.100.101.120 s97.98.99 n n",
+    "shown": "HP.Output.resolved \"codex\" \"abc\" none none"
+   },
+   "pre": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s97.98.99 n n"
+   },
+   "post": {
+    "ok": true,
+    "out": "V s99.111.100.101.120 s97.98.99 n n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "ExplicitSessionResolves",
+   "input": {
+    "encoded": "n s97 n R0 s99.111.100.101.120 L0 n",
+    "shown": "{ store := none,"
+   },
+   "ref": {
+    "encoded": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.97.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s97 n",
+    "shown": "HP.Output.unavailable"
+   },
+   "pre": {
+    "ok": true,
+    "out": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.97.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s97 n"
+   },
+   "post": {
+    "ok": true,
+    "out": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.97.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s97 n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "ExplicitSessionResolves",
+   "input": {
+    "encoded": "S L0 L0 L0 s49 n R0 s99.111.100.101.120 L0 n",
+    "shown": "{ store := some { jobs := [], tasks := [], arts := [] },"
+   },
+   "ref": {
+    "encoded": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.49.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s49 n",
+    "shown": "HP.Output.unavailable"
+   },
+   "pre": {
+    "ok": true,
+    "out": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.49.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s49 n"
+   },
+   "post": {
+    "ok": true,
+    "out": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.49.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s49 n"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 114,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 9,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "ResolvedAdapterResumable",
+  "UnavailableHasReason",
+  "ResolvedNeedsLocalStore",
+  "ExplicitSessionReused",
+  "MissingJobUnavailable",
+  "AdapterMismatchUnavailable",
+  "EphemeralCodexSourceUnavailable"
+ ],
+ "cost_usd": 10.11,
+ "seconds": 1210
+}

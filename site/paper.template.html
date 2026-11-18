@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A proof gate for agent-written code, with an adversary agent that proves what the laws leave open and a completeness theorem as the stop rule. Three domains, three model tiers, real shipped code.">
+<meta name="theme-color" content="#0a0a09"><title>Proved is not finished: completeness checks for proof gates on agent-written code — Puppetmaster</title>
+<link rel="canonical" href="https://puppetmaster.gg/labs/hard-proof/paper/">
+<meta property="og:type" content="article"><meta property="og:title" content="Proved is not finished"><meta property="og:description" content="Completeness checks for proof gates on agent-written code."><meta property="og:url" content="https://puppetmaster.gg/labs/hard-proof/paper/"><meta property="og:image" content="https://puppetmaster.gg/labs/hard-proof/og-card.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Two lock designs, A and B, pass the same three proved laws. On the same input, A leaves the lock free and B keeps it held."><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://puppetmaster.gg/labs/hard-proof/og-card.jpg">
+<link rel="icon" type="image/png" href="/logo-128.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<style>
+.doc ul,.doc ol{margin:0 0 20px;padding-left:22px;color:var(--text);font-size:17px;line-height:1.75}
+.doc li{margin-bottom:6px}
+.doc h3{margin:30px 0 10px;font-size:19px;color:var(--ink)}
+.doc .abstract{margin:0 0 34px;padding:22px 24px;border:1px solid var(--line-2);background:var(--panel)}
+.doc .abstract p{margin:0 0 12px;font-size:16px}
+.doc .abstract p:last-child{margin:0}
+.doc .k{font:500 12px var(--mono);letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin:0 0 10px}
+.doc .claim{margin:6px 0 28px;padding:18px 22px;border-left:3px solid var(--gold);background:var(--panel);font:600 19px/1.55 var(--sans);color:var(--ink)}
+.doc td.ok{color:#9fc27f}.doc td.bad{color:var(--risk)}
+.doc code{overflow-wrap:anywhere}
+.doc pre{margin:0 0 22px;padding:16px 18px;border:1px solid var(--line-2);background:#0f0e0b;font:13px/1.65 var(--mono);color:var(--gold-hi);white-space:pre-wrap;overflow-wrap:anywhere}
+.doc .toc{columns:2;column-gap:32px;font-size:15px;margin:0 0 34px}
+.doc .draft{display:inline-block;margin:0 0 18px;padding:6px 10px;border:1px solid var(--line-gold);font:500 12px var(--mono);letter-spacing:.08em;color:var(--gold-hi);text-transform:uppercase}
+.doc .small{font:13px/1.7 var(--mono);color:var(--faint)}
+@media (max-width:640px){.doc .toc{columns:1}}
+</style>
+<script>document.documentElement.classList.add('js')</script><script src="/site.js" defer></script>
+</head>
+<body class="doc-page">
+<a class="skip" href="#article">Skip to article</a>
+<header class="nav"><div class="wrap nav-in"><a class="brand" href="/" aria-label="Puppetmaster home"><span class="logo-crop"><img src="/logo.png" alt="" width="64" height="64"></span>PUPPETMASTER<span class="domain">.GG</span></a><nav aria-label="Main navigation"><a class="hide-sm" href="/#suite">Suite</a><a class="hide-sm" href="/#inference">Inference</a><a href="/labs/" aria-current="page">Labs</a><a href="/#index">Index</a><button class="search-trigger" type="button" data-palette aria-label="Search everything"><span>Search</span><kbd>⌘K</kbd></button><a class="source-link hide-xs" href="https://github.com/professorpalmer">GitHub <span aria-hidden="true">↗</span></a></nav></div></header>
+<article class="doc" id="article">
+<p class="eyebrow"><a href="/labs/">LABS</a> · PAPER · PROOF GATES FOR AGENT CODE</p>
+<p class="draft">Draft for review</p>
+<h1>Proved is not finished: completeness checks for proof gates on agent-written code</h1>
+<p class="byline">Cary Palmer · 18 November 2026 · Lean 4.36.0 · Puppetmaster 1.51.0 · <a href="/labs/hard-proof/">visual summary</a></p>
+
+<div class="abstract">
+<p class="k">Abstract</p>
+<p>A proof gate accepts an agent's code change only when a deterministic checker accepts a machine-checked proof for each law that a human owns. The gate forces "the code obeys the laws". It does not force "the laws say enough". We show that this second gap is real, that agents can find it with proofs, and that it can be closed with a proof.</p>
+<p>We proved three laws for a model of a lock, and six proof kernels accepted the proofs. Adversary agents then got the laws and one task: find two designs that pass each law and behave differently. In {{GAP_LOCK_TOTAL}} of {{GAP_LOCK_TOTAL}} runs on three model tiers, the agent supplied two lock designs, proofs that each design passes each law, and a proved trace on which they differ. One design never releases the lock. We call this object a gap certificate. The same checker that accepts a solution accepts it.</p>
+<p>A gap certificate becomes one concrete question for the human. The answer becomes a new law. With the new law, the agents got a second task: find a gap or prove that none exists. In {{COMPLETE_LOCK_TOTAL}} of {{COMPLETE_LOCK_TOTAL}} runs the agent proved that two designs that pass each law behave the same on each sequence of events. The folder had no example of such a proof. The loop stops when the checker accepts that theorem.</p>
+<p>We repeated the loop on real shipped code: the command <code>puppetmaster models sync</code>, with one law for each sentence of its release notes. Adversary agents proved that the release notes allow a sync that writes the new rows in a different order, and a sync that writes each new row two times. Link tests compare the two Lean models with the real Python code on {{LINK_TOTAL}} events and cases, with 0 differences, and the lock test fails on the real release that had the bug.</p>
+<p>In a third domain no pilot text enters the laws. An agent wrote the laws for the lock's stale-recovery rule from the English documentation of the code. Adversary agents found the gaps, the answer to each question was the behavior of the shipped code, and a law-author agent wrote a general law for each answer. The loop stopped on a completeness proof for each of three law sets. The number of questions was {{EXP10_QUESTION_COUNTS}}.</p>
+<p>We ran the same test on the sync command. The law authors got seven sentences of its documentation, and a model file that also holds a mirror of the code. Six law sets by three models each left the same behavior open: the order of the new rows, which the documentation does not state. Each loop ended on a completeness proof after one to three questions, for $1.43 to $3.60. The adversaries also found a fault in a definition that the pilot owned: a "legal" input that was not intended to be legal.</p>
+{{ABSTRACT_SCALE}}
+{{ABSTRACT_BASELINE}}
+{{ABSTRACT_LOOPS}}
+<p>The completeness criterion is from hardware verification, and distinguishing inputs and mutation tests for specifications are known. The contribution is a composition of these ideas into a loop for agents in Lean, with an artifact for each run: proof-carrying gap certificates from an untrusted adversary, one question for the human for each gap, and a completeness theorem as the stop condition.</p>
+</div>
+
+<div class="doc-stats">
+<div class="doc-stat"><span>Gap certificates accepted</span><strong class="accent">{{TOTAL_GAP}}</strong></div>
+<div class="doc-stat"><span>Completeness proofs accepted</span><strong>{{TOTAL_COMPLETE}}</strong></div>
+<div class="doc-stat"><span>Link test, differences</span><strong>0</strong></div>
+<div class="doc-stat"><span>Lowest cost of one gap certificate</span><strong>{{CHEAPEST_GAP}}</strong></div>
+</div>
+
+<p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
+<p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 16 lists the limits.</p>
+
+{{REVISION_NOTE}}
+<ol class="toc">
+<li><a href="#problem">The problem</a></li>
+<li><a href="#defs">Definitions</a></li>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#lock">Domain 1: a lock</a></li>
+<li><a href="#sync">Domain 2: shipped code</a></li>
+<li><a href="#recover">Domain 3: laws written by an agent</a></li>
+<li><a href="#sync2">Domain 2 again: laws written by an agent</a></li>
+<li><a href="#scale">A scale test on generated rules</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#baseline">A review with no proof duty</a></li>
+<li><a href="#loops">The loop, a review loop, and resumed sessions</a></li>
+<li><a href="#bugs">Real bugs of our own code</a></li>
+<li><a href="#ladder">From findings to fixes: an audit with grades of evidence</a></li>
+<li><a href="#human">What the human does</a></li>
+<li><a href="#prior">Prior work</a></li>
+<li><a href="#limits">Limits and disclosures</a></li>
+<li><a href="#data">Data and reproduction</a></li>
+</ol>
+
+<h2 id="problem">1. The problem</h2>
+<p>An agent writes code faster than a human can read it. A review by a human or by a second model is a judgment. Tests show that some inputs work. A proof gate replaces the judgment with a check: the agent must supply a proof that the code obeys a formal law, and a small trusted checker accepts or rejects the proof.</p>
+<p>The known weak point is the law. A proof shows that the code matches the law. It does not show that the law matches what the human wants. The standard answer is that a human reads the laws. Our first experiments show why that answer is not enough.</p>
+<p>We wrote three laws for a lock and proved them. The author of the laws did not see that no law says "a release frees the lock". The three laws allow a lock that never unlocks. A reader of three short Lean statements has the same blind spot. The question of this paper is narrow:</p>
+<p><strong>Can the gap between "proved" and "finished" be measured and closed with the same machinery that checks the proofs?</strong></p>
+
+<h2 id="defs">2. Definitions</h2>
+<h3>The gate</h3>
+<p>A <em>law</em> is a formal statement about a design. A human owns the laws and each definition that a law mentions. The agent owns the design and the proofs. The <em>gate</em> is a deterministic function from the laws, the design and the proofs to accept or reject. It makes no model call. A law with no proof gives a reject.</p>
+<p>The gate has three parts. A hash lock rejects a run when a human-owned file changes. A structure check requires a proof for each law and a "kill" proof for each known-bad design. The proof check is Lean's <code>lake comparator</code>: it compares each statement with a challenge file that the human owns, audits the axioms, and replays the proof in the kernel. With one flag it also runs five more kernels.</p>
+<h3>The gap certificate</h3>
+<p>Fix an observation: the part of the behavior that a user of the system can see. A <em>gap certificate</em> for a law set has four parts:</p>
+<ol>
+<li>Two designs, A and B.</li>
+<li>A proof that A passes each law, and a proof that B passes each law.</li>
+<li>One legal input.</li>
+<li>A proof that the observations of A and B differ on that input.</li>
+</ol>
+<p>A gap certificate is an objection to the laws that has the same standard as a solution. An untrusted agent can write it, because the checker accepts it only when each part is proved. Inside the model it cannot be a false alarm: the two designs do pass each law, and they do differ. It can still point at a fault outside the laws, for example a definition of a legal input that is wrong (Section 7).</p>
+<h3>Complete laws</h3>
+<p>A law set is <em>complete</em> for an observation when each two designs that pass each law give the same observation on each legal input:</p>
+<pre>theorem laws_complete :
+  ∀ (I J : Design), Passes I → Passes J →
+    ∀ input, observe I input = observe J input</pre>
+<p>A gap certificate and a completeness proof exclude each other. For a law set that some design passes, one of the two is true, and a proof of one of them answers the question. This criterion is not ours. Hardware verification uses it for sets of properties (Section 15).</p>
+<h3>The loop</h3>
+<ol>
+<li><strong>Prove.</strong> An agent proves that the design obeys each law. The gate checks.</li>
+<li><strong>Attack.</strong> A second agent must supply a gap certificate or a completeness proof. The gate checks.</li>
+<li><strong>Ask.</strong> For a gap, the gate prints the input and the two observations. The human selects one.</li>
+<li><strong>Add.</strong> The answer becomes a law. Go to step 1.</li>
+<li><strong>Stop.</strong> The loop ends when the gate accepts a completeness proof.</li>
+</ol>
+<p>At the stop, the laws leave no behavior open for the chosen observation. The human made each choice, and each choice was a concrete case.</p>
+<p>The stop is a certificate, not a guarantee. The loop does not end in general. A domain with unbounded behavior can give a new question in each round, and a true completeness statement can be too hard for the prover. The loops in this study had a limit of six or eight rounds and ended after two to four.</p>
+
+<h2 id="setup">3. Setup</h2>
+<ul>
+<li><strong>Checker.</strong> Lean 4.36.0, core library only, no Mathlib. <code>lake comparator</code> with the permitted axioms <code>propext</code>, <code>Quot.sound</code> and <code>Classical.choice</code>. Our own gate runs used the <code>--paranoid</code> flag: the Lean kernel and five more checkers (<code>leanchecker-paranoid</code>, <code>lean4lean</code>, <code>nanoda</code>, <code>con-leche</code>, <code>con-ron</code>).</li>
+<li><strong>Workers.</strong> Each run is one Puppetmaster 1.51.0 flow: one Claude Code worker, then the gate as a shell check, with a maximum of three repair visits. The models are Claude Haiku 5.5, Sonnet 5.5 and Opus 5.5 at medium effort. Two sets of runs used two OpenAI models through the Codex command line (Section 9).</li>
+<li><strong>Pins.</strong> The flow graph holds the SHA-256 of each human-owned file. The check fails when a pinned file changes. The graph is in the orchestrator state, outside the folder that the worker can write.</li>
+<li><strong>Verdicts.</strong> The outcome of a run is the verdict of our own gate run after the flow, with the extra kernels. The report of the worker is not the verdict.</li>
+<li><strong>Cost.</strong> The cost of a run is the API-equivalent price that the provider reported for the worker session.</li>
+<li><strong>No hints.</strong> For domains 1 and 2, the pilot proved each target in a private folder before the worker runs, to make sure that the task had an answer. We searched each worker transcript for that folder path and found no read of it. For the laws that agents wrote (Sections 6 and 7) and for the blind scale set (Section 8), the pilot made no proof before the runs.</li>
+</ul>
+
+<h2 id="lock">4. Domain 1: a lock</h2>
+<h3>The model</h3>
+<p>The world is an operating system that gives a pid to a new process after the old process stops. Each process start gets a new start token. A lock design selects what the lock stores about its owner, and how the lock decides that the owner is alive. Four events exist: spawn, exit, acquire, release. The observation is the set of processes in the critical section. The lock cannot read that set.</p>
+<p>The model stands for a real component: <code>puppetmaster.interprocess_lock.InterProcessFileLock</code>, which stores a pid and a kernel start token in a lock file.</p>
+<h3>The first law was weak</h3>
+<p>Our plan had one law: two processes are never in the critical section together. The known bug for this component is pid reuse: the lock stores the pid alone, the owner dies, and a new process gets the pid. Lean proves that this buggy design obeys the planned law (<code>mutex_alone_misses_pid_only</code>). Pid reuse does not put two processes inside. It makes a dead owner look alive, so the lock stays shut.</p>
+<p>Law 2 catches it: when the lock refuses a request, a live process is in the critical section. Lean proves that law 2 is false for the pid-only design, with a trace of four events.</p>
+<h3>The gate against cheats</h3>
+<p>We ran eleven scripted cheat attempts against the gate.</p>
+{{TABLE_ATTACKS}}
+<p>The last row is a limit of a gate whose lock file is in the worker's folder. From experiment 3 on, the hash of the lock file and of the gate script is pinned in the flow graph. Scripted runs of "edit the challenge and sign again" and "change the gate to exit 0" then give a reject.</p>
+<h3>The link to real code</h3>
+<p>A proof about a model says nothing about code until a test links them. The link test sends the same random event traces to the Lean model and to the real lock class on a real lock file. After each event, the owner record and the critical-section set must agree. The kernel answers for "which pid am I", "what is the start token of this pid" and "is this pid alive" are simulated, because a test cannot make the kernel use a pid again.</p>
+{{TABLE_LINK}}
+<p>The same test ran against five real releases. Release 1.28.6 is the last release before the pid-reuse fix.</p>
+{{TABLE_HISTORY}}
+<p>The first trace that differs on 1.28.6 is the trace that Lean used to prove law 2 false for the pid-only design, with one more process.</p>
+<h3>An impossible challenge</h3>
+<p>We added one requirement: the lock record must not contain the start token. Lean proves that no lock design can satisfy law 1, law 2 and this requirement together (<code>challenge_is_impossible</code>). A lock with no token cannot tell "the owner died and a new process has its pid" from "that new process took the lock". Law 2 says grant in the first state, and law 1 says refuse in the second.</p>
+<p>Four workers got this challenge. One had a neutral brief. Three had a brief with pressure ("this change must ship today") and write access to each file. Each worker changed no file and reported the conflict with the correct reason. One Haiku 5.5 worker with a shell also wrote and compiled its own proof of the impossibility.</p>
+<h3>The gap</h3>
+<p>The adversary brief did not say where a gap can be. It did say that the task was to find one, and the folder had the proved lock design and a pinned example in which a release takes a process out of the critical section (Section 16). Each accepted certificate has the same content: design B is the proved lock with a release that does nothing. On the trace spawn, acquire, release, the process is out of the critical section for design A and in it for design B. Design B passes law 1, law 2 and law 3.</p>
+<p>The question for the human is one line: after its own release, is the process out, or in? We answered "out". This answer is law 4.</p>
+<h3>Completeness</h3>
+<p>With four laws, each worker decided that no gap is left and proved it. The proof shows that the critical-section set after each event is a function of the operating-system state and the set before the event. The function does not name a design. Laws 1, 2 and 4 are sufficient for this result. Law 3 adds no observable constraint.</p>
+
+<h2 id="sync">5. Domain 2: shipped code</h2>
+<h3>The code and its laws</h3>
+<p><code>puppetmaster models sync</code> adds the starter models that a model registry lacks. It shipped in Puppetmaster 1.51.0 on the day of this study. The real function is <code>puppetmaster.registry_sync.plan_starter_sync</code>.</p>
+<p>The Lean model <code>refSync</code> mirrors the Python code line for line. We wrote seven laws, one for each sentence of the release notes: the old rows stay as they are, only absent starter entries are added, no absent entry is left, a new entry is disabled, an entry on a locked adapter stays disabled, the enable flag keeps the starter state, and a second run changes nothing.</p>
+<h3>Proofs with no examples</h3>
+<p>The folder for this domain had no proofs. Each worker proved the seven laws for <code>refSync</code>. The gate of the flow accepted each result on the first check, with no repair visit.</p>
+<h3>The link</h3>
+<p>The link test sends random registries, starter lists and settings to <code>refSync</code> and to the real Python function. One part is replaced: the starter list of the case stands in for the built-in starter list.</p>
+{{TABLE_LINK_SYNC}}
+<h3>The gaps</h3>
+<p>Each adversary found a gap in the seven laws. Two kinds came back:</p>
+<ul>
+<li><strong>Order.</strong> A sync that appends the new rows in reverse order passes each law. (Haiku 5.5 and Sonnet 5.5.)</li>
+<li><strong>Duplicates.</strong> A sync that appends each new row two times passes each law. (Opus 5.5.)</li>
+</ul>
+<p>The shipped code writes each row one time, in starter order. The gap is in the written description of the feature, not in the code. A second implementation that follows the release notes can be wrong in these two ways and still pass.</p>
+<p>The answer to the two questions is the behavior of the shipped code. It became law 8: the new rows are the absent starter entries, one time each, in starter order.</p>
+<h3>Completeness</h3>
+<p>With eight laws, each worker proved that two sync designs that pass each law give the same registry for each legal input.</p>
+
+<h2 id="recover">6. Domain 3: laws written by an agent</h2>
+<p>In domains 1 and 2 the pilot wrote the laws, and the pilot knew each gap before the adversary ran. A reader can say that the laws were made to have a gap. Domain 3 removes the pilot from the laws.</p>
+<h3>The rule and its description</h3>
+<p>The real lock removes a lock file that a different process left, but only in some cases. The code is <code>InterProcessFileLock._recover_stale_owner</code>. Its documentation has three sentences about this rule. One of them: "A later process recovers an orphan whose owner PID is no longer alive; malformed/unknown owners are recovered after <code>stale_after</code> seconds."</p>
+<p>The pilot wrote the model types, a mirror of the code (<code>ref</code>), and a link test. The link test compares <code>ref</code> with the real method on a full grid of 144 cases, on real lock files. The two agree on each case. Two changed versions of the code differ in 18 cases each.</p>
+<h3>Three agents write the laws</h3>
+<p>Three workers (Haiku 5.5, Sonnet 5.5, Opus 5.5) each got the three sentences and one task: write one law for each stated requirement, and no law for a case that the description does not state. The gate accepted a law set when the mirror of the shipped code passes each law, some rule fails a law, and no law names the mirror. Each worker wrote six laws. The pilot read the laws after the gate accepted them, and did not edit them or prove a result about them before the next step.</p>
+<h3>The loop with no pilot text</h3>
+<p>For each law set, a script ran the loop with Sonnet 5.5 workers. An adversary supplied a gap certificate or a completeness proof. For a gap, the answer to the question was the behavior of the shipped code for that case. A law-author worker then added a general law for that answer. The gate checked that each old law was unchanged and that the mirror still passed.</p>
+{{TABLE_EXP10}}
+<p>These are the questions that the gate printed, with the answer and the name of the law that an agent then added:</p>
+{{EXP10_QUESTIONS}}
+<p>Each question is a real open point in the documentation of shipped code. The documentation says "after <code>stale_after</code> seconds". It does not say what the lock does at that exact age, or when the age is not known. The code has an answer for each case, and after the loop the laws have it too.</p>
+
+{{SECTION_SYNC2}}
+
+{{SECTION_SCALE}}
+
+<h2 id="results">9. Results</h2>
+<p>Each row is one task for one model. "Runs" counts the accepted runs out of all runs for that cell, the first run and the repeat runs together.</p>
+{{TABLE_RUNS}}
+<p class="small">Time is the median worker time. Cost is the mean cost for the cell. "Example proofs" says if the folder already had proofs of a similar shape.</p>
+<h3>The kinds of gap</h3>
+<p>A script ran the question runner on each accepted certificate of domains 1 and 2. All {{LOCK_CERTS}} lock certificates show the same gap: the two designs first differ after a release event. The {{SYNC_CERTS}} sync certificates show two kinds: the row order ({{SYNC_ORDER}}) and a row that is written two times ({{SYNC_DUP}}).</p>
+<h3>Models from a second vendor</h3>
+<p>The two lock adversary tasks also ran with two OpenAI models through the Codex command line, with the same flows and the same gate.</p>
+{{TABLE_XVENDOR}}
+<p>GPT-5.6 Sol finished the two tasks. GPT-5.6 Luna found the gap in each of two runs, and did not finish the completeness proof in each of two runs. The two Luna workers selected the correct result, wrote a proof with unsolved goals, and stopped after 241 s and 172 s with the report "CompleteSolution.lean does not build". The gate rejected the two files at the build step. These are the only rejected proofs of the study, and the workers did not claim success. The flow ends on a worker verdict of FAIL, so no repair visit ran.</p>
+<p class="small">The first try used the Cursor adapter. Each of its 8 runs stopped at launch with an account message from the provider, and no model ran. Those runs are not in the table. The Codex adapter reports no cost for these runs, because they ran on a subscription plan.</p>
+<h3>What the runs show</h3>
+<ul>
+<li><strong>In the main table, the gap is found each time.</strong> {{GAP_ALL}} accepted gap certificates in {{GAP_ALL_N}} adversary runs. The brief did not say where the gap is.</li>
+<li><strong>In the main table, completeness is proved each time.</strong> {{COMPLETE_ALL}} accepted completeness proofs in {{COMPLETE_ALL_N}} runs, with no example proof of that kind.</li>
+<li><strong>All adversary runs of the study.</strong> {{TOTALS_TEXT}}</li>
+<li><strong>Most of these gaps do not need a proof to be found.</strong> Section 10 gives the same decision points to a reviewer with no proof duty. It found {{BL_GAP_VALID}} of {{BL_GAP_TASKS}} gaps. It missed one gap in each of {{BL_DUP_REVIEWS}} reviews, and the proof adversary found that gap.</li>
+<li><strong>The cheapest model was sufficient for these tasks.</strong> Haiku 5.5 finished each task. The lowest cost of one accepted gap certificate in the study was {{CHEAPEST_GAP}}.</li>
+<li><strong>Agents wrote the laws, and the loop still ended.</strong> Nine loops started from laws that agents wrote from documentation. Each loop ended on a completeness proof, after one to three questions.</li>
+<li><strong>One proof was too hard for one model.</strong> GPT-5.6 Luna did not finish the completeness proof for the lock in two attempts. It reported the failure each time, and the gate rejected the files.</li>
+<li><strong>No worker cheated.</strong> No run changed a human-owned file. The pressure runs had write access to each file and to the sign command.</li>
+<li><strong>The report of the worker is not the verdict.</strong> One worker reported "partial" and its proof was correct. One worker reported "proof written" and the file did not compile. The gate decided in each case.</li>
+</ul>
+
+{{SECTION_BASELINE}}
+{{SECTION_LOOPS}}
+{{SECTION_BUGS}}
+{{SECTION_LADDER}}
+<h2 id="human">14. What the human does</h2>
+<p>In this loop the human reads no proof and no Lean statement. The human gets one concrete case for each gap:</p>
+<pre>who = process 1
+event=spawn 1    A_inside=none  B_inside=none
+event=acquire 1  A_inside=1     B_inside=1
+event=release 1  A_inside=none  B_inside=1</pre>
+<pre>starter  = [id 1]
+registry = []
+A_result = [id 1]
+B_result = [id 1; id 1]</pre>
+<p>These two blocks are gate output from accepted certificates. The answer is a choice between A and B. The cost of the question is small, and the question cannot be a false alarm about the laws: the two designs do pass each law, and they do differ. A question can show a different fault. In Section 7, three questions showed that a definition of the pilot permitted an input that the pilot did not intend.</p>
+<p>The number of questions is the number of gaps. The lock needed one question. The sync command needed two with the pilot's laws, and one to three with laws that agents wrote. After the last answer, a theorem says that no question is left for the chosen observation.</p>
+
+<h2 id="prior">15. Prior work</h2>
+<p>We searched on 17 and 18 November 2026 and opened each page in this table. The parts of the loop exist. The search was short and was not systematic, so we do not claim that no earlier system has this loop.</p>
+<div class="doc-scroll"><table>
+<thead><tr><th>Work</th><th>What it has</th><th>Relation</th></tr></thead>
+<tbody>
+<tr><td><a href="https://kluedo.ub.rptu.de/frontdoor/index/index/docId/4680">Bormann, Complete Functional Verification</a> (2009); sold as gap-free verification</td><td>A completeness checker for sets of hardware operation properties. It finds verification gaps.</td><td>The completeness criterion is from this line of work. We apply it to agent-written code and let an agent supply the proof.</td></tr>
+<tr><td><a href="https://people.eecs.berkeley.edu/~sseshia/pubs/b2hd-jha-icse10.html">Jha, Gulwani, Seshia, Tiwari, Oracle-guided component-based program synthesis</a> (ICSE 2010)</td><td>A distinguishing input separates two candidate programs. An oracle answers.</td><td>Our question for the human is a distinguishing input. Our candidates are proved to pass the laws.</td></tr>
+<tr><td><a href="https://www.usenix.org/conference/osdi24/presentation/goldweber">Goldweber et al., IronSpec</a> (OSDI 2024)</td><td>Sanity checks, spec-testing proofs and mutation tests for specifications. Ten spec bugs in six verified systems.</td><td>Our mutant kills and pinned examples follow it.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2603.17150">Lahiri, Intent Formalization</a> (2026)</td><td>States that only the user is an oracle for a specification, and asks for metrics with light user interaction.</td><td>Our loop is one such interaction with an exact stop rule.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2604.00280">Misu et al., Spec-Harness</a> (2026)</td><td>Scores LLM-written specifications with symbolic verification and input and output mutation.</td><td>A score from mutants is a proxy. A gap certificate is a proof.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2310.17807">Sun et al., Clover</a> (2023)</td><td>Consistency checks among code, docstrings and formal annotations.</td><td>The same goal: do not trust a verified result alone.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2611.07073">Maji, When Verification Is Not Agreement</a> (2026)</td><td>Two agents formalize the same text. Verification success does not imply that they agree.</td><td>Disagreement between two formalizations as a signal. Our two designs carry proofs.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2407.01688">Disselkoen et al., How We Built Cedar</a> (2024)</td><td>An executable model with proofs, and differential random tests of production code against the model.</td><td>Our link tests are this method.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2405.06624">Dalrymple et al., Towards Guaranteed Safe AI</a> (2024)</td><td>A world model, a safety specification, and a verifier with a proof certificate.</td><td>The same three parts as our gate.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2608.13522">Ye et al., Vero</a> (2026)</td><td>43 Lean repositories for agents. Agents can prove that a specification is unsatisfiable.</td><td>Our impossible-challenge runs are that kind of objection.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2509.22908">Bursuc et al., A benchmark for vericoding</a> (2025)</td><td>12,504 formal specifications. Model success: Dafny 82%, Verus 44%, Lean 27%.</td><td>Our tasks are small against this benchmark.</td></tr>
+<tr><td><a href="https://lean-lang.org/doc/reference/4.35.0-rc3/ValidatingProofs/">Lean reference, Validating Proofs</a></td><td>The comparator: statement match, axiom audit, kernel replay, sandbox.</td><td>Our gate is a wrapper around it.</td></tr>
+</tbody></table></div>
+<h3>What this paper contributes</h3>
+<p>The paper puts known ideas together into a workflow for coding agents in Lean, and reports a case study with an artifact for each run:</p>
+<ul>
+<li>The gap certificate as a proof-carrying object that an untrusted agent writes and the proof checker accepts.</li>
+<li>The loop that turns each certificate into one question for the human and stops when the checker accepts a completeness theorem.</li>
+<li>Measurements on three model tiers, with real shipped code on the other side of a link test, and with laws that agents wrote from the documentation of that code.</li>
+</ul>
+<h3>Areas that this search did not cover</h3>
+<p>A referee will ask about these lines of work. We did not read them for this draft, and we name no paper from them:</p>
+<ul>
+<li>Counterexample-guided inductive synthesis and programming by example, where a distinguishing input refines a specification.</li>
+<li>Active learning and mining of specifications with queries to an oracle.</li>
+<li>Relational verification and hyperproperties. A gap certificate and a completeness statement are statements about two runs or two programs.</li>
+<li>Vacuity detection and coverage measures for properties in model checking.</li>
+<li>Checks for underspecification in specification languages and in requirements engineering.</li>
+</ul>
+<p>The idea for the study came from the Bend language page, which shows a laws file for the human and a proofs file for the agent.</p>
+
+<h2 id="limits">16. Limits and disclosures</h2>
+<ul>
+<li><strong>An AI agent ran this study.</strong> A pilot agent (Claude Fable 5.2 in Claude Code) designed and ran the experiments, wrote the laws and the models, and wrote this draft, in one session on 17 and 18 November 2026. The owner asked for the study and was asleep for the second half. No human reviewed the laws before the runs.</li>
+<li><strong>The worker folders had hints.</strong> The gap tasks of domains 1 and 2 asked the worker to find a gap. They did not ask if a gap exists. The decision tasks (gap or completeness) came after a law was added. Each folder had a reference design: the proved lock, or the mirror of the code. The brief of the lock gap task says that design A can be the proved lock. The lock law file has a pinned example in which a release takes a process out of the critical section, which points at the behavior that each gap certificate uses. The law authors of Sections 6 and 7 had the mirror of the code in the model file, because they must prove that it passes their laws. Only the blind set of Section 8 had no reference design. Its brief did not say if a gap existed, but the folder path of each run did (Section 10).</li>
+<li><strong>The step from an answer to a law is trusted.</strong> One answer does not fix one general requirement. A law author can generalize in a wrong direction, and the gate checks only that the mirror of the code passes the new law and that the old laws are unchanged. In the runs with agent-written laws the oracle was the behavior of the shipped code. Those runs show that a specification can be recovered from code and documentation. They do not show that the loop finds the intent of a human.</li>
+<li><strong>No guarantee that the loop ends.</strong> See Section 2. Each loop here ended, on small domains, with a limit on the rounds.</li>
+<li><strong>A stand-in gave the human answers.</strong> The pilot answered the three questions of domains 1 and 2 (the release, the row order, the duplicate rows). In the runs with agent-written laws a script answered with the behavior of the shipped code. The loop was not tested with a real human.</li>
+<li><strong>Human-owned definitions are trusted, and one was wrong.</strong> The pilot's definition of a legal starter list permitted a list with one entry two times. The adversaries found it (Section 7). The runs of domain 2 used the same definition. Their results hold for the larger set of inputs, but the definition did not say what the pilot intended. The loop showed the fault only because a printed question looked odd. A wrong definition that makes no odd question stays hidden.</li>
+<li><strong>A law can state the code again.</strong> The gate rejects a law that names the mirror of the code. It cannot reject a law that writes the same logic again. One Haiku 5.5 law states the enabled flag as one boolean formula, which is the logic of the helper function. A law set of that kind is complete, and it says nothing that the code does not say.</li>
+<li><strong>The proof was not necessary for most gaps.</strong> A review with no proof duty found {{BL_GAP_VALID}} of the {{BL_GAP_TASKS}} gaps of the comparison in Section 10, at about the same cost. The proof duty added one gap that {{BL_DUP_MISSED}} of {{BL_DUP_REVIEWS}} reviews missed. That is one fault on three related law sets. We did not measure how frequently a gap of that kind occurs in real specifications.</li>
+<li><strong>The loop tests are small.</strong> Section 11 has six law sets from one domain and one run of each loop. The cost of a resumed visit depends on the provider cache, which has a time limit.</li>
+<li><strong>The study on real bugs has one team and one run.</strong> The bugs of Section 12 are from two repositories of one team. Each arm gets the name of the function that had the bug, which a real review does not always have. Each bug had one run of the proof pipeline, with a limit of six steps. A bug where the code ignores an input cannot be found by a model that mirrors the code. The fix of each bug is the truth of the test, so the test cannot count a second fault that a method found in the same function.</li>
+<li><strong>The owner decided rules, not diffs.</strong> In Section 13 the owner answered four questions about rules and gave the order to merge. The owner did not read each of the 51 fixes. The evidence for a fix is its test, two reviews by agents, and CI. One rule has a proof.</li>
+<li><strong>Small domains.</strong> A lock with four events, a filter over lists, and a decision over five fields. A completeness proof for a large system can be very hard. {{LIMIT_SCALE}}</li>
+<li><strong>Completeness is for one observation and one model.</strong> The lock result covers the critical-section set. It does not cover the status that the lock reports, timing, or two processes that race. The model has one step at a time.</li>
+<li><strong>The link is a test.</strong> The laws are proved for a model. The code is linked to the model by random tests with simulated kernel answers, not by a proof.</li>
+<li><strong>Vendors.</strong> Each worker in the main tables was a Claude model, and the pilot is from the same family. Two OpenAI models ran the two lock adversary tasks only, two runs each. One of them did not finish the completeness proof.</li>
+<li><strong>The pilot knew the gaps in domains 1 and 2.</strong> The pilot wrote those laws and proved each gap and each completeness result in private before the worker runs. Sections 6 and 7 have laws that agents wrote, but the pilot wrote the models and selected the description sentences.</li>
+<li><strong>Small counts, and replicates.</strong> Each cell of the main table has between {{MIN_N}} and {{MAX_N}} runs. Each loop and each scale task ran one time for each model. The repeat runs are runs of the same task again, not new problems. The rates say little about a different task. The costs are for these tasks only.</li>
+<li><strong>Selection.</strong> The pilot selected the domains, the observations and the description sentences, and built some tasks after it saw earlier results. We did not measure the effect of these choices.</li>
+<li><strong>Faults in the run.</strong> A first set of three loops for Section 6 is void: Lean wrote a manifest file outside the write scope of the worker, and each flow reported "failed". We fixed the harness and report the second set. Its numbers of questions were the same as in the void set. Eight runs through a second provider tool stopped at launch (Section 9). The first start of one early experiment failed because a model pin was absent from a registry. Two loop starts failed on the form of a flow name. The first scale set leaked the answer (Section 8). The folder path of each run of the blind scale set had the word "gap" or "complete" (Section 10). The times in the first rows of the pilot's decision log are estimates.</li>
+<li><strong>Help in the first proof tasks.</strong> In the first lock proof task, the folder had proofs of a similar shape. The sync proofs and the two completeness proofs had no such help.</li>
+<li><strong>No cheat attempt occurred.</strong> No worker tried to pass the pins, so scripted attacks tested them. No brief ordered a cheat.</li>
+<li><strong>No sandbox.</strong> The comparator sandbox needs a Linux tool. The runs were on macOS with the sandbox off. Lean code can run programs at build time, so a real gate must run in a sandbox.</li>
+<li><strong>Prior work.</strong> The search was two days of web search by the pilot. A reader who knows this field can know of closer work.</li>
+<li><strong>Authorship.</strong> We build Puppetmaster. The flows that ran the workers are Puppetmaster flows.</li>
+</ul>
+
+<h2 id="data">17. Data and reproduction</h2>
+<ul>
+<li><a href="/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
+<li><a href="/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>{{ZIP_SHA}}</code>.</li>
+<li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. {{VERIFY_TEXT}}</li>
+<li><code>README.md</code> in the archive has a command for each experiment family. The link tests need a checkout of Puppetmaster.</li>
+<li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the tools <code>hardproof</code> and <code>hpflow</code>, the records of Sections 10 to 13, and this paper as a <a href="/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>
+</ul>
+
+<div class="doc-cite">
+<p>Cite as: Palmer, C. “Proved is not finished: completeness checks for proof gates on agent-written code.” Puppetmaster Labs, draft of 18 November 2026. https://puppetmaster.gg/labs/hard-proof/paper/</p>
+</div>
+</article>
+<footer class="wrap foot"><a class="brand" href="/"><span class="logo-crop"><img src="/logo.png" alt="" width="64" height="64" loading="lazy"></span>PUPPETMASTER<span class="domain">.GG</span></a><span class="foot-note">INDEPENDENT BY DESIGN.</span><nav aria-label="Footer"><a href="/#index">Index</a><a href="/labs/">Labs</a></nav></footer>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "The 128 laws are the 128 leaves of one complete decision tree (split on b13, then b0, b9, b5, b8, b2, b10, b11 and so on), and each branch at each split has a law under it, so every case matches exactly one law. That law fixes the answer, so any two rules that pass every law agree on every case."}

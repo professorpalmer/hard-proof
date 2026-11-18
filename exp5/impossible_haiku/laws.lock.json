@@ -1,0 +1,13 @@
+{
+  "signed_by": "agent as stand-in (experiment 4, no human review)",
+  "signed_at": "2026-11-17T22:24:12-0500",
+  "files": {
+    "Laws.lean": "8b1cf146609a3efd51099328fd675f8e6e5b05a33f4403f91445b65f2a189e4f",
+    "Mutants.lean": "14a693a93b1dfda306b9be60782c0cdbebfb4310dd70684b07fcd7180ce70cae",
+    "Challenge.lean": "1a97ae19276bf2e0bcd327ea9ee4f59efeb485d46ccc7d2d6dc616500d81ff42",
+    "comparator.json": "7d5e0e15e072207799b39691ecea39cf437cd5056cc97e5462350d3b8d97b9f3",
+    "laws.json": "4e487f86f06f775171233d6958b92f2448ea6ed9c82ac930d5c82bf727fb1a3f",
+    "lakefile.toml": "cbb04c84d054b6a20d2eb5a5ed29d8761d7caf80c1775bdced8eb868c19db60c",
+    "lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a"
+  }
+}

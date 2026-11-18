@@ -1,0 +1,159 @@
+{
+ "bugs": 95,
+ "proof_detected": 31,
+ "in_scope": 66,
+ "proof_detected_in_scope": 31,
+ "outcomes": {
+  "detected by a question": 15,
+  "complete, bug not detected": 16,
+  "prover failed": 2,
+  "detected by a conflict": 16,
+  "step limit": 46
+ },
+ "outcomes_in_scope": {
+  "detected by a question": 15,
+  "prover failed": 2,
+  "detected by a conflict": 16,
+  "complete, bug not detected": 4,
+  "step limit": 29
+ },
+ "cost_usd": 792.7,
+ "seconds": 100206,
+ "items": 384,
+ "items_not_the_bug": 353,
+ "arms": {
+  "plain/sonnet": {
+   "detected": 32,
+   "union_with_proof": 46,
+   "proof_only": 14,
+   "review_only": 15,
+   "both": 17
+  },
+  "shell/opus": {
+   "detected": 44,
+   "union_with_proof": 54,
+   "proof_only": 10,
+   "review_only": 23,
+   "both": 21
+  },
+  "shell/sonnet": {
+   "detected": 36,
+   "union_with_proof": 49,
+   "proof_only": 13,
+   "review_only": 18,
+   "both": 18
+  }
+ },
+ "any_review_arm": 55,
+ "union_all": 61,
+ "proof_only_vs_all_review": [
+  "453b6524",
+  "4e16c220",
+  "7be23d23",
+  "b7eb3415",
+  "e8af8068",
+  "f44c7375"
+ ],
+ "proof_only_titles": {
+  "453b6524": "_gate_write_scope passes a run outside Git that it could not observe",
+  "4e16c220": "CodeGraph refresh debounce suppresses the first check when the monotonic clock is small",
+  "7be23d23": "cost spec lookup fell through when the routed model id was absent",
+  "b7eb3415": "Payload string values explode into characters and \"false\" reads as True in routing signals",
+  "e8af8068": "Artifact headline empty when the finding is under a non-canonical key",
+  "f44c7375": "Token classes sum past the prompt when cache read and write overlap"
+ },
+ "by_kind": {
+  "arithmetic": {
+   "bugs": 3,
+   "proof": 3,
+   "any_review": 2
+  },
+  "boundary": {
+   "bugs": 7,
+   "proof": 4,
+   "any_review": 6
+  },
+  "list or set logic": {
+   "bugs": 21,
+   "proof": 5,
+   "any_review": 14
+  },
+  "other": {
+   "bugs": 1,
+   "proof": 0,
+   "any_review": 1
+  },
+  "parse": {
+   "bugs": 13,
+   "proof": 5,
+   "any_review": 6
+  },
+  "path or glob": {
+   "bugs": 5,
+   "proof": 2,
+   "any_review": 3
+  },
+  "precedence": {
+   "bugs": 22,
+   "proof": 7,
+   "any_review": 10
+  },
+  "state": {
+   "bugs": 9,
+   "proof": 3,
+   "any_review": 5
+  },
+  "text": {
+   "bugs": 14,
+   "proof": 2,
+   "any_review": 8
+  }
+ },
+ "cost_median_usd": 8.14,
+ "cost_mean_usd": 8.34,
+ "cost_range_usd": [
+  2.14,
+  23.16
+ ],
+ "model": {
+  "made": 95,
+  "link_agrees_before_the_fix": 95,
+  "mutants_made": 1353,
+  "mutants_killed": 1307,
+  "all_mutants_killed": 56
+ },
+ "cost_by_stage_usd": {
+  "M": 188.15,
+  "L": 43.39,
+  "R": 279.87,
+  "LF": 50.17,
+  "A": 133.28,
+  "LA": 97.86
+ },
+ "detected_at_step": {
+  "1": 14,
+  "2": 6,
+  "3": 5,
+  "4": 1,
+  "5": 3,
+  "6": 2
+ },
+ "items_by_kind": {
+  "conflict": 139,
+  "gap": 245
+ },
+ "replaced_by_a_second_run": [
+  "180b1d51",
+  "eaeb5933",
+  "d9fe4f63",
+  "1e6f34b3",
+  "f44c7375",
+  "1b0b28ad"
+ ],
+ "review_cost_usd": {
+  "shell/sonnet/pre": 48.08,
+  "plain/sonnet/pre": 44.66,
+  "shell/opus/pre": 105.49,
+  "shell/sonnet/post": 49.6
+ }
+}

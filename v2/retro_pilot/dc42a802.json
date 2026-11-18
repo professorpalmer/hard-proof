@@ -1,0 +1,99 @@
+{
+ "bug": "dc42a802",
+ "title": "List template inside map item files renders as one str() path",
+ "repo": "Puppetmaster",
+ "function": "_item_scopes",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-811a28e233",
+   "folder": "~/Projects/hp-work/p/811a28e233",
+   "model": "opus",
+   "flow": "flow_880f1c216d05",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ec47cc718efc"
+   ],
+   "seconds": 420,
+   "cost_usd": 2.908,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-c208d424ef",
+   "folder": "~/Projects/hp-work/p/c208d424ef",
+   "model": "sonnet",
+   "flow": "flow_86ecc1e1c9b5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f18161953fcb"
+   ],
+   "seconds": 53,
+   "cost_usd": 0.509,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-fe838cc649",
+   "folder": "~/Projects/hp-work/p/fe838cc649",
+   "model": "sonnet",
+   "flow": "flow_312076756bff",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_19a6fbcd508e"
+   ],
+   "seconds": 152,
+   "cost_usd": 0.927,
+   "stage": "R1"
+  }
+ ],
+ "items": [],
+ "outcome": "prover failed",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 26,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 1580,
+   "first_difference": {
+    "input": "L3 - - s207b7b7d7d2020 s6a75646765 - i0 s6167656e74 - i0 K1 s6732 I4 O0 O1 s63 O0 O3 s31 O2 s62 O0 s F s O2 s s20 s30 O3 s62 F s63 i1 s i1 s63 s O3 s62 A1 A2 s7b7b6b65797d7d s20 s6974656d i12 s31 A1 T",
+    "lean_ref": "1 s6732 P0",
+    "python": "1 s6732 P1 s30"
+   }
+  }
+ },
+ "first_laws": [
+  "NoCodeNodesEmptyScope",
+  "SinglePlaceholderKeepsList",
+  "ItemIdSubstituted",
+  "KeyPlaceholder",
+  "UnknownNameKept"
+ ],
+ "cost_usd": 4.34,
+ "seconds": 625
+}

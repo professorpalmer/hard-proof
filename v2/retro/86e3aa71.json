@@ -1,0 +1,351 @@
+{
+ "bug": "86e3aa71",
+ "title": "Pricing uses the initial router pick, not the fallback model that ran",
+ "repo": "Puppetmaster",
+ "function": "_routing_model_ids",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-e384881a2b",
+   "folder": "~/Projects/hp-work/p/e384881a2b",
+   "model": "opus",
+   "flow": "flow_9ac2267fa30f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c3f3d1f74c90"
+   ],
+   "seconds": 177,
+   "cost_usd": 1.765,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-09e6167769",
+   "folder": "~/Projects/hp-work/p/09e6167769",
+   "model": "sonnet",
+   "flow": "flow_6d00f0ebe2d3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_29cebbf9d6aa"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.44,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-4ce9cffac5",
+   "folder": "~/Projects/hp-work/p/4ce9cffac5",
+   "model": "sonnet",
+   "flow": "flow_b8496fb44dcd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d326422a1441"
+   ],
+   "seconds": 76,
+   "cost_usd": 0.62,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-ba1dfbb2dc",
+   "folder": "~/Projects/hp-work/p/ba1dfbb2dc",
+   "model": "sonnet",
+   "flow": "flow_2653fc24bfac",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7ed5503c8c19"
+   ],
+   "seconds": 100,
+   "cost_usd": 0.687,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-ea306a1e6c",
+   "folder": "~/Projects/hp-work/p/ea306a1e6c",
+   "model": "sonnet",
+   "flow": "flow_d87bc45a2cb9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bba3457471d1"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.408,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-eb325d5996",
+   "folder": "~/Projects/hp-work/p/eb325d5996",
+   "model": "sonnet",
+   "flow": "flow_58d62b4cdfa1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0190f661627a"
+   ],
+   "seconds": 73,
+   "cost_usd": 0.583,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-cc449f6143",
+   "folder": "~/Projects/hp-work/p/cc449f6143",
+   "model": "sonnet",
+   "flow": "flow_b1d17b8168c0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_89ecbf4df35d"
+   ],
+   "seconds": 107,
+   "cost_usd": 0.746,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-fd8727610f",
+   "folder": "~/Projects/hp-work/p/fd8727610f",
+   "model": "sonnet",
+   "flow": "flow_2d934877fb6e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_79cdd8801489"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.403,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-22e43f9c06",
+   "folder": "~/Projects/hp-work/p/22e43f9c06",
+   "model": "sonnet",
+   "flow": "flow_921c5d471ef6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_32b06066ba25"
+   ],
+   "seconds": 82,
+   "cost_usd": 0.611,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-347067ca6c",
+   "folder": "~/Projects/hp-work/p/347067ca6c",
+   "model": "sonnet",
+   "flow": "flow_7a00e5ddd915",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1fccc88e04b7"
+   ],
+   "seconds": 197,
+   "cost_usd": 0.0,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-feaaeaf42b",
+   "folder": "~/Projects/hp-work/p/feaaeaf42b",
+   "model": "sonnet",
+   "flow": "flow_95bbcba3788e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0af5c096e269"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.405,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-ba0f2bf881",
+   "folder": "~/Projects/hp-work/p/ba0f2bf881",
+   "model": "sonnet",
+   "flow": "flow_31d81544b13e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_747ca6d16c85"
+   ],
+   "seconds": 91,
+   "cost_usd": 0.712,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-299832cbc4",
+   "folder": "~/Projects/hp-work/p/299832cbc4",
+   "model": "sonnet",
+   "flow": "flow_de5f874e4bd8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9288fbd0098f"
+   ],
+   "seconds": 86,
+   "cost_usd": 0.637,
+   "stage": "A4"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "1 6 s114,111,117,116,101,114 s116 n",
+    "shown": "[Artifact(type=6, created_by=\"router\", task_id=\"t\", payload=None)]"
+   },
+   "design_a": {
+    "encoded": "0",
+    "shown": "{}"
+   },
+   "design_b": {
+    "encoded": "1 s116 s78,111,110,101",
+    "shown": "{\"t\": \"None\"}"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "{}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "2 6 s114,111,117,116,101,114 s97 d1 s109,111,100,101,108,95,105,100 s109 6 s114,111,117,116,101,114 s98 d1 s109,111,100,101,108,95,105,100 s109",
+    "shown": "[Artifact(type=6, created_by=\"router\", task_id=\"a\", payload={\"model_id\": \"m\"}), Artifact(type=6, created_by=\"router\", task_id=\"b\", payload={\"model_id\": \"m\"})]"
+   },
+   "design_a": {
+    "encoded": "2 s97 s109 s98 s109",
+    "shown": "{\"a\": \"m\", \"b\": \"m\"}"
+   },
+   "design_b": {
+    "encoded": "2 s98 s109 s97 s109",
+    "shown": "{\"b\": \"m\", \"a\": \"m\"}"
+   },
+   "ref": {
+    "encoded": "2 s97 s109 s98 s109",
+    "shown": "{\"a\": \"m\", \"b\": \"m\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "2 s97 s109 s98 s109"
+   },
+   "post": {
+    "ok": true,
+    "out": "2 s97 s109 s98 s109"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "2 6 s114,111,117,116,101,114 s116 d1 s109,111,100,101,108,95,105,100 s97 6 s114,111,117,116,101,114 s116 d1 s109,111,100,101,108,95,105,100 s98",
+    "shown": "[Artifact(type=6, created_by=\"router\", task_id=\"t\", payload={\"model_id\": \"a\"}), Artifact(type=6, created_by=\"router\", task_id=\"t\", payload={\"model_id\": \"b\"})]"
+   },
+   "design_a": {
+    "encoded": "1 s116 s97",
+    "shown": "{\"t\": \"a\"}"
+   },
+   "design_b": {
+    "encoded": "1 s116 s98",
+    "shown": "{\"t\": \"b\"}"
+   },
+   "ref": {
+    "encoded": "1 s116 s97",
+    "shown": "{\"t\": \"a\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1 s116 s97"
+   },
+   "post": {
+    "ok": true,
+    "out": "1 s116 s97"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 23,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 6,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "FromRouterDecision",
+  "RecordedModelListed",
+  "KeysDistinct"
+ ],
+ "cost_usd": 8.02,
+ "seconds": 1087
+}

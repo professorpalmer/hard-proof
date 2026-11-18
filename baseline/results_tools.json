@@ -1,0 +1,161 @@
+{
+ "arm": "tools",
+ "runs": [
+  {
+   "id": "59ee53e8",
+   "arm": "tools",
+   "model": "haiku",
+   "flow": "flow_f11602c147df",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_8d4f4ae77917"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.175,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": true,
+     "b7": true,
+     "b8": true,
+     "b9": true,
+     "b10": true,
+     "b11": false,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "The 127 laws have premises that cover 16380 of the 16384 cases, and no two covering laws disagree, so a rule passing every law exists. This case matches no law's premise, so flipping any passing rule's answer on it keeps every law true, giving two passing rules that differ here."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "714f6d1d",
+   "arm": "tools",
+   "model": "haiku",
+   "flow": "flow_f1a8a089fcab",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_88466a8737ff"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.176,
+   "answer": {
+    "verdict": "complete",
+    "reason": "All 128 laws parse to non-vacuous cubes over the 14 inputs. Every one of the 16384 cases is fixed by at least one law, and no two laws that cover the same case disagree, so Passes determines each rule's answer at every case."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "9b260ba0",
+   "arm": "tools",
+   "model": "sonnet",
+   "flow": "flow_05d0343d8cb4",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_bcfdae63a802"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.53,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": false,
+     "b1": true,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": false,
+     "b7": true,
+     "b8": true,
+     "b9": false,
+     "b10": false,
+     "b11": false,
+     "b12": true,
+     "b13": true,
+     "b14": true,
+     "b15": false,
+     "b16": true,
+     "b17": true
+    },
+    "reason": "The 511 laws are cubes with no conflicts, and they leave 8 of 262144 cases uncovered, including this one. Two rules that pass all laws can differ there."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "6b5d23e7",
+   "arm": "tools",
+   "model": "sonnet",
+   "flow": "flow_15dfe5b4a66f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_5ec593fde04f"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.401,
+   "answer": {
+    "verdict": "complete",
+    "reason": "With distinct starter ids, the laws fix the tail: AddsOnlyAbsent and AddsEveryAbsent make its ids exactly the absent starter ids, NewInStarterOrder makes the ids a sublist of the nodup starter ids (so no duplicates and a fixed order), and EnabledRule fixes each enabled flag. RowsStay and NewAtEnd fix the prefix, so the result is unique."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "45724140",
+   "arm": "tools",
+   "model": "sonnet",
+   "flow": "flow_96144caf3b44",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_51bb9ddb4ea2"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.408,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, KeepsExisting fixes the old rows as a prefix. AddsOnlyAbsent, AddsAllAbsent and NoDuplicateId force one new row per absent starter. NewInStarterOrder fixes the order. The enabled laws fix the flag in every case (enable off, locked, or enable on and unlocked). So every passing design gives the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "07bd809d",
+   "arm": "tools",
+   "model": "sonnet",
+   "flow": "flow_141cbaa1ec7c",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_02ef954fcb94"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.418,
+   "answer": {
+    "verdict": "complete",
+    "reason": "KeepsPrefix gives result r ++ t. With distinct starter ids, AddsOnlyAbsent, AddsAllAbsent and KeepsStarterOrder fix t to exactly the absent starters, in starter order, with one row each and the same id, adapter and model. NewDisabled, LockedDisabled and EnableKeepsState fix the enabled flag in every case, and Entry has no other field, so the result is unique."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  }
+ ]
+}

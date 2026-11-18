@@ -1,0 +1,566 @@
+{
+ "bug": "f57cc208",
+ "title": "GPT-5.6 tool-reasoning prefix check misses the bare catalog alias gpt-5.6",
+ "repo": "Puppetmaster",
+ "function": "AgenticAdapter._extra_params",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-274967f01b",
+   "folder": "~/Projects/hp-work/p/274967f01b",
+   "model": "opus",
+   "flow": "flow_f36b9853acf3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9b868511e50f"
+   ],
+   "seconds": 247,
+   "cost_usd": 2.347,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-6fc05aa25a",
+   "folder": "~/Projects/hp-work/p/6fc05aa25a",
+   "model": "sonnet",
+   "flow": "flow_ec71e0911bb0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bf1cbd0de018"
+   ],
+   "seconds": 74,
+   "cost_usd": 0.554,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-30fd9fab2c",
+   "folder": "~/Projects/hp-work/p/30fd9fab2c",
+   "model": "sonnet",
+   "flow": "flow_762ca9e5c427",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9535fdfe7566"
+   ],
+   "seconds": 288,
+   "cost_usd": 1.382,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-2bea73757f",
+   "folder": "~/Projects/hp-work/p/2bea73757f",
+   "model": "sonnet",
+   "flow": "flow_b6a7791f5c0a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e6bff2bf344f"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.526,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-89eee91d1d",
+   "folder": "~/Projects/hp-work/p/89eee91d1d",
+   "model": "sonnet",
+   "flow": "flow_2d33ef179123",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ea06c06a46f0"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.425,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-abcddbcc82",
+   "folder": "~/Projects/hp-work/p/abcddbcc82",
+   "model": "sonnet",
+   "flow": "flow_7edd181e3ffe",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_922704ab37ed"
+   ],
+   "seconds": 153,
+   "cost_usd": 0.927,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-e8c9938e03",
+   "folder": "~/Projects/hp-work/p/e8c9938e03",
+   "model": "sonnet",
+   "flow": "flow_4cfb3928e4c4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_30c582c5bc91"
+   ],
+   "seconds": 92,
+   "cost_usd": 0.719,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-eed37f6cb8",
+   "folder": "~/Projects/hp-work/p/eed37f6cb8",
+   "model": "sonnet",
+   "flow": "flow_9a70a6edb377",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_72caf7c3a9ac"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.416,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-f34fa0201c",
+   "folder": "~/Projects/hp-work/p/f34fa0201c",
+   "model": "sonnet",
+   "flow": "flow_8c63cf862552",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f8a68115666d"
+   ],
+   "seconds": 117,
+   "cost_usd": 0.719,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-ea835eb267",
+   "folder": "~/Projects/hp-work/p/ea835eb267",
+   "model": "sonnet",
+   "flow": "flow_d408f023b42e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c9a01124a63e"
+   ],
+   "seconds": 71,
+   "cost_usd": 0.576,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-44335af25e",
+   "folder": "~/Projects/hp-work/p/44335af25e",
+   "model": "sonnet",
+   "flow": "flow_778b11650cad",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_00f66257d595"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.387,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-635dcc1323",
+   "folder": "~/Projects/hp-work/p/635dcc1323",
+   "model": "sonnet",
+   "flow": "flow_3a5d26d7a568",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_519d3dfbabfd"
+   ],
+   "seconds": 246,
+   "cost_usd": 1.349,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-059dd9b470",
+   "folder": "~/Projects/hp-work/p/059dd9b470",
+   "model": "sonnet",
+   "flow": "flow_af0ffc6075a1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_380c4506018e"
+   ],
+   "seconds": 91,
+   "cost_usd": 0.665,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-a4f126416f",
+   "folder": "~/Projects/hp-work/p/a4f126416f",
+   "model": "sonnet",
+   "flow": "flow_c8893d898e7e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2d13a4573973"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.425,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-47223a95f8",
+   "folder": "~/Projects/hp-work/p/47223a95f8",
+   "model": "sonnet",
+   "flow": "flow_0910b2591274",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f1a8d132b304"
+   ],
+   "seconds": 89,
+   "cost_usd": 0.648,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-e5ead97144",
+   "folder": "~/Projects/hp-work/p/e5ead97144",
+   "model": "sonnet",
+   "flow": "flow_bada348f780c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c619b5a494eb"
+   ],
+   "seconds": 113,
+   "cost_usd": 0.785,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-31418254e9",
+   "folder": "~/Projects/hp-work/p/31418254e9",
+   "model": "sonnet",
+   "flow": "flow_f9069bdc8ece",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_028f81af0bed"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.388,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-691ee3a4c3",
+   "folder": "~/Projects/hp-work/p/691ee3a4c3",
+   "model": "sonnet",
+   "flow": "flow_af46ccae7613",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7222ed93da7a"
+   ],
+   "seconds": 113,
+   "cost_usd": 0.73,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-04555d31d5",
+   "folder": "~/Projects/hp-work/p/04555d31d5",
+   "model": "sonnet",
+   "flow": "flow_055cfb58ab70",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_705e3ac95e8b"
+   ],
+   "seconds": 141,
+   "cost_usd": 0.966,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-2ac10d54f6",
+   "folder": "~/Projects/hp-work/p/2ac10d54f6",
+   "model": "sonnet",
+   "flow": "flow_c991f64b5a39",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_84f241252609"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.434,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "5|N|7|N|N|N|N|N",
+    "shown": "payload(max_output_tokens=5, max_completion_tokens=absent, max_tokens=7, temperature=absent, provider=absent, model=absent, adapter_model_name=absent, reasoning_effort=absent)"
+   },
+   "design_a": {
+    "encoded": "mt=5;t=N;re=N",
+    "shown": "extra(max_tokens=5, temperature=N, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=99;t=N;re=N",
+    "shown": "extra(max_tokens=99, temperature=N, reasoning_effort=absent)"
+   },
+   "ref": {
+    "encoded": "mt=5;t=N;re=N",
+    "shown": "extra(max_tokens=5, temperature=N, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=5;t=N;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=5;t=N;re=N"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|N|N|0|N|N|N|N",
+    "shown": "payload(max_output_tokens=absent, max_completion_tokens=absent, max_tokens=absent, temperature=0, provider=absent, model=absent, adapter_model_name=absent, reasoning_effort=absent)"
+   },
+   "design_a": {
+    "encoded": "mt=N;t=0.0;re=N",
+    "shown": "extra(max_tokens=absent, temperature=0.0, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "ref": {
+    "encoded": "mt=N;t=0.0;re=N",
+    "shown": "extra(max_tokens=absent, temperature=0.0, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=N;t=0.0;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=N;t=0.0;re=N"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "0|N|N|N|N|N|N|N",
+    "shown": "payload(max_output_tokens=0, max_completion_tokens=absent, max_tokens=absent, temperature=absent, provider=absent, model=absent, adapter_model_name=absent, reasoning_effort=absent)"
+   },
+   "design_a": {
+    "encoded": "mt=0;t=N;re=N",
+    "shown": "extra(max_tokens=0, temperature=N, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "ref": {
+    "encoded": "mt=0;t=N;re=N",
+    "shown": "extra(max_tokens=0, temperature=N, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=0;t=N;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=0;t=N;re=N"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|N|N|N|S111.112.101.110.97.105|S103.112.116.45.52|N|N",
+    "shown": "payload(max_output_tokens=absent, max_completion_tokens=absent, max_tokens=absent, temperature=absent, provider=\"openai\", model=\"gpt-4\", adapter_model_name=absent, reasoning_effort=absent)"
+   },
+   "design_a": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=N;t=N;re=S108.111.119",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=\"low\")"
+   },
+   "ref": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|N|N|N|N|S109|N|S104",
+    "shown": "payload(max_output_tokens=absent, max_completion_tokens=absent, max_tokens=absent, temperature=absent, provider=absent, model=\"m\", adapter_model_name=absent, reasoning_effort=\"h\")"
+   },
+   "design_a": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=N;t=N;re=S120",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=\"x\")"
+   },
+   "ref": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|N|N|N|S102.111.111|N|N|N",
+    "shown": "payload(max_output_tokens=absent, max_completion_tokens=absent, max_tokens=absent, temperature=absent, provider=\"foo\", model=absent, adapter_model_name=absent, reasoning_effort=absent)"
+   },
+   "design_a": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "design_b": {
+    "encoded": "mt=N;t=N;re=S108.111.119",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=\"low\")"
+   },
+   "ref": {
+    "encoded": "mt=N;t=N;re=N",
+    "shown": "extra(max_tokens=absent, temperature=N, reasoning_effort=absent)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "post": {
+    "ok": true,
+    "out": "mt=N;t=N;re=N"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 12,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 417,
+   "first_difference": {
+    "input": "N|N|N|N|N|S103.112.116.45.53.46.54|S116.109.95.80.106.32|S72.73.103.72",
+    "lean_ref": "mt=N;t=N;re=N",
+    "python": "mt=N;t=N;re=S110.111.110.101"
+   }
+  }
+ },
+ "first_laws": [
+  "MaxTokensPassThrough",
+  "MaxTokensAbsent",
+  "TemperaturePassThrough",
+  "TemperatureAbsent",
+  "DirectGpt56ExplicitNone",
+  "OlderGpt5NoNone",
+  "CompatibleDefaultsLow",
+  "CallerEffortKept",
+  "ProviderFallsBackToOpenai",
+  "OpencodeGoNoDefault",
+  "CodexInjectsEffort"
+ ],
+ "cost_usd": 15.37,
+ "seconds": 2011
+}

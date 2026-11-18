@@ -1,0 +1,9 @@
+{
+ "k": 10,
+ "leaves": 32,
+ "seed": 2,
+ "task": "complete",
+ "blind": true,
+ "laws": 32,
+ "removed_leaf": null
+}

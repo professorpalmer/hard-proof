@@ -1,0 +1,120 @@
+{
+ "bug": "b5bcda97",
+ "title": "Conversation economics scope includes unstamped and other-session jobs",
+ "repo": "marionette",
+ "function": "_conversation_jobs",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-c189ed5d59",
+   "folder": "~/Projects/hp-work/p/c189ed5d59",
+   "model": "opus",
+   "flow": "flow_b9d602e6f10b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_03eb3316254a"
+   ],
+   "seconds": 159,
+   "cost_usd": 1.67,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-a713c86993",
+   "folder": "~/Projects/hp-work/p/a713c86993",
+   "model": "sonnet",
+   "flow": "flow_9334add854a2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_322a60375992"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.394,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-2dfcc438cf",
+   "folder": "~/Projects/hp-work/p/2dfcc438cf",
+   "model": "sonnet",
+   "flow": "flow_ea437cbdd854",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2a5f0cf10a3b"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.401,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "NoForeign",
+   "input": {
+    "encoded": "N|L0/t/s97",
+    "shown": "jobs=[{id: 0, accounting_owned: True, session_id: \"a\"}] active_session_id=None"
+   },
+   "ref": {
+    "encoded": "L0/t/s97",
+    "shown": "[{id: 0, accounting_owned: True, session_id: \"a\"}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "L0/t/s97"
+   },
+   "post": {
+    "ok": true,
+    "out": "L"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 19,
+   "made": 19,
+   "killed": 19,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 5,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 10474,
+   "first_difference": {
+    "input": "S|L0/s32/s8202;1/n/s;2/i7/s31.84.114.117.101;3/f/-;4/-/s45.51.32.8287;5/t/s0;6/s32/s;7/i0/s13",
+    "lean_ref": "L0/s32/s8202;2/i7/s31.84.114.117.101;5/t/s0;6/s32/s",
+    "python": "L"
+   }
+  }
+ },
+ "first_laws": [
+  "OnlyOwned",
+  "FromInput",
+  "NoForeign"
+ ],
+ "cost_usd": 2.46,
+ "seconds": 206
+}

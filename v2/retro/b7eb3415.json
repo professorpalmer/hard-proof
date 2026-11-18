@@ -1,0 +1,264 @@
+{
+ "bug": "b7eb3415",
+ "title": "Payload string values explode into characters and \"false\" reads as True in routing signals",
+ "repo": "Puppetmaster",
+ "function": "signals_from_worker_spec",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-00a36bd1fc",
+   "folder": "~/Projects/hp-work/p/00a36bd1fc",
+   "model": "opus",
+   "flow": "flow_f3c792911330",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ba15466e22ee"
+   ],
+   "seconds": 254,
+   "cost_usd": 2.104,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-4337caa8e5",
+   "folder": "~/Projects/hp-work/p/4337caa8e5",
+   "model": "sonnet",
+   "flow": "flow_35b8107bb8e4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_691dd65c6e80"
+   ],
+   "seconds": 51,
+   "cost_usd": 0.51,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-30047c9960",
+   "folder": "~/Projects/hp-work/p/30047c9960",
+   "model": "sonnet",
+   "flow": "flow_62502bc01f8b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e2c4f66dc809"
+   ],
+   "seconds": 49,
+   "cost_usd": 0.523,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-9b126fca87",
+   "folder": "~/Projects/hp-work/p/9b126fca87",
+   "model": "sonnet",
+   "flow": "flow_a837dca69502",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_21d32b79f883"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.422,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-a38da937fe",
+   "folder": "~/Projects/hp-work/p/a38da937fe",
+   "model": "sonnet",
+   "flow": "flow_8034b5ed577f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_65689dddd9e1"
+   ],
+   "seconds": 85,
+   "cost_usd": 0.651,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-0d4738d234",
+   "folder": "~/Projects/hp-work/p/0d4738d234",
+   "model": "sonnet",
+   "flow": "flow_9cbe78d99ee5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dcd2df9750e8"
+   ],
+   "seconds": 47,
+   "cost_usd": 0.505,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-1b5e9618d1",
+   "folder": "~/Projects/hp-work/p/1b5e9618d1",
+   "model": "sonnet",
+   "flow": "flow_892e678376f5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_649588fd5eb2"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.487,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-c0bcee9164",
+   "folder": "~/Projects/hp-work/p/c0bcee9164",
+   "model": "sonnet",
+   "flow": "flow_e44061288602",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2bd30204a98b"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.466,
+   "stage": "R3"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "DisabledExcluded",
+   "input": {
+    "encoded": "N A A A E1 Scursor E1 Scursor",
+    "shown": "{ override := HP.V.none,"
+   },
+   "ref": {
+    "encoded": "OK S Sexplore I0 N N L0 N N T T E1 Scursor",
+    "shown": "HP.Output.ok"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK S Sexplore I0 N N L0 N N T T E1 Scursor"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK S Sexplore I0 N N L0 N N T T E1 Scursor"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "N A A A A A",
+    "shown": "{ override := HP.V.none, instr := none, role := none, payload := none, lockEnv := none, disabled := none }"
+   },
+   "design_a": {
+    "encoded": "ERR",
+    "shown": "HP.Output.error"
+   },
+   "design_b": {
+    "encoded": "OK N N I0 N N L0 N N T T A",
+    "shown": "HP.Output.ok"
+   },
+   "ref": {
+    "encoded": "OK S Sexplore I0 N N L0 N N T T A",
+    "shown": "HP.Output.ok"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK S Sexplore I0 N N L0 N N T T A"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK S Sexplore I0 N N L0 N N T T A"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "AbsentAttrsDefault",
+   "input": {
+    "encoded": "N A A P D1 Kallowed_adapters I5 A A",
+    "shown": "{ override := HP.V.none,"
+   },
+   "ref": {
+    "encoded": "ERR",
+    "shown": "HP.Output.error"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ERR"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK S Sexplore I0 N N L0 N N T T E0"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 39,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 18,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 7414,
+   "first_difference": {
+    "input": "Sz0a_ P L1 S P I100000000000000000000 P D8 Kprefer_plan_billed F Kallow_api_billing F Kestimated_tokens_out I0 Krequired_tags N Kmax_cost_usd N Kallowed_adapters Scursor Knote N Kmin_capability T A A",
+    "lean_ref": "OK Sz0a_ I100000000000000000000 I6 T N L0 N I0 F F E5 Sc So Sr Ss Su",
+    "python": "OK Sz0a_ I100000000000000000000 I6 T N L0 N I0 F F E1 Scursor"
+   }
+  }
+ },
+ "first_laws": [
+  "PreferPlanDefault",
+  "AllowApiDefault",
+  "PreferPlanOverride",
+  "AllowApiOverride",
+  "MinCapabilityForced",
+  "RequiredTagsKept",
+  "TokensInOverride",
+  "TokensOutOverride",
+  "AllowedAdaptersOverride",
+  "NoLockNoRestriction",
+  "DisabledExcluded"
+ ],
+ "cost_usd": 5.67,
+ "seconds": 572
+}

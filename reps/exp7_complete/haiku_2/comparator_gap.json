@@ -1,0 +1,7 @@
+{
+  "challenge_module": "GapChallenge",
+  "solution_module": "GapSolution",
+  "theorem_names": ["Gap.a_passes", "Gap.b_passes", "Gap.differ"],
+  "definition_names": ["Gap.designA", "Gap.designB", "Gap.trace", "Gap.who"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

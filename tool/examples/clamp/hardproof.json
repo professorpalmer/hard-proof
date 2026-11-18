@@ -1,0 +1,6 @@
+{
+  "name": "clamp",
+  "namespace": "HP",
+  "python": {"module": "clampmod", "function": "clamp"},
+  "banned_in_laws": ["ref"]
+}

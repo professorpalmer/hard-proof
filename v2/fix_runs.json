@@ -1,0 +1,1271 @@
+[
+ {
+  "slug": "mn-harness-skill-store",
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "bugs": [
+   "81081b2d-1",
+   "f75dc534-1",
+   "f75dc534-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-skill-store",
+  "flow": "flow_30a560db5423",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fixed the trailing-dash slug, the patch-slug overwrite and the duplicate after a renamed approval; new tests, 162 related tests and fix_check all pass",
+    "seconds": 231,
+    "cost_usd": 1.348
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PARTIAL",
+    "reason": "the three fixes and their tests look correct from reading, but I could not run pytest because Bash was denied after the first diff call.",
+    "seconds": 103,
+    "cost_usd": 0.601
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/skill_store.py | 17 ++++++++++++++++-\n 1 file changed, 16 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.95,
+  "seconds": 334
+ },
+ {
+  "slug": "mn-harness-pilot-guards",
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "bugs": [
+   "1af9b7d4-1",
+   "1af9b7d4-2",
+   "1af9b7d4-3",
+   "1af9b7d4-5",
+   "e3af4031-2",
+   "e3af4031-5",
+   "791b83f9-1",
+   "791b83f9-2",
+   "791b83f9-7"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-pilot-guards",
+  "flow": "flow_f69d4a73e65f",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "all 9 bugs fixed at the cause with regression and near-input tests, 342 related tests pass, fix_check gives accept.",
+    "seconds": 321,
+    "cost_usd": 1.928
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "All nine bugs are fixed at their cause, each with a regression test that fails on the old code; 30 of 30 tests pass and no unrelated behavior changed.",
+    "seconds": 92,
+    "cost_usd": 0.485
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/pilot_guards.py | 77 ++++++++++++++++++++++++++++++++++++++-----------\n 1 file changed, 60 insertions(+), 17 deletions(-)\n",
+  "cost_usd": 2.41,
+  "seconds": 413
+ },
+ {
+  "slug": "pm-puppetmaster-gates",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/gates.py",
+  "bugs": [
+   "56e0b53a-1",
+   "56e0b53a-4"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-gates",
+  "flow": "flow_8108ec004893",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "_same_path no longer matches by suffix, so both repros give the correct result, the new and related tests pass, and fix_check returned accept",
+    "seconds": 145,
+    "cost_usd": 1.189
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "`_same_path` suffix matching, the shared cause of both bugs, is fixed in `puppetmaster/worker_attribution.py:266`. The change is minimal, and the new tests fail on the old code and pass now.",
+    "seconds": 104,
+    "cost_usd": 0.465
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/worker_attribution.py | 7 ++++++-\n 1 file changed, 6 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.65,
+  "seconds": 249
+ },
+ {
+  "slug": "pm-puppetmaster-cli-helpers",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/cli/helpers.py",
+  "bugs": [
+   "f0603426-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-cli-helpers",
+  "flow": "flow_9feb685b4840",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "an empty or blank allowlist now fails closed in the CLI and MCP paths; the new tests, the related tests and fix_check all pass",
+    "seconds": 214,
+    "cost_usd": 1.142
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the blank-allowlist bug is fixed at its cause, in both the CLI path and the MCP forwarding path. The change is minimal, the callers are unaffected, and the 9 new tests pass.",
+    "seconds": 93,
+    "cost_usd": 0.457
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/cli/helpers.py | 20 +++++++++++++-------\n 1 file changed, 13 insertions(+), 7 deletions(-)\n",
+  "cost_usd": 1.6,
+  "seconds": 307
+ },
+ {
+  "slug": "pm-puppetmaster-preflight",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/preflight.py",
+  "bugs": [
+   "06d11534-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-preflight",
+  "flow": "flow_69cd4970a464",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "adapter_cli_present now looks up only the first word of a multi-word command, the new and related tests pass, and fix_check gives accept",
+    "seconds": 115,
+    "cost_usd": 1.123
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "multi-word CLAUDE_CODE_COMMAND/CODEX_COMMAND now resolves only the first word via command_parts; change is minimal and 6 tests pass, with the two multi-word tests failing on the old code.",
+    "seconds": 94,
+    "cost_usd": 0.406
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/preflight.py | 12 +++++++++++-\n 1 file changed, 11 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.53,
+  "seconds": 209
+ },
+ {
+  "slug": "pm-puppetmaster-worker-resume",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "bugs": [
+   "7ca3faca-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-worker-resume",
+  "flow": "flow_d70f4b6807d1",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "_resolve skips receipts without a session id before it picks the newest one; the new and related tests pass and fix_check accepts.",
+    "seconds": 107,
+    "cost_usd": 0.993
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "`_resolve` now ignores receipts with no session id when an earlier one has one. The fix is minimal and the new tests fail on the old code.",
+    "seconds": 105,
+    "cost_usd": 0.407
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/worker_resume.py | 8 +++++++-\n 1 file changed, 7 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.4,
+  "seconds": 212
+ },
+ {
+  "slug": "pm-puppetmaster-write-intent",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "bugs": [
+   "18d4efe1-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-write-intent",
+  "flow": "flow_531c97dfdd1c",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "antigravity \"analyze\" is now read-only through the adapter's own mode map, the regression and near-input tests pass, and fix_check gives accept",
+    "seconds": 113,
+    "cost_usd": 1.02
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "`adapter_may_write` now uses the adapter's own mode map, so `analyze` is read-only; the minimal diff and tests are sound, and the tests pass.",
+    "seconds": 98,
+    "cost_usd": 0.423
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/write_intent.py | 11 +++++------\n 1 file changed, 5 insertions(+), 6 deletions(-)\n",
+  "cost_usd": 1.44,
+  "seconds": 211
+ },
+ {
+  "slug": "pm-puppetmaster-metr-seams",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/metr_seams.py",
+  "bugs": [
+   "b9b2bd25-7"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-metr-seams",
+  "flow": "flow_9aaeb73e4418",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fixed the role separator lookup in is_coordination_protocol_payload, added regression tests, and the related tests and fix_check.py pass",
+    "seconds": 106,
+    "cost_usd": 0.943
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the role check now matches both separators, the change is minimal, and the 4 new tests pass.",
+    "seconds": 90,
+    "cost_usd": 0.402
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/metr_seams.py | 7 ++++++-\n 1 file changed, 6 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.34,
+  "seconds": 196
+ },
+ {
+  "slug": "pm-puppetmaster-dashboard",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/dashboard.py",
+  "bugs": [
+   "a33abbb6-1",
+   "a33abbb6-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-dashboard",
+  "flow": "flow_7b967ae58079",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "IPv6 hosts now bind on an AF_INET6 socket, and the error names only the ports that were tried; new and related tests pass and fix_check accepts.",
+    "seconds": 144,
+    "cost_usd": 1.16
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "both bugs fixed at the cause (IPv6 address family for hosts with a colon; error range uses the last port actually tried); change is minimal and the new tests fail on the old code.",
+    "seconds": 96,
+    "cost_usd": 0.425
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/dashboard.py | 13 ++++++++++---\n 1 file changed, 10 insertions(+), 3 deletions(-)\n",
+  "cost_usd": 1.58,
+  "seconds": 240
+ },
+ {
+  "slug": "pm-puppetmaster-rate-limit-headers",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "bugs": [
+   "fd9aa32e-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-rate-limit-headers",
+  "flow": "flow_5aea84e08e07",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "reset_at now reads RFC 3339 resets, the new and related tests pass (23), and fix_check accepts.",
+    "seconds": 108,
+    "cost_usd": 1.011
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the RFC 3339 reset now parses before the RFC 2822 fallback, existing input handling is unchanged, and the five new tests pass.",
+    "seconds": 94,
+    "cost_usd": 0.405
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/rate_limit_headers.py | 11 +++++++++++\n 1 file changed, 11 insertions(+)\n",
+  "cost_usd": 1.42,
+  "seconds": 202
+ },
+ {
+  "slug": "pm-puppetmaster-acceptance-criteria",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/acceptance_criteria.py",
+  "bugs": [
+   "f35c046c-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-acceptance-criteria",
+  "flow": "flow_d1a50d2af905",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the reported key now has its marker removed before the match, the new tests and `test_quality_control.py` pass, and fix_check accepts",
+    "seconds": 111,
+    "cost_usd": 1.045
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the fix is at the cause (reported keys now use the shared normalizer), it is minimal, and the 6 new tests pass.",
+    "seconds": 634,
+    "cost_usd": 0.513
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/acceptance_criteria.py | 5 ++++-\n 1 file changed, 4 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.56,
+  "seconds": 745
+ },
+ {
+  "slug": "pm-puppetmaster-diagnostics",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/diagnostics.py",
+  "bugs": [
+   "d4b6efe1-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-diagnostics",
+  "flow": "flow_91ef29e7b33e",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "a partial @cursor/sdk directory with no package.json is not an install in diagnostics and cursor_sdk_home, regression tests pass, fix_check accepts",
+    "seconds": 719,
+    "cost_usd": 1.372
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the fix treats a directory without package.json as a partial install in `diagnostics.py` and `cursor_sdk_home.py`, the new tests pass, and the callers keep their old behavior for complete installs.",
+    "seconds": 147,
+    "cost_usd": 0.437
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "ects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).\\n    ts = datetime.utcfromtimestamp(finished_at).strftime(\\\"%Y%m%dT%H%M%S\\\")\\n\\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\\n=========================== short test summary info ============================\\nFAILED tests/test_puppetmaster.py::PuppetmasterTests::test_daemon_worker_mode_uses_warm_worker\\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\\n1 failed, 255 passed, 1 skipped, 4 warnings, 45 subtests passed in 655.18s (0:10:55)\\n\"\n ]\n}\n",
+  "diffstat": " puppetmaster/cursor_sdk_home.py | 9 +++++++--\n puppetmaster/diagnostics.py     | 4 +++-\n tests/test_puppetmaster.py      | 3 +++\n 3 files changed, 13 insertions(+), 3 deletions(-)\n",
+  "cost_usd": 1.81,
+  "seconds": 866
+ },
+ {
+  "slug": "pm-puppetmaster-store",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/store.py",
+  "bugs": [
+   "38803feb-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-store",
+  "flow": "flow_1b47cf56a7a0",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fixed the query word split in both store backends, added regression tests, 60 related tests pass and fix_check accepts",
+    "seconds": 1560,
+    "cost_usd": 1.484
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "FAIL",
+    "reason": "puppetmaster/store.py:203 `[a-z0-9_]+` drops non-ASCII letters, so accented or non-Latin goal words stop matching memory and a non-Latin query loses its term filter (use `\\w+`)",
+    "seconds": 845,
+    "cost_usd": 0.528
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "Unicode-aware query word split in both store backends; punctuation and non-ASCII regression tests; 63 related tests pass and fix_check accepts",
+    "seconds": 452,
+    "cost_usd": 0.302
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the punctuation bug is fixed at its cause in `store.py:201` with `\\w+`, the non-ASCII regression is gone, and 8 of 8 tests pass.",
+    "seconds": 79,
+    "cost_usd": 0.066
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/sqlite_store.py | 3 ++-\n puppetmaster/store.py        | 9 ++++++++-\n 2 files changed, 10 insertions(+), 2 deletions(-)\n",
+  "cost_usd": 2.38,
+  "seconds": 2936
+ },
+ {
+  "slug": "mn-harness-runaway-guard",
+  "repo": "marionette",
+  "file": "harness/runaway_guard.py",
+  "bugs": [
+   "146de2cf-6"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-runaway-guard",
+  "flow": "flow_785fefd8bcf2",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "progress key now includes the polled target; new tests and test_runaway_guard.py pass (14), fix_check accepts",
+    "seconds": 614,
+    "cost_usd": 1.05
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the progress fingerprint now includes the polled target, so waits on different jobs no longer trigger the unchanged-progress steer. Same-target polling still does, and both new tests pass.",
+    "seconds": 150,
+    "cost_usd": 0.4
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/runaway_guard.py | 3 +++\n 1 file changed, 3 insertions(+)\n",
+  "cost_usd": 1.45,
+  "seconds": 764
+ },
+ {
+  "slug": "mn-harness-context-budget",
+  "repo": "marionette",
+  "file": "harness/context_budget.py",
+  "bugs": [
+   "a48b7e17-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-context-budget",
+  "flow": "flow_85323c80d704",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "The label now comes from the real preview decision, not a text search; new tests and test_context_budget_limits pass (19 passed), and fix_check accepts the change.",
+    "seconds": 906,
+    "cost_usd": 1.279
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "The preview shape is now passed from `maybe_persist_result` instead of guessed from the text. The change is minimal and the 49 tests pass. I did not run the new tests against the old code, but they fail there by reading.",
+    "seconds": 879,
+    "cost_usd": 0.653
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/context_budget.py | 14 +++++++++++---\n 1 file changed, 11 insertions(+), 3 deletions(-)\n",
+  "cost_usd": 1.93,
+  "seconds": 1785
+ },
+ {
+  "slug": "mn-harness-api-codegraph-index",
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "bugs": [
+   "d349963d-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-api-codegraph-index",
+  "flow": "flow_f72da2551291",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the staleness check now uses the indexer's shared extension list, the regression tests and related tests pass, and the fix check accepts the change.",
+    "seconds": 791,
+    "cost_usd": 1.312
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "`codegraph_is_stale` now uses the indexer's `INDEXABLE_EXTENSIONS`, so edits to .lua, .luau, .c, .cpp and .rb files mark the index stale; the 9 new tests pass and the 5 new-language cases would fail on the old code.",
+    "seconds": 321,
+    "cost_usd": 0.496
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/api/codegraph_index.py | 4 +++-\n 1 file changed, 3 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.81,
+  "seconds": 1112
+ },
+ {
+  "slug": "mn-harness-browser-real-profile",
+  "repo": "marionette",
+  "file": "harness/browser_real_profile.py",
+  "bugs": [
+   "6e747ee7-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-browser-real-profile",
+  "flow": "flow_5f9d3d378cd8",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "The guard now checks every Linux candidate (XDG, snap, flatpak). The new tests fail on the old code and pass on the fix, 67 related tests pass, and fix_check accepts.",
+    "seconds": 450,
+    "cost_usd": 1.072
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "Every Linux install location (XDG, snap, flatpak) is now checked at the cause; the change is minimal, and the new tests fail on the old code and pass on the new.",
+    "seconds": 145,
+    "cost_usd": 0.391
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/browser_real_profile.py | 46 +++++++++++++++++++++++++++--------------\n 1 file changed, 30 insertions(+), 16 deletions(-)\n",
+  "cost_usd": 1.46,
+  "seconds": 595
+ },
+ {
+  "slug": "mn-harness-worker",
+  "repo": "marionette",
+  "file": "harness/worker.py",
+  "bugs": [
+   "8c8070c4-1",
+   "8c8070c4-2",
+   "8c8070c4-4",
+   "8c8070c4-5"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-worker",
+  "flow": "flow_f320b9b6612a",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "all 4 bugs fixed at the cause; the new and existing escaped-write tests pass, and fix_check gives accept.",
+    "seconds": 156,
+    "cost_usd": 1.257
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "FAIL",
+    "reason": "harness/worker.py:283 the new command-word anchor drops detection after `do`, `then`, `xargs`, `bash -c \"...\"` and similar, so escaped writes that the old code caught are now missed.",
+    "seconds": 155,
+    "cost_usd": 0.423
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the 4 bugs are fixed, the old \\b boundary is back with path-component and package-manager exclusions, quoted paths stay whole, 22 tests pass, and fix_check gives accept.",
+    "seconds": 412,
+    "cost_usd": 0.316
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the four bugs are fixed at their cause, the compound-shell and quoted-path regressions are gone, and the new and existing escaped-write tests pass (22 passed, 3 skipped).",
+    "seconds": 442,
+    "cost_usd": 0.189
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/worker.py | 81 +++++++++++++++++++++++++++++++++++++++++++++++--------\n 1 file changed, 70 insertions(+), 11 deletions(-)\n",
+  "cost_usd": 2.19,
+  "seconds": 1165
+ },
+ {
+  "slug": "mn-pmharness-drivers-cursor-cli",
+  "repo": "marionette",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "bugs": [
+   "67ffe9e8-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-pmharness-drivers-cursor-cli",
+  "flow": "flow_929096e5f874",
+  "flow_status": "stuck",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PARTIAL",
+    "reason": "the bug is fixed and all new and related tests pass, but fix_check.py rejects because tests/test_providers.py leaves an agent acp process from cursor_acp.py prewarm, outside this task's scope",
+    "seconds": 283,
+    "cost_usd": 1.383
+   },
+   {
+    "node": "check",
+    "ok": false,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "_tool_hint_payload falls back to tool_call for generic names, regression tests added, test_providers prewarm leak stopped, fix_check accepts",
+    "seconds": 104,
+    "cost_usd": 0.228
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "FAIL",
+    "reason": "tests/test_providers.py:141 is an unrelated edit to an existing test (`prewarm` monkeypatch); the driver fix and new tests look correct, but I did not run them.",
+    "seconds": 149,
+    "cost_usd": 0.418
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PARTIAL",
+    "reason": "the bug is fixed and new and related tests pass, but fix_check.py rejects because of a leak in test_providers.py (cursor_acp prewarm) that the reviewer says must ship separately",
+    "seconds": 318,
+    "cost_usd": 0.132
+   },
+   {
+    "node": "check",
+    "ok": false,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "_tool_hint_payload falls back to tool_call for generic names, regression tests pass, test_providers prewarm stub stops the agent acp leak, fix_check accepts",
+    "seconds": 776,
+    "cost_usd": 0.166
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "FAIL",
+    "reason": "tests/test_providers.py:141 still has the unrelated `prewarm` monkeypatch, an edit to an existing test outside the bug scope.",
+    "seconds": 33,
+    "cost_usd": 0.04
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PARTIAL",
+    "reason": "the bug is fixed and its tests pass, but fix_check.py rejects until the agent acp leak in test_providers.py (cursor_acp prewarm) is fixed as a separate change",
+    "seconds": 32,
+    "cost_usd": 0.107
+   },
+   {
+    "node": "check",
+    "ok": false,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"reject\",\n \"problems\": [\n  \"tests of the repository fail after the change:\\n........................................................................ [ 49%]\\n.....................................................................s.. [ 98%]\\n..                                                                       [100%]\\n=== pytest finished with work still running ===\\n-- child process 14966 ~/.local/bin/agent --use-system-ca ~/.local/share/cursor-agent/versions/2026.08.11-e8db854/index.js acp\\n\"\n ]\n}\n",
+  "diffstat": " pmharness/drivers/cursor_cli.py | 3 ++-\n 1 file changed, 2 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 2.47,
+  "seconds": 1695
+ },
+ {
+  "slug": "mn-pmharness-intent",
+  "repo": "marionette",
+  "file": "pmharness/intent.py",
+  "bugs": [
+   "11691ae0-1",
+   "11691ae0-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-pmharness-intent",
+  "flow": "flow_156a2fd9aeec",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "both infer_roles bugs fixed at the cause (word-start audit match, hyphenated flow signals); new and existing intent tests pass and fix_check accepts",
+    "seconds": 458,
+    "cost_usd": 1.023
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "both bugs are fixed at the cause with a minimal diff, and the 4 new tests pass; I did not run the existing `tests/test_intent.py`.",
+    "seconds": 521,
+    "cost_usd": 0.508
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " pmharness/intent.py | 13 +++++++++++--\n 1 file changed, 11 insertions(+), 2 deletions(-)\n",
+  "cost_usd": 1.53,
+  "seconds": 979
+ },
+ {
+  "slug": "mn-harness-providers",
+  "repo": "marionette",
+  "file": "harness/providers.py",
+  "bugs": [
+   "67cd0a74-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/mn-harness-providers",
+  "flow": "flow_564cf5c83898",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "The full slug is kept when the prefix is not a provider name. Four regression tests, the four related test files and fix_check all pass.",
+    "seconds": 359,
+    "cost_usd": 0.906
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "`build_pilot` in `harness/providers.py` keeps the full spec when the prefix before the colon is not a known provider, so `deepseek/deepseek-r1:free` is no longer cut to `free`. All 4 new tests pass.",
+    "seconds": 437,
+    "cost_usd": 0.541
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " harness/providers.py | 5 ++++-\n 1 file changed, 4 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.45,
+  "seconds": 796
+ },
+ {
+  "slug": "pm-puppetmaster-failure",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "bugs": [
+   "99395a2a-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-failure",
+  "flow": "flow_555fce5b801b",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fixed the 401 lookahead so a sentence-end \"401.\" is not_authenticated; new and related tests pass and fix_check accepts",
+    "seconds": 794,
+    "cost_usd": 1.047
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the 401 lookahead now accepts a sentence-ending dot and still rejects a dot followed by a digit; new tests are sound, but I could not run them (Bash denied).",
+    "seconds": 151,
+    "cost_usd": 0.424
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/failure.py | 3 ++-\n 1 file changed, 2 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.47,
+  "seconds": 945
+ },
+ {
+  "slug": "pm-puppetmaster-orchestrator",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/orchestrator.py",
+  "bugs": [
+   "1421544b-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-orchestrator",
+  "flow": "flow_eeede2bee546",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the stale pre-re-queue failure no longer counts as recoverable; the repro result changed, the 4 new tests and the related tests pass, and fix_check accepts.",
+    "seconds": 443,
+    "cost_usd": 1.358
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "the fix counts only failures after the current attempt's router-fallback marker, leaves first-attempt behaviour unchanged, and the 4 new tests pass.",
+    "seconds": 36,
+    "cost_usd": 0.45
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/orchestrator.py | 23 ++++++++++++++++++++++-\n 1 file changed, 22 insertions(+), 1 deletion(-)\n",
+  "cost_usd": 1.81,
+  "seconds": 479
+ },
+ {
+  "slug": "pm-puppetmaster-savings",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/savings.py",
+  "bugs": [
+   "9dbccc9d-1",
+   "9dbccc9d-2"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-savings",
+  "flow": "flow_83535bc01e4f",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fallbacks and escalations now count once per (job_id, task_id); the new and related tests pass and fix_check accepts",
+    "seconds": 418,
+    "cost_usd": 1.038
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PARTIAL",
+    "reason": "I could not run the new tests or the old code (Bash denied); the diff and the tests read as correct and meet every rubric item.",
+    "seconds": 31,
+    "cost_usd": 0.448
+   },
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "fallbacks and escalations count once per (job_id, task_id); 53 related tests pass and fix_check accepts; the direct run of the new tests on HEAD code was blocked and is shown only through the repros",
+    "seconds": 44,
+    "cost_usd": 0.211
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "Fix counts fallbacks and escalations once per (kind, job, task); 6 new tests pass, and the old code would fail the two repro tests.",
+    "seconds": 22,
+    "cost_usd": 0.051
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/savings.py | 19 ++++++++++++++-----\n 1 file changed, 14 insertions(+), 5 deletions(-)\n",
+  "cost_usd": 1.75,
+  "seconds": 515
+ },
+ {
+  "slug": "pm-puppetmaster-adapters-cursor",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/cursor.py",
+  "bugs": [
+   "8d28fd94-1",
+   "8d28fd94-3",
+   "8d28fd94-14",
+   "a3347ffc-1"
+  ],
+  "tree": "~/Projects/hp-work/fix/pm-puppetmaster-adapters-cursor",
+  "flow": "flow_9bcf86588397",
+  "flow_status": "done",
+  "steps": [
+   {
+    "node": "build",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "all four bugs fixed at their cause, the regression tests and the related tests pass, and fix_check accepts the change",
+    "seconds": 119,
+    "cost_usd": 1.29
+   },
+   {
+    "node": "check",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   },
+   {
+    "node": "review",
+    "ok": true,
+    "verdict": "PASS",
+    "reason": "all four bugs fixed at the cause with minimal edits; 13 new tests pass and would fail on the old code; one low-risk edge: an empty list reached through the prefix path now returns None.",
+    "seconds": 69,
+    "cost_usd": 0.444
+   },
+   {
+    "node": "done",
+    "ok": true,
+    "verdict": null,
+    "reason": "None"
+   }
+  ],
+  "check": "{\n \"verdict\": \"accept\",\n \"problems\": []\n}\n",
+  "diffstat": " puppetmaster/adapters/cursor.py | 12 ++++++++++--\n 1 file changed, 10 insertions(+), 2 deletions(-)\n",
+  "cost_usd": 1.73,
+  "seconds": 188
+ }
+]

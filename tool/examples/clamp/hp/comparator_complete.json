@@ -1,0 +1,13 @@
+{
+  "challenge_module": "HPCompleteChallenge",
+  "solution_module": "CompleteSolution",
+  "theorem_names": [
+    "HPComplete.laws_complete"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

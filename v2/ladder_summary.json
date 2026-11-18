@@ -1,0 +1,107 @@
+{
+ "findings_live_on_newest_dev": 211,
+ "functions": 57,
+ "verifier_runs": 114,
+ "verifier_cost_usd": 93.09,
+ "both_real_reachable": 87,
+ "both_real_not_reachable": 56,
+ "both_by_design": 18,
+ "mixed": 50,
+ "distinct_confirmed_bugs": 45,
+ "by_repository": {
+  "marionette": 24,
+  "Puppetmaster": 21
+ },
+ "files": 25,
+ "severity_pairs": {
+  "medium / medium": 17,
+  "low / low": 16,
+  "medium / low": 7,
+  "high / medium": 2,
+  "high / high": 1,
+  "medium / high": 1,
+  "low / medium": 1
+ },
+ "fix": {
+  "file_groups": 25,
+  "first_run_check_accept_and_review_pass": 22,
+  "cost_usd": 43.12,
+  "seconds": 18138
+ },
+ "second_review_by_sessions": {
+  "Puppetmaster": {
+   "pull_request": 305,
+   "bugs": 21,
+   "ok_to_merge": 19,
+   "reverted": 2,
+   "ci": "18 checks green on c4eaee33"
+  },
+  "marionette": {
+   "pull_request": 699,
+   "bugs": 24,
+   "ok_to_merge": 21,
+   "reverted": 3,
+   "ci": "tests-full run on cda67849: 4 of 6 jobs green; the 2 red jobs also fail on main and are corrected in pull request 701"
+  }
+ },
+ "hpflow_first_live_run": {
+  "repository": "Puppetmaster",
+  "range": "v1.50.0..v1.51.1",
+  "targets": 20,
+  "findings_with_a_repro_that_runs": 13,
+  "confirmed": 7,
+  "real_not_reachable": 5,
+  "mixed": 1,
+  "review_cost_usd": 11.87,
+  "verify_cost_usd": 16.66,
+  "review_seconds": 1098,
+  "verify_seconds": 861,
+  "fix_runs": 4,
+  "fix_cost_usd": 7.52,
+  "fix_seconds": 784,
+  "fixes_at_grade_3": 7,
+  "pull_request": 306,
+  "fixes_after_second_review": 7
+ },
+ "incident": {
+  "date": "2026-11-18",
+  "machine_memory_gb": 48,
+  "lean_kernel_con_leche_gb": 77.2,
+  "orphan_codegraph_processes": 120,
+  "orphan_memory_gb": 93.1,
+  "product_fix": "Puppetmaster v1.51.1, pull request 303"
+ },
+ "owner_step": {
+  "date": "2026-11-18",
+  "reverted_fixes": 5,
+  "owner_questions": 4,
+  "fixes_made_again_with_the_owner_rule": 4,
+  "accepted_with_no_code_change": 1,
+  "rules": [
+   "Puppetmaster, write scope gate (2 bugs): convert each worker event path to the repository root form when it is recorded, compare exact paths, and delete the suffix rule.",
+   "Marionette, refusal of workers: a negation directly before a launch verb and the word for workers is a refusal. A limit on the count is not a refusal.",
+   "Marionette, launch against a narrow question: in one clause, a launch verb with only a determiner before the word for the swarm wins.",
+   "Marionette, a second platform name in a request: no change. The owner accepted the behavior of today."
+  ],
+  "shipped": {
+   "Puppetmaster": {
+    "pull_requests": [
+     305,
+     306
+    ],
+    "fixes": 28,
+    "release": "v1.51.2",
+    "ci": "CI run 44417063514, 8 jobs green on the release tree"
+   },
+   "marionette": {
+    "pull_requests": [
+     699
+    ],
+    "fixes": 23,
+    "release": "v0.9.685",
+    "ci": ""
+   }
+  },
+  "fixes_shipped": 51
+ }
+}

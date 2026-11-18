@@ -1,0 +1,109 @@
+{
+ "bug": "a95bf56f",
+ "title": "Spill preview picks head-only for command output because it tests the random call id",
+ "repo": "marionette",
+ "function": "maybe_persist_result (with _looks_like_command_result, lines 235-239)",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-8243005556",
+   "folder": "~/Projects/hp-work/p/8243005556",
+   "model": "opus",
+   "flow": "flow_00699f79f36f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dc2e91fdb8fd"
+   ],
+   "seconds": 492,
+   "cost_usd": 3.012,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-5c81e15720",
+   "folder": "~/Projects/hp-work/p/5c81e15720",
+   "model": "sonnet",
+   "flow": "flow_06c6a19f1e26",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_41c0762bc12b"
+   ],
+   "seconds": 66,
+   "cost_usd": 0.567,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-e603e542f0",
+   "folder": "~/Projects/hp-work/p/e603e542f0",
+   "model": "sonnet",
+   "flow": "flow_7d53da8f9772",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7c0f33ad7094"
+   ],
+   "seconds": 120,
+   "cost_usd": 0.542,
+   "stage": "R1"
+  }
+ ],
+ "items": [],
+ "outcome": "prover failed",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 108,
+   "made": 20,
+   "killed": 17,
+   "survived": [
+    "line 104: delete `try:     from harness.offload_policy import should_offloa...`",
+    "line 54: swap arguments 2 and 3 in `os.path.join(os.path.abspath(state_dir), 'pmharness-resul...`",
+    "line 84: swap the values of `session_id` and `tool_call_id` in `register_spill(state_dir=state_dir, session_id=result_id,...`"
+   ],
+   "kill_rate": 0.85
+  },
+  "quotes": {
+   "quotes": 10,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 122,
+   "first_difference": {
+    "input": ",yx\"{CX_?A[A+0?][>x_}](-,*Z[}X>\\\\<z,{y]z*Z'/y<*;?=x[>={_?/_Z+?:_+#]Z<=[=0>:,[]#)1/!:Zc[;>[.b?'1])XXA;A#!}B ;C}-Y?X1!+x:->b??+'\"-9+0].C*a90+00/\"y=a8'z(x]{1y{/y1*cX+-(A>[BCY{a\\\\_]X[=A8=B>c A(<Xx,=]#1)b xCa\\\\*YCx0zYZX!<#>?[>[8\";<}}_ X+).#-\"> {?(X+{c:)c)=yC}ZC/99,'}8ZX\"#\\\\c/a0#].B?\"=Y.Y#Y,#{<,:1-*{< > YZ[Z0YX1cC<)z/#=c+a[+[A[(=);;cAz +-c*, 9-8/1YAx')ZbCb]#ac){99 ;\\\\>8b;}[,(9,0_Y0aBy:(Z(\tbash bash id.2\t83\t9\tgrep:i151;x:i130\t+i32\t-\t1\t1\t+2\t+secret\t1\t\t95\t0\t0",
+    "lean_ref": "S380,330,persist|<persisted-output>\\nThis tool result was too large (380 characters, 0.4 KB).\\nFull output saved to: /tmp/hpmp-0000000000/x/pmharness-results/bash bash id.2-HASHHASHHASH.txt\\nUse read_file with start_line and limit to read specific sections\\n\\nPreview (head and tail):\\n,yx\"{C\\n... [omitted 371 characters] ...\\n(Z(\\n...\\n</persisted-output>",
+    "python": "S380,296,persist|<persisted-output>\\nThis tool result was too large (380 characters, 0.4 KB).\\nFull output saved to: /tmp/hpmp-0000000000/x/pmharness-results/bash bash id.2-HASHHASHHASH.txt\\nUse read_file with start_line and limit to read specific sections\\n\\nPreview (first 9 chars):\\n,yx\"{CX_?\\n...\\n</persisted-output>"
+   }
+  }
+ },
+ "first_laws": [
+  "UnboundedKeepsInline",
+  "NoReadToolKeepsInline",
+  "PersistedOnlyIfOversized",
+  "PersistedHasPath",
+  "SpillFailNotPersisted",
+  "SessionAddsSpillUri",
+  "RegistryFailKeepsPath",
+  "DefaultHeadTailForCommands",
+  "DedupeHasHash",
+  "ToolOverrideApplies",
+  "SavingsGateMinTokens"
+ ],
+ "cost_usd": 4.12,
+ "seconds": 678
+}

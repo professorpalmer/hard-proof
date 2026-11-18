@@ -1,0 +1,108 @@
+{
+ "start": "rl_a_sonnet_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled",
+  "NewInStarterOrder",
+  "NoDuplicateOfExisting"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_9ed3528ae7ec",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 59,
+    "cost_usd": 0.5
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateOfExisting"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+   "law_author": {
+    "flow": "flow_f5319edf038f",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 33,
+    "cost_usd": 0.45
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "OneRowPerAbsentEntry": "\u2200 c st r, \u2203 new, f c st r = r ++ new \u2227 new.map (fun e => (e.id, e.adapter, e.model)) = (st.filter (absent r)).map (fun e => (e.id, e.adapter, e.model))"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_e799cdda7a2d",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 54,
+    "cost_usd": 0.52
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateOfExisting",
+    "OneRowPerAbsentEntry"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled",
+  "NewInStarterOrder",
+  "NoDuplicateOfExisting",
+  "OneRowPerAbsentEntry"
+ ],
+ "questions": 1
+}

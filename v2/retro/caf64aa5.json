@@ -1,0 +1,451 @@
+{
+ "bug": "caf64aa5",
+ "title": "adapter_may_write returns True for read-only agentic/cursor/hermes payloads and discards swarm_mode",
+ "repo": "Puppetmaster",
+ "function": "adapter_may_write",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-6c5e0118d4",
+   "folder": "~/Projects/hp-work/p/6c5e0118d4",
+   "model": "opus",
+   "flow": "flow_a4fa4ac47e65",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2b18f8637da9"
+   ],
+   "seconds": 167,
+   "cost_usd": 1.624,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-e56ba2f52f",
+   "folder": "~/Projects/hp-work/p/e56ba2f52f",
+   "model": "sonnet",
+   "flow": "flow_2e3e494d0361",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8e457911a998"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.526,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-6305975311",
+   "folder": "~/Projects/hp-work/p/6305975311",
+   "model": "sonnet",
+   "flow": "flow_70660536594c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ad69033ee463"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.411,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-d98368d64a",
+   "folder": "~/Projects/hp-work/p/d98368d64a",
+   "model": "sonnet",
+   "flow": "flow_9bf2f0a0218c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ea34abf2d6c9"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.413,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-22c7d4f13c",
+   "folder": "~/Projects/hp-work/p/22c7d4f13c",
+   "model": "sonnet",
+   "flow": "flow_d2851278ce14",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0f98d0c77943"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.429,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-fba6106763",
+   "folder": "~/Projects/hp-work/p/fba6106763",
+   "model": "sonnet",
+   "flow": "flow_c9e8e0ac3c45",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1b1d2d65e90e"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.406,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-d8563bf009",
+   "folder": "~/Projects/hp-work/p/d8563bf009",
+   "model": "sonnet",
+   "flow": "flow_6de01b9c154d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_868c10f32ae3"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.428,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-a57df411f0",
+   "folder": "~/Projects/hp-work/p/a57df411f0",
+   "model": "sonnet",
+   "flow": "flow_5f2915ea3b45",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c22880ca0591"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.402,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-f49835d0b9",
+   "folder": "~/Projects/hp-work/p/f49835d0b9",
+   "model": "sonnet",
+   "flow": "flow_4d318ccab884",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0b3f86846e9a"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.429,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-a8acac1b99",
+   "folder": "~/Projects/hp-work/p/a8acac1b99",
+   "model": "sonnet",
+   "flow": "flow_bb8203b952e9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_99de7602f61e"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.511,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-39475bb329",
+   "folder": "~/Projects/hp-work/p/39475bb329",
+   "model": "sonnet",
+   "flow": "flow_f91677e2d905",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_05aa49a7e096"
+   ],
+   "seconds": 81,
+   "cost_usd": 0.708,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-6e2f1a5e8b",
+   "folder": "~/Projects/hp-work/p/6e2f1a5e8b",
+   "model": "sonnet",
+   "flow": "flow_90ab43814727",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_068a1c460c1e"
+   ],
+   "seconds": 57,
+   "cost_usd": 0.566,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-cbbe8dac89",
+   "folder": "~/Projects/hp-work/p/cbbe8dac89",
+   "model": "sonnet",
+   "flow": "flow_822136b62b24",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e28550d52fa3"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.422,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-1ca48e8d6d",
+   "folder": "~/Projects/hp-work/p/1ca48e8d6d",
+   "model": "sonnet",
+   "flow": "flow_8af0e84f859d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c63397eb15a4"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.427,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-39aed9d969",
+   "folder": "~/Projects/hp-work/p/39aed9d969",
+   "model": "sonnet",
+   "flow": "flow_4667f6a1c830",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_81ff789aa66f"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.401,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "CodexReadOnly",
+   "input": {
+    "encoded": "D|N|codex|A|A|T|A|A|A|.",
+    "shown": "adapter='codex' payload={mode: (missing), implement: (missing), read_only: True, sandbox: (missing), permission_mode: (missing), dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "AntigravityPlan",
+   "input": {
+    "encoded": "D|N|antigravity|A|A|A|A|splan|A|.",
+    "shown": "adapter='antigravity' payload={mode: (missing), implement: (missing), read_only: (missing), sandbox: (missing), permission_mode: 'plan', dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "AntigravityPlan",
+   "input": {
+    "encoded": "D|N|antigravity|sx|A|T|A|splan|A|.",
+    "shown": "adapter='antigravity' payload={mode: 'x', implement: (missing), read_only: True, sandbox: (missing), permission_mode: 'plan', dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "AntigravityPlan",
+   "input": {
+    "encoded": "D|N|antigravity|sx|A|A|sread-only|splan|A|.",
+    "shown": "adapter='antigravity' payload={mode: 'x', implement: (missing), read_only: (missing), sandbox: 'read-only', permission_mode: 'plan', dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|N|zzz|.",
+    "shown": "adapter='zzz' payload=None swarm_mode=None"
+   },
+   "design_a": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "design_b": {
+    "encoded": "false",
+    "shown": "False (read-only)"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True (may write)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "UnknownAdapterWrites",
+   "input": {
+    "encoded": "N|N|local|.",
+    "shown": "adapter='local' payload=None swarm_mode=None"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False (read-only)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 57,
+   "made": 20,
+   "killed": 17,
+   "survived": [
+    "line 12: delete `del swarm_mode`",
+    "line 23: delete `if name in {'agentic', 'cursor', 'hermes'}:     return True`",
+    "line 24: delete `return True`"
+   ],
+   "kill_rate": 0.85
+  },
+  "quotes": {
+   "quotes": 13,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2737,
+   "first_difference": {
+    "input": "D|N|hermes|snxKY|A|sxj0|F|N|i-1|.",
+    "lean_ref": "true",
+    "python": "false"
+   }
+  }
+ },
+ "first_laws": [
+  "ClaudePlanReadOnly",
+  "ClaudeExplicitModeWins",
+  "ClaudeReadOnlySignalPlan",
+  "ClaudeDefaultWrites",
+  "CodexReadOnly",
+  "AntigravityPlan",
+  "AliasAgy",
+  "SwarmModeReserved",
+  "DefaultWorkersAnalysis"
+ ],
+ "cost_usd": 8.1,
+ "seconds": 638
+}

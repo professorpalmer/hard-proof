@@ -1,0 +1,8 @@
+{
+  "verdict": "gap",
+  "open_decision": "The order of the added rows: no law fixes the order in which the new starter entries are appended after the old rows (a design can also add an entry more than once).",
+  "input": "config: locked = none, enable = false. registry: [] . starter: [{id 1, adapter 1, model 1, enabled true}, {id 2, adapter 1, model 2, enabled true}] (distinct ids).",
+  "result_a": "refSync order: [{id 1, adapter 1, model 1, enabled false}, {id 2, adapter 1, model 2, enabled false}]",
+  "result_b": "reversed order of the added rows: [{id 2, adapter 1, model 2, enabled false}, {id 1, adapter 1, model 1, enabled false}]",
+  "reason": "Law 1 only needs the result to be the old registry followed by some added list. Laws 2 to 6 check each added row alone, and law 3 checks presence only, so the reversed design passes every law. A second run adds nothing for both designs, so law 7 holds too."
+}

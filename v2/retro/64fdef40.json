@@ -1,0 +1,120 @@
+{
+ "bug": "64fdef40",
+ "title": "tool_choice rejection predicate misses OpenCode Go thinking-mode 400 wording",
+ "repo": "Puppetmaster",
+ "function": "_provider_rejects_tool_choice_force",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-ed6f6dae53",
+   "folder": "~/Projects/hp-work/p/ed6f6dae53",
+   "model": "opus",
+   "flow": "flow_d210b2d1d5fe",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b2021e3feca6"
+   ],
+   "seconds": 106,
+   "cost_usd": 1.293,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-7d270502ca",
+   "folder": "~/Projects/hp-work/p/7d270502ca",
+   "model": "sonnet",
+   "flow": "flow_671be39c760d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a187a40a90d2"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.425,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-68c45fc25b",
+   "folder": "~/Projects/hp-work/p/68c45fc25b",
+   "model": "sonnet",
+   "flow": "flow_f6f90e5652c7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f2b8ded90322"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.423,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "MentionsToolChoice",
+   "input": {
+    "encoded": "M746f6f6c5f63686f696365 N",
+    "shown": "message=\"tool_choice\" body=None"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "false"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 17,
+   "made": 17,
+   "killed": 17,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2446,
+   "first_difference": {
+    "input": "M6e6f742063757272656e746c79206f6e6c20226e544f4f4c5f43484f49434520 N",
+    "lean_ref": "false",
+    "python": "true"
+   }
+  }
+ },
+ "first_laws": [
+  "OnlyAutoAllowed",
+  "MentionsToolChoice",
+  "RejectsNamedChoice"
+ ],
+ "cost_usd": 2.14,
+ "seconds": 160
+}

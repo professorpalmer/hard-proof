@@ -1,0 +1,89 @@
+{
+  "id": "hardproof-exp7-complete-opus",
+  "entry": "prove",
+  "defaults": {
+    "adapter": "claude-code",
+    "model": "claude-opus-5-5",
+    "timeout_seconds": 3000,
+    "finish": "criteria"
+  },
+  "nodes": [
+    {
+      "id": "prove",
+      "kind": "agent",
+      "role": "code",
+      "files": [
+        "GapSolution.lean",
+        "CompleteSolution.lean"
+      ],
+      "task": "Context: this Lean 4 project models a lock. `Laws.lean` defines the model and four laws: `Mutex`, `NoOrphanHold`, `HolderKeepsLock`, and `ReleaseFrees`. `Solution.lean` has a lock design `Exp.lock` and proofs that it obeys each law. The owner added `ReleaseFrees` after an adversary showed that the first three laws allow a lock that never releases. The owner now believes that the four laws describe a correct lock completely.\n\nYour role: you are the adversary. Test that belief. One of two results is true, and you must find out which one:\n\n1. A gap exists. Two lock designs each pass every law (`Laws.Passes`), but after one sequence of events a process is in the critical section for one design and not for the other. To show this, write `GapSolution.lean` (read `GapChallenge.lean`): `namespace Gap` with `designA`, `designB`, `trace`, `who`, and complete proofs of `a_passes`, `b_passes`, and `differ`.\n\n2. No gap exists. Each two designs that pass every law put the same processes in the critical section after each sequence of events. To show this, write `CompleteSolution.lean` (read `CompleteChallenge.lean`): `namespace Complete` with a complete proof of `laws_complete`.\n\nEach statement must be the same as the statement in the challenge file. The gate is `python3 complete_gate.py check`. It prints a JSON report and accepts one correct result of either kind. Verdict `accept` is the only success.\n\nRules:\n- Edit `GapSolution.lean` and `CompleteSolution.lean` only. The gate rejects the run if another file changes.\n- Do not use `sorry`, a new `axiom`, or `native_decide`. The gate rejects them.\n- The toolchain is Lean 4.36.0 with no Mathlib. `lake build GapSolution` or `lake build CompleteSolution` gives the compiler errors.\n- If you cannot complete either result, report how far you got, and end your reply with `VERDICT: FAIL - <reason>`.\n\nReport: say in plain words which result is true and why. Give the number of gate runs that you made.",
+      "payload": {
+        "allowed_tools": [
+          "Bash(cd:*)",
+          "Bash(ls:*)",
+          "Bash(pwd)",
+          "Bash(cat:*)",
+          "Bash(git status:*)",
+          "Bash(git diff:*)",
+          "Bash(git log:*)",
+          "Bash(lake:*)",
+          "Bash(lean:*)",
+          "Bash(python3 complete_gate.py:*)",
+          "Bash(shasum:*)"
+        ]
+      }
+    },
+    {
+      "id": "gate",
+      "kind": "shell",
+      "command": "printf '%s  %s\\n' b06dc39d40a5f2a2f6ae3863f05d8a2706a3b49c8f64039e9ab3cecf1ad35e66 Laws.lean b02bd257cd73f0ee00b6777afb1f29b7e0e30249f08cd68b5fd3954d8bd2bfb8 Mutants.lean ccfcbe2ddfb66a10f563af3bfaf06aae5e3276ef2e9c3dd82853f73908b50f6e GapChallenge.lean 1ed08831a5403cac575491a2b7d8e694b61483c44b9d830eebc05b2692486120 CompleteChallenge.lean 87fe20a30d7420c91abb719cd86c8c2f65ed6d732f928d3a5e5515324e384a51 GapRunner.lean 2e7a26929f97a35d708eba5022c8d004d53715f9290f34fe86428283394bbbbd comparator_gap.json 71c42a2b3d91575ba180b7863480d789f33188da5c7a835a94973700475719ee comparator_complete.json a19d57ac46a13f29d4e3a266ea7308d97175b1ee447de73a2250fc6087dd5082 complete_gate.py 0dbe4f0183ea9ee3a52006d2d06fb91e5bbb673e486034d0296b37545da7cbe1 lakefile.toml 582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a lean-toolchain | shasum -a 256 -c - && python3 complete_gate.py check --actor flow"
+    },
+    {
+      "id": "done",
+      "kind": "end",
+      "status": "pass"
+    },
+    {
+      "id": "objected",
+      "kind": "end",
+      "status": "fail"
+    },
+    {
+      "id": "failed",
+      "kind": "end",
+      "status": "fail"
+    }
+  ],
+  "edges": [
+    {
+      "from": "prove",
+      "to": "objected",
+      "when": "FAIL"
+    },
+    {
+      "from": "prove",
+      "to": "gate",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "done",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "prove",
+      "when": "fail",
+      "max": 3
+    },
+    {
+      "from": "gate",
+      "to": "failed",
+      "when": "fail"
+    },
+    {
+      "from": "prove",
+      "to": "failed"
+    }
+  ]
+}

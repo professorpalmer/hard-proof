@@ -1,0 +1,494 @@
+{
+ "bug": "a5e7ffc5",
+ "title": "Explicit model pin drops registry payload_defaults (provider)",
+ "repo": "Puppetmaster",
+ "function": "stamp_resolved_model_pin",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-80d0ce7bb4",
+   "folder": "~/Projects/hp-work/p/80d0ce7bb4",
+   "model": "opus",
+   "flow": "flow_31f09a9e6d40",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_57cab534b7f0"
+   ],
+   "seconds": 94,
+   "cost_usd": 1.281,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-540e363370",
+   "folder": "~/Projects/hp-work/p/540e363370",
+   "model": "sonnet",
+   "flow": "flow_01fd5bc42cec",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6dafbc4c37d7"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.419,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-177ea5d957",
+   "folder": "~/Projects/hp-work/p/177ea5d957",
+   "model": "sonnet",
+   "flow": "flow_c5177d4af717",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_549835d640ef"
+   ],
+   "seconds": 55,
+   "cost_usd": 0.535,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-aeac6d0439",
+   "folder": "~/Projects/hp-work/p/aeac6d0439",
+   "model": "sonnet",
+   "flow": "flow_8bce4af5f93a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e0d58075de8c"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.425,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-32a578ad67",
+   "folder": "~/Projects/hp-work/p/32a578ad67",
+   "model": "sonnet",
+   "flow": "flow_59442e5b7ccf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f260b4196558"
+   ],
+   "seconds": 70,
+   "cost_usd": 0.654,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-df6661224a",
+   "folder": "~/Projects/hp-work/p/df6661224a",
+   "model": "sonnet",
+   "flow": "flow_4f30b36ac1f4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0f535b3bcc01"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.452,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-9472e14a87",
+   "folder": "~/Projects/hp-work/p/9472e14a87",
+   "model": "sonnet",
+   "flow": "flow_7428a11abd1c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_63d29d25f462"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.386,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-caa1d7d30b",
+   "folder": "~/Projects/hp-work/p/caa1d7d30b",
+   "model": "sonnet",
+   "flow": "flow_ec4e41e6eea0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0ff95bc80e59"
+   ],
+   "seconds": 55,
+   "cost_usd": 0.522,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-6b1374c9c6",
+   "folder": "~/Projects/hp-work/p/6b1374c9c6",
+   "model": "sonnet",
+   "flow": "flow_3504c58c28c5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_af330cd1b5a0"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.395,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-b83d40c50b",
+   "folder": "~/Projects/hp-work/p/b83d40c50b",
+   "model": "sonnet",
+   "flow": "flow_a828e7d658f3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f53bbf553e22"
+   ],
+   "seconds": 71,
+   "cost_usd": 0.633,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-cb75f3d101",
+   "folder": "~/Projects/hp-work/p/cb75f3d101",
+   "model": "sonnet",
+   "flow": "flow_d8074b258361",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_33346f02dd89"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.421,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-8ab94531f9",
+   "folder": "~/Projects/hp-work/p/8ab94531f9",
+   "model": "sonnet",
+   "flow": "flow_4b2377073674",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6d0ff9f67515"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.389,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-141ebb9d30",
+   "folder": "~/Projects/hp-work/p/141ebb9d30",
+   "model": "sonnet",
+   "flow": "flow_6a105bc60d40",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f5c123ba5a64"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.467,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-4231b50f59",
+   "folder": "~/Projects/hp-work/p/4231b50f59",
+   "model": "sonnet",
+   "flow": "flow_cd4797fd0101",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9e0c42708b9b"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.444,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-0edc1138e6",
+   "folder": "~/Projects/hp-work/p/0edc1138e6",
+   "model": "sonnet",
+   "flow": "flow_d77f0618b544",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4ae53e7b510e"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.466,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-61523a9018",
+   "folder": "~/Projects/hp-work/p/61523a9018",
+   "model": "sonnet",
+   "flow": "flow_80eb9fef66b5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cee6bb9da409"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.42,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-ee167fbc16",
+   "folder": "~/Projects/hp-work/p/ee167fbc16",
+   "model": "sonnet",
+   "flow": "flow_be3d0c6c2c0f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3527e4d07e93"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.397,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "k=v|||",
+    "shown": "payload={\"k\": \"v\"} pin=(registry_id=\"\", adapter_model_name=\"\", adapter=\"\")"
+   },
+   "design_a": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "design_b": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=,k=v",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\", \"k\": \"v\"}"
+   },
+   "ref": {
+    "encoded": "k=v,model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"k\": \"v\", \"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "k=v,model=,router_model_id=,pinned_model=,pinned_adapter_model_name="
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "UnresolvedPinStampsNothing",
+   "input": {
+    "encoded": "|||",
+    "shown": "payload={} pin=(registry_id=\"\", adapter_model_name=\"\", adapter=\"\")"
+   },
+   "ref": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name="
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "|||",
+    "shown": "payload={} pin=(registry_id=\"\", adapter_model_name=\"\", adapter=\"\")"
+   },
+   "design_a": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "design_b": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=,zzz=v",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\", \"zzz\": \"v\"}"
+   },
+   "ref": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name="
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "UnresolvedPinIsNotStamped",
+   "input": {
+    "encoded": "|||",
+    "shown": "payload={} pin=(registry_id=\"\", adapter_model_name=\"\", adapter=\"\")"
+   },
+   "ref": {
+    "encoded": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name=",
+    "shown": "{\"model\": \"\", \"router_model_id\": \"\", \"pinned_model\": \"\", \"pinned_adapter_model_name\": \"\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "model=,router_model_id=,pinned_model=,pinned_adapter_model_name="
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "|r|a|",
+    "shown": "payload={} pin=(registry_id=\"r\", adapter_model_name=\"a\", adapter=\"\")"
+   },
+   "design_a": {
+    "encoded": "model=a,router_model_id=r,pinned_model=r,pinned_adapter_model_name=a",
+    "shown": "{\"model\": \"a\", \"router_model_id\": \"r\", \"pinned_model\": \"r\", \"pinned_adapter_model_name\": \"a\"}"
+   },
+   "design_b": {
+    "encoded": "pinned_adapter_model_name=a,pinned_model=r,router_model_id=r,model=a",
+    "shown": "{\"pinned_adapter_model_name\": \"a\", \"pinned_model\": \"r\", \"router_model_id\": \"r\", \"model\": \"a\"}"
+   },
+   "ref": {
+    "encoded": "model=a,router_model_id=r,pinned_model=r,pinned_adapter_model_name=a",
+    "shown": "{\"model\": \"a\", \"router_model_id\": \"r\", \"pinned_model\": \"r\", \"pinned_adapter_model_name\": \"a\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "model=a,router_model_id=r,pinned_model=r,pinned_adapter_model_name=a"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "AdapterlessPinIsNotStamped",
+   "input": {
+    "encoded": "|a|a|",
+    "shown": "payload={} pin=(registry_id=\"a\", adapter_model_name=\"a\", adapter=\"\")"
+   },
+   "ref": {
+    "encoded": "model=a,router_model_id=a,pinned_model=a,pinned_adapter_model_name=a",
+    "shown": "{\"model\": \"a\", \"router_model_id\": \"a\", \"pinned_model\": \"a\", \"pinned_adapter_model_name\": \"a\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "model=a,router_model_id=a,pinned_model=a,pinned_adapter_model_name=a"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'NoneType' object has no attribute 'payload_defaults'"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 2,
+   "made": 2,
+   "killed": 2,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": null,
+   "first_difference": {
+    "input": "pinned=a_b,a-b=k_3|model||claude-code",
+    "error": "AttributeError: 'NoneType' object has no attribute 'payload_defaults'"
+   }
+  }
+ },
+ "first_laws": [
+  "PersistsAdapterModelName",
+  "PersistsRegistryId",
+  "DispatchGetsAdapterName"
+ ],
+ "cost_usd": 8.71,
+ "seconds": 656
+}

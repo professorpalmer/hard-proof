@@ -1,0 +1,186 @@
+{
+ "bug": "7d1f2d14",
+ "title": "Out-of-range dashboard port reported as already in use",
+ "repo": "Puppetmaster",
+ "function": "bind_dashboard_server",
+ "kind": "boundary",
+ "stages": [
+  {
+   "flow_id": "hp2-9c08129ffa",
+   "folder": "~/Projects/hp-work/p/9c08129ffa",
+   "model": "opus",
+   "flow": "flow_7bcf3a39c79c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c5a8bb3197db"
+   ],
+   "seconds": 221,
+   "cost_usd": 1.903,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-bda85853f2",
+   "folder": "~/Projects/hp-work/p/bda85853f2",
+   "model": "sonnet",
+   "flow": "flow_b3dfebf35a86",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4a7248a93705"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.494,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9f03cc8c11",
+   "folder": "~/Projects/hp-work/p/9f03cc8c11",
+   "model": "sonnet",
+   "flow": "flow_137f4514cbcd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bba8386f3951"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.428,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-6cefe628aa",
+   "folder": "~/Projects/hp-work/p/6cefe628aa",
+   "model": "sonnet",
+   "flow": "flow_97763c1ed193",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_636b0cb96d2f"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.43,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-7881353147",
+   "folder": "~/Projects/hp-work/p/7881353147",
+   "model": "sonnet",
+   "flow": "flow_c35ecee95fc7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2d49d115f83b"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.462,
+   "stage": "R2"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "PortZeroBinds",
+   "input": {
+    "encoded": "|0|N|0|",
+    "shown": "host= port=0 auto_port=true max_attempts=0 bind errors=[]"
+   },
+   "ref": {
+    "encoded": "raised|-|no free port for the dashboard in 0--1 on . Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.",
+    "shown": "OSError(no free port for the dashboard in 0--1 on . Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.) from None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "raised|-|no free port for the dashboard in 0--1 on . Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port."
+   },
+   "post": {
+    "ok": true,
+    "out": "raised|-|no free port for the dashboard in 0--1 on . Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "StrictFreeBinds",
+   "input": {
+    "encoded": "|65536|0|N|",
+    "shown": "host= port=65536 auto_port=false max_attempts=20 bind errors=[]"
+   },
+   "ref": {
+    "encoded": "raised|-|port 65536 on  is already in use \u2014 another dashboard (or another program) owns it. Omit --port to auto-pick the next free port, or pass --port-search to start searching from 65536.",
+    "shown": "OSError(port 65536 on  is already in use \u2014 another dashboard (or another program) owns it. Omit --port to auto-pick the next free port, or pass --port-search to start searching from 65536.) from None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "raised|-|port 65536 on  is already in use \u2014 another dashboard (or another program) owns it. Omit --port to auto-pick the next free port, or pass --port-search to start searching from 65536."
+   },
+   "post": {
+    "ok": true,
+    "out": "raised|-|port 65536 is not a valid TCP port (must be 0-65535)."
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 31,
+   "made": 20,
+   "killed": 19,
+   "survived": [
+    "line 2: constant 20 to 19"
+   ],
+   "kill_rate": 0.95
+  },
+  "quotes": {
+   "quotes": 15,
+   "not_found": [
+    "True when a bind failure means \\\"pick another port\\\" rather than \\\"give up\\\".",
+    "Deliberately NOT generalised to a bare EACCES, which on POSIX means \\\"privileged",
+    "``auto_port`` (the default, matching a bare ``--port``-less invocation) makes th"
+   ]
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 3392,
+   "first_difference": {
+    "input": "|70000|N|21|",
+    "lean_ref": "raised|-|no free port for the dashboard in 70000-70020 on . Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.",
+    "python": "raised|-|port 70000 is not a valid TCP port (must be 0-65535)."
+   }
+  }
+ },
+ "first_laws": [
+  "PortZeroBinds",
+  "StrictFreeBinds",
+  "StrictBusyFails",
+  "StrictOtherReraises",
+  "AutoBumpsToFirstFree",
+  "AutoOtherReraises",
+  "AutoExhaustedErrors"
+ ],
+ "cost_usd": 3.72,
+ "seconds": 345
+}

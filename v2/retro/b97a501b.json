@@ -1,0 +1,227 @@
+{
+ "bug": "b97a501b",
+ "title": "Implement guard counts an applied patch with failed tests as implement success",
+ "repo": "marionette",
+ "function": "job_result_shows_implement_success",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-6be0019baa",
+   "folder": "~/Projects/hp-work/p/6be0019baa",
+   "model": "opus",
+   "flow": "flow_ffa559ffc291",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e47082a5ad48"
+   ],
+   "seconds": 173,
+   "cost_usd": 1.634,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-3650ba5cc4",
+   "folder": "~/Projects/hp-work/p/3650ba5cc4",
+   "model": "sonnet",
+   "flow": "flow_a7a48e0d0094",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ce4d8c2b0f89"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.437,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-dc5399a0e2",
+   "folder": "~/Projects/hp-work/p/dc5399a0e2",
+   "model": "sonnet",
+   "flow": "flow_a4bf12591968",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b99b50cdd2c6"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.476,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-0ed5884a9d",
+   "folder": "~/Projects/hp-work/p/0ed5884a9d",
+   "model": "sonnet",
+   "flow": "flow_32160aad9564",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_15987a8343e6"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.387,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-a3d70f6e91",
+   "folder": "~/Projects/hp-work/p/a3d70f6e91",
+   "model": "sonnet",
+   "flow": "flow_4604ed915993",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_046b2f2334a3"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.396,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-48b940334e",
+   "folder": "~/Projects/hp-work/p/48b940334e",
+   "model": "sonnet",
+   "flow": "flow_e0cad638542f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5cb1984dbe79"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.467,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-0a79cdf2bb",
+   "folder": "~/Projects/hp-work/p/0a79cdf2bb",
+   "model": "sonnet",
+   "flow": "flow_1787d980508b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_12c61fd1d647"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.447,
+   "stage": "A2"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "X N X N",
+    "shown": "{ res := HP.Res.notDict (HP.Val.none), stamped := HP.Stamped.notDict (HP.Val.none) }"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "false"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "true"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "false"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "J _ _ _ T _ _ D _",
+    "shown": "{ res := HP.Res.dict"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "false"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "true"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "true"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 55,
+   "made": 20,
+   "killed": 18,
+   "survived": [
+    "line 9: delete `if not isinstance(res_job, dict):     return False`",
+    "line 10: delete `return False`"
+   ],
+   "kill_rate": 0.9
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 4844,
+   "first_difference": {
+    "input": "J D I0 _ _ S9.31 S59.88.59.56.117 N I1 D L2",
+    "lean_ref": "true",
+    "python": "false"
+   }
+  }
+ },
+ "first_laws": [
+  "ExhaustedNotSuccess",
+  "AnalysisOnlyExcluded",
+  "AnalysisOkNoPatchNotSuccess"
+ ],
+ "cost_usd": 4.24,
+ "seconds": 333
+}

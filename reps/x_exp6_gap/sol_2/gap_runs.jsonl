@@ -1,0 +1,4 @@
+{"at": "2026-11-18T00:54:35-0500", "actor": "flow", "verdict": "accept", "stage": "done", "seconds": 1.72}
+{"at": "2026-11-18T00:54:42-0500", "actor": "flow", "verdict": "accept", "stage": "done", "seconds": 1.7}
+{"at": "2026-11-18T00:54:52-0500", "actor": "pilot-verify", "verdict": "accept", "stage": "done", "seconds": 7.41}
+{"at": "2026-11-18T01:39:49-0500", "actor": "verify-all", "verdict": "accept", "stage": "done", "seconds": 8.25}

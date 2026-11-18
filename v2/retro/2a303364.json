@@ -1,0 +1,268 @@
+{
+ "bug": "2a303364",
+ "title": "Cursor no-edit payload with mode=implement took the edit path",
+ "repo": "Puppetmaster",
+ "function": "CursorAdapter.run",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-da72848a80",
+   "folder": "~/Projects/hp-work/p/da72848a80",
+   "model": "opus",
+   "flow": "flow_4be1f08533c7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6d7a76c79b38"
+   ],
+   "seconds": 182,
+   "cost_usd": 2.075,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-d12c6106fc",
+   "folder": "~/Projects/hp-work/p/d12c6106fc",
+   "model": "sonnet",
+   "flow": "flow_565353a9c62d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_94a9844a7d55"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.387,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-849534d73d",
+   "folder": "~/Projects/hp-work/p/849534d73d",
+   "model": "sonnet",
+   "flow": "flow_6dcdbe03b715",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7f35ea8ec648"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.395,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-ffbcc8900d",
+   "folder": "~/Projects/hp-work/p/ffbcc8900d",
+   "model": "sonnet",
+   "flow": "flow_cf5e3b458e83",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a3a039459454"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.429,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-fd973f4aa4",
+   "folder": "~/Projects/hp-work/p/fd973f4aa4",
+   "model": "sonnet",
+   "flow": "flow_9ee9984716a0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9e420fcf070c"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.384,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-a5207a3ea1",
+   "folder": "~/Projects/hp-work/p/a5207a3ea1",
+   "model": "sonnet",
+   "flow": "flow_74d3285250fd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_320abb637ccc"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.44,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-2f961a12bd",
+   "folder": "~/Projects/hp-work/p/2f961a12bd",
+   "model": "sonnet",
+   "flow": "flow_809af3a7a72f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_52102638c051"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.386,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-dbcc4baee4",
+   "folder": "~/Projects/hp-work/p/dbcc4baee4",
+   "model": "sonnet",
+   "flow": "flow_c4d84fef7aeb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f6555fb9bc09"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.39,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-ad974140e1",
+   "folder": "~/Projects/hp-work/p/ad974140e1",
+   "model": "sonnet",
+   "flow": "flow_de4667e9d2c1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_97056bcd9e55"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.415,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-6802dc4f45",
+   "folder": "~/Projects/hp-work/p/6802dc4f45",
+   "model": "sonnet",
+   "flow": "flow_8c4b26ec401f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1358586a2f87"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.398,
+   "stage": "A3"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "A|A|97|",
+    "shown": "payload mode=<absent>, implement=<absent>; goal=\"a\", worker_id=\"\""
+   },
+   "design_a": {
+    "encoded": "analyze|97|",
+    "shown": "_run_analyze(task, goal=\"a\", worker_id=\"\")"
+   },
+   "design_b": {
+    "encoded": "analyze||",
+    "shown": "_run_analyze(task, goal=\"\", worker_id=\"\")"
+   },
+   "ref": {
+    "encoded": "analyze|97|",
+    "shown": "_run_analyze(task, goal=\"a\", worker_id=\"\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "analyze|97|"
+   },
+   "post": {
+    "ok": true,
+    "out": "analyze|97|"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "A|A||119",
+    "shown": "payload mode=<absent>, implement=<absent>; goal=\"\", worker_id=\"w\""
+   },
+   "design_a": {
+    "encoded": "analyze||119",
+    "shown": "_run_analyze(task, goal=\"\", worker_id=\"w\")"
+   },
+   "design_b": {
+    "encoded": "analyze||",
+    "shown": "_run_analyze(task, goal=\"\", worker_id=\"\")"
+   },
+   "ref": {
+    "encoded": "analyze||119",
+    "shown": "_run_analyze(task, goal=\"\", worker_id=\"w\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "analyze||119"
+   },
+   "post": {
+    "ok": true,
+    "out": "analyze||119"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "ModeImplementEdits",
+  "FlagImplementEdits",
+  "DefaultAnalyzes"
+ ],
+ "cost_usd": 5.7,
+ "seconds": 384
+}

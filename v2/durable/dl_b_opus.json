@@ -1,0 +1,102 @@
+{
+ "name": "dl_b_opus",
+ "start": "b_opus",
+ "base": "base_b",
+ "folder": "5987fa9a08",
+ "flow": "flow_cd11906323d6",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 28,
+   "cost_usd": 0.414,
+   "jobs": [
+    "job_9db4782fd5e9"
+   ],
+   "session_cost_usd": 0.414
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 34,
+   "cost_usd": 0.436,
+   "jobs": [
+    "job_a167628179ae"
+   ],
+   "session_cost_usd": 0.436
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 40,
+   "cost_usd": 0.137,
+   "jobs": [
+    "job_684433960ed0"
+   ],
+   "session_cost_usd": 0.551
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 1,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]",
+    "design B result: [id 2 (adapter 0, model 1, disabled); id 1 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)]",
+   "new_laws": {
+    "NewRowsInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 (added f c st r).map (fun e => e.id) = (st.filter (absent r)).map (fun e => e.id)"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 3,
+ "cost_usd": 0.99,
+ "seconds": 102,
+ "final_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled",
+  "NewRowsInStarterOrder"
+ ]
+}

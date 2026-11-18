@@ -1,0 +1,163 @@
+{
+ "name": "rl_b_haiku",
+ "start": "b_haiku",
+ "base": "base_b",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "d9fb55e1be",
+   "review": {
+    "flow": "flow_7d43a9e6361d",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 25,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new entries among themselves, so a design can append them in starter order or in reverse order (or add repeated copies).",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       1
+      ],
+      [
+       2,
+       2,
+       2,
+       1
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,1,1,0],[2,2,2,0]]",
+    "result_b": "[[2,2,2,0],[1,1,1,0]]",
+    "reason": "RowsKept only makes the registry a prefix of the result. No law orders the appended entries, so the reference design and a design that appends the same entries in reverse both pass every law."
+   },
+   "code_result": "id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)",
+   "law_author": {
+    "flow": "flow_09f0e018712b",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 32,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewEntriesInStarterOrder": "\u2200 (c : Config) (st r rest : List Entry), f c st r = r ++ rest \u2192 rest.map (fun e => e.id) = (st.filter (absent r)).map (fun s => s.id)"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "645379694c",
+   "review": {
+    "flow": "flow_fc9581e8479b",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 23,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept",
+    "NewEntriesInStarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, RowsKept fixes the registry as a prefix. NewEntriesInStarterOrder fixes the ids of the new rows and their order. Those ids are absent from the registry, so OnlyLacking ties each row to the one starter entry with that id (ids are distinct) and gives its adapter and model. NewEntryEnabled then gives its enabled flag. So every passing design gives the same registry."
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "b275ecb411",
+   "review": {
+    "flow": "flow_c94d7508ce7a",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 21,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "AppendsAbsent",
+    "OnlyLacking",
+    "NewEntryEnabled",
+    "NotAddedByIdentity",
+    "RowsKept",
+    "NewEntriesInStarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "RowsKept fixes the registry as a prefix of the result. NewEntriesInStarterOrder fixes the ids of the rest to the absent starter ids in order. For each such id, AppendsAbsent, OnlyLacking and NewEntryEnabled fix adapter, model and enabled (the id is not in the registry and starter ids are distinct), so the result is unique."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept",
+  "NewEntriesInStarterOrder"
+ ],
+ "reviews": 3,
+ "questions": 1,
+ "laws_added": 1,
+ "cost_usd": 1.64,
+ "seconds": 101,
+ "end_state_complete": true,
+ "finish": {
+  "outcome": "complete",
+  "questions": 0,
+  "final_laws": [
+   "AppendsAbsent",
+   "OnlyLacking",
+   "NewEntryEnabled",
+   "NotAddedByIdentity",
+   "RowsKept",
+   "NewEntriesInStarterOrder"
+  ],
+  "cost_usd": 0.56,
+  "seconds": 69,
+  "questions_text": []
+ }
+}

@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "TblLaws.lean has 512 laws, one per leaf of a decision tree. The cube sizes sum to exactly 2^18 (Kraft sum 1), so the laws cover every case and fix its answer."}

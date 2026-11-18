@@ -1,0 +1,14 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "Exp.mutex",
+    "Exp.no_orphan_hold",
+    "Exp.can_refuse",
+    "Exp.can_enter",
+    "Exp.kill_pid_only",
+    "Exp.mutex_alone_misses_pid_only"
+  ],
+  "definition_names": ["Exp.lock"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

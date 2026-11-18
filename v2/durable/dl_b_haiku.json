@@ -1,0 +1,146 @@
+{
+ "name": "dl_b_haiku",
+ "start": "b_haiku",
+ "base": "base_b",
+ "folder": "5a6782b740",
+ "flow": "flow_2221c451ef35",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 37,
+   "cost_usd": 0.438,
+   "jobs": [
+    "job_6bb38d33b930"
+   ],
+   "session_cost_usd": 0.438
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 41,
+   "cost_usd": 0.477,
+   "jobs": [
+    "job_1b30143280f4"
+   ],
+   "session_cost_usd": 0.477
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 35,
+   "cost_usd": 0.11,
+   "jobs": [
+    "job_73634ebd75a3"
+   ],
+   "session_cost_usd": 0.548
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 22,
+   "cost_usd": 0.069,
+   "jobs": [
+    "job_dd6fc03f3e83"
+   ],
+   "session_cost_usd": 0.546
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 84,
+   "cost_usd": 0.312,
+   "jobs": [
+    "job_a6d3d1c8cfa0"
+   ],
+   "session_cost_usd": 0.86
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 2,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=true locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "design B result: [id 1 (adapter 1, model 1, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, enabled); id 1 (adapter 1, model 1, enabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, enabled); id 1 (adapter 1, model 1, enabled)]",
+   "new_laws": {
+    "StarterOrder": "\u2200 (c : Config) (st r : List Entry), \u2203 rest, f c st r = r ++ rest \u2227 List.Sublist (rest.map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=true locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[id 0 (adapter 0, model 0, enabled)]",
+    "design A result: [id 0 (adapter 0, model 0, enabled)]",
+    "design B result: [id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, enabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, enabled)]",
+   "new_laws": {
+    "NoRepeat": "\u2200 (c : Config) (st r : List Entry), \u2203 rest, f c st r = r ++ rest \u2227 \u2200 e \u2208 rest, hasId r e.id = false \u2227 hasIdentity r e.adapter e.model = false"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 5,
+ "cost_usd": 1.41,
+ "seconds": 219,
+ "final_laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept",
+  "StarterOrder",
+  "NoRepeat"
+ ]
+}

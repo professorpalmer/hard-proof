@@ -1,0 +1,187 @@
+{
+ "name": "rl_b_opus",
+ "start": "b_opus",
+ "base": "base_b",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "1a7068b2c9",
+   "review": {
+    "flow": "flow_1c955c75db3b",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 32,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new rows among themselves, only that they come after the old rows.",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       0
+      ],
+      [
+       2,
+       2,
+       2,
+       0
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,1,1,0],[2,2,2,0]] (new rows in starter order)",
+    "result_b": "[[2,2,2,0],[1,1,1,0]] (new rows in reverse starter order)",
+    "reason": "Every law talks about which rows are added, how many, and their fields, but none about their order. A design that appends the same rows reversed passes all nine laws and gives a different registry."
+   },
+   "code_result": "id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)",
+   "law_author": {
+    "flow": "flow_ddd682e46c62",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 28,
+    "cost_usd": 0.42
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewRowsInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 List.Sublist ((added f c st r).map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "202a845204",
+   "review": {
+    "flow": "flow_7db7236dbd13",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 21,
+    "cost_usd": 0.39
+   },
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled",
+    "NewRowsInStarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input the laws fix the old rows and their order, the set and number of new rows (each absent starter once, none other), their order (sublist of starter ids), their id, adapter and model, and the enabled flag in all three cases (no enable, locked, enable and unlocked). Nothing is left open."
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "30bc17b0b6",
+   "review": {
+    "flow": "flow_ee97d012ee02",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 21,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled",
+    "NewRowsInStarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "Old rows and their order are fixed by KeepsExistingRows and NewEntriesAtEnd. The new rows are one per absent starter entry (AddsEachAbsent, AddsOnlyAbsent, AddsEachOnce with DistinctIds), in starter order (NewRowsInStarterOrder). Their id, adapter and model are fixed, and the enabled flag is fixed in every case: enable false, locked adapter, and enable true on an unlocked adapter."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled",
+  "NewRowsInStarterOrder"
+ ],
+ "reviews": 3,
+ "questions": 1,
+ "laws_added": 1,
+ "cost_usd": 1.61,
+ "seconds": 102,
+ "end_state_complete": true,
+ "finish": {
+  "outcome": "complete",
+  "questions": 0,
+  "final_laws": [
+   "KeepsExistingRows",
+   "NewEntriesAtEnd",
+   "AddsEachAbsent",
+   "AddsOnlyAbsent",
+   "AddsEachOnce",
+   "NoIdentityDuplicate",
+   "NewDisabledByDefault",
+   "EnableKeepsStarterState",
+   "LockedAlwaysDisabled",
+   "NewRowsInStarterOrder"
+  ],
+  "cost_usd": 0.61,
+  "seconds": 83,
+  "questions_text": []
+ }
+}

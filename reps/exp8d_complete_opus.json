@@ -1,0 +1,66 @@
+{
+ "task": "exp8d_complete_opus",
+ "seconds": 71,
+ "runs": [
+  {
+   "task": "exp8d_complete_opus",
+   "model": "opus",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete_opus/opus_1",
+   "flow": "flow_cddd18e15210",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 60,
+   "cost_usd": 0.96,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete_opus",
+   "model": "opus",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete_opus/opus_2",
+   "flow": "flow_987a03ad8127",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 60,
+   "cost_usd": 0.94,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete_opus",
+   "model": "opus",
+   "rep": 3,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete_opus/opus_3",
+   "flow": "flow_c05468effaa7",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 52,
+   "cost_usd": 0.9,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  }
+ ]
+}

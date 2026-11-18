@@ -1,0 +1,14 @@
+name = "exp8"
+defaultTargets = ["Exp8"]
+
+[[lean_lib]]
+name = "Exp8"
+roots = ["SyncLaws", "SyncChallenge", "SyncSolution", "SyncGapChallenge", "SyncCompleteChallenge"]
+
+[[lean_lib]]
+name = "SyncGapWork"
+roots = ["SyncGapSolution"]
+
+[[lean_lib]]
+name = "SyncCompleteWork"
+roots = ["SyncCompleteSolution"]

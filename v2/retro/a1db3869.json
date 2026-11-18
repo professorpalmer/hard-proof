@@ -1,0 +1,415 @@
+{
+ "bug": "a1db3869",
+ "title": "Provider HTTP 402/404 returns raw reason, not a failure class",
+ "repo": "Puppetmaster",
+ "function": "classify_provider_failure",
+ "kind": "boundary",
+ "stages": [
+  {
+   "flow_id": "hp2-371b7184bf",
+   "folder": "~/Projects/hp-work/p/371b7184bf",
+   "model": "opus",
+   "flow": "flow_1ebc884e87b7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9981a7819c29"
+   ],
+   "seconds": 190,
+   "cost_usd": 1.744,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-a14a29b5b1",
+   "folder": "~/Projects/hp-work/p/a14a29b5b1",
+   "model": "sonnet",
+   "flow": "flow_c1056ebac8f8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3f4bd44ca2dc"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.431,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-61aa1bdfef",
+   "folder": "~/Projects/hp-work/p/61aa1bdfef",
+   "model": "sonnet",
+   "flow": "flow_48ba2f3b2f78",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0412c23a5691"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.404,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-1067cbe3b6",
+   "folder": "~/Projects/hp-work/p/1067cbe3b6",
+   "model": "sonnet",
+   "flow": "flow_dbe575a2bf41",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_81abfd4c6597"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.384,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-a843b0bebe",
+   "folder": "~/Projects/hp-work/p/a843b0bebe",
+   "model": "sonnet",
+   "flow": "flow_01ccef066c75",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2026f45d8c04"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.403,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-41e9446ccb",
+   "folder": "~/Projects/hp-work/p/41e9446ccb",
+   "model": "sonnet",
+   "flow": "flow_82592ea81d33",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0ca20af7e8f3"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.386,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-40d383dc9c",
+   "folder": "~/Projects/hp-work/p/40d383dc9c",
+   "model": "sonnet",
+   "flow": "flow_37d00287779d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0b7b8e7614f8"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.432,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-6634068a5c",
+   "folder": "~/Projects/hp-work/p/6634068a5c",
+   "model": "sonnet",
+   "flow": "flow_0cc744f2f18a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_209a134f77de"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.408,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-7f8790ca6b",
+   "folder": "~/Projects/hp-work/p/7f8790ca6b",
+   "model": "sonnet",
+   "flow": "flow_40d8214427d8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c0e65e72e86c"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.381,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-25473a7e8b",
+   "folder": "~/Projects/hp-work/p/25473a7e8b",
+   "model": "sonnet",
+   "flow": "flow_6d4e2de7905a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fad31096d6cc"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.46,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-ffd6d1e568",
+   "folder": "~/Projects/hp-work/p/ffd6d1e568",
+   "model": "sonnet",
+   "flow": "flow_5ff750326824",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f826987d3427"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.403,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-b8d8341ef3",
+   "folder": "~/Projects/hp-work/p/b8d8341ef3",
+   "model": "sonnet",
+   "flow": "flow_c6b83dbed5bc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7d3c1ccb16a7"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.383,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-4936b40443",
+   "folder": "~/Projects/hp-work/p/4936b40443",
+   "model": "sonnet",
+   "flow": "flow_4ad8f9c51fc5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_895352f49504"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.45,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-26c2c37541",
+   "folder": "~/Projects/hp-work/p/26c2c37541",
+   "model": "sonnet",
+   "flow": "flow_f375b1145678",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_71da2701145c"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.414,
+   "stage": "A5"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "LegacyReasonRetry",
+   "input": {
+    "encoded": "111,112,101,110,97,105,95,115,101,114,118,101,114,95,101,114,114,111,114|401|",
+    "shown": "reason=\"openai_server_error\" http_status=some 401 body=\"\""
+   },
+   "ref": {
+    "encoded": "110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100",
+    "shown": "\"not_authenticated\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100"
+   },
+   "post": {
+    "ok": true,
+    "out": "110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "LegacyReasonRetry",
+   "input": {
+    "encoded": "111,112,101,110,97,105,95,115,101,114,118,101,114,95,101,114,114,111,114|403|",
+    "shown": "reason=\"openai_server_error\" http_status=some 403 body=\"\""
+   },
+   "ref": {
+    "encoded": "102,111,114,98,105,100,100,101,110",
+    "shown": "\"forbidden\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "102,111,114,98,105,100,100,101,110"
+   },
+   "post": {
+    "ok": true,
+    "out": "102,111,114,98,105,100,100,101,110"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "|n|",
+    "shown": "reason=\"\" http_status=none body=\"\""
+   },
+   "design_a": {
+    "encoded": "115,101,114,118,101,114,95,101,114,114,111,114",
+    "shown": "\"server_error\""
+   },
+   "design_b": {
+    "encoded": "117,110,107,110,111,119,110",
+    "shown": "\"unknown\""
+   },
+   "ref": {
+    "encoded": "117,110,107,110,111,119,110",
+    "shown": "\"unknown\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "117,110,107,110,111,119,110"
+   },
+   "post": {
+    "ok": true,
+    "out": "117,110,107,110,111,119,110"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "97|500|",
+    "shown": "reason=\"a\" http_status=some 500 body=\"\""
+   },
+   "design_a": {
+    "encoded": "117,110,107,110,111,119,110",
+    "shown": "\"unknown\""
+   },
+   "design_b": {
+    "encoded": "116,105,109,101,111,117,116",
+    "shown": "\"timeout\""
+   },
+   "ref": {
+    "encoded": "115,101,114,118,101,114,95,101,114,114,111,114",
+    "shown": "\"server_error\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "115,101,114,118,101,114,95,101,114,114,111,114"
+   },
+   "post": {
+    "ok": true,
+    "out": "115,101,114,118,101,114,95,101,114,114,111,114"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "|404|",
+    "shown": "reason=\"\" http_status=some 404 body=\"\""
+   },
+   "design_a": {
+    "encoded": "117,110,107,110,111,119,110",
+    "shown": "\"unknown\""
+   },
+   "design_b": {
+    "encoded": "102,111,114,98,105,100,100,101,110",
+    "shown": "\"forbidden\""
+   },
+   "ref": {
+    "encoded": "117,110,107,110,111,119,110",
+    "shown": "\"unknown\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "117,110,107,110,111,119,110"
+   },
+   "post": {
+    "ok": true,
+    "out": "109,111,100,101,108,95,117,110,97,118,97,105,108,97,98,108,101"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 53,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 11,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 776,
+   "first_difference": {
+    "input": "104,116,116,112,95,115,116,97,116,117,115,58,53,95,95,48,48|402|98,108,111,99,107,101,100,32,98,121,32,117,112,115,116,114,101,97,109",
+    "lean_ref": "104,116,116,112,95,115,116,97,116,117,115,58,53,95,95,48,48",
+    "python": "98,105,108,108,105,110,103,95,111,114,95,113,117,111,116,97"
+   }
+  }
+ },
+ "first_laws": [
+  "UpstreamBlock401",
+  "LegacyReasonRetry"
+ ],
+ "cost_usd": 7.08,
+ "seconds": 557
+}

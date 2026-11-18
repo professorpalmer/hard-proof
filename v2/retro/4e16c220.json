@@ -1,0 +1,316 @@
+{
+ "bug": "4e16c220",
+ "title": "CodeGraph refresh debounce suppresses the first check when the monotonic clock is small",
+ "repo": "marionette",
+ "function": "maybe_refresh_codegraph",
+ "kind": "boundary",
+ "stages": [
+  {
+   "flow_id": "hp2-a0c4270340",
+   "folder": "~/Projects/hp-work/p/a0c4270340",
+   "model": "opus",
+   "flow": "flow_fa15d504e785",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5f33c545a72a"
+   ],
+   "seconds": 231,
+   "cost_usd": 2.09,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-c4269626e7",
+   "folder": "~/Projects/hp-work/p/c4269626e7",
+   "model": "sonnet",
+   "flow": "flow_3cd46b13bdeb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1829f90c6234"
+   ],
+   "seconds": 50,
+   "cost_usd": 0.52,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9e5a91e582",
+   "folder": "~/Projects/hp-work/p/9e5a91e582",
+   "model": "sonnet",
+   "flow": "flow_bee2f1d52b44",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_554d0ed3a4a6"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.412,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-564595e1dc",
+   "folder": "~/Projects/hp-work/p/564595e1dc",
+   "model": "sonnet",
+   "flow": "flow_d455a6893f6e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b8b51cfa0387"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.405,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-7e50477f2c",
+   "folder": "~/Projects/hp-work/p/7e50477f2c",
+   "model": "sonnet",
+   "flow": "flow_9bef8cbdd277",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_53082e6c039a"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.454,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-395b6419d6",
+   "folder": "~/Projects/hp-work/p/395b6419d6",
+   "model": "sonnet",
+   "flow": "flow_ef69f63c182c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_43ce6d5a0e44"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.387,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-acd07e2e49",
+   "folder": "~/Projects/hp-work/p/acd07e2e49",
+   "model": "sonnet",
+   "flow": "flow_750245ef4475",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_58f07ce2a23b"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.427,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-5c47eb1d8c",
+   "folder": "~/Projects/hp-work/p/5c47eb1d8c",
+   "model": "sonnet",
+   "flow": "flow_bbbb1e2df54e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_aeebf70790b0"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.406,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-29af079e65",
+   "folder": "~/Projects/hp-work/p/29af079e65",
+   "model": "sonnet",
+   "flow": "flow_f16402de503e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1aa250afb3d0"
+   ],
+   "seconds": 66,
+   "cost_usd": 0.6,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-dbafbe623a",
+   "folder": "~/Projects/hp-work/p/dbafbe623a",
+   "model": "sonnet",
+   "flow": "flow_149d1ef38044",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6fd3a28b214b"
+   ],
+   "seconds": 55,
+   "cost_usd": 0.573,
+   "stage": "A4"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ForceBypassesDebounce",
+   "input": {
+    "encoded": "s 1 0 0 L L s105.100.108.101 0 0 1 n",
+    "shown": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"idle\" is_stale=false thread_start_raises=false deps_bound=true reason=none"
+   },
+   "ref": {
+    "encoded": "ok L 0 0 n 0",
+    "shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ok L 0 0 n 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "ok L 0 0 n 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "ForceBypassesDebounce",
+   "input": {
+    "encoded": "s97 1 0 0 L L s 0 1 1 n",
+    "shown": "repo_path=\"a\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=false thread_start_raises=true deps_bound=true reason=none"
+   },
+   "ref": {
+    "encoded": "ok Ls97/v0 0 0 n 1",
+    "shown": "outcome=HP.Outcome.ok stale_check_at={\"a\": 0/4} is_stale_called=false reindex_called=false reason=none diag_called=true"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ok Ls97/v0 0 0 n 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "ok Ls97/v0 0 0 n 1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "ForceBypassesBackoff",
+   "input": {
+    "encoded": "s 1 0 0 L L s 1 0 1 n",
+    "shown": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=true thread_start_raises=false deps_bound=true reason=none"
+   },
+   "ref": {
+    "encoded": "ok L 0 0 n 0",
+    "shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ok L 0 0 n 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "ok L 0 0 n 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "s97 0 0 0 L L s105.100.108.101 0 0 1 n",
+    "shown": "repo_path=\"a\" force=false monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"idle\" is_stale=false thread_start_raises=false deps_bound=true reason=none"
+   },
+   "design_a": {
+    "encoded": "ok L 0 0 n 0",
+    "shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false"
+   },
+   "design_b": {
+    "encoded": "te L 0 0 n 0",
+    "shown": "outcome=HP.Outcome.typeError stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false"
+   },
+   "ref": {
+    "encoded": "ok L 0 0 n 0",
+    "shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ok L 0 0 n 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "ok Ls97/v0 1 0 n 0"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 37,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2228,
+   "first_difference": {
+    "input": "s47.114.101.112.111.47.97 0 0 0 L Ls67.58.92.65.115.104.105.116.97/v1063 s 1 0 1 s73.110.100.101.120.101.114.32.102.97.105.108.101.100",
+    "lean_ref": "ok L 0 0 s73.110.100.101.120.101.114.32.102.97.105.108.101.100 0",
+    "python": "ok Ls47.114.101.112.111.47.97/v0 1 1 s102.105.108.101.115.32.99.104.97.110.103.101.100.32.45.45.32.114.101.102.114.101.115.104.105.110.103.32.105.110.100.101.120 0"
+   }
+  }
+ },
+ "first_laws": [
+  "NoReindexWhileIndexing",
+  "DebounceBlocksCheck",
+  "BackoffBlocksReindex",
+  "ForceBypassesDebounce",
+  "ForceBypassesBackoff",
+  "StaleRefreshes",
+  "ReindexOnlyWhenStale"
+ ],
+ "cost_usd": 6.27,
+ "seconds": 545
+}

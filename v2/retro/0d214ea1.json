@@ -1,0 +1,193 @@
+{
+ "bug": "0d214ea1",
+ "title": "Platform lock write drops foreign keys in platform.json",
+ "repo": "Puppetmaster",
+ "function": "_write_disabled",
+ "kind": "state",
+ "stages": [
+  {
+   "flow_id": "hp2-7372ae9cbc",
+   "folder": "~/Projects/hp-work/p/7372ae9cbc",
+   "model": "opus",
+   "flow": "flow_2359404c41bf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_60a108e3309d"
+   ],
+   "seconds": 139,
+   "cost_usd": 0.0,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-be6a68bf8e",
+   "folder": "~/Projects/hp-work/p/be6a68bf8e",
+   "model": "sonnet",
+   "flow": "flow_a1af6b35d1b3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3231bccbbef9"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.432,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9d59c437ea",
+   "folder": "~/Projects/hp-work/p/9d59c437ea",
+   "model": "sonnet",
+   "flow": "flow_979f2ac29001",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d403d1c2dc3b"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.429,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-4371ef77ee",
+   "folder": "~/Projects/hp-work/p/4371ef77ee",
+   "model": "sonnet",
+   "flow": "flow_0ebdeb522273",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a4ebd6968cf7"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.436,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-d57a2bb5cd",
+   "folder": "~/Projects/hp-work/p/d57a2bb5cd",
+   "model": "sonnet",
+   "flow": "flow_dfa1d21938cc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_93280a35c336"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.393,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-aa8be47db8",
+   "folder": "~/Projects/hp-work/p/aa8be47db8",
+   "model": "sonnet",
+   "flow": "flow_333e4cd6e9be",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d31757873dc1"
+   ],
+   "seconds": 89,
+   "cost_usd": 0.719,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-1abbd4b39b",
+   "folder": "~/Projects/hp-work/p/1abbd4b39b",
+   "model": "sonnet",
+   "flow": "flow_4b8afee3fd02",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6b7341f8f64a"
+   ],
+   "seconds": 46,
+   "cost_usd": 0.519,
+   "stage": "A2"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "2:agentic,cursor",
+    "shown": "adapters = [\"agentic\", \"cursor\"]"
+   },
+   "design_a": {
+    "encoded": "platform.json|2:agentic,cursor|{\\n  \"disabled\": [\\n    \"agentic\",\\n    \"cursor\"\\n  ]\\n}\\n",
+    "shown": "path = platform.json, disabled = [\"agentic\", \"cursor\"], text = \"{\\n  \\\"disabled\\\": [\\n    \\\"agentic\\\",\\n    \\\"cursor\\\"\\n  ]\\n}\\n\""
+   },
+   "design_b": {
+    "encoded": "platform.json|2:cursor,agentic|{\\n  \"disabled\": [\\n    \"cursor\",\\n    \"agentic\"\\n  ]\\n}\\n",
+    "shown": "path = platform.json, disabled = [\"cursor\", \"agentic\"], text = \"{\\n  \\\"disabled\\\": [\\n    \\\"cursor\\\",\\n    \\\"agentic\\\"\\n  ]\\n}\\n\""
+   },
+   "ref": {
+    "encoded": "platform.json|2:agentic,cursor|{\\n  \"disabled\": [\\n    \"agentic\",\\n    \"cursor\"\\n  ]\\n}\\n",
+    "shown": "path = platform.json, disabled = [\"agentic\", \"cursor\"], text = \"{\\n  \\\"disabled\\\": [\\n    \\\"agentic\\\",\\n    \\\"cursor\\\"\\n  ]\\n}\\n\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "platform.json|2:agentic,cursor|{\\n  \"disabled\": [\\n    \"agentic\",\\n    \"cursor\"\\n  ]\\n}\\n"
+   },
+   "post": {
+    "ok": true,
+    "out": "platform.json|2:agentic,cursor|{\\n  \"disabled\": [\\n    \"agentic\",\\n    \"cursor\"\\n  ]\\n}\\n"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 9,
+   "made": 9,
+   "killed": 9,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "PathIsLockFile",
+  "TextHoldsDenylist",
+  "OnlyRequestedWritten",
+  "OnlyKnownWritten",
+  "KnownRequestedWritten"
+ ],
+ "cost_usd": 2.93,
+ "seconds": 379
+}

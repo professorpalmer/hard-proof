@@ -1,0 +1,64 @@
+{
+ "task": "exp11_k14_l128_gap",
+ "seconds": 120,
+ "runs": [
+  {
+   "task": "exp11_k14_l128_gap",
+   "model": "haiku",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_gap/haiku_1",
+   "flow": "flow_96bd3895368e",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 108,
+   "cost_usd": 0.31,
+   "changed_files": [
+    "TblGapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp11_k14_l128_gap",
+   "model": "sonnet",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_gap/sonnet_1",
+   "flow": "flow_f8e5ed4f62c8",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "FAIL"
+   ],
+   "worker_seconds": 36,
+   "cost_usd": 0.5,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "objection"
+  },
+  {
+   "task": "exp11_k14_l128_gap",
+   "model": "opus",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_gap/opus_1",
+   "flow": "flow_020e95e7d6d6",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 86,
+   "cost_usd": 1.24,
+   "changed_files": [
+    "TblGapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "outcome": "accept"
+  }
+ ]
+}

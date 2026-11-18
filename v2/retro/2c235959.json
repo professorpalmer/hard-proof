@@ -1,0 +1,416 @@
+{
+ "bug": "2c235959",
+ "title": "Router fallback keeps the previous route's injected provider",
+ "repo": "Puppetmaster",
+ "function": "merge_routing_payload",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-5a7e02f4c5",
+   "folder": "~/Projects/hp-work/p/5a7e02f4c5",
+   "model": "opus",
+   "flow": "flow_b5418f9eb033",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c243c7c1b6cd"
+   ],
+   "seconds": 458,
+   "cost_usd": 3.235,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-589ca34291",
+   "folder": "~/Projects/hp-work/p/589ca34291",
+   "model": "sonnet",
+   "flow": "flow_46663531863d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3c49f655cc03"
+   ],
+   "seconds": 45,
+   "cost_usd": 0.534,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-f1f04e9b57",
+   "folder": "~/Projects/hp-work/p/f1f04e9b57",
+   "model": "sonnet",
+   "flow": "flow_c15da87a8725",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1eb1f2f9c559"
+   ],
+   "seconds": 41,
+   "cost_usd": 0.554,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-4c4e5b5a2b",
+   "folder": "~/Projects/hp-work/p/4c4e5b5a2b",
+   "model": "sonnet",
+   "flow": "flow_547d6dc8a4fe",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f9605d3b95c1"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.416,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-27cd721cfa",
+   "folder": "~/Projects/hp-work/p/27cd721cfa",
+   "model": "sonnet",
+   "flow": "flow_987f9ae130aa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f973247f289a"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.504,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-48c75577f6",
+   "folder": "~/Projects/hp-work/p/48c75577f6",
+   "model": "sonnet",
+   "flow": "flow_4d46c46a5eb5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_60e8c7c7b47d"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.433,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-5c4205388c",
+   "folder": "~/Projects/hp-work/p/5c4205388c",
+   "model": "sonnet",
+   "flow": "flow_7e8ea7def215",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ffca1ff08f22"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.564,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-f5ad3d0d4f",
+   "folder": "~/Projects/hp-work/p/f5ad3d0d4f",
+   "model": "sonnet",
+   "flow": "flow_e5f10718e5eb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fc7a244d70c8"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.39,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-ad937c4a90",
+   "folder": "~/Projects/hp-work/p/ad937c4a90",
+   "model": "sonnet",
+   "flow": "flow_1df27b9753b1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_843dc3d66da5"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.524,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-7846ca1d9f",
+   "folder": "~/Projects/hp-work/p/7846ca1d9f",
+   "model": "sonnet",
+   "flow": "flow_61c80034535f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_550382c6cb89"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.421,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-bb7fe70443",
+   "folder": "~/Projects/hp-work/p/bb7fe70443",
+   "model": "sonnet",
+   "flow": "flow_fd20bd4cd9c4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3f133ed55756"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.5,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-dd0ea03c22",
+   "folder": "~/Projects/hp-work/p/dd0ea03c22",
+   "model": "sonnet",
+   "flow": "flow_e683581a48be",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e138f4cb89a5"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.425,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-1fe78d79b9",
+   "folder": "~/Projects/hp-work/p/1fe78d79b9",
+   "model": "sonnet",
+   "flow": "flow_12964ef243ef",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c1074337eea8"
+   ],
+   "seconds": 43,
+   "cost_usd": 0.509,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-92571dad74",
+   "folder": "~/Projects/hp-work/p/92571dad74",
+   "model": "sonnet",
+   "flow": "flow_ca912e6b02be",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9d39fcff4fcf"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.386,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "CallerPinWins",
+   "input": {
+    "encoded": "o1 s726561736f6e696e675f6566666f7274 s48494748 s61 s61 s61 t f s706c616e o0 n n n - - - - - - - r",
+    "shown": "payload={'reasoning_effort': 'HIGH'} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields=(absent) registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o11 s726561736f6e696e675f6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n",
+    "shown": "{'reasoning_effort': 'high', 'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o11 s726561736f6e696e675f6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n"
+   },
+   "post": {
+    "ok": true,
+    "out": "o11 s726561736f6e696e675f6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "UnpinnedMedium",
+   "input": {
+    "encoded": "o1 s6566666f7274 s68696768 s61 s61 s61 t f s706c616e o0 n n n - - - - - - - r",
+    "shown": "payload={'effort': 'high'} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields=(absent) registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o12 s6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768",
+    "shown": "{'effort': 'high', 'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'high'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o12 s6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "post": {
+    "ok": true,
+    "out": "o12 s6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "UnpinnedMedium",
+   "input": {
+    "encoded": "o1 s65787472615f61726773 l2 s2d2d6566666f7274 s68696768 s61 s61 s61 t f s706c616e o0 n n n - - - - - - - r",
+    "shown": "payload={'extra_args': ['--effort', 'high']} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields=(absent) registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o12 s65787472615f61726773 l2 s2d2d6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768",
+    "shown": "{'extra_args': ['--effort', 'high'], 'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'high'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o12 s65787472615f61726773 l2 s2d2d6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "post": {
+    "ok": true,
+    "out": "o12 s65787472615f61726773 l2 s2d2d6566666f7274 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "UnpinnedMedium",
+   "input": {
+    "encoded": "o1 s706172616d73 l1 o2 s6964 s6566666f7274 s76616c7565 s68696768 s61 s61 s61 t f s706c616e o0 n n n - - - - - - - r",
+    "shown": "payload={'params': [{'id': 'effort', 'value': 'high'}]} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields=(absent) registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o12 s706172616d73 l1 o2 s6964 s6566666f7274 s76616c7565 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768",
+    "shown": "{'params': [{'id': 'effort', 'value': 'high'}], 'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'high'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o12 s706172616d73 l1 o2 s6964 s6566666f7274 s76616c7565 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "post": {
+    "ok": true,
+    "out": "o12 s706172616d73 l1 o2 s6964 s6566666f7274 s76616c7565 s68696768 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "UnpinnedMedium",
+   "input": {
+    "encoded": "o0 s61 s61 s61 t f s706c616e o0 n n n - - - - + o1 s726561736f6e696e675f6566666f7274 s68696768 - - r",
+    "shown": "payload={} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields={'reasoning_effort': 'high'} registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o11 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768",
+    "shown": "{'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'high'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o11 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "post": {
+    "ok": true,
+    "out": "o11 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n s726561736f6e696e675f6566666f7274 s68696768"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "CallerPinWins",
+   "input": {
+    "encoded": "o1 s726561736f6e696e675f6566666f7274 s68696768 s61 s61 s61 t f s706c616e o0 n n n - - - - + o1 s726561736f6e696e675f6566666f7274 s6c6f77 - - r",
+    "shown": "payload={'reasoning_effort': 'high'} decision.model=ModelSpec(id='a', adapter='a', adapter_model_name='a', enabled=true, retired=false, billing='plan', payload_defaults={}) policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=(absent) effective_capability_score=(absent) score_source=(absent) score_provenance=(absent) extra_fields={'reasoning_effort': 'low'} registry=(absent) previous_adapter=(absent) detector=raises"
+   },
+   "ref": {
+    "encoded": "o11 s726561736f6e696e675f6566666f7274 s6c6f77 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n",
+    "shown": "{'reasoning_effort': 'low', 'billing': 'plan', 'registry_billing': 'plan', 'billing_source': 'registry', 'billing_evidence': ['registry:plan'], 'model': 'a', 'router_model_id': 'a', 'route_revision': 1, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "o11 s726561736f6e696e675f6566666f7274 s6c6f77 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n"
+   },
+   "post": {
+    "ok": true,
+    "out": "o11 s726561736f6e696e675f6566666f7274 s6c6f77 s62696c6c696e67 s706c616e s72656769737472795f62696c6c696e67 s706c616e s62696c6c696e675f736f75726365 s7265676973747279 s62696c6c696e675f65766964656e6365 l1 s72656769737472793a706c616e s6d6f64656c s61 s726f757465725f6d6f64656c5f6964 s61 s726f7574655f7265766973696f6e i1 s726f757465725f706f6c696379 n s726f757465725f6361706162696c6974795f6e6565646564 n s726f757465725f657374696d617465645f636f73745f757364 n"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 44,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 16,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": null,
+   "first_difference": {
+    "input": "o4 s62696c6c696e67 n s6175746f5f726f757465 i-3 s726f757465725f6d6f64656c5f6964 s6d32 s706172616d73 l1 o2 s6964 s6566666f7274 s76616c7565 s6c6f77 s6d31 s6f70656e6169 s792d6d656469756d f t s706c616e o0 i1 i50 s302e35 + l3 s6d31 s6d33 s6d32 + i70 + i3 + o0 - + L5 s6d31 s616e746967726176697479 s782d6c6f77 f t s706c616e o0 s6d31 s6f70656e6169 s792d6d656469756d f t s706c616e o0 s6d31 s636c617564652d636f6465 s6e32 f t s706c616e o0 s6d32 s636c617564652d636f6465 s782d6c6f77 t f s617069 o1 s666f6f n s6d32 s636f646578 s6d32 t f s756e6b6e6f776e o0 - d t s78",
+    "error": "KeyError: 'foo'"
+   }
+  }
+ },
+ "first_laws": [
+  "UnpinnedMedium",
+  "CallerPinWins",
+  "RevisionMonotonic"
+ ],
+ "cost_usd": 9.39,
+ "seconds": 868
+}

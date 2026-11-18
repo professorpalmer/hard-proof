@@ -1,0 +1,59 @@
+{
+ "start": "rl_b_opus_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled",
+  "NewRowsInStarterOrder"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_63d1437ed5ef",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 83,
+    "cost_usd": 0.61
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled",
+    "NewRowsInStarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled",
+  "NewRowsInStarterOrder"
+ ],
+ "questions": 0
+}

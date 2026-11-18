@@ -1,0 +1,465 @@
+{
+ "bug": "722ca0a0",
+ "title": "OpenRouter fallback sends a catalog short name as the model id",
+ "repo": "marionette",
+ "function": "build_pilot",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-c6bc761b99",
+   "folder": "~/Projects/hp-work/p/c6bc761b99",
+   "model": "opus",
+   "flow": "flow_785970ec8b05",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_78ff1da8400b"
+   ],
+   "seconds": 283,
+   "cost_usd": 2.285,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-156ce39b1d",
+   "folder": "~/Projects/hp-work/p/156ce39b1d",
+   "model": "sonnet",
+   "flow": "flow_4b23f9fd9126",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c237d1056a6a"
+   ],
+   "seconds": 55,
+   "cost_usd": 0.529,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-3e68661a9a",
+   "folder": "~/Projects/hp-work/p/3e68661a9a",
+   "model": "sonnet",
+   "flow": "flow_6830b63a51f2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f202121ee898"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.477,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-ca63adc15d",
+   "folder": "~/Projects/hp-work/p/ca63adc15d",
+   "model": "sonnet",
+   "flow": "flow_0529a6be93af",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_303efe953654"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.408,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-3ba8912215",
+   "folder": "~/Projects/hp-work/p/3ba8912215",
+   "model": "sonnet",
+   "flow": "flow_5b907a17dab5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0b71c516c9af"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.457,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-5a54341213",
+   "folder": "~/Projects/hp-work/p/5a54341213",
+   "model": "sonnet",
+   "flow": "flow_339774e87c15",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_205abe651415"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.395,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-5a9d846490",
+   "folder": "~/Projects/hp-work/p/5a9d846490",
+   "model": "sonnet",
+   "flow": "flow_4c2f2ee05f42",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9c1a0b311f62"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.458,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-b94e41e25a",
+   "folder": "~/Projects/hp-work/p/b94e41e25a",
+   "model": "sonnet",
+   "flow": "flow_3f3b4a51da17",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_32a7498168b6"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.388,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-5e174f21c9",
+   "folder": "~/Projects/hp-work/p/5e174f21c9",
+   "model": "sonnet",
+   "flow": "flow_a779d256536f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9b6a5512ec0e"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.497,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-58581e4833",
+   "folder": "~/Projects/hp-work/p/58581e4833",
+   "model": "sonnet",
+   "flow": "flow_cece63438416",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a5db8fe8ec31"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.393,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-b9f34e221b",
+   "folder": "~/Projects/hp-work/p/b9f34e221b",
+   "model": "sonnet",
+   "flow": "flow_9b25f3c3e6d2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_055905178431"
+   ],
+   "seconds": 72,
+   "cost_usd": 0.633,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-3167b704f9",
+   "folder": "~/Projects/hp-work/p/3167b704f9",
+   "model": "sonnet",
+   "flow": "flow_ff4c75008a58",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_49d862b100e4"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.486,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-5b1a99de2a",
+   "folder": "~/Projects/hp-work/p/5b1a99de2a",
+   "model": "sonnet",
+   "flow": "flow_07024d79c330",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f9ffd1a5645c"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.419,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-58851397b2",
+   "folder": "~/Projects/hp-work/p/58851397b2",
+   "model": "sonnet",
+   "flow": "flow_5fefc85adc98",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_29d7beca2891"
+   ],
+   "seconds": 89,
+   "cost_usd": 0.719,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-796effd1f2",
+   "folder": "~/Projects/hp-work/p/796effd1f2",
+   "model": "sonnet",
+   "flow": "flow_767b907b7200",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_21bac5c0dd51"
+   ],
+   "seconds": 53,
+   "cost_usd": 0.533,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-69feeaef5a",
+   "folder": "~/Projects/hp-work/p/69feeaef5a",
+   "model": "sonnet",
+   "flow": "flow_f7238f330a29",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e1a6a194b820"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.395,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ExplicitProviderModel",
+   "input": {
+    "encoded": "s97.58.98 n 1 s97 0 s 0 0 0 0",
+    "shown": "spec=\"a:b\" max_tokens=none providers=[{name=\"a\" env_vars=[] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[]"
+   },
+   "ref": {
+    "encoded": "E s110.111.32.112.114.111.118.105.100.101.114.32.107.101.121.32.97.118.97.105.108.97.98.108.101.32.102.111.114.32.112.105.108.111.116.32.39.97.58.98.39.46.32.83.101.116.32.111.110.101.32.111.102.58.32",
+    "shown": "ProviderError(\"no provider key available for pilot 'a:b'. Set one of: \")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "E s110.111.32.112.114.111.118.105.100.101.114.32.107.101.121.32.97.118.97.105.108.97.98.108.101.32.102.111.114.32.112.105.108.111.116.32.39.97.58.98.39.46.32.83.101.116.32.111.110.101.32.111.102.58.32"
+   },
+   "post": {
+    "ok": true,
+    "out": "E s110.111.32.112.114.111.118.105.100.101.114.32.107.101.121.32.97.118.97.105.108.97.98.108.101.32.102.111.114.32.112.105.108.111.116.32.39.97.58.98.39.46.32.83.101.116.32.111.110.101.32.111.102.58.32"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "ExplicitProviderModel",
+   "input": {
+    "encoded": "s97.58.98 n 1 s97 1 s75 s 0 0 0 1 s75 s120",
+    "shown": "spec=\"a:b\" max_tokens=none providers=[{name=\"a\" env_vars=[\"K\"] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[(\"K\", \"x\")]"
+   },
+   "ref": {
+    "encoded": "D O s97.58.98 s98 s s75 1500",
+    "shown": "OpenAICompatDriver(name=\"a:b\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=1500)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 1500"
+   },
+   "post": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 1500"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "BareFirstAvailable",
+   "input": {
+    "encoded": "s109 n 1 s97 1 s75 s 0 0 1 s109 1 s75 s120",
+    "shown": "spec=\"m\" max_tokens=none providers=[{name=\"a\" env_vars=[\"K\"] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[\"m\"]}] environ=[(\"K\", \"x\")]"
+   },
+   "ref": {
+    "encoded": "D O s109 s109 s s75 1500",
+    "shown": "OpenAICompatDriver(name=\"m\", model=\"m\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=1500)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D O s109 s109 s s75 1500"
+   },
+   "post": {
+    "ok": true,
+    "out": "D O s109 s109 s s75 1500"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "BareOpenRouterLastResort",
+   "input": {
+    "encoded": "s109 n 1 s111.112.101.110.114.111.117.116.101.114 1 s75 s 0 0 0 1 s75 s120",
+    "shown": "spec=\"m\" max_tokens=none providers=[{name=\"openrouter\" env_vars=[\"K\"] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[(\"K\", \"x\")]"
+   },
+   "ref": {
+    "encoded": "D O s109 s109 s s75 1500",
+    "shown": "OpenAICompatDriver(name=\"m\", model=\"m\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=1500)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D O s109 s109 s s75 1500"
+   },
+   "post": {
+    "ok": true,
+    "out": "D O s109 s109 s s75 1500"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "s97.58.98 n 1 s97 1 s75 s 0 0 0 1 s75 s120",
+    "shown": "spec=\"a:b\" max_tokens=none providers=[{name=\"a\" env_vars=[\"K\"] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[(\"K\", \"x\")]"
+   },
+   "design_a": {
+    "encoded": "D O s s98 s s75 0",
+    "shown": "OpenAICompatDriver(name=\"\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=0)"
+   },
+   "design_b": {
+    "encoded": "D O s s98 s s75 1",
+    "shown": "OpenAICompatDriver(name=\"\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=1)"
+   },
+   "ref": {
+    "encoded": "D O s97.58.98 s98 s s75 1500",
+    "shown": "OpenAICompatDriver(name=\"a:b\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=1500)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 1500"
+   },
+   "post": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 1500"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "s97.58.98 i5 1 s97 1 s75 s 0 0 0 1 s75 s120",
+    "shown": "spec=\"a:b\" max_tokens=(some 5) providers=[{name=\"a\" env_vars=[\"K\"] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[(\"K\", \"x\")]"
+   },
+   "design_a": {
+    "encoded": "D O s s98 s s75 5",
+    "shown": "OpenAICompatDriver(name=\"\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=5)"
+   },
+   "design_b": {
+    "encoded": "D O s s98 s s75 6",
+    "shown": "OpenAICompatDriver(name=\"\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=6)"
+   },
+   "ref": {
+    "encoded": "D O s97.58.98 s98 s s75 5",
+    "shown": "OpenAICompatDriver(name=\"a:b\", model=\"b\", base_url=\"\", api_key_env=(some \"K\"), max_tokens=5)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 5"
+   },
+   "post": {
+    "ok": true,
+    "out": "D O s97.58.98 s98 s s75 5"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 52,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 16,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 6,
+   "first_difference": {
+    "input": "s103.112.116.45.53.46.52.58.103.108.109.45.53.46.50 i-1 9 s111.112.101.110.114.111.117.116.101.114 1 s79.80.69.78.82.79.85.84.69.82.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.111.112.101.110.114.111.117.116.101.114.46.97.105.47.97.112.105.47.118.49 0 1 s111.114 6 s113.119.101.110.47.113.119.101.110.51.45.99.111.100.101.114.45.51.48.98.45.97.51.98.45.105.110.115.116.114.117.99.116 s122.45.97.105.47.103.108.109.45.53.46.50 s100.101.101.112.115.101.101.107.47.100.101.101.112.115.101.101.107.45.118.52.45.112.114.111 s109.111.111.110.115.104.111.116.97.105.47.107.105.109.105.45.107.50.46.54 s97.110.116.104.114.111.112.105.99.47.99.108.97.117.100.101.45.111.112.117.115.45.52.46.56 s111.112.101.110.97.105.47.103.112.116.45.53.46.52 s97.110.116.104.114.111.112.105.99 2 s65.78.84.72.82.79.80.73.67.95.65.80.73.95.75.69.89 s65.78.84.72.82.79.80.73.67.95.84.79.75.69.78 s104.116.116.112.115.58.47.47.97.112.105.46.97.110.116.104.114.111.112.105.99.46.99.111.109 1 1 s99.108.97.117.100.101 3 s99.108.97.117.100.101.45.111.112.117.115.45.52.45.56 s99.108.97.117.100.101.45.115.111.110.110.101.116.45.52.45.53 s99.108.97.117.100.101.45.104.97.105.107.117.45.52.45.53 s111.112.101.110.97.105 1 s79.80.69.78.65.73.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.97.112.105.46.111.112.101.110.97.105.46.99.111.109.47.118.49 0 1 s111.97.105 2 s103.112.116.45.53.46.52 s103.112.116.45.53.46.52.45.109.105.110.105 s103.101.109.105.110.105 2 s71.69.77.73.78.73.95.65.80.73.95.75.69.89 s71.79.79.71.76.69.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.103.101.110.101.114.97.116.105.118.101.108.97.110.103.117.97.103.101.46.103.111.111.103.108.101.97.112.105.115.46.99.111.109.47.118.49.98.101.116.97.47.111.112.101.110.97.105 0 2 s103.111.111.103.108.101 s103.111.111.103.108.101.45.103.101.109.105.110.105 2 s103.101.109.105.110.105.45.102.108.97.115.104.45.108.97.116.101.115.116 s103.101.109.105.110.105.45.112.114.111.45.108.97.116.101.115.116 s100.101.101.112.115.101.101.107 1 s68.69.69.80.83.69.69.75.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.97.112.105.46.100.101.101.112.115.101.101.107.46.99.111.109.47.118.49 0 1 s100.101.101.112.115.101.101.107.45.99.104.97.116 2 s100.101.101.112.115.101.101.107.45.99.104.97.116 s100.101.101.112.115.101.101.107.45.114.101.97.115.111.110.101.114 s122.97.105 3 s71.76.77.95.65.80.73.95.75.69.89 s90.65.73.95.65.80.73.95.75.69.89 s90.95.65.73.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.97.112.105.46.122.46.97.105.47.97.112.105.47.112.97.97.115.47.118.52 0 3 s103.108.109 s122.45.97.105 s122.104.105.112.117 2 s103.108.109.45.53.46.50 s103.108.109.45.52.46.55.45.102.108.97.115.104 s109.105.110.105.109.97.120 1 s77.73.78.73.77.65.88.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.97.112.105.46.109.105.110.105.109.97.120.46.105.111.47.97.110.116.104.114.111.112.105.99 1 1 s109.105.110.105.45.109.97.120 2 s77.105.110.105.77.97.120.45.77.51 s77.105.110.105.77.97.120.45.77.50.46.55 s120.97.105 1 s88.65.73.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.97.112.105.46.120.46.97.105.47.118.49 0 2 s103.114.111.107 s120.45.97.105 2 s103.114.111.107.45.52 s103.114.111.107.45.52.45.102.97.115.116 s110.118.105.100.105.97 1 s78.86.73.68.73.65.95.65.80.73.95.75.69.89 s104.116.116.112.115.58.47.47.105.110.116.101.103.114.97.116.101.46.97.112.105.46.110.118.105.100.105.97.46.99.111.109.47.118.49 0 1 s110.118.105.100.105.97.45.110.105.109 2 s113.119.101.110.47.113.119.101.110.51.45.99.111.100.101.114.45.52.56.48.98 s100.101.101.112.115.101.101.107.45.97.105.47.100.101.101.112.115.101.101.107.45.118.51.46.49 8 s79.80.69.78.82.79.85.84.69.82.95.65.80.73.95.75.69.89 s39.39 s79.80.69.78.65.73.95.65.80.73.95.75.69.89 s32.107.32 s71.79.79.71.76.69.95.65.80.73.95.75.69.89 s32.9.32 s90.95.65.73.95.65.80.73.95.75.69.89 s32.9.32 s88.65.73.95.65.80.73.95.75.69.89 s32 s68.69.69.80.83.69.69.75.95.65.80.73.95.75.69.89 s9 s90.65.73.95.65.80.73.95.75.69.89 s32.9.32 s65.78.84.72.82.79.80.73.67.95.65.80.73.95.75.69.89 s32.107.32",
+    "lean_ref": "D O s103.112.116.45.53.46.52.58.103.108.109.45.53.46.50 s103.108.109.45.53.46.50 s104.116.116.112.115.58.47.47.111.112.101.110.114.111.117.116.101.114.46.97.105.47.97.112.105.47.118.49 s79.80.69.78.82.79.85.84.69.82.95.65.80.73.95.75.69.89 -1",
+    "python": "D O s103.112.116.45.53.46.52.58.103.108.109.45.53.46.50 s122.45.97.105.47.103.108.109.45.53.46.50 s104.116.116.112.115.58.47.47.111.112.101.110.114.111.117.116.101.114.46.97.105.47.97.112.105.47.118.49 s79.80.69.78.82.79.85.84.69.82.95.65.80.73.95.75.69.89 -1"
+   }
+  }
+ },
+ "first_laws": [
+  "ExplicitProviderModel",
+  "BareFirstAvailable",
+  "BareOpenRouterLastResort"
+ ],
+ "cost_usd": 9.47,
+ "seconds": 834
+}

@@ -1,0 +1,100 @@
+{
+ "start": "rl_a_haiku_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "RowsStay",
+  "NewAtEnd",
+  "AddsOnlyAbsent",
+  "AddsEveryAbsent",
+  "NoSameIdentity",
+  "EnabledRule",
+  "StarterOrder"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_e617d11983f7",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 60,
+    "cost_usd": 0.51
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "RowsStay",
+    "NewAtEnd",
+    "AddsOnlyAbsent",
+    "AddsEveryAbsent",
+    "NoSameIdentity",
+    "EnabledRule",
+    "StarterOrder"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+   "law_author": {
+    "flow": "flow_a8eae2446a2f",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 31,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "AbsentStartersKeepMultiplicity": "\u2200 (c : Config) (st r tail : List Entry), f c st r = r ++ tail \u2192 tail.map Entry.id = ((st.filter (absent r)).map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_3acec6a9304f",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 50,
+    "cost_usd": 0.51
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "RowsStay",
+    "NewAtEnd",
+    "AddsOnlyAbsent",
+    "AddsEveryAbsent",
+    "NoSameIdentity",
+    "EnabledRule",
+    "StarterOrder",
+    "AbsentStartersKeepMultiplicity"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "RowsStay",
+  "NewAtEnd",
+  "AddsOnlyAbsent",
+  "AddsEveryAbsent",
+  "NoSameIdentity",
+  "EnabledRule",
+  "StarterOrder",
+  "AbsentStartersKeepMultiplicity"
+ ],
+ "questions": 1
+}

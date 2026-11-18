@@ -1,0 +1,510 @@
+{
+ "bug": "eaeb5933",
+ "title": "SQLite retrieve_memory ANDs query terms, drops any-term matches",
+ "repo": "Puppetmaster",
+ "function": "SQLiteSwarmStore.retrieve_memory",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-58d1f1777b",
+   "folder": "~/Projects/hp-work/p/58d1f1777b",
+   "model": "opus",
+   "flow": "flow_045f029cc8c3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9d0b27c3c48d"
+   ],
+   "seconds": 900,
+   "cost_usd": 3.295,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-61c498d4d7",
+   "folder": "~/Projects/hp-work/p/61c498d4d7",
+   "model": "sonnet",
+   "flow": "flow_990ab25ed67b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f0799e14ae03"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.47,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-16420c56e9",
+   "folder": "~/Projects/hp-work/p/16420c56e9",
+   "model": "sonnet",
+   "flow": "flow_bfb1c61b0358",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_51544a2bf4e6"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.577,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-810497de3a",
+   "folder": "~/Projects/hp-work/p/810497de3a",
+   "model": "sonnet",
+   "flow": "flow_457b53fc8d48",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4a7e6ecfc688"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.496,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-0da1a1e588",
+   "folder": "~/Projects/hp-work/p/0da1a1e588",
+   "model": "sonnet",
+   "flow": "flow_ca0335bbd426",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b30d2a503faf"
+   ],
+   "seconds": 81,
+   "cost_usd": 0.66,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-4462e500cd",
+   "folder": "~/Projects/hp-work/p/4462e500cd",
+   "model": "sonnet",
+   "flow": "flow_65d2c5568f4e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c194bd685c7a"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.421,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-ec47d50ccf",
+   "folder": "~/Projects/hp-work/p/ec47d50ccf",
+   "model": "sonnet",
+   "flow": "flow_c89b87094492",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_08893296d465"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.399,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-2cf9310765",
+   "folder": "~/Projects/hp-work/p/2cf9310765",
+   "model": "sonnet",
+   "flow": "flow_4f140531363d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_267c21d35bff"
+   ],
+   "seconds": 104,
+   "cost_usd": 0.779,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-a82d1165aa",
+   "folder": "~/Projects/hp-work/p/a82d1165aa",
+   "model": "sonnet",
+   "flow": "flow_162b23e1395e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_061ad06f2acb"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.498,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-d1afd295ee",
+   "folder": "~/Projects/hp-work/p/d1afd295ee",
+   "model": "sonnet",
+   "flow": "flow_112a3caccea2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dabf7c79df8c"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.392,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-3ce2763efd",
+   "folder": "~/Projects/hp-work/p/3ce2763efd",
+   "model": "sonnet",
+   "flow": "flow_56576f0a6bc4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8f692756decb"
+   ],
+   "seconds": 132,
+   "cost_usd": 0.858,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-a8ed5f8f14",
+   "folder": "~/Projects/hp-work/p/a8ed5f8f14",
+   "model": "sonnet",
+   "flow": "flow_2038ff21f7ff",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d37933f19fb3"
+   ],
+   "seconds": 50,
+   "cost_usd": 0.538,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-de7fc30904",
+   "folder": "~/Projects/hp-work/p/de7fc30904",
+   "model": "sonnet",
+   "flow": "flow_eb58d934eaa1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_08588b24ef4a"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.432,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-28db894307",
+   "folder": "~/Projects/hp-work/p/28db894307",
+   "model": "sonnet",
+   "flow": "flow_bcdd2c3292fa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_60981ced4620"
+   ],
+   "seconds": 113,
+   "cost_usd": 0.755,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-1fd155e417",
+   "folder": "~/Projects/hp-work/p/1fd155e417",
+   "model": "sonnet",
+   "flow": "flow_2311132735b0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bb07f19dce31"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.49,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-b4d9e42254",
+   "folder": "~/Projects/hp-work/p/b4d9e42254",
+   "model": "sonnet",
+   "flow": "flow_9342198509ca",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e5292cf01abc"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.394,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-17a453dbed",
+   "folder": "~/Projects/hp-work/p/17a453dbed",
+   "model": "sonnet",
+   "flow": "flow_d8f40f6e1df1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9f2eed2265db"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.419,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-eed209110c",
+   "folder": "~/Projects/hp-work/p/eed209110c",
+   "model": "sonnet",
+   "flow": "flow_ff10eddff8fe",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8ef900ed1501"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.391,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "SortedByConfidence",
+   "input": {
+    "encoded": "Q x726f6c6520616263 L 10 F - - - - N 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a",
+    "shown": "query=\"role abc\" limit=10 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a",
+    "shown": "[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "Q x L 0 F - - - - N 1 a a a a a a a",
+    "shown": "query=\"\" limit=0 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "design_a": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "Q x L 1 F - - - - N 1 a a a a a a a",
+    "shown": "query=\"\" limit=1 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "design_a": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 1 a a a a a a a"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 1 a a a a a a a"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "Q x616263 L 1 F - - - - N 1 a a a a a a a",
+    "shown": "query=\"abc\" limit=1 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "design_a": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "Q x L -1 F - - - - N 1 a a a a a a a",
+    "shown": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "design_a": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 0",
+    "shown": "[]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "NegativeLimitEmpty",
+   "input": {
+    "encoded": "Q x L -1 F - - - - N 2 a a a a a a a a a a a a a a",
+    "shown": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent); (adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "ref": {
+    "encoded": "R 1 a a a a a a a",
+    "shown": "[(adapter=absent confidence=absent evidence=absent role=absent scope=absent statement=absent topic=absent)]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "R 1 a a a a a a a"
+   },
+   "post": {
+    "ok": true,
+    "out": "R 1 a a a a a a a"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 15,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 692,
+   "first_difference": {
+    "input": "Q x0a726f6c6520204e6f6e655b5d612262202074202054 L 4 F - - - - N 5 x666f d 7 l 0 x x726f6c65 x x73746174656d656e7420272c2027 x7b20636f6e666964656e6365 i -1 l 3 x7d206e756c6c20466f6f x5d416163 x61646170746572202c x424152 x4265746120223a2022 x3a x666f x4e6f6e65205b5d20612262 d -5 a x69742773 x616263205b5d20746f706963 x3a x666f206162204e6f6e65 x73746174656d656e7420272c2027 a l 3 x x x3a n a x746f70696320612262 x73636f706520666f20272c2027 x61226220726f6c652061646170746572 d 3 l 1 x697427732078797a x74727565 n x73746174656d656e7420272c2027 x",
+    "lean_ref": "R 0",
+    "python": "R 2 x666f d 7 l 0 x x726f6c65 x x73746174656d656e7420272c2027 x61226220726f6c652061646170746572 d 3 l 1 x697427732078797a x74727565 n x73746174656d656e7420272c2027 x"
+   }
+  }
+ },
+ "first_laws": [
+  "FilterSound",
+  "FromTable",
+  "SortedByConfidence"
+ ],
+ "cost_usd": 12.26,
+ "seconds": 1729
+}

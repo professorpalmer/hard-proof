@@ -1,0 +1,196 @@
+{
+ "name": "dl_a_opus",
+ "start": "a_opus",
+ "base": "base",
+ "folder": "9aecd3370a",
+ "flow": "flow_28004c6e3f79",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 42,
+   "cost_usd": 0.428,
+   "jobs": [
+    "job_6644cd4e8bcb"
+   ],
+   "session_cost_usd": 0.428
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 40,
+   "cost_usd": 0.47,
+   "jobs": [
+    "job_95e39368ca7d"
+   ],
+   "session_cost_usd": 0.47
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 30,
+   "cost_usd": 0.091,
+   "jobs": [
+    "job_ff692f572720"
+   ],
+   "session_cost_usd": 0.519
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 18,
+   "cost_usd": 0.065,
+   "jobs": [
+    "job_2bb558d05f09"
+   ],
+   "session_cost_usd": 0.535
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 56,
+   "cost_usd": 0.207,
+   "jobs": [
+    "job_432d9e915e7f"
+   ],
+   "session_cost_usd": 0.726
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 17,
+   "cost_usd": 0.064,
+   "jobs": [
+    "job_86469897b154"
+   ],
+   "session_cost_usd": 0.599
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 61,
+   "cost_usd": 0.193,
+   "jobs": [
+    "job_4cda7d02dd07"
+   ],
+   "session_cost_usd": 0.919
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 3,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled)]",
+   "new_laws": {
+    "NewRowsOnce": "\u2200 c st r t, DistinctIds st \u2192 st.Nodup \u2192 f c st r = r ++ t \u2192 t.Pairwise (fun a b => a.id \u2260 b.id)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 1 (adapter 1, model 1, disabled)]",
+   "new_laws": {
+    "NewRowsInOrder": "\u2200 c st r t, DistinctIds st \u2192 f c st r = r ++ t \u2192 (t.map Entry.id).Sublist (st.map Entry.id)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+   "new_laws": {
+    "NewRowCount": "\u2200 c st r t, DistinctIds st \u2192 f c st r = r ++ t \u2192 t.length = (st.filter (absent r)).length"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 7,
+ "cost_usd": 1.52,
+ "seconds": 264,
+ "final_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewRowsOnce",
+  "NewRowsInOrder",
+  "NewRowCount"
+ ]
+}

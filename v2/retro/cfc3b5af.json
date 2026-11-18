@@ -1,0 +1,508 @@
+{
+ "bug": "cfc3b5af",
+ "title": "Prompt-cache marker put on an empty text block",
+ "repo": "marionette",
+ "function": "AnthropicDriver._build_body._mark",
+ "kind": "boundary",
+ "stages": [
+  {
+   "flow_id": "hp2-a56ade5fbb",
+   "folder": "~/Projects/hp-work/p/a56ade5fbb",
+   "model": "opus",
+   "flow": "flow_c162d66d365e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f223960d6bfc"
+   ],
+   "seconds": 230,
+   "cost_usd": 2.071,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-1c1ae18d02",
+   "folder": "~/Projects/hp-work/p/1c1ae18d02",
+   "model": "sonnet",
+   "flow": "flow_8ba2078c9bfc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d789addccaa6"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.441,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-18c3578dcd",
+   "folder": "~/Projects/hp-work/p/18c3578dcd",
+   "model": "sonnet",
+   "flow": "flow_e8f50d2edcbf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_017487ee4a10"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.46,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-d8e74c84fd",
+   "folder": "~/Projects/hp-work/p/d8e74c84fd",
+   "model": "sonnet",
+   "flow": "flow_6c619c230e8c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a472372c021e"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.39,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-613cf159be",
+   "folder": "~/Projects/hp-work/p/613cf159be",
+   "model": "sonnet",
+   "flow": "flow_032036f431c8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c70f11965668"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.42,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-3ec3b09d8e",
+   "folder": "~/Projects/hp-work/p/3ec3b09d8e",
+   "model": "sonnet",
+   "flow": "flow_18d3dda99ccc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0fbec9545046"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.458,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-829de6fcc2",
+   "folder": "~/Projects/hp-work/p/829de6fcc2",
+   "model": "sonnet",
+   "flow": "flow_383ed46f3e69",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0a68be3426dd"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.505,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-2624e244b4",
+   "folder": "~/Projects/hp-work/p/2624e244b4",
+   "model": "sonnet",
+   "flow": "flow_a9a7668221c8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c13ae7a45477"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.403,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-2cb6ee8041",
+   "folder": "~/Projects/hp-work/p/2cb6ee8041",
+   "model": "sonnet",
+   "flow": "flow_f5a5f499b912",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_12bfc5b56850"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.41,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-17ab465961",
+   "folder": "~/Projects/hp-work/p/17ab465961",
+   "model": "sonnet",
+   "flow": "flow_ebed1a51f392",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_781dd0fb3feb"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.469,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-849af74a36",
+   "folder": "~/Projects/hp-work/p/849af74a36",
+   "model": "sonnet",
+   "flow": "flow_f26555af63f1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3e13f8ae2b05"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.425,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-39be92746d",
+   "folder": "~/Projects/hp-work/p/39be92746d",
+   "model": "sonnet",
+   "flow": "flow_8ddde87eba86",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6e93b53d29ff"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.396,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-06fe2c3ef0",
+   "folder": "~/Projects/hp-work/p/06fe2c3ef0",
+   "model": "sonnet",
+   "flow": "flow_61055bf1824a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_74862b57008c"
+   ],
+   "seconds": 47,
+   "cost_usd": 0.499,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-7bcb8d5193",
+   "folder": "~/Projects/hp-work/p/7bcb8d5193",
+   "model": "sonnet",
+   "flow": "flow_b90a02f45641",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_25d30e940f76"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.415,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-01184e8bc1",
+   "folder": "~/Projects/hp-work/p/01184e8bc1",
+   "model": "sonnet",
+   "flow": "flow_b42b2cd9e2f2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_382efaa931ee"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.406,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-74d8e2b04e",
+   "folder": "~/Projects/hp-work/p/74d8e2b04e",
+   "model": "sonnet",
+   "flow": "flow_f7c2874fd52c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6f402ab0e0b6"
+   ],
+   "seconds": 50,
+   "cost_usd": 0.518,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-14ef8cbdad",
+   "folder": "~/Projects/hp-work/p/14ef8cbdad",
+   "model": "sonnet",
+   "flow": "flow_d539fd56aa72",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7965f58a548c"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.506,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-6e384b5803",
+   "folder": "~/Projects/hp-work/p/6e384b5803",
+   "model": "sonnet",
+   "flow": "flow_89f58cfbdc64",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2e9a510dfc5d"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.389,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "Marks",
+   "input": {
+    "encoded": "{s99,111,110,116,101,110,116;[n]}",
+    "shown": "{ msg := HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.cons (HP.Val.null) (HP.VList.nil))) (HP.Dict.nil) }"
+   },
+   "ref": {
+    "encoded": "{s99,111,110,116,101,110,116;[n]}",
+    "shown": "HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.cons (HP.Val.null) (HP.VList.nil))) (HP.Dict.nil)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[n]}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[n]}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "Marks",
+   "input": {
+    "encoded": "{s99,111,110,116,101,110,116;[{}i0;]}",
+    "shown": "{ msg := HP.Dict.cons"
+   },
+   "ref": {
+    "encoded": "{s99,111,110,116,101,110,116;[{}i0;]}",
+    "shown": "HP.Dict.cons"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[{}i0;]}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[{}i0;]}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "{}",
+    "shown": "{ msg := HP.Dict.nil }"
+   },
+   "design_a": {
+    "encoded": "{s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}}",
+    "shown": "HP.Dict.cons \"cache_control\" (HP.Val.obj (HP.Dict.cons \"type\" (HP.Val.str \"ephemeral\") (HP.Dict.nil))) (HP.Dict.nil)"
+   },
+   "design_b": {
+    "encoded": "{s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}s101,120,116,114,97;n}",
+    "shown": "HP.Dict.cons"
+   },
+   "ref": {
+    "encoded": "{}",
+    "shown": "HP.Dict.nil"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "{s99,111,110,116,101,110,116;i0;}",
+    "shown": "{ msg := HP.Dict.cons \"content\" (HP.Val.int 0) (HP.Dict.nil) }"
+   },
+   "design_a": {
+    "encoded": "{s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}s99,111,110,116,101,110,116;i0;}",
+    "shown": "HP.Dict.cons"
+   },
+   "design_b": {
+    "encoded": "{s99,111,110,116,101,110,116;i0;}",
+    "shown": "HP.Dict.cons \"content\" (HP.Val.int 0) (HP.Dict.nil)"
+   },
+   "ref": {
+    "encoded": "{s99,111,110,116,101,110,116;i0;}",
+    "shown": "HP.Dict.cons \"content\" (HP.Val.int 0) (HP.Dict.nil)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;i0;}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;i0;}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "{s99,111,110,116,101,110,116;s97;}",
+    "shown": "{ msg := HP.Dict.cons \"content\" (HP.Val.str \"a\") (HP.Dict.nil) }"
+   },
+   "design_a": {
+    "encoded": "{s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}s99,111,110,116,101,110,116;s97;}",
+    "shown": "HP.Dict.cons"
+   },
+   "design_b": {
+    "encoded": "{s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}s122,122;ns99,111,110,116,101,110,116;s97;}",
+    "shown": "HP.Dict.cons"
+   },
+   "ref": {
+    "encoded": "{s99,111,110,116,101,110,116;[{s116,121,112,101;s116,101,120,116;s116,101,120,116;s97;s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}}]}",
+    "shown": "HP.Dict.cons"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[{s116,121,112,101;s116,101,120,116;s116,101,120,116;s97;s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}}]}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[{s116,121,112,101;s116,101,120,116;s116,101,120,116;s97;s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}}]}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "{s99,111,110,116,101,110,116;[]}",
+    "shown": "{ msg := HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.nil)) (HP.Dict.nil) }"
+   },
+   "design_a": {
+    "encoded": "{s99,111,110,116,101,110,116;[]}",
+    "shown": "HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.nil)) (HP.Dict.nil)"
+   },
+   "design_b": {
+    "encoded": "{s122,122,122;ns99,111,110,116,101,110,116;[]}",
+    "shown": "HP.Dict.cons \"zzz\" (HP.Val.null) (HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.nil)) (HP.Dict.nil))"
+   },
+   "ref": {
+    "encoded": "{s99,111,110,116,101,110,116;[]}",
+    "shown": "HP.Dict.cons \"content\" (HP.Val.arr (HP.VList.nil)) (HP.Dict.nil)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[]}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s99,111,110,116,101,110,116;[]}"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 9,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 972,
+   "first_difference": {
+    "input": "{s120;i1;s99,111,110,116,101,110,116;s;}",
+    "lean_ref": "{s120;i1;s99,111,110,116,101,110,116;[{s116,121,112,101;s116,101,120,116;s116,101,120,116;s;s99,97,99,104,101,95,99,111,110,116,114,111,108;{s116,121,112,101;s101,112,104,101,109,101,114,97,108;}}]}",
+    "python": "{s120;i1;s99,111,110,116,101,110,116;s;}"
+   }
+  }
+ },
+ "first_laws": [
+  "Marks"
+ ],
+ "cost_usd": 9.58,
+ "seconds": 757
+}

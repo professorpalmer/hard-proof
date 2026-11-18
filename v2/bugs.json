@@ -1,0 +1,3824 @@
+[
+ {
+  "title": "_reads_request searches the nested graph of an entry map and skips entry parallel branches",
+  "repo": "Puppetmaster",
+  "fix_commit": "61db51b3fe63254c558fc8cd24bcdff53ba3170c",
+  "parent_commit": "f6ed20cc41fff23621227db7b049783ab324808e",
+  "file": "puppetmaster/flow.py",
+  "function": "_reads_request",
+  "function_lines_at_parent": [
+   2641,
+   2654
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function removed only the top-level 'revise' key of the entry node and then searched the whole entry node as JSON for {{prev}}. When the entry node is a map, the inner builder's 'revise' (and later inner nodes) were in that text, so the item counted as one that reads the request. The branches of an entry parallel were never searched, so a branch task with {{prev}} did not count.",
+  "failing_input": "flow._reads_request({'entry': 'regions', 'edges': [], 'nodes': [{'id': 'regions', 'kind': 'map', 'items': '{{item.regions}}', 'graph': {'entry': 'build', 'edges': [], 'nodes': [{'id': 'build', 'kind': 'agent', 'task': 't', 'revise': 'Fix: {{prev}}'}]}}]}); second case: flow._reads_request({'entry': 'both', 'edges': [], 'nodes': [{'id': 'both', 'kind': 'parallel', 'branches': ['a', 'b']}, {'id': 'a', 'kind': 'agent', 'task': 't'}, {'id': 'b', 'kind': 'agent', 'task': 'Do {{prev}}'}]})",
+  "wrong_result": "True for the entry-map graph; False for the entry-parallel graph",
+  "right_result": "False for the entry-map graph; True for the entry-parallel graph",
+  "intended_behavior_text_before_fix": {
+   "text": "``{{input}}`` anywhere, or ``{{prev}}`` in the entry node's task, puts the\n    request into the item's own task. ``revise`` does not count: it is the\n    message to a resumed session (a repair, or a follow-up where its ``prev``\n    carries the request), and every builder that runs on a follow-up gets the\n    request in some form.",
+   "file": "puppetmaster/flow.py",
+   "commit": "f6ed20cc41fff23621227db7b049783ab324808e"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-00",
+  "id": "1e29a408",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"map\": true, \"parallel\": false}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"map\": false, \"parallel\": true}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "_item_scopes ignores the files that an inner map of an item writes",
+  "repo": "Puppetmaster",
+  "fix_commit": "e449108b3cd6d31fdd5eb2d38eca67131e9c8e13",
+  "parent_commit": "fe94dd98249a782e29085737e95e118c381aa0c8",
+  "file": "puppetmaster/flow.py",
+  "function": "_item_scopes",
+  "function_lines_at_parent": [
+   2340,
+   2350
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function collected 'files' only from code agent nodes at the top level of the item graph. A code agent inside a nested map node of the item was not visited, so an item that fans out again got an empty write scope, and peer workers were then charged with its files.",
+  "failing_input": "flow._item_scopes({'nodes': [{'id': 'regions', 'kind': 'map', 'items': '{{item.regions}}', 'graph': {'entry': 'build', 'edges': [], 'nodes': [{'id': 'build', 'kind': 'agent', 'task': 't', 'files': ['regions/{{item}}.py']}]}}]}, ['g0'], [{'regions': ['r1', 'r2']}])",
+  "wrong_result": "{'g0': []}",
+  "right_result": "{'g0': ['regions/r1.py', 'regions/r2.py']}",
+  "intended_behavior_text_before_fix": {
+   "text": "Each item's declared write scope: the rendered ``files`` of its code nodes.",
+   "file": "puppetmaster/flow.py",
+   "commit": "fe94dd98249a782e29085737e95e118c381aa0c8"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-00",
+  "id": "c92e54d2",
+  "pre_result": {
+   "ok": true,
+   "result": "{'g0': []}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'g0': []}"
+  },
+  "verified": false,
+  "verify_note": "the two trees give the same result"
+ },
+ {
+  "title": "_gate_write_scope passes a run outside Git that it could not observe",
+  "repo": "Puppetmaster",
+  "fix_commit": "ef57f1cf991e7bae81652878044cad7dbe588d08",
+  "parent_commit": "1f96c07f28756938b1c41cf57d521632e8498a1d",
+  "file": "puppetmaster/gates.py",
+  "function": "_gate_write_scope",
+  "function_lines_at_parent": [
+   336,
+   424
+  ],
+  "kind": "state",
+  "what_was_wrong": "Without an attributed delta, the gate took the changed files from git_snapshot. Outside a Git work tree the snapshot lists no changes whether or not files changed, and the gate read the empty list as 'no writes' and passed. It did not check snapshot['is_worktree'].",
+  "failing_input": "gates._gate_write_scope('ws', {'scope': ['src/*']}, [], tmp_dir) where tmp_dir is not a Git work tree and holds tests/test_x.py written by the worker, and puppetmaster.adapters.git_snapshot returns {'is_worktree': False, 'changed_files': [], 'untracked_files': []}",
+  "wrong_result": "GateResult passed=True, reason 'all writes within declared scope'",
+  "right_result": "GateResult passed=False, reason 'change observation unavailable: cwd is not a git work tree and the run has no attributed delta, so writes outside the scope cannot be ruled out', details observation 'unavailable'",
+  "intended_behavior_text_before_fix": {
+   "text": "Every file the run changed must match one of the declared globs. A write\n    outside scope means the worker strayed into territory another task owns",
+   "file": "puppetmaster/gates.py",
+   "commit": "1f96c07f28756938b1c41cf57d521632e8498a1d"
+  },
+  "state_needed": "git_snapshot patched to return the non-worktree dict above (or a real temp dir without Git); empty artifacts list",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-00",
+  "id": "453b6524",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"details\": {\"changed_files\": [], \"scope\": [\"src/*\"]}, \"passed\": true, \"reason\": \"all writes within declared scope\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"details\": {\"changed_files\": [], \"observation\": \"unavailable\", \"scope\": [\"src/*\"]}, \"passed\": false, \"reason\": \"change observation unavailable: cwd is not a git work tree and the run has no attributed delta, so writes outside the scope cannot be ruled out\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "_write_candidate overwrites the candidate of another job with the same goal on the same day",
+  "repo": "Puppetmaster",
+  "fix_commit": "5dc5fc1ecb9bfcdadf028872cf8d38a27f477ba7",
+  "parent_commit": "9b321fc497a56fa5231b4c6f97223a20ea4a52f8",
+  "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+  "function": "_write_candidate",
+  "function_lines_at_parent": [
+   345,
+   362
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "The target folder name was only the UTC date plus the slug, and mkdir used exist_ok=True. A second job with the same goal slug on the same day wrote into the folder of the first job and replaced its SKILL.md and candidate.json, so the first job's candidate was lost.",
+  "failing_input": "home = empty temp dir; _write_candidate('audit-auth', 'A\\n', {'job_id': 'job_aaaa1111'}, home=home); then _write_candidate('audit-auth', 'B\\n', {'job_id': 'job_bbbb2222'}, home=home) on the same UTC day",
+  "wrong_result": "Both calls return <home>/skills-candidates/<YYYYMMDD>-audit-auth; only one candidate.json remains, with job_id 'job_bbbb2222'",
+  "right_result": "Second call returns <home>/skills-candidates/<YYYYMMDD>-audit-auth-bbbb2222; two candidate.json files remain, job_ids 'job_aaaa1111' and 'job_bbbb2222'",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a temp directory as home (a small file tree) and a fixed UTC date for both calls",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-00",
+  "id": "14de48f8",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"first\": \"skills-candidates/<DATE>-audit-auth\", \"job_ids\": [\"job_bbbb2222\"], \"second\": \"skills-candidates/<DATE>-audit-auth\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"first\": \"skills-candidates/<DATE>-audit-auth\", \"job_ids\": [\"job_aaaa1111\", \"job_bbbb2222\"], \"second\": \"skills-candidates/<DATE>-audit-auth-bbbb2222\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "List template inside map item files renders as one str() path",
+  "repo": "Puppetmaster",
+  "fix_commit": "c28ad424ba9f686d04d668bbb71aed78096aedcd",
+  "parent_commit": "876b5e8da7e4262ce5388a41c23447aefc744498",
+  "file": "puppetmaster/flow.py",
+  "function": "_item_scopes",
+  "function_lines_at_parent": [
+   2162,
+   2175
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "render_value keeps the type of a lone placeholder, so [\"{{item.files}}\"] rendered to a list inside a list. _item_scopes flattened only a str result and then applied str() to each entry, so the nested list became the single path \"['src/a.py']\" (a glob with no literal prefix that overlaps every scope).",
+  "failing_input": "_item_scopes({\"nodes\": [{\"id\": \"b\", \"kind\": \"agent\", \"files\": [\"{{item.files}}\"]}]}, [\"a\", \"b\"], [{\"files\": [\"src/a.py\"]}, {\"files\": [\"src/b.py\"]}])",
+  "wrong_result": "{'a': [\"['src/a.py']\"], 'b': [\"['src/b.py']\"]}",
+  "right_result": "{'a': ['src/a.py'], 'b': ['src/b.py']}",
+  "intended_behavior_text_before_fix": {
+   "text": "A field that is exactly one\nplaceholder keeps its type, so `\"files\": \"{{item.files}}\"` stays a list.",
+   "file": "docs/FLOWS.md",
+   "commit": "876b5e8da7e4262ce5388a41c23447aefc744498"
+  },
+  "state_needed": "none (the function builds its own probe FlowRun from the item; no I/O)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-01",
+  "id": "dc42a802",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"a\": [\"['src/a.py']\"], \"b\": [\"['src/b.py']\"]}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"a\": [\"src/a.py\"], \"b\": [\"src/b.py\"]}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Write-scope glob a/**/* misses direct child a/file",
+  "repo": "Puppetmaster",
+  "fix_commit": "e9ef3804131e2038b4573cb2ecf2e843d5614839",
+  "parent_commit": "5f709ceab2b095fe999d92897719aec30782749f",
+  "file": "puppetmaster/flow.py",
+  "function": "_in_scope",
+  "function_lines_at_parent": [
+   2036,
+   2039
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "_in_scope used plain fnmatch, which reads \"**/\" as \"something, then a slash\", so a recursive glob never matched zero directories. A file directly inside the scoped directory was out of scope. The same matcher was copied as covered() inside gates._gate_write_scope.",
+  "failing_input": "_in_scope(\"renders/region_001/revision_3_validation.json\", [\"renders/region_001/**/*\"])",
+  "wrong_result": "False",
+  "right_result": "True (fixed matcher conflicts.path_in_scope); a neighbor path renders/region_002/x.json stays False",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-01",
+  "id": "35bdcd78",
+  "pre_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ImportError",
+   "message": "cannot import name '_in_scope' from 'puppetmaster.flow' (~/Projects/hp-work/src/35bdcd78/post/puppetmaster/flow.py)",
+   "where": [
+    "  File \"~/Projects/hp-work/repro/35bdcd78/repro.py\", line 2, in run",
+    "    from puppetmaster.flow import _in_scope",
+    "ImportError: cannot import name '_in_scope' from 'puppetmaster.flow' (~/Projects/hp-work/src/35bdcd78/post/puppetmaster/flow.py)"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Provider HTTP 402/404 returns raw reason, not a failure class",
+  "repo": "Puppetmaster",
+  "fix_commit": "96d5be891dd20b90a05d1362f5aacb4178cb8b16",
+  "parent_commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_provider_failure",
+  "function_lines_at_parent": [
+   315,
+   357
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "The status ladder handled only 401, 403, 429 and 5xx. Any other status fell through to the reason map, whose default returns the raw reason string, so the result was not a canonical failure class.",
+  "failing_input": "classify_provider_failure(\"http_status:402\") and classify_provider_failure(\"http_status:404\")",
+  "wrong_result": "'http_status:402' and 'http_status:404'",
+  "right_result": "'billing_or_quota' and 'model_unavailable'",
+  "intended_behavior_text_before_fix": {
+   "text": "Bridge raw direct-provider errors into the canonical failure taxonomy.",
+   "file": "puppetmaster/failure.py",
+   "commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-01",
+  "id": "a1db3869",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"http_status:402\": \"http_status:402\", \"http_status:404\": \"http_status:404\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"http_status:402\": \"billing_or_quota\", \"http_status:404\": \"model_unavailable\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Bare \"api key\" substring classifies any error as not_authenticated",
+  "repo": "Puppetmaster",
+  "fix_commit": "96d5be891dd20b90a05d1362f5aacb4178cb8b16",
+  "parent_commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "function_lines_at_parent": [
+   102,
+   173
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "_BASE_RULES had a bare-substring auth rule (\"api key\", \"authentication\") placed before the context-length and rate-limit rules. Any text that only mentioned an API key was classified not_authenticated, and first-match order hid the real class.",
+  "failing_input": "classify_adapter_failure(\"codex\", \"maximum context exceeded for this api key\")",
+  "wrong_result": "'not_authenticated'",
+  "right_result": "'context_length_exceeded'",
+  "intended_behavior_text_before_fix": {
+   "text": "# An explicit credential diagnosis, never a bare \"auth\"/\"login\" substring: those\n# also occur in symbols, paths and quoted source (``production_authority``).",
+   "file": "puppetmaster/failure.py",
+   "commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-01",
+  "id": "39b812c2",
+  "pre_result": {
+   "ok": true,
+   "result": "'not_authenticated'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'context_length_exceeded'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "\"429\" substring inside an id classifies as rate_limit",
+  "repo": "Puppetmaster",
+  "fix_commit": "96d5be891dd20b90a05d1362f5aacb4178cb8b16",
+  "parent_commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "function_lines_at_parent": [
+   102,
+   173
+  ],
+  "kind": "text",
+  "what_was_wrong": "The rate-limit rule was _any(\"rate limit\", \"429\"), a plain substring test, so digits 429 inside a request id or other number matched. The 401 rule beside it already used a word-boundary regex.",
+  "failing_input": "classify_adapter_failure(\"codex\", \"error: request req_84291 failed\")",
+  "wrong_result": "'rate_limit'",
+  "right_result": "'unknown'",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-01",
+  "id": "afadbb63",
+  "pre_result": {
+   "ok": true,
+   "result": "'rate_limit'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'unknown'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Changed-nothing check ignores receipts marked write_capable",
+  "repo": "Puppetmaster",
+  "fix_commit": "96d5be891dd20b90a05d1362f5aacb4178cb8b16",
+  "parent_commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b",
+  "file": "puppetmaster/quality.py",
+  "function": "_write_run_changed_nothing",
+  "function_lines_at_parent": [
+   265,
+   278
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function counted a receipt as write-capable only by a legacy permission_mode or sandbox value. It did not read the write_capable key, which adapters such as codex and antigravity already wrote at the parent, so a write-capable run with no diff was not flagged.",
+  "failing_input": "_write_run_changed_nothing([Artifact(job_id='j', task_id='t', type=ArtifactType.VERIFICATION, created_by='w', payload={'worker_diff_present': False, 'write_capable': True}, confidence=1.0, evidence=[])])",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "A run its adapter allowed to edit, that reported no change of its own.",
+   "file": "puppetmaster/quality.py",
+   "commit": "f8b0c744f0a78f879205aacd780e7bc90cc0308b"
+  },
+  "state_needed": "a list of Artifact objects (in-memory dataclasses)",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-01",
+  "id": "da5edac4",
+  "pre_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "await summary mode none still adds an empty summary key while the job runs",
+  "repo": "Puppetmaster",
+  "fix_commit": "4ed4b2b9e7b57e9b5af311e5254c5d4390b0048b",
+  "parent_commit": "f2858c4a5708c308fa02354c96f64bdd97c3a884",
+  "file": "puppetmaster/cli/commands_jobs.py",
+  "function": "await_summary_body",
+  "function_lines_at_parent": [
+   368,
+   394
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The non-terminal check ran before the mode == 'none' check, so a running job in mode none got body['summary'] = '' although mode none means state only.",
+  "failing_input": "await_summary_body(None, 'j1', {'terminal': False, 'status': 'running'}, 'none')",
+  "wrong_result": "{'terminal': False, 'status': 'running', 'summary_mode': 'none', 'summary': ''}",
+  "right_result": "{'terminal': False, 'status': 'running', 'summary_mode': 'none'}",
+  "intended_behavior_text_before_fix": {
+   "text": "compact (default): counts, exceptions, headlines and a pointer to the stitched summary; full: the whole stitched summary; none: state only. PUPPETMASTER_AWAIT_SUMMARY sets the default.",
+   "file": "puppetmaster/cli/_parser.py",
+   "commit": "f2858c4a5708c308fa02354c96f64bdd97c3a884"
+  },
+  "state_needed": "none (store is not touched on the non-terminal path; pass None)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-02",
+  "id": "b79ed344",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"status\": \"running\", \"summary\": \"\", \"summary_mode\": \"none\", \"terminal\": false}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"status\": \"running\", \"summary_mode\": \"none\", \"terminal\": false}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "failure classifier reads any 'auth' or 'login' substring as not_authenticated",
+  "repo": "Puppetmaster",
+  "fix_commit": "99a4a9194549c189b791d1d39ab28c3d9b8320f2",
+  "parent_commit": "3d9e88c5b58f99eb47fada4af30d428570362dff",
+  "file": "puppetmaster/failure.py",
+  "function": "_classify",
+  "function_lines_at_parent": [
+   63,
+   68
+  ],
+  "kind": "text",
+  "what_was_wrong": "_classify applies the _BASE_RULES table, whose rule _any('auth', 'login') matched any substring, so identifiers such as 'author' or a traceback frame 'in production_authority' classified the failure as not_authenticated. Traceback frames were also not removed before the match.",
+  "failing_input": "classify_codex_failure(\"KeyError: 'author'\")  (calls classify_adapter_failure -> _classify with the codex rules + _BASE_RULES); also 'Traceback (most recent call last):\\n  File \"puppetmaster/router.py\", line 10, in production_authority\\n    raise ValueError(\"bad\")\\nValueError: bad'",
+  "wrong_result": "'not_authenticated' for both inputs",
+  "right_result": "'unknown' for both inputs",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-02",
+  "id": "392b718e",
+  "pre_result": {
+   "ok": true,
+   "result": "[\"not_authenticated\", \"not_authenticated\"]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[\"unknown\", \"unknown\"]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "conflicting replayed Codex usage records give an order-dependent total",
+  "repo": "Puppetmaster",
+  "fix_commit": "99a4a9194549c189b791d1d39ab28c3d9b8320f2",
+  "parent_commit": "3d9e88c5b58f99eb47fada4af30d428570362dff",
+  "file": "puppetmaster/adapters/codex_rollout.py",
+  "function": "attempt_usage",
+  "function_lines_at_parent": [
+   75,
+   125
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "requests.setdefault(response_id, usage) kept the first record seen for a response_id, so two replays of one request with different counters gave a total that depended on file order instead of an unknown (None) counter.",
+  "failing_input": "attempt_usage(path, frozenset()) where path is a JSONL rollout with lines: {\"type\":\"event_msg\",\"payload\":{\"type\":\"task_started\",\"turn_id\":\"t1\"}}, then two token_usage_record lines for turn_id t1 and response_id r1 with usage input_tokens 100 and 200 (other FIELDS 0/10 equal); compare order 100-then-200 with 200-then-100",
+  "wrong_result": "usage['input_tokens'] == 100 in one order and 200 in the other order",
+  "right_result": "usage['input_tokens'] is None in both orders, usage_disputed_fields == ['input_tokens']",
+  "intended_behavior_text_before_fix": {
+   "text": "The rollout keeps one\n``token_usage_record`` per original request (``response_id``) tagged with its\n``turn_id``; summing the unique records of the one turn this attempt started\nis exact.",
+   "file": "puppetmaster/adapters/codex_rollout.py",
+   "commit": "3d9e88c5b58f99eb47fada4af30d428570362dff"
+  },
+  "state_needed": "a small JSONL rollout file (3 lines) in a temp dir",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-02",
+  "id": "6dafb38b",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"100_then_200\": {\"input_tokens\": 100, \"usage_disputed_fields\": null}, \"200_then_100\": {\"input_tokens\": 200, \"usage_disputed_fields\": null}}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"100_then_200\": {\"input_tokens\": null, \"usage_disputed_fields\": [\"input_tokens\"]}, \"200_then_100\": {\"input_tokens\": null, \"usage_disputed_fields\": [\"input_tokens\"]}}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "model allowlist ignored on a direct adapter run without --auto-route",
+  "repo": "Puppetmaster",
+  "fix_commit": "8623a0cbfa6d42f84cd691c10c3639593dae3986",
+  "parent_commit": "433b630cb5ff43152536ef611bf7468e0a5e6044",
+  "file": "puppetmaster/cli/helpers.py",
+  "function": "routing_payload_from_args",
+  "function_lines_at_parent": [
+   300,
+   320
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The function returned {} whenever auto_route was false, before it read --allowed-models, so an explicit allowlist was dropped and the run used the adapter default model.",
+  "failing_input": "routing_payload_from_args(argparse.Namespace(auto_route=False, allowed_models=['claude-code/opus-5-5']), adapter='claude-code')",
+  "wrong_result": "{}",
+  "right_result": "{'auto_route': True, 'allowed_adapters': ['claude-code'], 'allowed_model_ids': ['claude-code/opus-5-5']}",
+  "intended_behavior_text_before_fix": {
+   "text": "- Explicit model allowlists now flow through CLI, MCP, swarm, prewalk, and\n  in-place edit paths, with empty allowlists failing closed.",
+   "file": "docs/CHANGELOG.md",
+   "commit": "433b630cb5ff43152536ef611bf7468e0a5e6044"
+  },
+  "state_needed": "none (an args namespace with two attributes)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-02",
+  "id": "4acdce50",
+  "pre_result": {
+   "ok": true,
+   "result": "{}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'auto_route': True, 'allowed_adapters': ['claude-code'], 'allowed_model_ids': ['claude-code/opus-5-5']}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Codex exec argv puts the stdin '-' where variadic --image takes it as a path",
+  "repo": "Puppetmaster",
+  "fix_commit": "6b9305b91b8b2786a15f40680035b4c0c24e4980",
+  "parent_commit": "8623a0cbfa6d42f84cd691c10c3639593dae3986",
+  "file": "puppetmaster/adapters/codex.py",
+  "function": "build_codex_exec_command",
+  "function_lines_at_parent": [
+   602,
+   647
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The argv ended with a bare '-' after extra_args with no '--' terminator, so after a variadic '--image <path>' the '-' was parsed as another image path, not as the stdin prompt positional.",
+  "failing_input": "build_codex_exec_command(extra_args=['--image', 'a.png'])",
+  "wrong_result": "argv ends [..., '--image', 'a.png', '-']",
+  "right_result": "argv ends [..., '--image', 'a.png', '--', '-']",
+  "intended_behavior_text_before_fix": {
+   "text": "The prompt is **not** part of the command: the trailing ``-`` positional\n    tells ``codex exec`` to read its instructions from stdin, and the caller\n    feeds them through ``CliInvocation.subprocess_kwargs['stdin_data']``.",
+   "file": "puppetmaster/adapters/codex.py",
+   "commit": "8623a0cbfa6d42f84cd691c10c3639593dae3986"
+  },
+  "state_needed": "none (command_parts splits a list or a string into argv)",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "pm-02",
+  "id": "8428f8d6",
+  "pre_result": {
+   "ok": true,
+   "result": "['--skip-git-repo-check', '--image', 'a.png', '-']"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "['--image', 'a.png', '--', '-']"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Claude Code cache token names not read by usage_from_sdk",
+  "repo": "Puppetmaster",
+  "fix_commit": "77a88a987e9fdbbc746da8d325b47707847b47f5",
+  "parent_commit": "afbe407f261f0327f2ff9447d5b3a2ce861bd6c1",
+  "file": "puppetmaster/usage.py",
+  "function": "usage_from_sdk",
+  "function_lines_at_parent": [
+   41,
+   71
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The cache alias lists held only the Cursor spellings (cacheReadTokens, cache_read_tokens), so the Anthropic keys cache_read_input_tokens and cache_creation_input_tokens were dropped and Claude Code receipts showed no cache tokens.",
+  "failing_input": "usage_from_sdk({'input_tokens': 10, 'output_tokens': 5, 'cache_read_input_tokens': 900, 'cache_creation_input_tokens': 40})",
+  "wrong_result": "{'tokens_in': 10, 'tokens_out': 5}",
+  "right_result": "{'tokens_in': 10, 'tokens_out': 5, 'cache_read_tokens': 900, 'cache_write_tokens': 40}",
+  "intended_behavior_text_before_fix": {
+   "text": "Normalize a Cursor/Claude SDK usage object into in/out token counts.",
+   "file": "puppetmaster/usage.py",
+   "commit": "afbe407f261f0327f2ff9447d5b3a2ce861bd6c1"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "b6774cde",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"tokens_in\": 10, \"tokens_out\": 5}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"cache_read_tokens\": 900, \"cache_write_tokens\": 40, \"tokens_in\": 10, \"tokens_out\": 5}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Artifact-shaped worker item with nested payload becomes 'Unnamed item'",
+  "repo": "Puppetmaster",
+  "fix_commit": "a6b030847c61400e4f3d60337cd6c11c9bc112ad",
+  "parent_commit": "6012ee8b30f36f0b11c7aa7a2545f96859fd0a29",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "cursor_artifact_from_item",
+  "function_lines_at_parent": [
+   649,
+   721
+  ],
+  "kind": "parse",
+  "what_was_wrong": "An item in the stored Artifact shape {'type': 'finding', 'payload': {'claim': ...}} was not lifted, so the headline lookup saw no claim key and the evidence fell back to adapter:<name>, with the real claim and evidence left under payload.",
+  "failing_input": "cursor_artifact_from_item(Task(job_id='j1', role='review', instruction='x'), 'w1', {'type': 'finding', 'payload': {'claim': 'Off-by-one in parse()', 'evidence': ['a.py:3']}}) -> (artifact.payload['claim'], artifact.evidence)",
+  "wrong_result": "('Unnamed item', ['adapter:cursor-sdk'])",
+  "right_result": "('Off-by-one in parse()', ['a.py:3'])",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (a Task object for job_id/task_id only)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "842bbbdd",
+  "pre_result": {
+   "ok": true,
+   "result": "('Unnamed item', ['adapter:cursor-sdk'])"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "('Off-by-one in parse()', ['a.py:3'])"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Typed finding with 'content' key gets placeholder headline",
+  "repo": "Puppetmaster",
+  "fix_commit": "039a06e85e28817cce8b07ece7a8aeb7358ca9f6",
+  "parent_commit": "1c2386ed6161dff24b60cb69ef0a7e9117da640b",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "_item_headline",
+  "function_lines_at_parent": [
+   638,
+   646
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The broad headline key list for typed items did not include content, text, body or message, so a typed finding that put its text in content got the headline 'Unnamed item' and many findings collapsed into one line.",
+  "failing_input": "_item_headline({'content': 'FINDING: lock leaks'}, 'claim', 'finding', declared=True)",
+  "wrong_result": "'Unnamed item'",
+  "right_result": "'FINDING: lock leaks'",
+  "intended_behavior_text_before_fix": {
+   "text": "# Workers name an item's one-line gist in different keys. An explicitly typed",
+   "file": "puppetmaster/adapters/cursor.py",
+   "commit": "1c2386ed6161dff24b60cb69ef0a7e9117da640b"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "72f830be",
+  "pre_result": {
+   "ok": true,
+   "result": "'Unnamed item'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'FINDING: lock leaks'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "adapter_cli_present reads antigravity, hermes and fx as installed",
+  "repo": "Puppetmaster",
+  "fix_commit": "532387433bc41e1e168d8485ad680173eb10ed22",
+  "parent_commit": "6b4eed203ae9d5a34707d1ff709e49a3c673f8ae",
+  "file": "puppetmaster/preflight.py",
+  "function": "adapter_cli_present (with adapter_cli_executable and the _ADAPTER_CLI_DEFAULT table, lines 946-949)",
+  "function_lines_at_parent": [
+   956,
+   995
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The CLI table knew only claude-code and codex, so adapter_cli_executable returned None for antigravity (agy), hermes and fx, and adapter_cli_present returned True (no CLI needed) even when the binary was absent.",
+  "failing_input": "adapter_cli_present('antigravity', env={}, resolver=lambda exe: None)",
+  "wrong_result": "True (adapter_cli_executable('antigravity', {}) is None)",
+  "right_result": "False (adapter_cli_executable('antigravity', {}) is 'agy')",
+  "intended_behavior_text_before_fix": {
+   "text": "True when ``adapter`` needs no CLI, or its CLI is actually installed.",
+   "file": "puppetmaster/preflight.py",
+   "commit": "6b4eed203ae9d5a34707d1ff709e49a3c673f8ae"
+  },
+  "state_needed": "env mapping and an executable resolver stub (name -> path or None)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "a4186f1c",
+  "pre_result": {
+   "ok": true,
+   "result": "{'present': True, 'executable': None}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'present': False, 'executable': 'agy'}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Codex cached_input_tokens ignored in usage record selection",
+  "repo": "Puppetmaster",
+  "fix_commit": "44bbd1feb1a5a3c5e73d3f1effe6c71a62485f27",
+  "parent_commit": "94fde4bd624fc00a34ea4bf5d8fe58d9a8dde362",
+  "file": "puppetmaster/usage.py",
+  "function": "select_usage_records",
+  "function_lines_at_parent": [
+   160,
+   212
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The record read only tokens_cached, but the Codex and Antigravity adapters stamp cached_input_tokens, so every cache hit got tokens_cached 0 and was priced at the full input rate.",
+  "failing_input": "select_usage_records([Artifact(job_id='j1', task_id='t1', type=ArtifactType.VERIFICATION, created_by='w1', confidence=1.0, evidence=['x'], payload={'tokens_in': 97124, 'tokens_out': 1000, 'cached_input_tokens': 92160})])['t1']['tokens_cached']",
+  "wrong_result": "0",
+  "right_result": "92160",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a list of Artifact objects (no store)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "41d520dd",
+  "pre_result": {
+   "ok": true,
+   "result": "0"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "92160"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Await digest picks the last-listed verification, not the latest",
+  "repo": "Puppetmaster",
+  "fix_commit": "d663938113029a5aecb4c936731d50ea729cb775",
+  "parent_commit": "6cd47d4bcc60b4318ab67b2d3148cf0fc34ef2e8",
+  "file": "puppetmaster/stitcher.py",
+  "function": "Stitcher._exceptions",
+  "function_lines_at_parent": [
+   196,
+   234
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The 'latest' verification per task was the last one in list order, and list_artifacts orders by random id, so an earlier failed attempt listed after a later pass made a passed task show as an exception.",
+  "failing_input": "One task t; verifications [V(result='passed', created_at='2026-10-04T10:05:00+00:00'), V(result='failed', failure='timeout', created_at='2026-10-04T10:00:00+00:00')]; Stitcher._exceptions('j1', verifications, 400) with store.list_tasks -> [t]",
+  "wrong_result": "[{'task_id': t.id, 'role': 'impl', 'result': 'failed', 'reason': 'timeout'}]",
+  "right_result": "[]",
+  "intended_behavior_text_before_fix": {
+   "text": "default (counts, deduped headlines with `reported_by`, conflicts, non-passed\n  tasks, and `summary_ref` with path, chars and sha256)",
+   "file": "docs/CHANGELOG.md",
+   "commit": "6cd47d4bcc60b4318ab67b2d3148cf0fc34ef2e8"
+  },
+  "state_needed": "a fake store with list_tasks(job_id) returning one Task",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "cdba4ecf",
+  "pre_result": {
+   "ok": true,
+   "result": "[{\"reason\": \"timeout\", \"result\": \"failed\", \"role\": \"impl\", \"task_id\": \"t1\"}]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Worker resume takes the VERDICT artifact as the session receipt",
+  "repo": "Puppetmaster",
+  "fix_commit": "62c7296519eae8fc7a050a9a1b0d8c5c5087272b",
+  "parent_commit": "a1e68c7eb27c3ca5361bd8134c4ee64ebdcf1f15",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "function_lines_at_parent": [
+   180,
+   247
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The receipt filter kept every VERIFICATION artifact of the adapter, including the worker_verdict artifact (same adapter, no thread_id). When it was the newest, resolution read no thread_id and fell back to a fresh session.",
+  "failing_input": "prior codex task P; artifacts [receipt {adapter:'codex', thread_id:'0199a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b', ephemeral:False, created_at 10:00:00}, verdict {adapter:'codex', kind:'worker_verdict', verdict:'PASS', created_at 10:00:01}]; _resolve(store, {'resume_from': {'job_id': 'j1', 'role': 'builder'}}, 'codex')",
+  "wrong_result": "{'status': 'unavailable', 'reason': \"prior task '<P.id>' recorded no thread_id\", ...}",
+  "right_result": "{'status': 'resolved', 'adapter': 'codex', 'session_id': '0199a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b', 'from_job_id': 'j1', 'from_task_id': P.id}",
+  "intended_behavior_text_before_fix": {
+   "text": "Resolve an opt-in worker session resume against recorded receipts.",
+   "file": "puppetmaster/worker_resume.py",
+   "commit": "a1e68c7eb27c3ca5361bd8134c4ee64ebdcf1f15"
+  },
+  "state_needed": "a fake store (get_job, list_tasks, list_artifacts) and session_on_disk stubbed to True",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "5739f09b",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"reason\": \"prior task 'task-P' recorded no thread_id\", \"resume_from\": {\"job_id\": \"j1\", \"role\": \"builder\"}, \"status\": \"unavailable\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"adapter\": \"codex\", \"from_job_id\": \"j1\", \"from_task_id\": \"task-P\", \"session_id\": \"0199a1b2-c3d4-7e5f-8a9b-0c1d2e3f4a5b\", \"status\": \"resolved\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Router fallback keeps the previous route's injected provider",
+  "repo": "Puppetmaster",
+  "fix_commit": "58e26942fbd93aad2f46bbd816a11c491a638c67",
+  "parent_commit": "496744c412d91e5021e3c6fda31cb18b0ea4a39e",
+  "file": "puppetmaster/orchestrator.py",
+  "function": "merge_routing_payload",
+  "function_lines_at_parent": [
+   188,
+   227
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "Keys that the previous route injected from its model's payload_defaults (provider) stayed in the payload and outranked the new model's defaults, because defaults merge under existing keys. A fallback to an OpenRouter model kept provider 'opencode-go'.",
+  "failing_input": "A = ModelSpec(id='agentic/go-kimi', adapter='agentic', adapter_model_name='kimi-k3', billing='api', payload_defaults={'provider': 'opencode-go'}, ...); B = ModelSpec(id='agentic/or-deepseek', adapter='agentic', adapter_model_name='deepseek/deepseek-v4-pro', billing='api', payload_defaults={'provider': 'openrouter'}, ...); merge_routing_payload({'provider': 'opencode-go', 'router_model_id': A.id, 'model': 'kimi-k3', 'billing': 'api', 'billing_source': 'registry'}, SimpleNamespace(model=B, policy='fallback', capability_needed=70, estimated_cost_usd=0.01, allowed_model_ids=None), registry=[A, B])['provider']",
+  "wrong_result": "'opencode-go'",
+  "right_result": "'openrouter'",
+  "intended_behavior_text_before_fix": {
+   "text": "Stamp a routing decision while letting explicit task payload keys win.",
+   "file": "puppetmaster/orchestrator.py",
+   "commit": "496744c412d91e5021e3c6fda31cb18b0ea4a39e"
+  },
+  "state_needed": "two ModelSpec objects as the registry; billing='api' on the spec so no billing detection runs",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-03",
+  "id": "2c235959",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"provider\": \"opencode-go\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"provider\": \"openrouter\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "spec_edits_files ignores adapter read-only settings (codex sandbox=read-only, claude-code plan)",
+  "repo": "Puppetmaster",
+  "fix_commit": "3a5fb8f3cd8b0b952421c77b09c9dd8a83d46a51",
+  "parent_commit": "7f52b9bb8d7311c074d91e0ad012e53cd83aa941",
+  "file": "puppetmaster/workers.py",
+  "function": "spec_edits_files",
+  "function_lines_at_parent": [
+   429,
+   436
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "For an edit-capable adapter, spec_edits_files returned True from adapter membership alone and never checked the adapter's own read-only settings. adapter_may_write already returned False for those payloads, so the two classifiers disagreed and swarm_mode said 'edit' for a read-only run.",
+  "failing_input": "spec_edits_files(WorkerSpec(role='r', instruction='g', adapter='codex', payload={'sandbox': 'read-only'}))  (also adapter='claude-code', payload={'permission_mode': 'plan'})",
+  "wrong_result": "True (both inputs)",
+  "right_result": "False (both inputs)",
+  "intended_behavior_text_before_fix": {
+   "text": "``spec_edits_files`` (dirty-tree / swarm mode) and ``edit_admission`` (file\nclaims) must agree on whether a task may mutate the working tree.",
+   "file": "puppetmaster/write_intent.py",
+   "commit": "7f52b9bb8d7311c074d91e0ad012e53cd83aa941"
+  },
+  "state_needed": "none (a WorkerSpec dataclass value)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-04",
+  "id": "7221304e",
+  "pre_result": {
+   "ok": true,
+   "result": "[True, True]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[False, False]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "adapter_may_write returns True for read-only agentic/cursor/hermes payloads and discards swarm_mode",
+  "repo": "Puppetmaster",
+  "fix_commit": "57ca92f8f4223da0e505a68ba185521eed4ffd23",
+  "parent_commit": "467aa6703451fdcb3bad3085e7a7ddada54f8110",
+  "file": "puppetmaster/write_intent.py",
+  "function": "adapter_may_write",
+  "function_lines_at_parent": [
+   22,
+   64
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The agentic/cursor/hermes branch returned True without a check of read_only, no_edit, dry_run or sandbox=read-only, and the swarm_mode argument was deleted unread. spec_edits_files honoured payload_forbids_writes, so read-only workers took exclusive write claims on the whole workspace.",
+  "failing_input": "adapter_may_write('agentic', {'read_only': True}); adapter_may_write('cursor', {'sandbox': 'read-only'}); adapter_may_write('agentic', {}, swarm_mode='analysis')",
+  "wrong_result": "True, True, True",
+  "right_result": "False, False, False (adapter_may_write('agentic', {}) stays True)",
+  "intended_behavior_text_before_fix": {
+   "text": "``spec_edits_files`` (dirty-tree / swarm mode) and ``edit_admission`` (file\nclaims) must agree on whether a task may mutate the working tree.",
+   "file": "puppetmaster/write_intent.py",
+   "commit": "467aa6703451fdcb3bad3085e7a7ddada54f8110"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-04",
+  "id": "caf64aa5",
+  "pre_result": {
+   "ok": true,
+   "result": "[true, true, true, true]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[false, false, false, true]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "tool_choice rejection predicate misses OpenCode Go thinking-mode 400 wording",
+  "repo": "Puppetmaster",
+  "fix_commit": "aa0f2e670429213ba9ab78dec9fe8c436418e3da",
+  "parent_commit": "5bdb30839b0fe652b7fd3134d623bf3102cbff10",
+  "file": "puppetmaster/adapters/agentic.py",
+  "function": "_provider_rejects_tool_choice_force",
+  "function_lines_at_parent": [
+   383,
+   392
+  ],
+  "kind": "text",
+  "what_was_wrong": "The predicate required one of three Muse-specific phrases ('only'+'auto', 'not currently supported', 'named function') beside 'tool_choice'. A 400 body that rejected the named tool_choice in other words did not match, so the strip-and-retry path did not run and the worker failed.",
+  "failing_input": "_provider_rejects_tool_choice_force(ProviderError('HTTP 400', reason='bad_request', status=400, body='{\"error\":{\"message\":\"Thinking mode does not support this tool_choice\"}}'))",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "# Muse / Meta (and any future auto-only model) reject named\n                    # tool_choice with HTTP 400. Strip force_tool once and retry\n                    # the same turn with nudge-only extras.",
+   "file": "puppetmaster/adapters/agentic.py",
+   "commit": "5bdb30839b0fe652b7fd3134d623bf3102cbff10"
+  },
+  "state_needed": "none (a ProviderError value)",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-04",
+  "id": "64fdef40",
+  "pre_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Typed report item with a 'title' headline is dropped as nameless",
+  "repo": "Puppetmaster",
+  "fix_commit": "4ce491b96d71119c03b9399fea05ebba1be42d90",
+  "parent_commit": "52fe77284e4c8abbd9ee5f948b816f04d9af940c",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "cursor_artifact_from_item",
+  "function_lines_at_parent": [
+   627,
+   696
+  ],
+  "kind": "parse",
+  "what_was_wrong": "An explicitly typed finding/risk/decision item took its headline only from claim/finding/summary (or risk/decision). An item that used title, headline or symptom returned None, so all typed findings of a report were lost and the report collapsed into one prose FINDING.",
+  "failing_input": "cursor_artifact_from_item(Task(job_id='job_1', role='audit', instruction='g', adapter='claude-code'), 'w1', {'type': 'finding', 'title': 'Cache key ignores tenant', 'file': 'a.py', 'line': 3}, adapter='claude-code')",
+  "wrong_result": "None",
+  "right_result": "Artifact of type FINDING with payload['claim'] == 'Cache key ignores tenant'",
+  "intended_behavior_text_before_fix": {
+   "text": "Structured JSON parses into\n    typed artifacts; anything else is preserved verbatim as a FINDING so the\n    report survives synthesis instead of dying in a log nobody reads.",
+   "file": "puppetmaster/adapters/cursor.py",
+   "commit": "52fe77284e4c8abbd9ee5f948b816f04d9af940c"
+  },
+  "state_needed": "none (a Task dataclass value)",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-04",
+  "id": "4527e9b3",
+  "pre_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "Artifact(job_id='job_1', task_id='task_ed08cf5b2eed', type=<ArtifactType.FINDING: 'finding'>, created_by='w1', payload={'title': 'Cache key ignores tenant', 'file': 'a.py', 'line': 3, 'claim': 'Cache key ignores tenant'}, confidence=0.75, evidence=['adapter:claude-code'], id='artifact_2fba3b489abb', created_at='2026-11-18T15:48:49+00:00', sha256=None, execution_status='unknown', grounding_status='cited', claim_support_status='unknown', criterion_status='unknown', worker_self_rating=0.75)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "verify-first-run derives the expected wire name by stripping 'codex/' from the dashed registry id",
+  "repo": "Puppetmaster",
+  "fix_commit": "05af96113acd0c968dbc6664e148121c71ad3825",
+  "parent_commit": "a4f32d63b95719a8b0e08c73a3a4c6bc489c6c84",
+  "file": "puppetmaster/setup_verification.py",
+  "function": "_validate",
+  "function_lines_at_parent": [
+   73,
+   128
+  ],
+  "kind": "text",
+  "what_was_wrong": "The expected wire model was model.removeprefix('codex/'), which gives the dashed registry alias (gpt-5-6-sol). The run persists the dotted adapter wire name (gpt-5.6-sol), so the identity comparison failed for every canonical pin.",
+  "failing_input": "_validate(store, 'codex/gpt-5-6-sol', 'n', Path('f')) where store.list_jobs() -> [job], store.list_tasks(job.id) -> [task], task.adapter='codex', task.payload={'model': 'gpt-5.6-sol', 'pinned_model': 'codex/gpt-5-6-sol', 'pinned_adapter_model_name': 'gpt-5.6-sol', 'router_model_id': 'codex/gpt-5-6-sol', 'auto_route': False, 'allowed_model_ids': ['codex/gpt-5-6-sol']}, task.status='running'",
+  "wrong_result": "'Persisted model identity differs from the exact requested pin; check the model registry.'",
+  "right_result": "identity check passes; with this state the next check returns 'Task did not complete in one fresh attempt; check Codex authentication and runtime diagnostics.' (with a complete fake store the result is '')",
+  "intended_behavior_text_before_fix": {
+   "text": "Explicit `setup --verify-first-run codex/<model>` verifies a fresh read-only Codex invocation, exact model identity, measured usage, and a fixture-backed finding without installing anything.",
+   "file": "docs/CHANGELOG.md",
+   "commit": "a4f32d63b95719a8b0e08c73a3a4c6bc489c6c84"
+  },
+  "state_needed": "a fake store with list_jobs and list_tasks returning one job and one task (simple namespaces)",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-04",
+  "id": "df459b30",
+  "pre_result": {
+   "ok": true,
+   "result": "'Persisted model identity differs from the exact requested pin; check the model registry.'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'Task did not complete in one fresh attempt; check Codex authentication and runtime diagnostics.'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "extra_fields reasoning_effort overwritten by the medium default",
+  "repo": "Puppetmaster",
+  "fix_commit": "073b506e4f7ce40d89f59132b46c56afe00bb6c4",
+  "parent_commit": "78cfda655a5677bec063acb19ba66c26536f74f7",
+  "file": "puppetmaster/orchestrator.py",
+  "function": "merge_routing_payload",
+  "function_lines_at_parent": [
+   176,
+   215
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "extra_fields were merged into the result, but apply_swarm_reasoning got only the original caller payload as the pin source. A reasoning_effort in extra_fields was not seen as a pin, so the medium default replaced it.",
+  "failing_input": "merge_routing_payload({}, decision, {'reasoning_effort': 'low'}) where decision.model has adapter='agentic', adapter_model_name='x', id='agentic/x', payload_defaults={'provider': 'openai', 'reasoning_effort': 'high'}, billing=None, and decision has policy='balanced', capability_needed=50, estimated_cost_usd=0.0, allowed_model_ids=None",
+  "wrong_result": "result['reasoning_effort'] == 'medium'",
+  "right_result": "result['reasoning_effort'] == 'low'",
+  "intended_behavior_text_before_fix": {
+   "text": "`merge_routing_payload` stamps `reasoning_effort=medium` unless the caller pinned, then overlays Cursor `params`, Claude `--effort`, Codex `-c model_reasoning_effort=`, and Antigravity `effort`. Catalog High+Fast is not a pin.",
+   "file": "docs/CHANGELOG.md",
+   "commit": "78cfda655a5677bec063acb19ba66c26536f74f7"
+  },
+  "state_needed": "none (a decision object with a model that has id, adapter, adapter_model_name, payload_defaults, billing; apply_swarm_reasoning from puppetmaster/swarm_reasoning.py at the same commit)",
+  "how_found": "test",
+  "confidence": "high",
+  "slice": "pm-05",
+  "id": "d7e7ed59",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"reasoning_effort\": \"medium\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"reasoning_effort\": \"low\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "coordination protocol scan skipped decision, risk and check fields",
+  "repo": "Puppetmaster",
+  "fix_commit": "0dab8adf0267ea5cd27d7a30d17e34943747f8a8",
+  "parent_commit": "66c9d10f28d4c1be342ccd85d027811057196db2",
+  "file": "puppetmaster/metr_seams.py",
+  "function": "is_coordination_protocol_payload",
+  "function_lines_at_parent": [
+   145,
+   168
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The text scan looked only at instruction, goal, claim, protocol, action and command. A DECISION, RISK or VERIFICATION payload that carried HOLD/recruit text in decision, risk or check was not seen as protocol, so the effort-index kept it.",
+  "failing_input": "is_coordination_protocol_payload({'decision': 'HOLD all merges until the coordinator says go'})",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "No cross-job message board: coordination-protocol gists are rejected at admission and filtered from shared-context injection, Frontier-adjacent gist filters, and effort-index.",
+   "file": "docs/CHANGELOG.md",
+   "commit": "66c9d10f28d4c1be342ccd85d027811057196db2"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-05",
+  "id": "a53b15e7",
+  "pre_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "community scorecard identity matched on shared wire name",
+  "repo": "Puppetmaster",
+  "fix_commit": "2417bbda4997bc398ce0bc8f04b54daea0947f6b",
+  "parent_commit": "2986f9a25f2bcd89ba77d814aafb425a9f91dcb7",
+  "file": "puppetmaster/scorecards.py",
+  "function": "_identity_hit",
+  "function_lines_at_parent": [
+   144,
+   155
+  ],
+  "kind": "other",
+  "what_was_wrong": "The function returned True when only adapter_model_name matched. Effort variants share one wire name, so a card for the Max registry row also attached to the Low row.",
+  "failing_input": "_identity_hit(SimpleNamespace(id='codex/gpt-5-6-luna-low', adapter='codex', adapter_model_name='gpt-5.6-luna'), {'id': 'codex/gpt-5-6-luna-max', 'adapter': 'codex', 'adapter_model_name': 'gpt-5.6-luna'})",
+  "wrong_result": "True",
+  "right_result": "False",
+  "intended_behavior_text_before_fix": {
+   "text": "`codex/gpt-5-5-high` and `codex/gpt-5-5-medium` compete in routing as distinct models with their own capability scores",
+   "file": "docs/CHANGELOG.md",
+   "commit": "2986f9a25f2bcd89ba77d814aafb425a9f91dcb7"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-05",
+  "id": "66e39e5c",
+  "pre_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Cursor no-edit payload with mode=implement took the edit path",
+  "repo": "Puppetmaster",
+  "fix_commit": "22a29c3bc36d9fa0dcc0461b8cb941ffd5d0b848",
+  "parent_commit": "12dd7e081e3b0b10cda9e176b4626dfe8c4be254",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "CursorAdapter.run",
+  "function_lines_at_parent": [
+   52,
+   60
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "run checked mode == 'implement' first and never looked at read_only, no_edit or dry_run. A read-only analysis payload with a stray mode=implement went to _run_implement.",
+  "failing_input": "CursorAdapter().run(task, 'goal', 'w1') with task.payload = {'mode': 'implement', 'read_only': True, 'sandbox': 'read-only'} (_run_implement and _run_analyze stubbed to return 'implement' / 'analyze')",
+  "wrong_result": "'implement' (_run_implement is called)",
+  "right_result": "'analyze' (_run_analyze is called)",
+  "intended_behavior_text_before_fix": {
+   "text": "True when a worker payload declares an adapter-independent no-edit run.",
+   "file": "puppetmaster/workers.py",
+   "commit": "12dd7e081e3b0b10cda9e176b4626dfe8c4be254"
+  },
+  "state_needed": "stub the two methods _run_implement and _run_analyze; task is any object with a payload dict",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-05",
+  "id": "2a303364",
+  "pre_result": {
+   "ok": true,
+   "result": "'implement'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'analyze'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "cost spec lookup fell through when the routed model id was absent",
+  "repo": "Puppetmaster",
+  "fix_commit": "5e1e3fe046370c763f2d7ed3ca089b3acbab98c0",
+  "parent_commit": "bbe48e061861f97d97685aceae27fff69e53c3bf",
+  "file": "puppetmaster/cost.py",
+  "function": "_resolve_spec",
+  "function_lines_at_parent": [
+   161,
+   176
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "When a final routing model_id was present but not in the registry, the function fell through to the recorded model and priced the task on that unrelated spec. The routed id is authoritative, so the result must be None (unpriced).",
+  "failing_input": "_resolve_spec('missing-routed-id', 'mid-model', {'mid-model': SPEC_MID}, {})",
+  "wrong_result": "SPEC_MID",
+  "right_result": "None",
+  "intended_behavior_text_before_fix": {
+   "text": "Pick the registry spec a task ran on: final routing decision first",
+   "file": "puppetmaster/cost.py",
+   "commit": "bbe48e061861f97d97685aceae27fff69e53c3bf"
+  },
+  "state_needed": "none (two small dicts)",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-05",
+  "id": "7be23d23",
+  "pre_result": {
+   "ok": true,
+   "result": "'SPEC_MID'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "final routing selection kept superseded ROUTING artifacts",
+  "repo": "Puppetmaster",
+  "fix_commit": "5e1e3fe046370c763f2d7ed3ca089b3acbab98c0",
+  "parent_commit": "bbe48e061861f97d97685aceae27fff69e53c3bf",
+  "file": "puppetmaster/cost.py",
+  "function": "final_routing_artifacts",
+  "function_lines_at_parent": [
+   118,
+   130
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function ranked ROUTING artifacts by created_by and did not skip artifacts whose payload.validation.status was stale or superseded. A superseded higher-rank route from a reset generation beat the current route.",
+  "failing_input": "final_routing_artifacts([A, B]) with A = artifact(type=ROUTING, created_by='router-fallback', task_id='t1', payload={'model_id': 'agentic/glm', 'validation': {'status': 'superseded'}}) and B = artifact(type=ROUTING, created_by='router', task_id='t1', payload={'model_id': 'agentic/kimi-k3'})",
+  "wrong_result": "{'t1': A} (model_id 'agentic/glm')",
+  "right_result": "{'t1': B} (model_id 'agentic/kimi-k3')",
+  "intended_behavior_text_before_fix": {
+   "text": "Prior produced\n  outputs are labeled ``superseded`` (audit history retained; nothing deleted).",
+   "file": "docs/CHANGELOG.md",
+   "commit": "bbe48e061861f97d97685aceae27fff69e53c3bf"
+  },
+  "state_needed": "a list of two artifact objects with type, created_by, task_id, payload",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-05",
+  "id": "c373ac69",
+  "pre_result": {
+   "ok": true,
+   "result": "{'t1': ('router-fallback', 'agentic/glm')}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'t1': ('router', 'agentic/kimi-k3')}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Adapter alias agy bypasses the platform lock",
+  "repo": "Puppetmaster",
+  "fix_commit": "29db82bf479cb294db2fdb90d0d50d66e857557f",
+  "parent_commit": "d6865a436f52e352d0e6022c81e9ff148a6560ac",
+  "file": "puppetmaster/platform_lock.py",
+  "function": "is_adapter_enabled",
+  "function_lines_at_parent": [
+   145,
+   153
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function treats every name outside KNOWN_ADAPTERS as an unlocked internal adapter. The registry alias 'agy' runs the antigravity adapter but is not in KNOWN_ADAPTERS, so a lock that disables antigravity still lets 'agy' run.",
+  "failing_input": "os.environ['PUPPETMASTER_ONLY_ADAPTERS'] = 'cursor'; is_adapter_enabled('agy')",
+  "wrong_result": "True (while is_adapter_enabled('antigravity') is False)",
+  "right_result": "False",
+  "intended_behavior_text_before_fix": {
+   "text": "Raised at task creation (the kernel-level gate) so a disabled adapter can never execute work regardless of which entry point built the specs --\n    hardcoded verb adapters, workflow configs, or router fall-throughs.",
+   "file": "puppetmaster/platform_lock.py",
+   "commit": "d6865a436f52e352d0e6022c81e9ff148a6560ac"
+  },
+  "state_needed": "PUPPETMASTER_ONLY_ADAPTERS env value (or a stub _read_disabled returning a denylist that contains 'antigravity'); puppetmaster/adapters/registry.py at the parent maps 'agy' to AntigravityAdapter()",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-06",
+  "id": "46cb670a",
+  "pre_result": {
+   "ok": true,
+   "result": "{'agy': True, 'antigravity': False}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'agy': False, 'antigravity': False}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Antigravity billing calls agy on PATH or an empty settings dir an authenticated plan",
+  "repo": "Puppetmaster",
+  "fix_commit": "29db82bf479cb294db2fdb90d0d50d66e857557f",
+  "parent_commit": "d6865a436f52e352d0e6022c81e9ff148a6560ac",
+  "file": "puppetmaster/platform_billing.py",
+  "function": "detect_antigravity_billing",
+  "function_lines_at_parent": [
+   615,
+   656
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "Any GEMINI/GOOGLE key gave healthy 'api' even when agy was not installed, and 'agy on PATH or the settings dir exists' gave healthy 'plan' even when the dir was empty. Neither condition proves usable Antigravity credentials.",
+  "failing_input": "home = tmp dir that holds an empty directory .gemini/antigravity-cli; PATH has no agy; detect_antigravity_billing(env={'PATH': home}, home=Path(home)). Second case: detect_antigravity_billing(env={'GEMINI_API_KEY': 'k'}, home=Path(home)/'nohome') with no agy on PATH.",
+  "wrong_result": "BillingStatus(billing='plan', healthy=True) for the first case; BillingStatus(billing='api', healthy=True) for the second case",
+  "right_result": "BillingStatus(billing='unknown', healthy=False) for both cases",
+  "intended_behavior_text_before_fix": {
+   "text": "healthy: bool  # True when the adapter has usable credentials",
+   "file": "puppetmaster/platform_billing.py",
+   "commit": "d6865a436f52e352d0e6022c81e9ff148a6560ac"
+  },
+  "state_needed": "a temporary home dir with an empty .gemini/antigravity-cli directory, and a PATH (os.environ) with no agy so shutil.which returns None; env is a plain dict",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-06",
+  "id": "d2e22309",
+  "pre_result": {
+   "ok": true,
+   "result": "BillingStatus(billing='plan', healthy=True); BillingStatus(billing='api', healthy=True)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "BillingStatus(billing='unknown', healthy=False); BillingStatus(billing='unknown', healthy=False)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Antigravity effort added to a model slug that already encodes effort",
+  "repo": "Puppetmaster",
+  "fix_commit": "29db82bf479cb294db2fdb90d0d50d66e857557f",
+  "parent_commit": "d6865a436f52e352d0e6022c81e9ff148a6560ac",
+  "file": "puppetmaster/adapters/antigravity.py",
+  "function": "resolve_antigravity_model",
+  "function_lines_at_parent": [
+   52,
+   61
+  ],
+  "kind": "text",
+  "what_was_wrong": "The substring test 'gemini-3.7-flash' in model also matches 'gemini-3.7-flash-high', so the function returns the default effort 'high' and the CLI gets --effort on a slug that already has an effort suffix.",
+  "failing_input": "resolve_antigravity_model({'model': 'gemini-3.7-flash-high'})",
+  "wrong_result": "('gemini-3.7-flash-high', 'high')",
+  "right_result": "('gemini-3.7-flash-high', None)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-06",
+  "id": "d486f0f2",
+  "pre_result": {
+   "ok": true,
+   "result": "('gemini-3.7-flash-high', 'high')"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "('gemini-3.7-flash-high', None)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Out-of-range dashboard port reported as already in use",
+  "repo": "Puppetmaster",
+  "fix_commit": "d0b2ccbeb952dcdfef0ce677729251770d491e91",
+  "parent_commit": "42e64b50d79bdf8ca35e42614f3198ce71732a79",
+  "file": "puppetmaster/dashboard.py",
+  "function": "bind_dashboard_server",
+  "function_lines_at_parent": [
+   2690,
+   2729
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "For a port above 65535 the loop guard 'candidate > 65535' breaks on the first iteration before any bind, and the function then raises the 'already in use' error, which is false because no bind was tried.",
+  "failing_input": "bind_dashboard_server('127.0.0.1', 70000, None, auto_port=False)",
+  "wrong_result": "OSError('port 70000 on 127.0.0.1 is already in use \u2014 another dashboard (or another program) owns it. ...')",
+  "right_result": "OSError('port 70000 is not a valid TCP port (must be 0-65535).')",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (no socket is opened for an out-of-range port)",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-06",
+  "id": "7d1f2d14",
+  "pre_result": {
+   "ok": true,
+   "result": "OSError('port 70000 on 127.0.0.1 is already in use \u2014 another dashboard (or another program) owns it. Omit --port to auto-pick the next free port, or pass --port-search to start searching from 70000.')"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "OSError('port 70000 is not a valid TCP port (must be 0-65535).')"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Exact registry id pin rejected as ambiguous when a sibling shares the adapter model name",
+  "repo": "Puppetmaster",
+  "fix_commit": "1568cb343709ca5fcf38875a4d5de01978d37c2e",
+  "parent_commit": "dbd971cb61ff31a217c12b5fa4a11783d8edd810",
+  "file": "puppetmaster/model_registry.py",
+  "function": "resolve_model_pin",
+  "function_lines_at_parent": [
+   1152,
+   1195
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "An exact registry id match and an adapter_model_name or normalized-token alias match went into one candidate list. When a second entry shared the adapter model name, the exact id pin raised AmbiguousModelPinError, although the exact id names exactly one entry.",
+  "failing_input": "resolve_model_pin('agentic/gpt-5.6-sol', [ModelSpec(id='agentic/gpt-5.6-sol', adapter='agentic', adapter_model_name='gpt-5.6-sol', enabled=True), ModelSpec(id='agentic/openai-codex/gpt-5.6-sol', adapter='agentic', adapter_model_name='gpt-5.6-sol', enabled=True)], adapter='agentic')",
+  "wrong_result": "raises AmbiguousModelPinError: model pin 'agentic/gpt-5.6-sol' is ambiguous across enabled registry entries: agentic/gpt-5.6-sol, agentic/openai-codex/gpt-5.6-sol",
+  "right_result": "ResolvedModelPin with registry_id='agentic/gpt-5.6-sol'",
+  "intended_behavior_text_before_fix": {
+   "text": "Resolve a durable registry id or adapter model name to one registry entry.",
+   "file": "puppetmaster/model_registry.py",
+   "commit": "dbd971cb61ff31a217c12b5fa4a11783d8edd810"
+  },
+  "state_needed": "a list of two ModelSpec entries (the registry argument)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-07",
+  "id": "d2e4f000",
+  "pre_result": {
+   "ok": true,
+   "result": "AmbiguousModelPinError"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "ResolvedModelPin(registry_id='agentic/gpt-5.6-sol', adapter_model_name='gpt-5.6-sol', adapter='agentic', spec=ModelSpec(id='agentic/gpt-5.6-sol', adapter='agentic', adapter_model_name='gpt-5.6-sol', capability_score=50, input_per_mtok_usd=0.0, output_per_mtok_usd=0.0, context_window=0, tags=[], notes='', enabled=True, payload_defaults={}, output_token_multiplier=1.0, billing='unknown'))"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "GPT-5.6 tool-reasoning prefix check misses the bare catalog alias gpt-5.6",
+  "repo": "Puppetmaster",
+  "fix_commit": "a29db60c66e041134e0f32ce944e0eeb5624925d",
+  "parent_commit": "2f067d8ec2042d630bcde1913c84887ff4deb319",
+  "file": "puppetmaster/adapters/agentic.py",
+  "function": "AgenticAdapter._extra_params",
+  "function_lines_at_parent": [
+   470,
+   500
+  ],
+  "kind": "text",
+  "what_was_wrong": "The GPT-5.6 family test was model.startswith('gpt-5.6-'). The starter catalog alias 'gpt-5.6' (Sol) has no trailing hyphen, so it was not in the family, and the direct OpenAI request got no reasoning_effort, which makes OpenAI reject function tools.",
+  "failing_input": "AgenticAdapter()._extra_params(task) with task.payload = {'provider': 'openai', 'model': 'gpt-5.6'}",
+  "wrong_result": "{}",
+  "right_result": "{'reasoning_effort': 'none'}",
+  "intended_behavior_text_before_fix": {
+   "text": "# Direct OpenAI GPT-5.6 Chat Completions defaults reasoning on when the\n        # field is omitted, then rejects function tools. Explicit `none` is the\n        # accepted tool contract. Older GPT-5 rejects `none`, so omit it there.",
+   "file": "puppetmaster/adapters/agentic.py",
+   "commit": "2f067d8ec2042d630bcde1913c84887ff4deb319"
+  },
+  "state_needed": "a Task object with a small payload dict",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-07",
+  "id": "f57cc208",
+  "pre_result": {
+   "ok": true,
+   "result": "{}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"reasoning_effort\": \"none\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Explicit max_timeout_seconds could only raise the worker hard cap",
+  "repo": "Puppetmaster",
+  "fix_commit": "ae065f1a23bd3d72f2266faae13d2fcda399df1a",
+  "parent_commit": "604c7ee786d5d899dc55b3cd08545d3fa1a4ff32",
+  "file": "puppetmaster/orchestrator.py",
+  "function": "Orchestrator._worker_hard_cap",
+  "function_lines_at_parent": [
+   2311,
+   2323
+  ],
+  "kind": "arithmetic",
+  "what_was_wrong": "The cap was max([base_timeout * 3, *explicit]), so an explicit ceiling below 3x base was ignored. No run could be bounded more tightly than 3x the base timeout.",
+  "failing_input": "Orchestrator._worker_hard_cap([task], 930) with task.payload = {'timeout_seconds': 900, 'max_timeout_seconds': 1200}",
+  "wrong_result": "2790",
+  "right_result": "1200",
+  "intended_behavior_text_before_fix": {
+   "text": "Honors an explicit ``payload.max_timeout_seconds``; otherwise 3\u00d7 base.",
+   "file": "puppetmaster/orchestrator.py",
+   "commit": "604c7ee786d5d899dc55b3cd08545d3fa1a4ff32"
+  },
+  "state_needed": "a list of task objects with a payload dict",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-07",
+  "id": "72f1073a",
+  "pre_result": {
+   "ok": true,
+   "result": "2790"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "1200"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Responses body forwarded Chat Completions reasoning_effort at top level",
+  "repo": "Puppetmaster",
+  "fix_commit": "745fb4b07c787a60bc2c6333923f2cc624a017fc",
+  "parent_commit": "5de5cd5858e891503a11df8303a619dcfb0a13f4",
+  "file": "puppetmaster/providers.py",
+  "function": "_build_responses_body",
+  "function_lines_at_parent": [
+   1602,
+   1645
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The function dropped other Chat Completions leftovers but copied a top-level reasoning_effort into the Responses body. The Responses / ChatGPT Codex API rejects that key (HTTP 400). It must become nested reasoning: {effort, summary}.",
+  "failing_input": "_build_responses_body(model='gpt-5.6-sol', messages=[{'role': 'user', 'content': 'hi'}], tools=None, extra={'reasoning_effort': 'low'})",
+  "wrong_result": "body contains 'reasoning_effort': 'low' and no 'reasoning' key",
+  "right_result": "body contains 'reasoning': {'effort': 'low', 'summary': 'auto'} and no 'reasoning_effort' key",
+  "intended_behavior_text_before_fix": {
+   "text": "# Chat Completions leftovers that Responses does not accept.",
+   "file": "puppetmaster/providers.py",
+   "commit": "5de5cd5858e891503a11df8303a619dcfb0a13f4"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-07",
+  "id": "f9dfb16f",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"input\": [{\"content\": [{\"text\": \"hi\", \"type\": \"input_text\"}], \"role\": \"user\", \"type\": \"message\"}], \"model\": \"gpt-5.6-sol\", \"reasoning_effort\": \"low\", \"store\": false}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"input\": [{\"content\": [{\"text\": \"hi\", \"type\": \"input_text\"}], \"role\": \"user\", \"type\": \"message\"}], \"model\": \"gpt-5.6-sol\", \"reasoning\": {\"effort\": \"low\", \"summary\": \"auto\"}, \"store\": false}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Out-of-range dashboard --port reported as already in use",
+  "repo": "Puppetmaster",
+  "fix_commit": "d0b2ccbeb952dcdfef0ce677729251770d491e91",
+  "parent_commit": "42e64b50d79bdf8ca35e42614f3198ce71732a79",
+  "file": "puppetmaster/dashboard.py",
+  "function": "bind_dashboard_server",
+  "function_lines_at_parent": [
+   2690,
+   2729
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "For a port above 65535 the loop guard candidate > 65535 broke out on the first iteration without a bind attempt, and the function then raised the 'already in use' error. The port was never tried and is not a valid TCP port.",
+  "failing_input": "bind_dashboard_server('127.0.0.1', 70000, None, auto_port=False)",
+  "wrong_result": "OSError: port 70000 on 127.0.0.1 is already in use \u2014 another dashboard (or another program) owns it. ...",
+  "right_result": "OSError: port 70000 is not a valid TCP port (must be 0-65535).",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (no socket is opened for an out-of-range port)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-07",
+  "id": "a7fbfac5",
+  "pre_result": {
+   "ok": true,
+   "result": "OSError: port 70000 on 127.0.0.1 is already in use \u2014 another dashboard (or another program) owns it. Omit --port to auto-pick the next free port, or pass --port-search to start searching from 70000."
+  },
+  "post_result": {
+   "ok": true,
+   "result": "OSError: port 70000 is not a valid TCP port (must be 0-65535)."
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Retry-After alone marks a healthy rate-limit snapshot as exhausted",
+  "repo": "Puppetmaster",
+  "fix_commit": "e34dc0a96d20c26d967a432463c98a23d9f9fe32",
+  "parent_commit": "e58ec86ad7ad298fefa41827174e0ea8a0dd3448",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "function": "RateLimitSnapshot.blocking_reset_at",
+  "function_lines_at_parent": [
+   51,
+   66
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "blocking_reset_at added retry_after_at to the blocking candidates even when no window had remaining == 0. is_exhausted is defined as blocking_reset_at(...) is not None, so a snapshot with quota left but a Retry-After value reported exhausted and admission blocked the call.",
+  "failing_input": "RateLimitSnapshot(requests=RateLimitWindow(kind='requests', limit=100, remaining=50, reset_at=1060.0), retry_after_at=1030.0).blocking_reset_at(now=1000.0)  (and .is_exhausted(now=1000.0))",
+  "wrong_result": "1030.0 (is_exhausted -> True)",
+  "right_result": "None (is_exhausted -> False)",
+  "intended_behavior_text_before_fix": {
+   "text": "True when any known window reports remaining == 0 with a future reset.",
+   "file": "puppetmaster/rate_limit_headers.py",
+   "commit": "e58ec86ad7ad298fefa41827174e0ea8a0dd3448"
+  },
+  "state_needed": "none (clock passed as now=)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-08",
+  "id": "28344682",
+  "pre_result": {
+   "ok": true,
+   "result": "{'blocking_reset_at': 1030.0, 'is_exhausted': True}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'blocking_reset_at': None, 'is_exhausted': False}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "429 with rate-limit window headers gets a synthetic 30 s Retry-After",
+  "repo": "Puppetmaster",
+  "fix_commit": "e34dc0a96d20c26d967a432463c98a23d9f9fe32",
+  "parent_commit": "e58ec86ad7ad298fefa41827174e0ea8a0dd3448",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "function": "parse_rate_limit_headers",
+  "function_lines_at_parent": [
+   179,
+   250
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "On HTTP 429 without a Retry-After header the parser always set retry_after_at = now + 30, also when x-ratelimit-* window headers were present. The fallback was meant only for a 429 that carries no other rate-limit signal.",
+  "failing_input": "parse_rate_limit_headers({'x-ratelimit-remaining-requests': '5', 'x-ratelimit-limit-requests': '100'}, now=1000.0, http_status=429)",
+  "wrong_result": "RateLimitSnapshot(requests=RateLimitWindow(kind='requests', limit=100, remaining=5, reset_at=None), tokens=None, retry_after_at=1030.0)",
+  "right_result": "RateLimitSnapshot(requests=RateLimitWindow(kind='requests', limit=100, remaining=5, reset_at=None), tokens=None, retry_after_at=None)",
+  "intended_behavior_text_before_fix": {
+   "text": "On HTTP 429, also consults ``Retry-After`` so admission can wait even when the\n    provider omits ``x-ratelimit-*``.",
+   "file": "puppetmaster/rate_limit_headers.py",
+   "commit": "e58ec86ad7ad298fefa41827174e0ea8a0dd3448"
+  },
+  "state_needed": "none (clock passed as now=)",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-08",
+  "id": "de9336c9",
+  "pre_result": {
+   "ok": true,
+   "result": "RateLimitSnapshot(requests=RateLimitWindow(kind='requests', limit=100, remaining=5, reset_at=None), tokens=None, retry_after_at=1030.0)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "RateLimitSnapshot(requests=RateLimitWindow(kind='requests', limit=100, remaining=5, reset_at=None), tokens=None, retry_after_at=None)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Slug-equivalent catalog id bypasses a disabled registry overlay",
+  "repo": "Puppetmaster",
+  "fix_commit": "6c6c470c5f45e04601c4d61342b85baf143f2ec3",
+  "parent_commit": "d05d820dbb76a370ab6fa9b3713e105a7afcd131",
+  "file": "puppetmaster/api_discovery.py",
+  "function": "catalog_to_specs",
+  "function_lines_at_parent": [
+   128,
+   203
+  ],
+  "kind": "text",
+  "what_was_wrong": "The overlay lookup matched existing registry entries only by exact adapter_model_name. A catalog id that differs only in punctuation (gpt-5.6-luna vs gpt-5-6-luna) found no overlay, so the result had the seed capability and enabled=True and re-enabled a model the operator disabled.",
+  "failing_input": "catalog_to_specs('openai', 'api', [{'id': 'gpt-5.6-luna'}], [ModelSpec(id='openai/gpt-5-6-luna', adapter='openai', adapter_model_name='gpt-5-6-luna', capability_score=76, enabled=False)])",
+  "wrong_result": "[ModelSpec(id='openai/gpt-5-6-luna', adapter_model_name='gpt-5.6-luna', capability_score=60, enabled=True, ...)]",
+  "right_result": "[ModelSpec(id='openai/gpt-5-6-luna', adapter_model_name='gpt-5.6-luna', capability_score=76, enabled=False, ...)]",
+  "intended_behavior_text_before_fix": {
+   "text": "Capability/price/context are inherited from an existing registry entry for\n    the same adapter+model (the registry is a tuning overlay)",
+   "file": "puppetmaster/api_discovery.py",
+   "commit": "d05d820dbb76a370ab6fa9b3713e105a7afcd131"
+  },
+  "state_needed": "none (existing registry is an argument)",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "pm-08",
+  "id": "b7e0a8d5",
+  "pre_result": {
+   "ok": true,
+   "result": "[ModelSpec(id='openai/gpt-5-6-luna', adapter='openai', adapter_model_name='gpt-5.6-luna', capability_score=60, input_per_mtok_usd=0.0, output_per_mtok_usd=0.0, context_window=0, tags=['openai', 'discovered'], notes='Discovered from the openai catalog (gpt-5.6-luna). Tune capability_score and pricing so the router ranks/charges it correctly.', enabled=True, payload_defaults={}, output_token_multiplier=1.0, billing='api')]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[ModelSpec(id='openai/gpt-5-6-luna', adapter='openai', adapter_model_name='gpt-5.6-luna', capability_score=76, input_per_mtok_usd=0.0, output_per_mtok_usd=0.0, context_window=0, tags=['discovered'], notes='', enabled=False, payload_defaults={}, output_token_multiplier=1.0, billing='api')]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Criterion reported passed without evidence stays passed",
+  "repo": "Puppetmaster",
+  "fix_commit": "0c6b3aeb24c1ef62975e0999e065f4a1d258fa92",
+  "parent_commit": "25a1772daf34347583ea9964e95109dca55ce24a",
+  "file": "puppetmaster/acceptance_criteria.py",
+  "function": "criterion_status_records",
+  "function_lines_at_parent": [
+   235,
+   277
+  ],
+  "kind": "state",
+  "what_was_wrong": "A worker row with status passed and no evidence kept status passed and got evidence 'not_reported', so the record claimed a pass with no evidence. A passed or failed status without concrete evidence must become unknown.",
+  "failing_input": "criterion_status_records(['Tests pass'], [{'criterion': 'Tests pass', 'status': 'passed'}])",
+  "wrong_result": "[{'criterion': 'Tests pass', 'status': 'passed', 'evidence': 'not_reported'}]",
+  "right_result": "[{'criterion': 'Tests pass', 'status': 'unknown', 'evidence': 'not_reported'}]",
+  "intended_behavior_text_before_fix": {
+   "text": "Omitted / unmatched criteria are ``status=unknown`` with\n    ``evidence=not_reported`` \u2014 never ``passed``.",
+   "file": "puppetmaster/acceptance_criteria.py",
+   "commit": "25a1772daf34347583ea9964e95109dca55ce24a"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-08",
+  "id": "c1d8cb3d",
+  "pre_result": {
+   "ok": true,
+   "result": "[{\"criterion\": \"Tests pass\", \"evidence\": \"not_reported\", \"status\": \"passed\"}]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[{\"criterion\": \"Tests pass\", \"evidence\": \"not_reported\", \"status\": \"unknown\"}]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Explicit model pin drops registry payload_defaults (provider)",
+  "repo": "Puppetmaster",
+  "fix_commit": "9bff23fab98eb4ac6f7e8f1842c04ef008b9db6c",
+  "parent_commit": "fb62e70795c7abaf5bd2596fcebf1fa493714ada",
+  "file": "puppetmaster/model_registry.py",
+  "function": "stamp_resolved_model_pin",
+  "function_lines_at_parent": [
+   1087,
+   1095
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The stamped payload copied only the caller payload and the pin ids. It did not merge pin.spec.payload_defaults under the caller keys, so a bare agentic pin lost provider=openrouter and the adapter fell back to openai.",
+  "failing_input": "spec = ModelSpec(id='agentic/meta-muse-spark-1-1', adapter='agentic', adapter_model_name='meta/muse-spark-1.1', payload_defaults={'provider': 'openrouter'}); stamp_resolved_model_pin({}, ResolvedModelPin(registry_id=spec.id, adapter_model_name=spec.adapter_model_name, adapter='agentic', spec=spec))",
+  "wrong_result": "{'model': 'meta/muse-spark-1.1', 'router_model_id': 'agentic/meta-muse-spark-1-1', 'pinned_model': 'agentic/meta-muse-spark-1-1', 'pinned_adapter_model_name': 'meta/muse-spark-1.1'} (no 'provider')",
+  "right_result": "{'provider': 'openrouter', 'model': 'meta/muse-spark-1.1', 'router_model_id': 'agentic/meta-muse-spark-1-1', 'pinned_model': 'agentic/meta-muse-spark-1-1', 'pinned_adapter_model_name': 'meta/muse-spark-1.1'}",
+  "intended_behavior_text_before_fix": {
+   "text": "optional ``payload_defaults`` injected into task payloads whenever this\n  entry is routed (for adapter-specific knobs such as effort)",
+   "file": "puppetmaster/model_registry.py",
+   "commit": "fb62e70795c7abaf5bd2596fcebf1fa493714ada"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-08",
+  "id": "a5e7ffc5",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"model\": \"meta/muse-spark-1.1\", \"pinned_adapter_model_name\": \"meta/muse-spark-1.1\", \"pinned_model\": \"agentic/meta-muse-spark-1-1\", \"router_model_id\": \"agentic/meta-muse-spark-1-1\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"model\": \"meta/muse-spark-1.1\", \"pinned_adapter_model_name\": \"meta/muse-spark-1.1\", \"pinned_model\": \"agentic/meta-muse-spark-1-1\", \"provider\": \"openrouter\", \"router_model_id\": \"agentic/meta-muse-spark-1-1\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Cursor analysis swarm not pinned to its launch adapter",
+  "repo": "Puppetmaster",
+  "fix_commit": "7455a74e5446b4e729871210fc537b0cde4135e5",
+  "parent_commit": "31c3a7ad898a0b6ea640715214c5316a7a54d0c4",
+  "file": "puppetmaster/swarm_launch.py",
+  "function": "build_analysis_swarm_specs",
+  "function_lines_at_parent": [
+   52,
+   130
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "With auto_route on, the builder set allowed_adapters=[adapter] for every adapter except cursor and local. A cursor swarm therefore had no adapter pin and the router could move its workers to agentic or minimax.",
+  "failing_input": "build_analysis_swarm_specs('audit x', ['audit'], adapter='cursor', cwd='/tmp')[0].payload.get('allowed_adapters')",
+  "wrong_result": "None (auto_route=True, no adapter pin)",
+  "right_result": "['cursor']",
+  "intended_behavior_text_before_fix": {
+   "text": "pins `allowed_adapters=[adapter]` so the swarm actually dispatches to the chosen platform (not just Cursor)",
+   "file": "docs/CHANGELOG.md",
+   "commit": "31c3a7ad898a0b6ea640715214c5316a7a54d0c4"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-08",
+  "id": "6a0926de",
+  "pre_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "['cursor']"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Nested wrapper unwrap clobbers a typed artifact",
+  "repo": "Puppetmaster",
+  "fix_commit": "05c79a0d54003ed866209edbf41a4aa99df30b33",
+  "parent_commit": "91223c7654956ccdce79036d2b711c8d845560d3",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "cursor_artifact_from_item",
+  "function_lines_at_parent": [
+   548,
+   603
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The function unwrapped a nested {\"finding\"|\"risk\"|\"decision\": {...}} dict even when the item already had a top-level type. The nested dict then replaced the whole item, so the top-level type and fields were lost.",
+  "failing_input": "cursor_artifact_from_item(Task(job_id='job', role='codex-review', instruction='inspect', adapter='codex', payload={}), 'w', {'type': 'risk', 'risk': 'KEEP', 'finding': {'claim': 'STEAL'}}, adapter='codex')",
+  "wrong_result": "Artifact type FINDING with payload {'claim': 'STEAL'}",
+  "right_result": "Artifact type RISK with payload {'risk': 'KEEP', 'finding': {'claim': 'STEAL'}, 'mitigation': 'Review and verify before implementation.'}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (a Task object built from literal values)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-09",
+  "id": "71de2806",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"payload\": {\"claim\": \"STEAL\"}, \"type\": \"FINDING\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"payload\": {\"finding\": {\"claim\": \"STEAL\"}, \"mitigation\": \"Review and verify before implementation.\", \"risk\": \"KEEP\"}, \"type\": \"RISK\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Pricing uses the initial router pick, not the fallback model that ran",
+  "repo": "Puppetmaster",
+  "fix_commit": "239615ceafb9a32f2d9cbf615eb1c04570dad022",
+  "parent_commit": "b36270d2ca8cca451394667b68e890c8361572f2",
+  "file": "puppetmaster/cost.py",
+  "function": "_routing_model_ids",
+  "function_lines_at_parent": [
+   93,
+   105
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The function kept only ROUTING artifacts with created_by == 'router' and ignored 'router-fallback' and 'router-escalation'. After a fallback, the task was priced on the failed first model and not on the model that did the work.",
+  "failing_input": "_routing_model_ids([Artifact(job_id='j', task_id='t1', type=ArtifactType.ROUTING, created_by='router', confidence=0.9, evidence=['x'], payload={'model_id': 'cursor/grok-4-5'}), Artifact(job_id='j', task_id='t1', type=ArtifactType.ROUTING, created_by='router-fallback', confidence=0.9, evidence=['x'], payload={'model_id': 'agentic/glm-5'})])",
+  "wrong_result": "{'t1': 'cursor/grok-4-5'}",
+  "right_result": "{'t1': 'agentic/glm-5'}",
+  "intended_behavior_text_before_fix": {
+   "text": "Cost\nmust be a pure downstream function of *(tokens actually consumed)* \u00d7 *(registry\nprice of the model actually used)*, independent of whether routing happened.",
+   "file": "puppetmaster/cost.py",
+   "commit": "b36270d2ca8cca451394667b68e890c8361572f2"
+  },
+  "state_needed": "none (a list of Artifact objects)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-09",
+  "id": "86e3aa71",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"t1\": \"cursor/grok-4-5\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"t1\": \"agentic/glm-5\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "SigV4 canonical URI not encoded a second time",
+  "repo": "Puppetmaster",
+  "fix_commit": "63414edf5d93bbf543cee659c91593d0d9b0a706",
+  "parent_commit": "5aa83235fa45b6d089c0206a833460cd2555d226",
+  "file": "puppetmaster/bedrock.py",
+  "function": "sigv4_sign_headers",
+  "function_lines_at_parent": [
+   238,
+   311
+  ],
+  "kind": "text",
+  "what_was_wrong": "The canonical URI was the raw URL path. SigV4 (non-S3) requires each path segment to be URI-encoded again, so an already-encoded '%3A' must become '%253A'. Model ids with ':' got a wrong signature.",
+  "failing_input": "sigv4_sign_headers(method='POST', url='https://bedrock-runtime.us-east-1.amazonaws.com/model/us.anthropic.claude-sonnet-4-5-20250929-v1%3A0/invoke', headers={'content-type': 'application/json'}, body=b'{}', region='us-east-1', service='bedrock', access_key_id='AKIDEXAMPLE', secret_access_key='wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY', amz_date='20260712T000000Z')",
+  "wrong_result": "canonical URI '/model/us.anthropic.claude-sonnet-4-5-20250929-v1%3A0/invoke'; Authorization Signature=ab17d5987660d8a904a5285c7488ad82282ca687e711c2ff96baec2f312b0962",
+  "right_result": "canonical URI '/model/us.anthropic.claude-sonnet-4-5-20250929-v1%253A0/invoke'; Authorization Signature=bb525f7e4d22989b8033b6173aea516f33203ed325c5db09058a58080767a8a6",
+  "intended_behavior_text_before_fix": {
+   "text": "Return request headers including AWS Signature Version 4 Authorization.",
+   "file": "puppetmaster/bedrock.py",
+   "commit": "5aa83235fa45b6d089c0206a833460cd2555d226"
+  },
+  "state_needed": "none (amz_date is an argument)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-09",
+  "id": "33d0fef8",
+  "pre_result": {
+   "ok": true,
+   "result": "{'content-type': 'application/json', 'Host': 'bedrock-runtime.us-east-1.amazonaws.com', 'X-Amz-Date': '20260712T000000Z', 'X-Amz-Content-Sha256': '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a', 'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20260712/us-east-1/bedrock/aws4_request, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=ab17d5987660d8a904a5285c7488ad82282ca687e711c2ff96baec2f312b0962'}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'content-type': 'application/json', 'Host': 'bedrock-runtime.us-east-1.amazonaws.com', 'X-Amz-Date': '20260712T000000Z', 'X-Amz-Content-Sha256': '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a', 'Authorization': 'AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20260712/us-east-1/bedrock/aws4_request, SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date, Signature=bb525f7e4d22989b8033b6173aea516f33203ed325c5db09058a58080767a8a6'}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Platform lock write drops foreign keys in platform.json",
+  "repo": "Puppetmaster",
+  "fix_commit": "9b0e9f1211d392fe11ce56ef2818643e03d9eceb",
+  "parent_commit": "b7fb660be1255f8971437c30119133f327a8354d",
+  "file": "puppetmaster/platform_lock.py",
+  "function": "_write_disabled",
+  "function_lines_at_parent": [
+   87,
+   91
+  ],
+  "kind": "state",
+  "what_was_wrong": "The function wrote a new document that held only the 'disabled' key. Other keys in the shared platform.json, such as Marionette's 'harness_initialized', were removed.",
+  "failing_input": "platform.json in dir D = {\"disabled\": [\"codex\"], \"harness_initialized\": true}; call _write_disabled({'codex', 'hermes'}, registry_path=D / 'models.json')",
+  "wrong_result": "platform.json = {\"disabled\": [\"codex\", \"hermes\"]}",
+  "right_result": "platform.json = {\"disabled\": [\"codex\", \"hermes\"], \"harness_initialized\": true}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "one temp directory with a platform.json file",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-09",
+  "id": "0d214ea1",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"disabled\": [\"codex\", \"hermes\"]}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"disabled\": [\"codex\", \"hermes\"], \"harness_initialized\": true}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "write_file result message raises on a symlinked workspace root",
+  "repo": "Puppetmaster",
+  "fix_commit": "88749c84f7abdc90eb67e145fca682d6062cf3ea",
+  "parent_commit": "d575902bf412d7abcf695bf79441268c1c683fa5",
+  "file": "puppetmaster/adapters/agentic.py",
+  "function": "AgenticAdapter._tool_write_file",
+  "function_lines_at_parent": [
+   424,
+   428
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "_confine returns a fully resolved path, but the message used path.relative_to(cwd) with the unresolved cwd. When cwd goes through a symlink (macOS /var -> /private/var), relative_to raises ValueError after the file is already written. Product callers pass a resolved cwd, so the fault is latent.",
+  "failing_input": "real = resolved temp dir; link = symlink to real; AgenticAdapter()._tool_write_file({'path': 'a.txt', 'content': 'x'}, link)",
+  "wrong_result": "ValueError: '<real>/a.txt' is not in the subpath of '<link>' (the file is written anyway)",
+  "right_result": "'wrote a.txt (1 chars)'",
+  "intended_behavior_text_before_fix": {
+   "text": "Both sides are fully resolved before comparison so symlinked temp roots\n        (macOS ``/var`` -> ``/private/var``) and ``..`` segments can't smuggle a\n        path outside the workspace.",
+   "file": "puppetmaster/adapters/agentic.py",
+   "commit": "d575902bf412d7abcf695bf79441268c1c683fa5"
+  },
+  "state_needed": "a temp directory and a symlink to it",
+  "how_found": "test",
+  "confidence": "medium",
+  "slice": "pm-09",
+  "id": "b159dbbc",
+  "pre_result": {
+   "ok": true,
+   "result": "ValueError"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'wrote a.txt (1 chars)'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Payload string values explode into characters and \"false\" reads as True in routing signals",
+  "repo": "Puppetmaster",
+  "fix_commit": "27c0a0e192850554614bc1c7848745fd9a711b60",
+  "parent_commit": "b45d1f7f0297b9bdf22bd8be30d51b5ac553ca49",
+  "file": "puppetmaster/router.py",
+  "function": "signals_from_worker_spec",
+  "function_lines_at_parent": [
+   632,
+   670
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The function read payload values with list(...), frozenset(...) and bool(...). A bare string such as required_tags=\"vision\" became a list of single characters, and the string \"false\" for prefer_plan_billed became True.",
+  "failing_input": "signals_from_worker_spec(SimpleNamespace(payload={\"required_tags\": \"vision\", \"prefer_plan_billed\": \"false\", \"allowed_adapters\": \"openai\"}, instruction=\"x\", role=\"explore\"))",
+  "wrong_result": "required_tags == ['v','i','s','i','o','n'], prefer_plan_billed == True, allowed_adapters == frozenset({'o','p','e','n','a','i'})",
+  "right_result": "required_tags == ['vision'], prefer_plan_billed == False, allowed_adapters == frozenset({'openai'})",
+  "intended_behavior_text_before_fix": {
+   "text": "* ``required_tags`` \u2014 list[str], all must be on the model's tags",
+   "file": "puppetmaster/router.py",
+   "commit": "b45d1f7f0297b9bdf22bd8be30d51b5ac553ca49"
+  },
+  "state_needed": "none when allowed_adapters is in the payload (otherwise the platform lock allowlist is read; pass allowed_adapters to avoid it)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-10",
+  "id": "b7eb3415",
+  "pre_result": {
+   "ok": true,
+   "result": "required_tags=['v', 'i', 's', 'i', 'o', 'n'] prefer_plan_billed=True allowed_adapters=['a', 'e', 'i', 'n', 'o', 'p']"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "required_tags=['vision'] prefer_plan_billed=False allowed_adapters=['openai']"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Valid JSON payload followed by a brace-bearing trailer parses as None",
+  "repo": "Puppetmaster",
+  "fix_commit": "12ce58745fcd4aa9aae222f2a155a62f955e3597",
+  "parent_commit": "96460a6e480c4df4d591dddded5a781e50f315d3",
+  "file": "puppetmaster/adapters.py",
+  "function": "parse_cursor_artifact_payload (with helper _json_object_slice)",
+  "function_lines_at_parent": [
+   3012,
+   3023
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The last parse candidate sliced from the first '{' or '[' to the last '}' or ']'. When a trailer after the JSON value also held a brace, the slice included the trailer, json.loads failed, and the function returned None.",
+  "failing_input": "parse_cursor_artifact_payload('{\"artifacts\": []}\\nDone {ok}')",
+  "wrong_result": "None",
+  "right_result": "{'artifacts': []}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "pm-10",
+  "id": "7b8aeb19",
+  "pre_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{'artifacts': []}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Cursor SDK probe checks one fixed directory level instead of the Node upward walk",
+  "repo": "Puppetmaster",
+  "fix_commit": "a09a8d19c776703d489d5629a2f065af91b884a6",
+  "parent_commit": "937b3b9a8deb0046b9ddaf973c5ef0e6fa1f081b",
+  "file": "puppetmaster/diagnostics.py",
+  "function": "_find_cursor_sdk_install",
+  "function_lines_at_parent": [
+   440,
+   460
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "The comment says the probe mirrors the Node node_modules walk upward from the package, but the code checked only Path(__file__).resolve().parent.parent / node_modules. It missed the first hop, the package directory itself.",
+  "failing_input": "diagnostics.__file__ = '<t>/site-packages/puppetmaster/diagnostics.py'; directory '<t>/site-packages/puppetmaster/node_modules/@cursor/sdk' exists; PUPPETMASTER_HOME unset; _find_cursor_sdk_install(Path('<t>/empty-workspace'))",
+  "wrong_result": "None",
+  "right_result": "Path('<t>/site-packages/puppetmaster/node_modules/@cursor/sdk')",
+  "intended_behavior_text_before_fix": {
+   "text": "    # The Puppetmaster package directory ships its own package.json and\n    # node_modules; cursor_sdk_runner.mjs uses Node's resolution which\n    # walks upward from its own file path. We mirror that here so\n    # diagnostics agree with runtime behavior.",
+   "file": "puppetmaster/diagnostics.py",
+   "commit": "937b3b9a8deb0046b9ddaf973c5ef0e6fa1f081b"
+  },
+  "state_needed": "a small temp directory tree, the module __file__ value, and PUPPETMASTER_HOME unset",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-10",
+  "id": "4ac63244",
+  "pre_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'site-packages/puppetmaster/node_modules/@cursor/sdk'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Hook command embeds a backslashed, unquoted Windows python path",
+  "repo": "Puppetmaster",
+  "fix_commit": "179b178b15a62b87d3c6735b8369e26906d4673e",
+  "parent_commit": "e786153381d240b09a969467159cc73e88820c37",
+  "file": "puppetmaster/hook_installers.py",
+  "function": "_gate_command",
+  "function_lines_at_parent": [
+   80,
+   82
+  ],
+  "kind": "text",
+  "what_was_wrong": "The function put the python path into a shell command string as is. A POSIX-style shell (Git Bash on Windows) removes unquoted backslashes, and a path with a space splits into two words.",
+  "failing_input": "_gate_command('claude', 'PreToolUse', python='C:\\\\Program Files\\\\Python\\\\python.exe')",
+  "wrong_result": "'C:\\\\Program Files\\\\Python\\\\python.exe -m puppetmaster invocation-gate --host claude --event PreToolUse'",
+  "right_result": "'\"C:/Program Files/Python/python.exe\" -m puppetmaster invocation-gate --host claude --event PreToolUse'",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (pass python explicitly so sys.executable is not read)",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "pm-10",
+  "id": "4d71662b",
+  "pre_result": {
+   "ok": true,
+   "result": "'C:\\\\Program Files\\\\Python\\\\python.exe -m puppetmaster invocation-gate --host claude --event PreToolUse'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'\"C:/Program Files/Python/python.exe\" -m puppetmaster invocation-gate --host claude --event PreToolUse'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Hook classifier redirects any shell search that contains a slash",
+  "repo": "Puppetmaster",
+  "fix_commit": "c89b0cb0b2a511a05f460c96886f3cc68155999e",
+  "parent_commit": "1d7ebc00e239227c1e47e8b4f1a805399268a8b7",
+  "file": "puppetmaster/hook_runner.py",
+  "function": "classify_tool",
+  "function_lines_at_parent": [
+   164,
+   186
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The module regex _BROAD_SHELL_RE accepted '/' as a broad-search signal, so any grep/rg command with a file path (one file, not recursive) was classified as a repo-wide search and deny-redirected.",
+  "failing_input": "classify_tool(\"Bash\", \"grep TODO src/app.py\")",
+  "wrong_result": "(True, 'puppetmaster_codegraph_search')",
+  "right_result": "(False, '')",
+  "intended_behavior_text_before_fix": {
+   "text": "Conservative on purpose:\n    only *broad* exploration is redirected. Anything namespaced ``puppetmaster``\n    / ``mcp`` is always allowed (never block our own tools), and focused reads /\n    single commands pass through.",
+   "file": "puppetmaster/hook_runner.py",
+   "commit": "1d7ebc00e239227c1e47e8b4f1a805399268a8b7"
+  },
+  "state_needed": "none (module-level regex _BROAD_SHELL_RE only)",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "pm-11",
+  "id": "aaeae23f",
+  "pre_result": {
+   "ok": true,
+   "result": "(True, 'puppetmaster_codegraph_search')"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "(False, '')"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Self-heal keeps first-seen recoverable failure, not the latest",
+  "repo": "Puppetmaster",
+  "fix_commit": "ea047b812487b4957630920131e75f83063d0831",
+  "parent_commit": "000c8a0bb3e2632bc69776adb7ef97f92bbca6f6",
+  "file": "puppetmaster/orchestrator.py",
+  "function": "Orchestrator._recoverable_failure_by_task",
+  "function_lines_at_parent": [
+   650,
+   657
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The map kept the first recoverable failure artifact seen per task. list_artifacts orders by artifact id (SQLite ORDER BY id, file store sorted file names), not by time, so a stale failure from an earlier attempt could win over the newer one.",
+  "failing_input": "store.list_artifacts('job_1') returns [A(id='art_0001', task_id='t1', created_at='2026-06-01T00:00:01+00:00', payload={'failure': 'billing_or_quota'}), B(id='art_ffff', task_id='t1', created_at='2026-06-01T00:00:09+00:00', payload={'failure': 'missing_cli'})]; call orch._recoverable_failure_by_task(Job(id='job_1'))",
+  "wrong_result": "{'t1': 'billing_or_quota'}",
+  "right_result": "{'t1': 'missing_cli'}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a fake store whose list_artifacts returns a list of two artifacts (id, task_id, created_at, payload); RECOVERABLE_FAILURES from puppetmaster.workers",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-11",
+  "id": "41a71e0f",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"t1\": \"billing_or_quota\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"t1\": \"missing_cli\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Savings ledger counts a re-dispatched task's router decision twice",
+  "repo": "Puppetmaster",
+  "fix_commit": "000c8a0bb3e2632bc69776adb7ef97f92bbca6f6",
+  "parent_commit": "250797c409b56f7adc89cdd944505495cee6195a",
+  "file": "puppetmaster/savings.py",
+  "function": "collect_routing_records",
+  "function_lines_at_parent": [
+   89,
+   131
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "Every created_by='router' ROUTING artifact became a RoutingRecord. A task that was dispatched again emitted a second router artifact, so savings dollars and counts were inflated. The fix dedups by task_id.",
+  "failing_input": "collect_routing_records([store]) where store.list_jobs() -> [Job(id='job_1')] and store.list_artifacts('job_1') -> two ROUTING artifacts, both created_by='router', task_id='t1', payload={'policy': 'balanced', 'estimated_cost_usd': 0.01, 'baseline_cost_usd': 0.10}",
+  "wrong_result": "2 RoutingRecord entries (jobs=1)",
+  "right_result": "1 RoutingRecord entry (jobs=1)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a fake store with list_jobs and list_artifacts returning two artifacts",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-11",
+  "id": "a089ec4c",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"jobs\": 1, \"records\": 2}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"jobs\": 1, \"records\": 1}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "command_parts drops backslashes of Windows executable paths",
+  "repo": "Puppetmaster",
+  "fix_commit": "93a92e5b917ff8324451eae558e65a1e2642f805",
+  "parent_commit": "62edac8451b2764291f197cd9706be208e976e51",
+  "file": "puppetmaster/adapters.py",
+  "function": "command_parts",
+  "function_lines_at_parent": [
+   1185,
+   1190
+  ],
+  "kind": "parse",
+  "what_was_wrong": "A string command was split with shlex.split in POSIX mode on every OS. On Windows the backslashes in a path such as C:\\Users\\me\\claude.exe were read as escapes and removed, so the adapter reported missing_cli.",
+  "failing_input": "with os.name == 'nt': command_parts('C:\\\\Users\\\\me\\\\claude.exe -p')  (the string C:\\Users\\me\\claude.exe -p)",
+  "wrong_result": "['C:Usersmeclaude.exe', '-p']",
+  "right_result": "['C:\\\\Users\\\\me\\\\claude.exe', '-p']",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "os.name patched to 'nt'",
+  "how_found": "test",
+  "confidence": "high",
+  "slice": "pm-11",
+  "id": "180b1d51",
+  "pre_result": {
+   "ok": true,
+   "result": "['C:Usersmeclaude.exe', '-p']"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "['C:\\\\Users\\\\me\\\\claude.exe', '-p']"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "SQLite retrieve_memory ANDs query terms, drops any-term matches",
+  "repo": "Puppetmaster",
+  "fix_commit": "954d4bbe743a829020009baf4a5491c6ba2121e5",
+  "parent_commit": "94aaabd4f51e63e97119d35e94e921bf54db7760",
+  "file": "puppetmaster/sqlite_store.py",
+  "function": "SQLiteSwarmStore.retrieve_memory",
+  "function_lines_at_parent": [
+   528,
+   572
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "Each query term was added as its own instr() clause joined with AND, so the SQL prefilter returned only records with every term. The Python scoring (and the file backend) keeps a record that matches any term. The fix puts the term clauses in one OR group.",
+  "failing_input": "memory table has one row data={'scope': 'repo', 'statement': 'workers share one store', 'confidence': 0.9}; call store.retrieve_memory('workers nonexistent')",
+  "wrong_result": "[]",
+  "right_result": "[{'scope': 'repo', 'statement': 'workers share one store', 'confidence': 0.9}]",
+  "intended_behavior_text_before_fix": {
+   "text": "No behavior changes \u2014 store contract preserved across both backends.",
+   "file": "docs/CHANGELOG.md",
+   "commit": "94aaabd4f51e63e97119d35e94e921bf54db7760"
+  },
+  "state_needed": "an in-memory SQLite table memory(id, data) with one JSON row; self._all runs the query, self.init is a no-op",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "pm-11",
+  "id": "eaeb5933",
+  "pre_result": {
+   "ok": true,
+   "result": "[]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[{\"confidence\": 0.9, \"scope\": \"repo\", \"statement\": \"workers share one store\"}]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Dashboard cost_rollup raises on non-numeric estimated_cost_usd",
+  "repo": "Puppetmaster",
+  "fix_commit": "244eced81c5255108d54533872ed707320a57f29",
+  "parent_commit": "8846bdd4d38c30d4eebcc3e2844c6a8fecd4551b",
+  "file": "puppetmaster/dashboard.py",
+  "function": "cost_rollup",
+  "function_lines_at_parent": [
+   68,
+   88
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The function called float() directly on payload['estimated_cost_usd'], so one ROUTING artifact with a non-numeric value raised ValueError and the whole job snapshot request returned 500.",
+  "failing_input": "cost_rollup([Artifact(type=ArtifactType.ROUTING, payload={'model_id': 'm1', 'estimated_cost_usd': 'n/a'})])",
+  "wrong_result": "raises ValueError: could not convert string to float: 'n/a'",
+  "right_result": "{'total_estimated_cost_usd': 0.0, 'by_model': {'m1': {'calls': 1, 'estimated_cost_usd': 0.0}}}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-11",
+  "id": "d9fe4f63",
+  "pre_result": {
+   "ok": true,
+   "result": "ValueError"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"by_model\": {\"m1\": {\"calls\": 1, \"estimated_cost_usd\": 0.0}}, \"total_estimated_cost_usd\": 0.0}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "File-store retrieve_memory crashes on a malformed confidence value",
+  "repo": "Puppetmaster",
+  "fix_commit": "ea047b812487b4957630920131e75f83063d0831",
+  "parent_commit": "000c8a0bb3e2632bc69776adb7ef97f92bbca6f6",
+  "file": "puppetmaster/store.py",
+  "function": "SwarmStore.retrieve_memory",
+  "function_lines_at_parent": [
+   355,
+   377
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The score loop called float(memory.get('confidence', 0)), so one persisted memory record with a non-numeric confidence raised ValueError and memory retrieval for the whole task failed. The fix coerces it to 0.0.",
+  "failing_input": "list_memory() returns [{'statement': 'workers share one store', 'confidence': 'high'}]; call store.retrieve_memory('workers')",
+  "wrong_result": "raises ValueError: could not convert string to float: 'high'",
+  "right_result": "[{'statement': 'workers share one store', 'confidence': 'high'}]",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a fake store whose list_memory returns one dict; _memory_matches_filters returns True",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "pm-11",
+  "id": "1e6f34b3",
+  "pre_result": {
+   "ok": true,
+   "result": "ValueError"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[{'statement': 'workers share one store', 'confidence': 'high'}]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Token classes sum past the prompt when cache read and write overlap",
+  "repo": "marionette",
+  "fix_commit": "8685128aef5e0b39f71048b1fbedc1f7a9d12880",
+  "parent_commit": "240b02525a18d5f4795a69fd3b936da88893f1de",
+  "file": "harness/usage_ledger/rates.py",
+  "function": "TokenClasses.split",
+  "function_lines_at_parent": [
+   82,
+   99
+  ],
+  "kind": "arithmetic",
+  "what_was_wrong": "split clamped only the uncached part at zero and kept cache_write as given. When a provider reports the same tokens as read and as written, cache_read + cache_write_5m exceeded tokens_in, so the classes added up to more than the prompt and the price was too high.",
+  "failing_input": "TokenClasses.split(tokens_in=11564, tokens_out=5, cache_read=10996, cache_write=10996)",
+  "wrong_result": "TokenClasses(input_uncached=0, cache_read=10996, cache_write_5m=10996, cache_write_1h=0, output=5)  (prompt property = 21992 > 11564)",
+  "right_result": "TokenClasses(input_uncached=0, cache_read=10996, cache_write_5m=568, cache_write_1h=0, output=5)  (prompt property = 11564)",
+  "intended_behavior_text_before_fix": {
+   "text": "``tokens_in`` is the whole prompt (cache reads and writes included).",
+   "file": "harness/usage_ledger/rates.py",
+   "commit": "240b02525a18d5f4795a69fd3b936da88893f1de"
+  },
+  "state_needed": "none",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-00",
+  "id": "f44c7375",
+  "pre_result": {
+   "ok": true,
+   "result": "TokenClasses(input_uncached=0, cache_read=10996, cache_write_5m=10996, cache_write_1h=0, output=5)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "TokenClasses(input_uncached=0, cache_read=10996, cache_write_5m=568, cache_write_1h=0, output=5)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Cache buckets inside prompt_tokens_details are added back to the prompt total",
+  "repo": "marionette",
+  "fix_commit": "cf7fa6d43a84bbdfcbb0d750c487b65ee53ab4ea",
+  "parent_commit": "ca47d18c25f251a58ea84ccc4c750a0b5f502bc4",
+  "file": "pmharness/drivers/token_usage.py",
+  "function": "_from_usage_dict (with expand_uncached_prompt_tokens, lines 204-220)",
+  "function_lines_at_parent": [
+   223,
+   345
+  ],
+  "kind": "arithmetic",
+  "what_was_wrong": "_from_usage_dict always called expand_uncached_prompt_tokens, which adds cache read + write to the input when their sum exceeds it. Buckets read from prompt_tokens_details are an OpenAI-style subset of prompt_tokens, so a report with read == write == most of the prompt tripled the input count.",
+  "failing_input": "_from_usage_dict({'prompt_tokens': 11564, 'completion_tokens': 5, 'prompt_tokens_details': {'cached_tokens': 10996, 'cache_write_tokens': 10996}})",
+  "wrong_result": "(33556, 5, None, 10996, 10996)",
+  "right_result": "(11564, 5, None, 10996, 10996, True)  (the fix adds a sixth in_details flag; tokens_in stays 11564)",
+  "intended_behavior_text_before_fix": {
+   "text": "OpenAI-style reports\n    keep ``prompt_tokens`` as the full total with cached as a subset\n    (``cached <= tin``), so we leave them alone.",
+   "file": "pmharness/drivers/token_usage.py",
+   "commit": "ca47d18c25f251a58ea84ccc4c750a0b5f502bc4"
+  },
+  "state_needed": "none",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-00",
+  "id": "1b0b28ad",
+  "pre_result": {
+   "ok": true,
+   "result": "(33556, 5, None, 10996, 10996)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "(11564, 5, None, 10996, 10996, True)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Polling steer fires on a wait that reports progress",
+  "repo": "marionette",
+  "fix_commit": "1b4a1f2ce8f55ed8e907480e0527fc79a24284e6",
+  "parent_commit": "6367cbfbf7fb50b464329361d1ab4281eba1596d",
+  "file": "harness/runaway_guard.py",
+  "function": "observe_step",
+  "function_lines_at_parent": [
+   168,
+   255
+  ],
+  "kind": "state",
+  "what_was_wrong": "The polling signal counted only identical wait actions (poll_count) and ignored the results. The third identical wait raised SIGNAL_POLLING, whose steer says the status came back unchanged, even when each result was different.",
+  "failing_input": "sess = SimpleNamespace(); act = SimpleNamespace(kind='wait', job_ids=['job_1'], timeout_seconds=30); [observe_step(sess, 'wait', act, c) for c in ('job_1 running 1/5 done', 'job_1 running 2/5 done', 'job_1 running 3/5 done')]  (HARNESS_RUNAWAY_AFTER unset, so after = 3)",
+  "wrong_result": "[[], [], ['polling_repeat']]",
+  "right_result": "[[], [], []]",
+  "intended_behavior_text_before_fix": {
+   "text": "wait/status reads for the same target have returned an unchanged ",
+   "file": "harness/runaway_guard.py",
+   "commit": "6367cbfbf7fb50b464329361d1ab4281eba1596d"
+  },
+  "state_needed": "session object whose _runaway_guard dict the function creates and updates across the three calls",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-00",
+  "id": "dfb56171",
+  "pre_result": {
+   "ok": true,
+   "result": "[[], [], ['polling_repeat']]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[[], [], []]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Re-read after an edit replays the pre-edit file from the loop guard cache",
+  "repo": "marionette",
+  "fix_commit": "6367cbfbf7fb50b464329361d1ab4281eba1596d",
+  "parent_commit": "5b25d3cff5cd52f35b45f28a079a5b11864378dd",
+  "file": "harness/pilot_guards.py",
+  "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+  "function_lines_at_parent": [
+   2139,
+   2141
+  ],
+  "kind": "state",
+  "what_was_wrong": "record_native_workspace_mutation advanced only the run_command epoch. The cached read_file result and its execution count stayed, so check_loop_guard replayed the old file contents as a cached repeat after the file was edited.",
+  "failing_input": "st = TurnGuardState(); act = SimpleNamespace(kind='read_file', path='main.py', start_line=None, end_line=None); record_action_execution(st, 'read_file', act); record_successful_result(st, 'read_file', act, 'x = 1\\n'); record_native_workspace_mutation(st); check_loop_guard(st, 'read_file', act)",
+  "wrong_result": "GuardVerdict(suppress=True, reason='loop_replay', message='[cached repeat of identical call]\\nx = 1\\n', replay=True)",
+  "right_result": "GuardVerdict(suppress=False)  (the read executes again)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "TurnGuardState dataclass with one cached read_file entry",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-00",
+  "id": "3f4f643d",
+  "pre_result": {
+   "ok": true,
+   "result": "GuardVerdict(suppress=True, reason='loop_replay', message='[cached repeat of identical call]\\nx = 1\\n', replay=True)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "GuardVerdict(suppress=False, reason='', message='', replay=False)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Spill preview picks head-only for command output because it tests the random call id",
+  "repo": "marionette",
+  "fix_commit": "da89ac8f9f3e3f34c8c25c18dd8fa356c6dcf63a",
+  "parent_commit": "fdd3a6a79c2da012e0db8c176b7a5cda152807a4",
+  "file": "harness/context_budget.py",
+  "function": "maybe_persist_result (with _looks_like_command_result, lines 235-239)",
+  "function_lines_at_parent": [
+   347,
+   460
+  ],
+  "kind": "text",
+  "what_was_wrong": "With head_tail=None the function chose head+tail only when the result id contained command/cmd/shell/bash/exec/run. Provider call ids such as toolu_* or call_* are random, so run_command output got a head-only preview and lost the failure summary at the end, although tool_name was given.",
+  "failing_input": "content = ''.join(f'tests/test_mod.py::test_{i} PASSED\\n' for i in range(400)) + 'FAILED tests/test_mod.py::test_x - AssertionError\\n=== 1 failed, 400 passed ===\\n'  (13969 chars); maybe_persist_result(content, 'toolu_01AbXyz', tmpdir, BudgetConfig(max_result_chars=4000, turn_budget_chars=200000, preview_chars=1500), tool_name='run_command')",
+  "wrong_result": "preview has only the first PASSED lines: no '[omitted' marker and no '1 failed, 400 passed' text",
+  "right_result": "preview has head, an '... [omitted N characters] ...' marker and the tail with '1 failed, 400 passed'",
+  "intended_behavior_text_before_fix": {
+   "text": "when None (default) a smart default is used that enables head+tail\n    for command-like results so the trailing error is visible.",
+   "file": "harness/context_budget.py",
+   "commit": "fdd3a6a79c2da012e0db8c176b7a5cda152807a4"
+  },
+  "state_needed": "a temporary state_dir for the spill file",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-00",
+  "id": "a95bf56f",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"has_omitted\": false, \"has_tail\": false, \"len\": 1749, \"text\": \"<persisted-output>\\nThis tool result was too large (13,969 characters, 13.6 KB).\\nFull output saved to: <tmp>/pmharness-results/toolu_01AbXyz.txt\\nUse read_file with start_line and limit to read specific sections\\n\\nPreview (first 1486 chars):\\ntests/test_mod.py::test_0 PASSED\\ntests/test_mod.py::test_1 PASSED\\ntests/test_mod.py::test_2 PASSED\\ntests/test_mod.py::test_3 PASSED\\ntests/test_mod.py::test_4 PASSED\\ntests/test_mod.py::test_5 PASSED\\ntests/test_mod.py::test_6 PASSED\\ntests/test_mod.py::test_7 PASSED\\ntests/test_mod.py::test_8 PASSED\\ntests/test_mod.py::test_9 PASSED\\ntests/test_mod.py::test_10 PASSED\\ntests/test_mod.py::test_11 PASSED\\ntests/test_mod.py::test_12 PASSED\\ntests/test_mod.py::test_13 PASSED\\ntests/test_mod.py::test_14 PASSED\\ntests/test_mod.py::test_15 PASSED\\ntests/test_mod.py::test_16 PASSED\\ntests/test_mod.py::test_17 PASSED\\ntests/test_mod.py::test_18 PASSED\\ntests/test_mod.py::test_19 PASSED\\ntests/test_mod.py::test_20 PASSED\\ntests/test_mod.py::test_21 PASSED\\ntests/test_mod.py::test_22 PASSED\\ntests/test_mod.py::test_23 PASSED\\ntests/test_mod.py::test_24 PASSED\\ntests/test_mod.py::test_25 PASSED\\ntests/test_mod.py::test_26 PASSED\\ntests/test_mod.py::test_27 PASSED\\ntests/test_mod.py::test_28 PASSED\\ntests/test_mod.py::test_29 PASSED\\ntests/test_mod.py::test_30 PASSED\\ntests/test_mod.py::test_31 PASSED\\ntests/test_mod.py::test_32 PASSED\\ntests/test_mod.py::test_33 PASSED\\ntests/test_mod.py::test_34 PASSED\\ntests/test_mod.py::test_35 PASSED\\ntests/test_mod.py::test_36 PASSED\\ntests/test_mod.py::test_37 PASSED\\ntests/test_mod.py::test_38 PASSED\\ntests/test_mod.py::test_39 PASSED\\ntests/test_mod.py::test_40 PASSED\\ntests/test_mod.py::test_41 PASSED\\ntests/test_mod.py::test_42 PASSED\\ntests/test_mod.py::test_43 PASSED\\n\\n...\\n</persisted-output>\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"has_omitted\": true, \"has_tail\": true, \"len\": 1772, \"text\": \"<persisted-output>\\nThis tool result was too large (13,969 characters, 13.6 KB).\\nFull output saved to: <tmp>/pmharness-results/toolu_01AbXyz.txt\\nUse read_file with start_line and limit to read specific sections\\n\\nPreview (head and tail):\\ntests/test_mod.py::test_0 PASSED\\ntests/test_mod.py::test_1 PASSED\\ntests/test_mod.py::test_2 PASSED\\ntests/test_mod.py::test_3 PASSED\\ntests/test_mod.py::test_4 PASSED\\ntests/test_mod.py::test_5 PASSED\\ntests/test_mod.py::test_6 PASSED\\ntests/test_mod.py::test_7 PASSED\\ntests/test_mod.py::test_8 PASSED\\ntests/test_mod.py::test_9 PASSED\\ntests/test_mod.py::test_10 PASSED\\ntests/test_mod.py::test_11 PASSED\\ntests/test_mod.py::test_12 PASSED\\ntests/test_mod.py::test_13 PASSED\\ntests/test_mod.py::test_14 PASSED\\ntests/test_mod.py::test_15 PASSED\\ntests/test_mod.py::test_16 PASSED\\ntests/test_mod.py::test_17 PASSED\\ntests/test_mod.py::test_18 PASSED\\ntests/test_mod.py::test_19 PASSED\\ntests/test_mod.py::test_20 PASSED\\ntests/test_mod.py::test_21 PASSED\\ntests/test_mod.py::test_22 PASSED\\ntests/test_mod.py::test_23 PASSED\\ntests/test_mod.py::test_24 PASSED\\ntests/test_mod.py::test_25 PASSED\\ntests/test_mod.py::test_26 PASSED\\ntests/test_mod.py::test_27 PASSED\\ntests/test_mod.py::test_28 PASSED\\n\\n... [omitted 12,494 characters] ...\\ntests/test_mod.py::test_388 PASSED\\ntests/test_mod.py::test_389 PASSED\\ntests/test_mod.py::test_390 PASSED\\ntests/test_mod.py::test_391 PASSED\\ntests/test_mod.py::test_392 PASSED\\ntests/test_mod.py::test_393 PASSED\\ntests/test_mod.py::test_394 PASSED\\ntests/test_mod.py::test_395 PASSED\\ntests/test_mod.py::test_396 PASSED\\ntests/test_mod.py::test_397 PASSED\\ntests/test_mod.py::test_398 PASSED\\ntests/test_mod.py::test_399 PASSED\\nFAILED tests/test_mod.py::test_x - AssertionError\\n=== 1 failed, 400 passed ===\\n\\n...\\n</persisted-output>\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Hooks added from the UI store a string command that the runner always skips",
+  "repo": "marionette",
+  "fix_commit": "d15ef16f56f8d35abfb6da416ce3dfeb9458648d",
+  "parent_commit": "bb4851a1541d2e9ead5cb74cb9a6ea04fcb69938",
+  "file": "harness/api/hooks.py",
+  "function": "post_hooks_add (unit with harness/hooks.py _valid_record, lines 50-60)",
+  "function_lines_at_parent": [
+   31,
+   50
+  ],
+  "kind": "parse",
+  "what_was_wrong": "post_hooks_add stored the command as a plain string with no legacy_shell flag. _valid_record accepts a string command only when legacy_shell is True and HARNESS_ALLOW_LEGACY_SHELL_HOOKS=1, so every hook added through the API was invalid and run_hooks skipped it.",
+  "failing_input": "status, hook = post_hooks_add({'event': 'postRun', 'command': 'touch /tmp/x'}); _valid_record(hook, 'postRun')  (HARNESS_ALLOW_LEGACY_SHELL_HOOKS unset)",
+  "wrong_result": "hook['command'] == 'touch /tmp/x'; _valid_record returns False (run_hooks records status 'skipped')",
+  "right_result": "hook['command'] == ['touch', '/tmp/x']; _valid_record returns True (hook executes)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "hooks file in a temporary harness state dir (get_hooks / save_hooks)",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "mn-00",
+  "id": "d73c86ce",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"command\": \"touch /tmp/x\", \"status\": 200, \"valid\": false}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"command\": [\"touch\", \"/tmp/x\"], \"status\": 200, \"valid\": true}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Explicit-swarm classifier ignores a later opt-out clause",
+  "repo": "marionette",
+  "fix_commit": "87cdb7a3312ed61628264788ce382fe7e0e24502",
+  "parent_commit": "402b15759965d3d8662729cacb4429e581b4ecd1",
+  "file": "harness/pilot_guards.py",
+  "function": "is_explicit_swarm_user_message",
+  "function_lines_at_parent": [
+   822,
+   831
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The function searched the whole message for a swarm request and only checked a short fixed negative list, so a later correction such as 'no workers' did not cancel an earlier 'run a swarm'. The swarm-request regex also had no 'use ... swarm' form, so 'Use a swarm to ...' was not a request.",
+  "failing_input": "is_explicit_swarm_user_message('Run a swarm on the repo. Actually, no workers, do it yourself.')  (second input: is_explicit_swarm_user_message('Use a swarm to audit the codebase.'))",
+  "wrong_result": "True for the correction message; False for 'Use a swarm to audit the codebase.'",
+  "right_result": "False for the correction message (last explicit delegation clause wins); True for 'Use a swarm to audit the codebase.'",
+  "intended_behavior_text_before_fix": {
+   "text": "True when the user asked to launch a swarm, not merely mentioned one.",
+   "file": "harness/pilot_guards.py",
+   "commit": "402b15759965d3d8662729cacb4429e581b4ecd1"
+  },
+  "state_needed": "none (module regexes _EXPLICIT_SWARM_RE, _EXPLICIT_SWARM_NEG_RE, _NARROW_INTENT_RE are constants)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-01",
+  "id": "5ea489a3",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"correction\": true, \"use_swarm\": false}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"correction\": false, \"use_swarm\": true}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Loop-guard key drops the model pin for run_implement",
+  "repo": "marionette",
+  "fix_commit": "f585ab577043de74de4225c5f85ecf356c241cbf",
+  "parent_commit": "34200bf9a75e5036241c2743c5f6e8fe1a6ecb88",
+  "file": "harness/pilot_guards.py",
+  "function": "normalize_action_args",
+  "function_lines_at_parent": [
+   971,
+   1071
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The branch for run_swarm and run_implement put the model pin into the identity key only when kind == 'run_swarm'. Two run_implement actions with the same goal but different model pins got the same key, so a retry on another model was treated as a loop repeat.",
+  "failing_input": "a = SimpleNamespace(kind='run_implement', goal='add retries to the fetch helper', roles=[], repo='/r', model='kimi-k3', arguments={}); b = same with model='deepseek-v4-pro'; normalize_action_args('run_implement', a) == normalize_action_args('run_implement', b)",
+  "wrong_result": "True (both keys are '{\"goal\":\"add retries to the fetch helper\",\"kind\":\"run_implement\",\"repo\":\"/r\",\"roles\":[]}')",
+  "right_result": "False (the key includes \"model\":\"kimi-k3\" vs \"model\":\"deepseek-v4-pro\")",
+  "intended_behavior_text_before_fix": {
+   "text": "# Model pin is part of identity so changing pin after a plumbing\n        # degrade is a real new dispatch, not a loop-guard collision.",
+   "file": "harness/pilot_guards.py",
+   "commit": "34200bf9a75e5036241c2743c5f6e8fe1a6ecb88"
+  },
+  "state_needed": "none (a simple action object with goal, roles, repo, model, arguments)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-01",
+  "id": "3cb29955",
+  "pre_result": {
+   "ok": true,
+   "result": "(True, '{\"goal\":\"add retries to the fetch helper\",\"kind\":\"run_implement\",\"repo\":\"/r\",\"roles\":[]}', '{\"goal\":\"add retries to the fetch helper\",\"kind\":\"run_implement\",\"repo\":\"/r\",\"roles\":[]}')"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "(False, '{\"adapter\":\"\",\"goal\":\"add retries to the fetch helper\",\"kind\":\"run_implement\",\"mode\":\"\",\"model\":\"kimi-k3\",\"repo\":\"/r\",\"roles\":[]}', '{\"adapter\":\"\",\"goal\":\"add retries to the fetch helper\",\"kind\":\"run_implement\",\"mode\":\"\",\"model\":\"deepseek-v4-pro\",\"repo\":\"/r\",\"roles\":[]}')"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Expert timestamp passes colon-less UTC offsets to the wire",
+  "repo": "marionette",
+  "fix_commit": "825cb7e2b0f31ee2e1d12ee835f5d03791d047ba",
+  "parent_commit": "10a446faa80222d305a01596b24f3e23791a645f",
+  "file": "harness/job_expert.py",
+  "function": "timestamp",
+  "function_lines_at_parent": [
+   29,
+   36
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The function accepted any timezone-aware value that datetime.fromisoformat could parse and returned the raw string, so an offset like '+0000' went out unchanged. The consumer parser accepts only a 'Z' or '+HH:MM' suffix and rejected the whole job detail as invalid metadata.",
+  "failing_input": "timestamp('2026-10-01T12:00:00+0000')  (Python 3.11+, where fromisoformat accepts '+0000')",
+  "wrong_result": "'2026-10-01T12:00:00+0000'",
+  "right_result": "'2026-10-01T12:00:00+00:00'",
+  "intended_behavior_text_before_fix": {
+   "text": "function timestamp(value: unknown): string | null { const s = nullableString(value); if (s !== null && (s.length > 64 || !/(Z|[+-]\\d{2}:\\d{2})$/.test(s) || !Number.isFinite(Date.parse(s)))) return invalid(); return s; }",
+   "file": "webapp/src/lib/expertMetadata.ts",
+   "commit": "10a446faa80222d305a01596b24f3e23791a645f"
+  },
+  "state_needed": "none",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-01",
+  "id": "e03bbbb7",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/e03bbbb7/pre/harness/job_expert.py\", line 7, in <module>",
+    "    from puppetmaster.cost import is_cost_final_job_status, valid_terminal_cost_receipt",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/e03bbbb7/post/harness/job_expert.py\", line 7, in <module>",
+    "    from puppetmaster.cost import is_cost_final_job_status, valid_terminal_cost_receipt",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Snapshot absorber keeps a first frame that is one paragraph twice",
+  "repo": "marionette",
+  "fix_commit": "523d1d7bb2ace375960935cf94148c977f975a01",
+  "parent_commit": "f4d6cb2060bdbe45f6a1bd820721eb56e89d7fb2",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "function_lines_at_parent": [
+   19,
+   38
+  ],
+  "kind": "text",
+  "what_was_wrong": "With empty accumulated text the function returned the incoming frame unchanged, so a 'message+message' frame (one paragraph, a blank line, the same paragraph) was painted twice in the Thought fold. The same doubled text also passed through extract_reasoning.",
+  "failing_input": "p = 'I should read the config file first.'; absorb_stream_snapshot('', p + '\\n\\n' + p)",
+  "wrong_result": "'I should read the config file first.\\n\\nI should read the config file first.'",
+  "right_result": "'I should read the config file first.'",
+  "intended_behavior_text_before_fix": {
+   "text": "OpenRouter/Gemini often resend the whole message (or message+message) after\ntrue token deltas. Cursor CLI already skips that; Completions did not.",
+   "file": "pmharness/stream_snapshot.py",
+   "commit": "f4d6cb2060bdbe45f6a1bd820721eb56e89d7fb2"
+  },
+  "state_needed": "none",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-01",
+  "id": "2726eed8",
+  "pre_result": {
+   "ok": true,
+   "result": "'I should read the config file first.\\n\\nI should read the config file first.'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'I should read the config file first.'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Broad-intent classifier fires on any mention of subprocess",
+  "repo": "marionette",
+  "fix_commit": "41f5e321dca82c4d69b8b77f3d87ae3d4184b6d3",
+  "parent_commit": "b5c54a9db4c6509247a581e07b1704b783b6f648",
+  "file": "harness/pilot_guards.py",
+  "function": "is_broad_intent_user_message",
+  "function_lines_at_parent": [
+   778,
+   787
+  ],
+  "kind": "text",
+  "what_was_wrong": "_BROAD_INTENT_RE contained a bare \\bsubprocess\\b alternative, so a narrow question that only named subprocess was classified as a broad audit task and forced swarm-first policy. A status recap such as 'what was the audit verdict?' was also broad because the word 'audit' matched.",
+  "failing_input": "is_broad_intent_user_message('Why does the subprocess call in runner.py hang?')  (second input: is_broad_intent_user_message('what was the audit verdict?'))",
+  "wrong_result": "True (both inputs)",
+  "right_result": "False (both inputs)",
+  "intended_behavior_text_before_fix": {
+   "text": "Classify user text for broad audit/review/investigate tasks (pure function).",
+   "file": "harness/pilot_guards.py",
+   "commit": "b5c54a9db4c6509247a581e07b1704b783b6f648"
+  },
+  "state_needed": "none (module regexes are constants)",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-01",
+  "id": "a20398b4",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"Why does the subprocess call in runner.py hang?\": true, \"what was the audit verdict?\": true}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"Why does the subprocess call in runner.py hang?\": false, \"what was the audit verdict?\": false}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "CodeGraph refresh debounce suppresses the first check when the monotonic clock is small",
+  "repo": "marionette",
+  "fix_commit": "55f799e1ceff7c56a1c1df69edde24667f5f653e",
+  "parent_commit": "eda79cc1a6fd7f996703a77b204b0a32655fc04d",
+  "file": "harness/api/codegraph_index.py",
+  "function": "maybe_refresh_codegraph",
+  "function_lines_at_parent": [
+   475,
+   505
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "A repo with no recorded check used 0.0 as its last check time. When time.monotonic() was below CODEGRAPH_STALE_DEBOUNCE (20 s), the first call took (now - 0.0) < 20 as a recent check and returned without a refresh.",
+  "failing_input": "codegraph_stale_check_at = {}; codegraph_fail_until = {}; time.monotonic() -> 5.0; maybe_refresh_codegraph('/repo')",
+  "wrong_result": "returns early: codegraph_stale_check_at stays {} and no worker thread starts",
+  "right_result": "codegraph_stale_check_at == {'/repo': 5.0} and one worker thread starts",
+  "intended_behavior_text_before_fix": {
+   "text": "Debounced, background staleness-driven reindex. Safe to call on every turn\n    and on session switch -- the debounce + the indexing-guard ensure it never\n    thrashes.",
+   "file": "harness/api/codegraph_index.py",
+   "commit": "eda79cc1a6fd7f996703a77b204b0a32655fc04d"
+  },
+  "state_needed": "module dicts codegraph_stale_check_at and codegraph_fail_until (empty), a patched time.monotonic returning 5.0, and a stub threading.Thread that records start()",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-02",
+  "id": "4e16c220",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"stale_check_at\": {}, \"threads_started\": 0}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"stale_check_at\": {\"/repo\": 5.0}, \"threads_started\": 1}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Contradictory failed/passed rows for one criterion still count as verified (last wins)",
+  "repo": "marionette",
+  "fix_commit": "e7027400cbf1a7518ba6eb668ce3e7f1abbb2b8d",
+  "parent_commit": "4ffc5375e3fe32feeec15321902531ccec340d3b",
+  "file": "harness/swarm_run_facts.py",
+  "function": "_verified_criterion_loci",
+  "function_lines_at_parent": [
+   383,
+   408
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The loop skipped rows whose status was not passed/verified, so a failed row for a criterion had no effect. A later passed row for the same criterion made it verified, although the artifact also reported it failed.",
+  "failing_input": "_verified_criterion_loci({'acceptance_criteria': [{'criterion': 'tests pass', 'status': 'failed', 'evidence': 'tests/test_x.py:10'}, {'criterion': 'tests pass', 'status': 'passed', 'evidence': 'tests/test_x.py:12'}]})",
+  "wrong_result": "{'tests pass': 'tests/test_x.py:12'}",
+  "right_result": "{}",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-02",
+  "id": "3acb0892",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"tests pass\": \"tests/test_x.py:12\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Implement guard counts an applied patch with failed tests as implement success",
+  "repo": "marionette",
+  "fix_commit": "9cb0cc4da3bb04e665a181cb64b3d75f861e2993",
+  "parent_commit": "00d3ef1f50afa2cec3a9c4c013f19c4f38823a63",
+  "file": "harness/pilot_guards.py",
+  "function": "job_result_shows_implement_success",
+  "function_lines_at_parent": [
+   1610,
+   1648
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The check returned True as soon as res_job['applied'] was truthy, before it looked at any acceptance field. A job with a landed patch and red tests (tests_passed False or acceptance 'failed') was marked success, which clamped the pilot budget as if the work was done.",
+  "failing_input": "job_result_shows_implement_success({'applied': True, 'tests_passed': False}); also job_result_shows_implement_success({'applied': True, 'acceptance': 'failed'})",
+  "wrong_result": "True (both calls)",
+  "right_result": "False (both calls)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "mn-02",
+  "id": "b97a501b",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"acceptance_failed\": true, \"tests_passed_false\": true}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"acceptance_failed\": false, \"tests_passed_false\": false}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Goal Mode skip latch is not cleared by a later continueable swarm in the same turn",
+  "repo": "marionette",
+  "fix_commit": "7796e13eb58db84144d47a5fd24032aa36966fef",
+  "parent_commit": "5a1fc0c4b374b4d7cb1c400f56b4d6fad43c701b",
+  "file": "harness/goal_mode.py",
+  "function": "stash_turn_swarm_facts",
+  "function_lines_at_parent": [
+   170,
+   184
+  ],
+  "kind": "state",
+  "what_was_wrong": "The function only ever set session._goal_mode_skip_continue to True. After one skip-class swarm, a later continueable swarm in the same turn could not clear the latch, so goal_continue_note returned None and Goal Mode stopped.",
+  "failing_input": "s = types.SimpleNamespace(); stash_turn_swarm_facts(s, {'a': 1}, skip_continue=True); stash_turn_swarm_facts(s, {'b': 2}, skip_continue=False); s._goal_mode_skip_continue",
+  "wrong_result": "True",
+  "right_result": "False",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a session object with attributes _turn_swarm_facts and _goal_mode_skip_continue (a SimpleNamespace is enough). Note: the fix also leaves the latch False when reset_turn_goal_state ran first and only a skip-class swarm follows.",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-02",
+  "id": "de50015f",
+  "pre_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Live browser profile check only knows the current host's profile paths",
+  "repo": "marionette",
+  "fix_commit": "9e0ef2e75f5c5d8d44fc5ba816be2e97dcc268b5",
+  "parent_commit": "a5b76406b4a258b7fa8de17eb6d8aadc8b509cf4",
+  "file": "harness/browser_real_profile.py",
+  "function": "is_live_browser_user_data_dir",
+  "function_lines_at_parent": [
+   96,
+   113
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "With system=None, the function compared the path only against real_profile_data_dir(browser, system=None), which uses the current platform. A macOS Chrome profile path on a Linux or Windows host was not taken as a live profile.",
+  "failing_input": "platform.system() -> 'Linux'; is_live_browser_user_data_dir(os.path.join(real_profile_data_dir('chrome', system='Darwin'), 'Default')), i.e. '~/Library/Application Support/Google/Chrome/Default' expanded",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "True when ``path`` is (or is inside) a real installed-browser profile.",
+   "file": "harness/browser_real_profile.py",
+   "commit": "a5b76406b4a258b7fa8de17eb6d8aadc8b509cf4"
+  },
+  "state_needed": "platform.system() patched to return 'Linux' (and HOME for expanduser)",
+  "how_found": "test",
+  "confidence": "medium",
+  "slice": "mn-02",
+  "id": "1f3119d9",
+  "pre_result": {
+   "ok": true,
+   "result": "False"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "True"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Overlapping hash edits applied silently and corrupt the file",
+  "repo": "marionette",
+  "fix_commit": "80a5c3fa79646dcd4e4e97ed8ee6a14529114f4e",
+  "parent_commit": "edb453fbe3788cfc0c11be625c5687f306b5beea",
+  "file": "harness/hash_edit.py",
+  "function": "apply_hash_edits",
+  "function_lines_at_parent": [
+   250,
+   303
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "Each op was validated alone against the original lines, then all ops were applied in reverse line order. Two replace ranges that share a line both passed validation, and the second replace then operated on lines already rewritten by the first, so lines were lost and ok=True was returned.",
+  "failing_input": "text='a\\nb\\nc\\nd\\n'; lines=split_lines(text); apply_hash_edits(text, [HashEditOp(op='replace', anchor=compute_range_hash(lines,1,2), start_line=1, end_line=2, text='X'), HashEditOp(op='replace', anchor=compute_range_hash(lines,2,3), start_line=2, end_line=3, text='Y')])",
+  "wrong_result": "('X\\nd\\n', ApplyResult(ok=True, message='applied 2 op(s)'))  (the 'Y' replacement and line c are lost)",
+  "right_result": "('a\\nb\\nc\\nd\\n', ApplyResult(ok=False, message='op[0] and op[1]: overlapping replace/replace ranges 1-2 and 2-3'))",
+  "intended_behavior_text_before_fix": {
+   "text": "Validate all ops against ``original_text``, then apply in memory.\n\n    Returns (new_text, result). On failure ``new_text`` is the unchanged\n    original and nothing should be written.",
+   "file": "harness/hash_edit.py",
+   "commit": "edb453fbe3788cfc0c11be625c5687f306b5beea"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-03",
+  "id": "736097e0",
+  "pre_result": {
+   "ok": true,
+   "result": "('X\\nd\\n', ApplyResult(ok=True, message='applied 2 op(s)', stale_anchors=[], applied_ops=2))"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "('a\\nb\\nc\\nd\\n', ApplyResult(ok=False, message='op[0] and op[1]: overlapping replace/replace ranges 1-2 and 2-3', stale_anchors=[], applied_ops=0))"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Registry rate lookup takes the first fuzzy match before an exact id match",
+  "repo": "marionette",
+  "fix_commit": "810fa85b294e04eb689bf44bab581c47b61d80da",
+  "parent_commit": "146941358b60412ac8e2bf3fac0cf71dd6b1254a",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "function_lines_at_parent": [
+   153,
+   169
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "_registry_rates returned the price of the first registry row that _registry_spec_matches accepted, and that check treats an exact id and a fuzzy slug match (dot vs dash, provider prefix stripped) as equal. A fuzzy row earlier in the registry won over the exact row for the same model id. The fix ranks matches by tier (exact, alias, fuzzy); _registry_spec_matches works with it as one unit.",
+  "failing_input": "_registry_rates('gpt-x', [SimpleNamespace(id='openai/gpt.x', adapter_model_name='', input_per_mtok_usd=5.0, output_per_mtok_usd=6.0), SimpleNamespace(id='gpt-x', adapter_model_name='', input_per_mtok_usd=1.0, output_per_mtok_usd=2.0)])",
+  "wrong_result": "(5.0, 6.0)",
+  "right_result": "(1.0, 2.0)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (registry is a list of objects with id, adapter_model_name, input_per_mtok_usd, output_per_mtok_usd)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-03",
+  "id": "0684a733",
+  "pre_result": {
+   "ok": true,
+   "result": "(5.0, 6.0)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "(1.0, 2.0)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Conflicting exact-tier prices fall through to a weaker fuzzy match",
+  "repo": "marionette",
+  "fix_commit": "d551a998118adee3f77693db939cc4ffc30270db",
+  "parent_commit": "4dad144c66af6975c4ef9b765f1451f719052780",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "function_lines_at_parent": [
+   192,
+   213
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "When the strongest match tier had rows with contradictory prices, _pick_consistent_positive_rates returned (0, 0) for that tier, and the loop then continued to the alias and fuzzy tiers. It returned a fuzzy row's price, which hid the ambiguity instead of failing closed.",
+  "failing_input": "_registry_rates('gpt-x', [SimpleNamespace(id='gpt-x', adapter_model_name='', input_per_mtok_usd=1.0, output_per_mtok_usd=2.0), SimpleNamespace(id='gpt-x', adapter_model_name='', input_per_mtok_usd=3.0, output_per_mtok_usd=4.0), SimpleNamespace(id='openai/gpt.x', adapter_model_name='', input_per_mtok_usd=5.0, output_per_mtok_usd=6.0)])",
+  "wrong_result": "(5.0, 6.0)",
+  "right_result": "(0.0, 0.0)",
+  "intended_behavior_text_before_fix": {
+   "text": "Return the shared positive rate pair, or ``(0, 0)`` when rates conflict.",
+   "file": "harness/api/routing_savings.py",
+   "commit": "4dad144c66af6975c4ef9b765f1451f719052780"
+  },
+  "state_needed": "none (registry is a list of objects with id, adapter_model_name, input_per_mtok_usd, output_per_mtok_usd)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-03",
+  "id": "8184b3a0",
+  "pre_result": {
+   "ok": true,
+   "result": "(5.0, 6.0)"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "(0.0, 0.0)"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Conversation economics scope includes unstamped and other-session jobs",
+  "repo": "marionette",
+  "fix_commit": "90322732aabcc5c0f952743fe62c820a698bcffb",
+  "parent_commit": "fd17bd77c26884f00b6cd0232f7dac8dd57a3386",
+  "file": "harness/api/economics.py",
+  "function": "_conversation_jobs",
+  "function_lines_at_parent": [
+   276,
+   287
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "With no active session id the function returned every owned job, which leaked all conversations into the conversation scope. With an active id it kept owned jobs that had no session_id, so unstamped jobs from other chats were counted as this conversation.",
+  "failing_input": "_conversation_jobs([{'id':'j1','accounting_owned':True}, {'id':'j2','accounting_owned':True,'session_id':'s1'}, {'id':'j3','accounting_owned':True,'session_id':'s2'}], 's1'); and the same jobs with active_session_id=''",
+  "wrong_result": "ids ['j1','j2'] for 's1'; ids ['j1','j2','j3'] for ''",
+  "right_result": "ids ['j2'] for 's1'; [] for ''",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (filter_accountable_jobs is a pure filter on job['accounting_owned'])",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-03",
+  "id": "b5bcda97",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"empty\": [\"j1\", \"j2\", \"j3\"], \"s1\": [\"j1\", \"j2\"]}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"empty\": [], \"s1\": [\"j2\"]}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "RuleStore.update text change creates a duplicate slug",
+  "repo": "marionette",
+  "fix_commit": "44a4964ac75661cd2aa007ccd75551337877fb2b",
+  "parent_commit": "e4694fb00d4500e0b912d4d9c50f48162b4a3f6f",
+  "file": "harness/rule_store.py",
+  "function": "RuleStore.update",
+  "function_lines_at_parent": [
+   125,
+   141
+  ],
+  "kind": "state",
+  "what_was_wrong": "The slug is derived from the rule text and is the rule identity: add replaces by slug, while set_state and remove select by slug. update changed the text without a check for another rule that already had the new slug. Two rules then shared one slug, and later slug operations touched both.",
+  "failing_input": "store = RuleStore(tmp/'rules.json'); store.add(Rule(text='always use tabs', state='active')); store.add(Rule(text='never emojis', state='active')); store.update('never-emojis', text='always use tabs'); [(r.text, r.slug) for r in store.list()]",
+  "wrong_result": "[('always use tabs','always-use-tabs'), ('always use tabs','always-use-tabs')]",
+  "right_result": "[('always use tabs','always-use-tabs')]",
+  "intended_behavior_text_before_fix": {
+   "text": "# replace by slug if present",
+   "file": "harness/rule_store.py",
+   "commit": "e4694fb00d4500e0b912d4d9c50f48162b4a3f6f"
+  },
+  "state_needed": "a rules JSON file in a temp directory (list of two rule dicts)",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-03",
+  "id": "470c4b98",
+  "pre_result": {
+   "ok": true,
+   "result": "[('always use tabs', 'always-use-tabs'), ('always use tabs', 'always-use-tabs')]"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[('always use tabs', 'always-use-tabs')]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Parent cancel terminalizes a command batch while children still run",
+  "repo": "marionette",
+  "fix_commit": "0e93f509c513d6746d18e9da8acd4922d0fac81e",
+  "parent_commit": "9a7a1958edaecc5a14bbc67f156bc99777b9f165",
+  "file": "harness/local_jobs.py",
+  "function": "LocalJobsMixin._sync_command_batch_from_children",
+  "function_lines_at_parent": [
+   294,
+   395
+  ],
+  "kind": "state",
+  "what_was_wrong": "When parent_cancelled was True and some child was not terminal, the aggregate status was forced to 'cancelled' and a durable terminal_receipt was written. The children state was not yet terminal, so the batch claimed an outcome it did not have.",
+  "failing_input": "host._local_jobs = {'b': {'id':'b','status':'running','child_job_ids':['c1','c2']}, 'c1': {'id':'c1','status':'completed'}, 'c2': {'id':'c2','status':'registered'}}; host._sync_command_batch_from_children('b', parent_cancelled=True)",
+  "wrong_result": "jobs['b']['status'] == 'cancelled' and jobs['b']['terminal_receipt']['status'] == 'cancelled'",
+  "right_result": "jobs['b']['status'] == 'running' and no 'terminal_receipt' key",
+  "intended_behavior_text_before_fix": {
+   "text": "Refresh aggregate status from durable child rows (children own truth).",
+   "file": "harness/local_jobs.py",
+   "commit": "9a7a1958edaecc5a14bbc67f156bc99777b9f165"
+  },
+  "state_needed": "a host object with _local_jobs dict, _local_jobs_lock and a no-op _persist_local_jobs_locked; COMMAND_TERMINAL_STATES from harness.command_jobs",
+  "how_found": "test",
+  "confidence": "high",
+  "slice": "mn-03",
+  "id": "88ec6e86",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"has_terminal_receipt\": true, \"receipt_status\": \"cancelled\", \"status\": \"cancelled\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"has_terminal_receipt\": false, \"receipt_status\": null, \"status\": \"running\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Patch skill slug re-truncated to the base slug at the 48-char cap",
+  "repo": "marionette",
+  "fix_commit": "ca251cb0d7d28241446de993bc5a1a3e79bd3af9",
+  "parent_commit": "5d2df4be2915b4e5e326830e966234d020ee4d4e",
+  "file": "harness/skill_store.py",
+  "function": "Skill.slug",
+  "function_lines_at_parent": [
+   56,
+   60
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "Skill.slug returned f\"{supersedes}-patch\" without a length bound. SkillStore._path then applies _slug (lines 35-41), which cuts to 48 chars, so for a base slug of 43 or more chars the '-patch' suffix is lost and the patch file name equals the base skill file name. Saving the patch overwrites the base skill.",
+  "failing_input": "_slug(Skill(name='p', supersedes='a'*48).slug)  # the file stem that SkillStore._path uses",
+  "wrong_result": "'a'*48 (equal to _slug('a'*48), the base skill's file stem); end to end, SkillStore.save of the patch replaced the body of pending/aaaa...a.md with 'PATCH'",
+  "right_result": "'a'*42 + '-patch' (distinct from the base stem); end to end, both files exist and the base file keeps body 'BASE'",
+  "intended_behavior_text_before_fix": {
+   "text": "# Stable slug ({root}-patch): re-proposing overwrites the same pending\n        # patch rather than creating a new one each time.",
+   "file": "harness/skill_store.py",
+   "commit": "5d2df4be2915b4e5e326830e966234d020ee4d4e"
+  },
+  "state_needed": "none for the slug check; the end-to-end overwrite needs a temp SkillStore root directory",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-04",
+  "id": "15174914",
+  "pre_result": {
+   "ok": true,
+   "result": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-patch'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "DNS-rebinding Host check rejects portless bracketed IPv6 loopback",
+  "repo": "marionette",
+  "fix_commit": "4a1808044847cfed18d9646a4bad10d834560b46",
+  "parent_commit": "5b150da8777056e23b452219dc24eac78eff259b",
+  "file": "harness/server.py",
+  "function": "_host_ok",
+  "function_lines_at_parent": [
+   1149,
+   1155
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The port strip was a ternary with two identical branches, host_header.rsplit(':', 1)[0]. For a bracketed IPv6 host with no port, rsplit cuts inside the address ('[::1]' becomes '[:'), so an allowed loopback Host header is rejected.",
+  "failing_input": "_host_ok('[::1]') with _ALLOWED_HOSTS = {'127.0.0.1', 'localhost', '::1', '[::1]'}",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "Defeat DNS-rebinding: the Host must be a literal loopback name. A rebound\n    attacker domain (evil.com -> 127.0.0.1) shows its own name in Host.",
+   "file": "harness/server.py",
+   "commit": "5b150da8777056e23b452219dc24eac78eff259b"
+  },
+  "state_needed": "the module constant _ALLOWED_HOSTS = {'127.0.0.1', 'localhost', '::1', '[::1]'}",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-04",
+  "id": "faa54b8a",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/faa54b8a/pre/harness/state.py\", line 13, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/faa54b8a/post/harness/state.py\", line 13, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Escaped-write detector flags redirects to /dev/null",
+  "repo": "marionette",
+  "fix_commit": "eacd8663adf175fd5b6296a7d7afd216e3dbaace",
+  "parent_commit": "1424df7bd536286bc95958357d37b126e58c26de",
+  "file": "harness/worker.py",
+  "function": "_detect_escaped_writes",
+  "function_lines_at_parent": [
+   148,
+   224
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "Every absolute redirect target outside the worktree was reported as an escaped write, including null and stdio pseudo-devices. A common '2>/dev/null' made a worker look like it wrote outside its worktree.",
+  "failing_input": "_detect_escaped_writes([{'kind': 'action_start', 'data': {'kind': 'run_command', 'goal': 'ls missing 2>/dev/null'}}], '/tmp/wt')",
+  "wrong_result": "['/dev/null']",
+  "right_result": "[]",
+  "intended_behavior_text_before_fix": {
+   "text": "Scan run_command events for shell writes to absolute paths that fall\n    OUTSIDE ``wt_path``. Returns a de-duplicated, sorted list of the escaped\n    destinations.",
+   "file": "harness/worker.py",
+   "commit": "1424df7bd536286bc95958357d37b126e58c26de"
+  },
+  "state_needed": "none (POSIX host; the command and worktree path are plain strings)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-04",
+  "id": "613af730",
+  "pre_result": {
+   "ok": true,
+   "result": "['/dev/null']"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "[]"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Deleting the active session promotes a session from another workspace",
+  "repo": "marionette",
+  "fix_commit": "d43b873167cf04876e793c04c92d292871910921",
+  "parent_commit": "7ddd167163342099dd892524841348dc2c51a00b",
+  "file": "harness/sessions.py",
+  "function": "SessionStore.delete",
+  "function_lines_at_parent": [
+   162,
+   172
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "When the active session was deleted, the next active session was the most recent row of ALL workspaces. The UI then switched to an unrelated directory (often a temp worktree) instead of staying in the current workspace.",
+  "failing_input": "store._sessions = [{'id': 'a', 'workspace_root': '/w1', 'created': 1}, {'id': 'b', 'workspace_root': '/w2', 'created': 2}]; store._active = 'a'; store.delete('a')",
+  "wrong_result": "'b' (a session in workspace /w2)",
+  "right_result": "None (no other session in workspace /w1)",
+  "intended_behavior_text_before_fix": {
+   "text": "Workspace scoping (``session_visible_for_workspace``):\n- New rows store ``workspace_root`` (the open repo cwd) at creation.\n- ``/api/sessions`` lists only rows visible for the active workspace.",
+   "file": "harness/sessions.py",
+   "commit": "7ddd167163342099dd892524841348dc2c51a00b"
+  },
+  "state_needed": "a SessionStore on a temp sessions.json path with a two-row _sessions list and _active; set PYTEST_CURRENT_TEST at the fix so the new temp-root prune does not run",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "mn-04",
+  "id": "b5550c4f",
+  "pre_result": {
+   "ok": true,
+   "result": "'b'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "None"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Legacy disconnected.json fallback leaks into temp HARNESS_STATE_DIR",
+  "repo": "marionette",
+  "fix_commit": "a10024bd362686b93e0a0ccdf66d184d2180fc83",
+  "parent_commit": "2d24670e7ed1f4d7e484432e365259bef6ef0cd1",
+  "file": "harness/keys.py",
+  "function": "_disconnected_file_path",
+  "function_lines_at_parent": [
+   270,
+   277
+  ],
+  "kind": "path or glob",
+  "what_was_wrong": "The legacy fallback to ~/.pmharness/disconnected.json fired for any HARNESS_STATE_DIR that lacked the file, also a temp dir outside ~/.pmharness. Hermetic test or temp state dirs then read the developer's real disconnect set.",
+  "failing_input": "HARNESS_STATE_DIR='/tmp/x' (no disconnected.json in it); _DISCONNECTED_FILE exists; _disconnected_file_path()",
+  "wrong_result": "the legacy _DISCONNECTED_FILE path (~/.pmharness/disconnected.json)",
+  "right_result": "'/tmp/x/disconnected.json'",
+  "intended_behavior_text_before_fix": {
+   "text": "# MIGRATION: earlier builds wrote keys.json to ~/.pmharness/keys.json.\n        # Once HARNESS_STATE_DIR anchored to ~/.pmharness/state, upgraded installs\n        # with keys only in the parent directory appeared keyless until re-entered.",
+   "file": "harness/keys.py",
+   "commit": "2d24670e7ed1f4d7e484432e365259bef6ef0cd1"
+  },
+  "state_needed": "env HARNESS_STATE_DIR set to an empty temp dir outside ~/.pmharness, and a file at _DISCONNECTED_FILE (patch the module constant to a temp file)",
+  "how_found": "test",
+  "confidence": "medium",
+  "slice": "mn-04",
+  "id": "5f77c05c",
+  "pre_result": {
+   "ok": true,
+   "result": "'LEGACY ~/.pmharness/disconnected.json'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'STATE_DIR/disconnected.json'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Cursor CLI mcp tool kind not mapped, MCP hint has no server/tool goal",
+  "repo": "marionette",
+  "fix_commit": "3787af43d0a5c41f3c323319a725d182aa0bad18",
+  "parent_commit": "3a641d7ea0714b15176739d770268afd67ca95c3",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "function": "_tool_hint_payload",
+  "function_lines_at_parent": [
+   322,
+   344
+  ],
+  "kind": "text",
+  "what_was_wrong": "_tool_hint_payload with _canonicalize_tool_kind (lines 306-319) left the humanized kind 'mcp' unmapped and read the goal only through goal_from_tool_args, which does not know the Cursor mcpToolCall keys serverIdentifier/toolName. MCP rows showed a bare 'mcp' kind with no goal.",
+  "failing_input": "_tool_hint_payload('mcpToolCall', {'serverIdentifier': 'user-puppetmaster', 'toolName': 'puppetmaster_status'})",
+  "wrong_result": "{'name': 'mcp'}",
+  "right_result": "{'name': 'call_mcp', 'goal': 'user-puppetmaster/puppetmaster_status'}",
+  "intended_behavior_text_before_fix": {
+   "text": "Map Cursor ACP/stream kinds onto Marionette row families.",
+   "file": "pmharness/drivers/cursor_cli.py",
+   "commit": "3a641d7ea0714b15176739d770268afd67ca95c3"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "mn-04",
+  "id": "8c2f0164",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"name\": \"mcp\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"goal\": \"user-puppetmaster/puppetmaster_status\", \"name\": \"call_mcp\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Tool-pair sanitizer checks presence of a tool result, not adjacency",
+  "repo": "marionette",
+  "fix_commit": "75bc29cdfc825f8cf1b851775916be1106e696a7",
+  "parent_commit": "4b7440c65b30c066677423152fab2d0281f455ff",
+  "file": "harness/conversation.py",
+  "function": "ConversationalSession._sanitize_tool_pairs",
+  "function_lines_at_parent": [
+   987,
+   1027
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The function collected every tool_call_id answered anywhere in history, so a tool_use whose result came later (after a wedged steer/user message) counted as answered and got no stub. Anthropic needs the result immediately after the assistant message.",
+  "failing_input": "self._history = [{'role':'system','content':'sys'}, {'role':'assistant','content':'','tool_calls':[{'id':'a'}]}, {'role':'user','content':'steer'}, {'role':'tool','tool_call_id':'a','content':'out'}]; self._sanitize_tool_pairs()",
+  "wrong_result": "history unchanged: assistant(tool_calls a), user 'steer', tool a -- the tool_use a is not directly followed by a tool result",
+  "right_result": "assistant(tool_calls a), tool a stub '(no result: the previous action was interrupted before it completed)', user 'steer', tool a 'out'",
+  "intended_behavior_text_before_fix": {
+   "text": "Anthropic 400s (\"tool_use ids were found without\n        tool_result blocks immediately after\") if an assistant message carries\n        tool_calls that are never answered",
+   "file": "harness/conversation.py",
+   "commit": "4b7440c65b30c066677423152fab2d0281f455ff"
+  },
+  "state_needed": "self._history as a small list of message dicts (a stub object with a _history attribute is enough)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-05",
+  "id": "7c93db21",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/7c93db21/pre/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/7c93db21/post/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Tool-pair sanitizer keeps duplicate tool results for one tool_use id",
+  "repo": "marionette",
+  "fix_commit": "06ade3a12544655352fae7a0765d72158359cf99",
+  "parent_commit": "aec74550c9fb11454db8d81a1f12cef308e42985",
+  "file": "harness/conversation.py",
+  "function": "ConversationalSession._sanitize_tool_pairs",
+  "function_lines_at_parent": [
+   1027,
+   1078
+  ],
+  "kind": "list or set logic",
+  "what_was_wrong": "The adjacent-run consumer appended every tool message in the run, so an interruption stub and a later real result for the same id both stayed. Anthropic rejects more than one tool_result per tool_use.",
+  "failing_input": "self._history = [{'role':'system','content':'sys'}, {'role':'assistant','content':'','tool_calls':[{'id':'a'}]}, {'role':'tool','tool_call_id':'a','content':'(no result: the previous action was interrupted before it completed)'}, {'role':'tool','tool_call_id':'a','content':'real output'}]; self._sanitize_tool_pairs()",
+  "wrong_result": "both tool messages for id 'a' kept (stub, then 'real output')",
+  "right_result": "one tool message for id 'a': 'real output' (the real result replaces the stub)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "self._history as a small list of message dicts",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-05",
+  "id": "a8fef948",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/a8fef948/pre/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/a8fef948/post/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Prompt-cache marker put on an empty text block",
+  "repo": "marionette",
+  "fix_commit": "6def968da58185ddf57dd5ea1631154e630c05d5",
+  "parent_commit": "5fb02892a56a9a6141ea3e38ac5fffec672a5f9b",
+  "file": "pmharness/drivers/anthropic.py",
+  "function": "AnthropicDriver._build_body._mark",
+  "function_lines_at_parent": [
+   232,
+   239
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "The nested _mark helper added cache_control to the last content block without a check for empty text, and wrapped an empty string message too. Anthropic gives 400 for cache_control on an empty text block.",
+  "failing_input": "msg = {'role':'user','content':[{'type':'tool_result','tool_use_id':'a','content':'x'},{'type':'text','text':''}]}; _mark(msg)",
+  "wrong_result": "msg['content'][-1] == {'type':'text','text':'','cache_control':{'type':'ephemeral'}}",
+  "right_result": "msg['content'][-1] == {'type':'text','text':''} (no marker)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (enable_prompt_cache=True on the driver to reach the helper through _build_body)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-05",
+  "id": "cfc3b5af",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"cache_control\": {\"type\": \"ephemeral\"}, \"text\": \"\", \"type\": \"text\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"text\": \"\", \"type\": \"text\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Fork-bomb regex does not match the real fork-bomb body",
+  "repo": "marionette",
+  "fix_commit": "3ad9ea3b08fda6f925df4f7f395a3679fc0da2d4",
+  "parent_commit": "3c89382f89716fc5653fab6469114200b6b0a232",
+  "file": "harness/worker.py",
+  "function": "is_obviously_destructive",
+  "function_lines_at_parent": [
+   37,
+   90
+  ],
+  "kind": "parse",
+  "what_was_wrong": "The regex was :\\(\\)\\{\\s*:\\|\\s*&\\s*\\}\\s*;\\s*: which expects ':|&' and so never matches the body ':|:&'. Only the exact no-space literal ':(){:|:&};:' was caught, so a fork bomb with normal spaces passed the guard.",
+  "failing_input": "is_obviously_destructive(':(){ :|:& };:')",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "Flags patterns like 'rm -rf /', 'rm -rf ~', ':(){:|:&};:', 'mkfs', 'dd if=', ",
+   "file": "harness/worker.py",
+   "commit": "3c89382f89716fc5653fab6469114200b6b0a232"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "high",
+  "slice": "mn-05",
+  "id": "d0405e3a",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/d0405e3a/pre/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/d0405e3a/post/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Force-push guard also blocks git push --force-with-lease",
+  "repo": "marionette",
+  "fix_commit": "3ad9ea3b08fda6f925df4f7f395a3679fc0da2d4",
+  "parent_commit": "3c89382f89716fc5653fab6469114200b6b0a232",
+  "file": "harness/worker.py",
+  "function": "is_obviously_destructive",
+  "function_lines_at_parent": [
+   37,
+   90
+  ],
+  "kind": "text",
+  "what_was_wrong": "The pattern git\\s+push\\s+.*--force and the literal 'git push --force' are prefix matches, so the safe --force-with-lease option was flagged as destructive.",
+  "failing_input": "is_obviously_destructive('git push --force-with-lease origin main')",
+  "wrong_result": "True",
+  "right_result": "False (and is_obviously_destructive('git push --force origin main') stays True)",
+  "intended_behavior_text_before_fix": {
+   "text": "Halt or block obviously destructive commands in the headless worker.",
+   "file": "harness/worker.py",
+   "commit": "3c89382f89716fc5653fab6469114200b6b0a232"
+  },
+  "state_needed": "none",
+  "how_found": "review",
+  "confidence": "medium",
+  "slice": "mn-05",
+  "id": "468319a6",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/468319a6/pre/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'puppetmaster'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/468319a6/post/harness/state.py\", line 10, in <module>",
+    "    from puppetmaster.store_factory import create_store",
+    "ModuleNotFoundError: No module named 'puppetmaster'"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "Provider.key returns an env key for a disconnected provider",
+  "repo": "marionette",
+  "fix_commit": "39d0271e253d788d31d5cf03fcd1a97093e5170d",
+  "parent_commit": "c42463d4c43226fc4c415b7fe2a1da413b838d2b",
+  "file": "harness/providers.py",
+  "function": "Provider.key",
+  "function_lines_at_parent": [
+   39,
+   45
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "key() read only os.environ and ignored the explicit disconnect set, so a shell-exported key made a provider that the user disconnected available again. The disconnect set was documented as authoritative over the environment.",
+  "failing_input": "os.environ['OPENROUTER_API_KEY']='sk-x'; HARNESS_STATE_DIR/disconnected.json = [\"openrouter\"]; get_provider('openrouter').key()",
+  "wrong_result": "'sk-x' (key_env() gives 'OPENROUTER_API_KEY')",
+  "right_result": "None (key_env() gives None)",
+  "intended_behavior_text_before_fix": {
+   "text": "Providers the user EXPLICITLY disconnected. Authoritative over the\n    environment: even when the user's shell exports e.g. OPENROUTER_API_KEY\n    (re-injected by the desktop app's login-shell env capture), a provider in\n    this set is treated as disconnected and its env vars are scrubbed.",
+   "file": "harness/keys.py",
+   "commit": "c42463d4c43226fc4c415b7fe2a1da413b838d2b"
+  },
+  "state_needed": "an env dict with one provider key, and a disconnected-provider set (keys.get_disconnected, read from HARNESS_STATE_DIR/disconnected.json)",
+  "how_found": "unknown",
+  "confidence": "high",
+  "slice": "mn-05",
+  "id": "85225887",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"key\": \"sk-x\", \"key_env\": \"OPENROUTER_API_KEY\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"key\": null, \"key_env\": null}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Broad audit goal collapses to one explorer role",
+  "repo": "marionette",
+  "fix_commit": "79d01e536e8ae90e3f6b1a9358e546817a59e226",
+  "parent_commit": "1c4de7e5d1be1155a521ad7ed157d051b6704ea0",
+  "file": "pmharness/intent.py",
+  "function": "infer_roles",
+  "function_lines_at_parent": [
+   88,
+   101
+  ],
+  "kind": "text",
+  "what_was_wrong": "The broad-audit signal list had words like 'audit' and 'review' but not common phrasings like 'bugs', 'codebase' or 'look through', so a platform-wide bug hunt got a single 'explore' role.",
+  "failing_input": "infer_roles('look through the codebase for bugs')",
+  "wrong_result": "['explore']",
+  "right_result": "['explore', 'conflict-auditor', 'test-coverage-reviewer', 'pipeline-mapper', 'decision-explainer']",
+  "intended_behavior_text_before_fix": {
+   "text": "Broad/audit-flavored goals fan out across every analysis lens",
+   "file": "pmharness/intent.py",
+   "commit": "1c4de7e5d1be1155a521ad7ed157d051b6704ea0"
+  },
+  "state_needed": "none",
+  "how_found": "user report",
+  "confidence": "medium",
+  "slice": "mn-05",
+  "id": "56f1a567",
+  "pre_result": {
+   "ok": true,
+   "result": "['explore']"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "['explore', 'conflict-auditor', 'test-coverage-reviewer', 'pipeline-mapper', 'decision-explainer']"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Artifact headline empty when the finding is under a non-canonical key",
+  "repo": "marionette",
+  "fix_commit": "93a9d4b8d70645e21d7161d469598607ed295e64",
+  "parent_commit": "eaeb29a2fc4d5ea24502af02ff0dd5e6c4b7e0a4",
+  "file": "pmharness/bridge.py",
+  "function": "_compact_artifact",
+  "function_lines_at_parent": [
+   175,
+   196
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "The headline came only from claim/decision/risk/check/summary/change, so a payload with its text under another key (for example 'report') gave an empty headline and the finding was dropped from the digest.",
+  "failing_input": "_compact_artifact(obj) with obj.type='finding', obj.payload={'report': 'SQL injection in build_query'}, obj.confidence=0.8",
+  "wrong_result": "{'type': 'finding', 'headline': '', 'confidence': 0.8, 'failure': None}",
+  "right_result": "headline == 'SQL injection in build_query' (plus empty_headline False)",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "none (a simple object with type, payload and confidence attributes)",
+  "how_found": "unknown",
+  "confidence": "medium",
+  "slice": "mn-05",
+  "id": "e8af8068",
+  "pre_result": {
+   "ok": true,
+   "result": "{\"confidence\": 0.8, \"failure\": null, \"headline\": \"\", \"type\": \"finding\"}"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "{\"confidence\": 0.8, \"empty_headline\": false, \"failure\": null, \"headline\": \"SQL injection in build_query\", \"type\": \"finding\"}"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "Patch of a pending skill patch chains the supersedes slug",
+  "repo": "marionette",
+  "fix_commit": "951fc7ede78a94cad3a2eee3bd07975aa5f82116",
+  "parent_commit": "8d455f2b300aedf213a6049087f57d5ff5f95719",
+  "file": "harness/skill_store.py",
+  "function": "SkillStore.propose_update",
+  "function_lines_at_parent": [
+   184,
+   197
+  ],
+  "kind": "state",
+  "what_was_wrong": "propose_update set supersedes to the slug it got, also when that slug was itself a pending patch. Skill.slug is '<supersedes>-patch', so each new patch of a patch grew the slug (foo-patch-patch-...) until the file name was too long, and the new patch superseded the patch instead of the root skill.",
+  "failing_input": "st = SkillStore(tmpdir); st.save(Skill(name='foo', body='b0', state='active')); p1 = st.propose_update('foo', 'b1'); p2 = st.propose_update(p1.slug, 'b2'); (p2.slug, p2.supersedes)",
+  "wrong_result": "('foo-patch-patch', 'foo-patch')",
+  "right_result": "('foo-patch', 'foo')",
+  "intended_behavior_text_before_fix": null,
+  "state_needed": "a temp directory used as the SkillStore root, with one saved active skill 'foo'",
+  "how_found": "test",
+  "confidence": "high",
+  "slice": "mn-06",
+  "id": "f4652eca",
+  "pre_result": {
+   "ok": true,
+   "result": "('foo-patch-patch', 'foo-patch')"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "('foo-patch', 'foo')"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ },
+ {
+  "title": "CodeGraph staleness check misses deleted files",
+  "repo": "marionette",
+  "fix_commit": "ce898ffab46fe4b568715bb7155f7c6b883608ea",
+  "parent_commit": "f02333f3253c2d0536fc4c4969e2d9be83e21874",
+  "file": "harness/server.py",
+  "function": "_codegraph_is_stale",
+  "function_lines_at_parent": [
+   363,
+   388
+  ],
+  "kind": "boundary",
+  "what_was_wrong": "The function compared the .codegraph mtime only with the mtimes of source files that still exist. A deleted source file changes only its parent directory mtime, so after a deletion the function returned False and the index kept the removed symbols.",
+  "failing_input": "repo with .codegraph (mtime 200) and a.py (mtime 100); b.py (mtime 100) is deleted after the index, so the repo directory mtime is 300; _codegraph_is_stale(repo)",
+  "wrong_result": "False",
+  "right_result": "True",
+  "intended_behavior_text_before_fix": {
+   "text": "This repo is always indexed (it auto-indexes on open and refreshes when stale).",
+   "file": "harness/pilot.py",
+   "commit": "f02333f3253c2d0536fc4c4969e2d9be83e21874"
+  },
+  "state_needed": "a small temp directory tree with a .codegraph dir and source files whose mtimes are set with os.utime, and one file removed",
+  "how_found": "user report",
+  "confidence": "high",
+  "slice": "mn-06",
+  "id": "0f327579",
+  "pre_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'cgi'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/0f327579/pre/harness/server.py\", line 20, in <module>",
+    "    import cgi",
+    "ModuleNotFoundError: No module named 'cgi'. Did you mean: 'gi'?"
+   ]
+  },
+  "post_result": {
+   "ok": false,
+   "error": "ModuleNotFoundError",
+   "message": "No module named 'cgi'",
+   "where": [
+    "  File \"~/Projects/hp-work/src/0f327579/post/harness/server.py\", line 20, in <module>",
+    "    import cgi",
+    "ModuleNotFoundError: No module named 'cgi'. Did you mean: 'gi'?"
+   ]
+  },
+  "verified": false,
+  "verify_note": "the function is absent on one side (moved or renamed by the fix)"
+ },
+ {
+  "title": "OpenRouter fallback sends a catalog short name as the model id",
+  "repo": "marionette",
+  "fix_commit": "98d3793908eaebefc8f3af324d35944c17af7317",
+  "parent_commit": "85a588a99a2b439b591ef5c67760f67455906437",
+  "file": "harness/providers.py",
+  "function": "build_pilot",
+  "function_lines_at_parent": [
+   163,
+   206
+  ],
+  "kind": "precedence",
+  "what_was_wrong": "When no keyed provider listed a bare model name, the last-resort OpenRouter branch kept the bare catalog name as the model. The docstring says a bare name falls back to its OpenRouter slug, so OpenRouter got an invalid model id and answered HTTP 400.",
+  "failing_input": "env has only OPENROUTER_API_KEY set; build_pilot('qwen3-coder-30b').model (catalog entry qwen3-coder-30b has openrouter slug 'qwen/qwen3-coder-30b-a3b-instruct')",
+  "wrong_result": "'qwen3-coder-30b'",
+  "right_result": "'qwen/qwen3-coder-30b-a3b-instruct'",
+  "intended_behavior_text_before_fix": {
+   "text": "'model'           -> resolved against the first available provider whose\n                           pilot_models contains it, else OpenRouter slug.",
+   "file": "harness/providers.py",
+   "commit": "85a588a99a2b439b591ef5c67760f67455906437"
+  },
+  "state_needed": "environment with only OPENROUTER_API_KEY set; the pmharness catalog (or a one-entry dict for qwen3-coder-30b); driver classes can be stubs that record the model",
+  "how_found": "test",
+  "confidence": "high",
+  "slice": "mn-06",
+  "id": "722ca0a0",
+  "pre_result": {
+   "ok": true,
+   "result": "'qwen3-coder-30b'"
+  },
+  "post_result": {
+   "ok": true,
+   "result": "'qwen/qwen3-coder-30b-a3b-instruct'"
+  },
+  "verified": true,
+  "verify_note": "the two trees differ on the reported input"
+ }
+]

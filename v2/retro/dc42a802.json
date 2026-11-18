@@ -1,0 +1,124 @@
+{
+ "bug": "dc42a802",
+ "title": "List template inside map item files renders as one str() path",
+ "repo": "Puppetmaster",
+ "function": "_item_scopes",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-811a28e233",
+   "folder": "~/Projects/hp-work/p/811a28e233",
+   "model": "opus",
+   "flow": "flow_85570bb9e191",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_08c0b39da7a0"
+   ],
+   "seconds": 441,
+   "cost_usd": 2.964,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-c208d424ef",
+   "folder": "~/Projects/hp-work/p/c208d424ef",
+   "model": "sonnet",
+   "flow": "flow_39f77ab26834",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cdf82722cf79"
+   ],
+   "seconds": 55,
+   "cost_usd": 0.477,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-fe838cc649",
+   "folder": "~/Projects/hp-work/p/fe838cc649",
+   "model": "sonnet",
+   "flow": "flow_9d08ce2a9fc2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_42623191a76b"
+   ],
+   "seconds": 372,
+   "cost_usd": 1.859,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ItemFilesStaysList",
+   "input": {
+    "encoded": "1 s6167656e74 - s7b7b6974656d2e66696c65737d7d 2 s61 s62 2 o1 s66696c6573 l1 s78 o1 s66696c6573 i5",
+    "shown": "{ nodes := [{ kind := \"agent\", role := none, files := \"{{item.files}}\" }],"
+   },
+   "ref": {
+    "encoded": "E",
+    "shown": "HP.Output.typeError"
+   },
+   "pre": {
+    "ok": true,
+    "out": "E"
+   },
+   "post": {
+    "ok": true,
+    "out": "2 s61 1 s78 s62 1 s35"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 26,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2631,
+   "first_difference": {
+    "input": "2 s4167656e74 + s636f6465 s7b7b206974656d2e300a7d7d s6167656e74 - l3 s207b7b73746174652e6974656d7d7d20 s20207b7b096974656d2e31207d7d s0a7b7b206974656d2e666c6167207d7d 2 s62 s6974656d 2 o0 s612e7079",
+    "lean_ref": "2 s62 3 s7b7d s2020 s0a s6974656d 3 s20612e707920 s2020 s0a",
+    "python": "2 s62 1 s7b7d s6974656d 1 s612e7079"
+   }
+  }
+ },
+ "first_laws": [
+  "KeysAreItemKeys",
+  "NoCodeNodesEmptyScope",
+  "PlainFilesIsScope",
+  "UnknownPlaceholderKept",
+  "KeyPlaceholder",
+  "IndexPlaceholder",
+  "ItemFilesStaysList"
+ ],
+ "cost_usd": 5.3,
+ "seconds": 868
+}

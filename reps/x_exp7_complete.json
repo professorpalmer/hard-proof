@@ -1,0 +1,86 @@
+{
+ "task": "x_exp7_complete",
+ "seconds": 287,
+ "runs": [
+  {
+   "task": "x_exp7_complete",
+   "model": "luna",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/luna_1",
+   "flow": "flow_a36d632df903",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "FAIL"
+   ],
+   "worker_seconds": 241,
+   "cost_usd": null,
+   "changed_files": [
+    "CompleteSolution.lean"
+   ],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "luna",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/luna_2",
+   "flow": "flow_cf7545007fa4",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "FAIL"
+   ],
+   "worker_seconds": 172,
+   "cost_usd": null,
+   "changed_files": [
+    "CompleteSolution.lean"
+   ],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "sol",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/sol_1",
+   "flow": "flow_73d3158ffb00",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 176,
+   "cost_usd": null,
+   "changed_files": [
+    "CompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "sol",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/sol_2",
+   "flow": "flow_1d7597cf5531",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 276,
+   "cost_usd": null,
+   "changed_files": [
+    "CompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  }
+ ]
+}

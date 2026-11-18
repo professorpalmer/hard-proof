@@ -1,0 +1,6 @@
+name = "exp1"
+defaultTargets = ["Exp1"]
+
+[[lean_lib]]
+name = "Exp1"
+roots = ["Laws", "Mutants", "Challenge", "Solution"]

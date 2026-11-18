@@ -1,0 +1,504 @@
+{
+ "bug": "1e6f34b3",
+ "title": "File-store retrieve_memory crashes on a malformed confidence value",
+ "repo": "Puppetmaster",
+ "function": "SwarmStore.retrieve_memory",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-19036f4530",
+   "folder": "~/Projects/hp-work/p/19036f4530",
+   "model": "opus",
+   "flow": "flow_24354fdbe8c0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PARTIAL"
+   ],
+   "jobs": [
+    "job_fb637546eb57"
+   ],
+   "seconds": 271,
+   "cost_usd": 2.324,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-6dfd85b1a0",
+   "folder": "~/Projects/hp-work/p/6dfd85b1a0",
+   "model": "sonnet",
+   "flow": "flow_44b92e11b837",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_75149e8cfa3e"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.4,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-3a620d0d19",
+   "folder": "~/Projects/hp-work/p/3a620d0d19",
+   "model": "sonnet",
+   "flow": "flow_c2a69ae3464e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5372193df4ef"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.5,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-91570ad36d",
+   "folder": "~/Projects/hp-work/p/91570ad36d",
+   "model": "sonnet",
+   "flow": "flow_991e8b23e07d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3363a11bc088"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.399,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-4dd465825a",
+   "folder": "~/Projects/hp-work/p/4dd465825a",
+   "model": "sonnet",
+   "flow": "flow_676163bd644c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8a80b3cabf76"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.425,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-c370624518",
+   "folder": "~/Projects/hp-work/p/c370624518",
+   "model": "sonnet",
+   "flow": "flow_d879959e3145",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_25ca400a67d5"
+   ],
+   "seconds": 62,
+   "cost_usd": 0.55,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-9a297a7f3f",
+   "folder": "~/Projects/hp-work/p/9a297a7f3f",
+   "model": "sonnet",
+   "flow": "flow_d06fe86e119c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d635a5a71756"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.401,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-2943285e46",
+   "folder": "~/Projects/hp-work/p/2943285e46",
+   "model": "sonnet",
+   "flow": "flow_1319d020d813",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ff6c5f44ea72"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.39,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-100a2af841",
+   "folder": "~/Projects/hp-work/p/100a2af841",
+   "model": "sonnet",
+   "flow": "flow_5577d90f46fd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c52fa1274c69"
+   ],
+   "seconds": 159,
+   "cost_usd": 0.88,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-48718ce7c3",
+   "folder": "~/Projects/hp-work/p/48718ce7c3",
+   "model": "sonnet",
+   "flow": "flow_98a6f65c0cca",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_43b7b0efc7de"
+   ],
+   "seconds": 71,
+   "cost_usd": 0.598,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-9ed0a812d3",
+   "folder": "~/Projects/hp-work/p/9ed0a812d3",
+   "model": "sonnet",
+   "flow": "flow_35ef8177d628",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2fd21b303eb2"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.396,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-9dd92d53df",
+   "folder": "~/Projects/hp-work/p/9dd92d53df",
+   "model": "sonnet",
+   "flow": "flow_e7bbc4f2f7dd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_90d4a55bfe64"
+   ],
+   "seconds": 186,
+   "cost_usd": 0.852,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-049aa22aa5",
+   "folder": "~/Projects/hp-work/p/049aa22aa5",
+   "model": "sonnet",
+   "flow": "flow_ace573b3a671",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_162493bc989b"
+   ],
+   "seconds": 61,
+   "cost_usd": 0.523,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-19814f1f94",
+   "folder": "~/Projects/hp-work/p/19814f1f94",
+   "model": "sonnet",
+   "flow": "flow_26777fddf823",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e8d3e5f88aca"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.381,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-0855f64037",
+   "folder": "~/Projects/hp-work/p/0855f64037",
+   "model": "sonnet",
+   "flow": "flow_9c6a5b489bf4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_158297cc120b"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.456,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-97bccc2bb5",
+   "folder": "~/Projects/hp-work/p/97bccc2bb5",
+   "model": "sonnet",
+   "flow": "flow_2e7e498fba8b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_67974a4f0409"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.37,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-303e0d5cfa",
+   "folder": "~/Projects/hp-work/p/303e0d5cfa",
+   "model": "sonnet",
+   "flow": "flow_7b8a5397df44",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_de804600a2bf"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.458,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-c624e9bad5",
+   "folder": "~/Projects/hp-work/p/c624e9bad5",
+   "model": "sonnet",
+   "flow": "flow_04933b06c5b1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b6c193e36b19"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.399,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "s|d|-|-|-|-|a/a/a/a/a/a/a",
+    "shown": "query=\"\" limit=(default) scope=None adapter=None role=None topic=None memories=[{scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}]"
+   },
+   "design_a": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "positions [0]"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "positions [0]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "s|d|-|-|-|-|a/a/a/a/a/a/a;a/a/a/a/a/a/a",
+    "shown": "query=\"\" limit=(default) scope=None adapter=None role=None topic=None memories=[{scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}, {scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}]"
+   },
+   "design_a": {
+    "encoded": "0,1",
+    "shown": "positions [0, 1]"
+   },
+   "design_b": {
+    "encoded": "1,0",
+    "shown": "positions [1, 0]"
+   },
+   "ref": {
+    "encoded": "0,1",
+    "shown": "positions [0, 1]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0,1"
+   },
+   "post": {
+    "ok": true,
+    "out": "0,1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "s97.98.99|d|-|-|-|-|a/a/a/a/a/a/a",
+    "shown": "query=\"abc\" limit=(default) scope=None adapter=None role=None topic=None memories=[{scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}]"
+   },
+   "design_a": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "positions [0]"
+   },
+   "ref": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "pre": {
+    "ok": true,
+    "out": ""
+   },
+   "post": {
+    "ok": true,
+    "out": ""
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "s|0|-|-|-|-|a/a/a/a/a/a/a",
+    "shown": "query=\"\" limit=0 scope=None adapter=None role=None topic=None memories=[{scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}]"
+   },
+   "design_a": {
+    "encoded": "0",
+    "shown": "positions [0]"
+   },
+   "design_b": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "ref": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "pre": {
+    "ok": true,
+    "out": ""
+   },
+   "post": {
+    "ok": true,
+    "out": ""
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "LimitBoundsOutput",
+   "input": {
+    "encoded": "s|-1|-|-|-|-|",
+    "shown": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None memories=[]"
+   },
+   "ref": {
+    "encoded": "",
+    "shown": "positions []"
+   },
+   "pre": {
+    "ok": true,
+    "out": ""
+   },
+   "post": {
+    "ok": true,
+    "out": ""
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "LimitBoundsOutput",
+   "input": {
+    "encoded": "s|-1|-|-|-|-|a/a/a/a/a/a/a;a/a/a/a/a/a/a",
+    "shown": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None memories=[{scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}, {scope=(absent) statement=(absent) evidence=(absent) adapter=(absent) role=(absent) topic=(absent) confidence=a}]"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "positions [0]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 6,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "RetrievesStoredMemories"
+ ],
+ "cost_usd": 10.7,
+ "seconds": 1076
+}

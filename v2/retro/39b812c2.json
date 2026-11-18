@@ -1,0 +1,420 @@
+{
+ "bug": "39b812c2",
+ "title": "Bare \"api key\" substring classifies any error as not_authenticated",
+ "repo": "Puppetmaster",
+ "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-a83f3224b2",
+   "folder": "~/Projects/hp-work/p/a83f3224b2",
+   "model": "opus",
+   "flow": "flow_1fb91aa0f8f7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5ddb8bd34533"
+   ],
+   "seconds": 308,
+   "cost_usd": 2.067,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-ae87d20345",
+   "folder": "~/Projects/hp-work/p/ae87d20345",
+   "model": "sonnet",
+   "flow": "flow_88ac256f9ae2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b1cafb7ae502"
+   ],
+   "seconds": 47,
+   "cost_usd": 0.458,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9debe94f8a",
+   "folder": "~/Projects/hp-work/p/9debe94f8a",
+   "model": "sonnet",
+   "flow": "flow_0caf8c5b8a51",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7e07af7ee075"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.428,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-1c6372e7de",
+   "folder": "~/Projects/hp-work/p/1c6372e7de",
+   "model": "sonnet",
+   "flow": "flow_026650ff78e5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4b506fd069ed"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.396,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-1ce95105ca",
+   "folder": "~/Projects/hp-work/p/1ce95105ca",
+   "model": "sonnet",
+   "flow": "flow_27539e5f780b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d8df315daa09"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.425,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-115549ade0",
+   "folder": "~/Projects/hp-work/p/115549ade0",
+   "model": "sonnet",
+   "flow": "flow_0d571ec610a2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e44841c5bc6b"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.385,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-a82249f098",
+   "folder": "~/Projects/hp-work/p/a82249f098",
+   "model": "sonnet",
+   "flow": "flow_bde61deab9c4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cfded55fa2b3"
+   ],
+   "seconds": 43,
+   "cost_usd": 0.43,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-b55657f904",
+   "folder": "~/Projects/hp-work/p/b55657f904",
+   "model": "sonnet",
+   "flow": "flow_755e34f377d7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9239a71cbe27"
+   ],
+   "seconds": 14,
+   "cost_usd": 0.369,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-58bcd78055",
+   "folder": "~/Projects/hp-work/p/58bcd78055",
+   "model": "sonnet",
+   "flow": "flow_cf5f773873e2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_087531f32f1b"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.414,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-c775acc113",
+   "folder": "~/Projects/hp-work/p/c775acc113",
+   "model": "sonnet",
+   "flow": "flow_c1f6a5b93ee8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1c76c01814d7"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.397,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-5b05c9cfbf",
+   "folder": "~/Projects/hp-work/p/5b05c9cfbf",
+   "model": "sonnet",
+   "flow": "flow_e10b6dfaf92b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a68cbaf85962"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.431,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-47bfcceaa9",
+   "folder": "~/Projects/hp-work/p/47bfcceaa9",
+   "model": "sonnet",
+   "flow": "flow_d1d4419aaad1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_010b5e7d28f0"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.395,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-a3b7469bb9",
+   "folder": "~/Projects/hp-work/p/a3b7469bb9",
+   "model": "sonnet",
+   "flow": "flow_5ef253485072",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cb715c7b3bef"
+   ],
+   "seconds": 46,
+   "cost_usd": 0.476,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-151a40cc91",
+   "folder": "~/Projects/hp-work/p/151a40cc91",
+   "model": "sonnet",
+   "flow": "flow_cdac8ddea8f8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b49fc9bf1f5e"
+   ],
+   "seconds": 13,
+   "cost_usd": 0.37,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "HermesNoProviderAuth",
+   "input": {
+    "encoded": "hermes:6e6f20696e666572656e63652070726f766964657220697320636f6e666967757265642e206865726d65733a206e6f20737563682066696c65206f72206469726563746f7279",
+    "shown": "adapter=hermes output=\"no inference provider is configured. hermes: no such file or directory\""
+   },
+   "ref": {
+    "encoded": "missing_cli",
+    "shown": "missing_cli"
+   },
+   "pre": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "post": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "HermesNoApiKeyAuth",
+   "input": {
+    "encoded": "hermes:6e6f20617069206b657920666f756e6420666f722070726f76696465723b206e6f20737563682066696c65206f72206469726563746f72793a206865726d6573",
+    "shown": "adapter=hermes output=\"no api key found for provider; no such file or directory: hermes\""
+   },
+   "ref": {
+    "encoded": "missing_cli",
+    "shown": "missing_cli"
+   },
+   "pre": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "post": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "ModelNotFoundUnavailable",
+   "input": {
+    "encoded": "codex:7370656e6420636170206d6f64656c5f6e6f745f666f756e64",
+    "shown": "adapter=codex output=\"spend cap model_not_found\""
+   },
+   "ref": {
+    "encoded": "billing_or_quota",
+    "shown": "billing_or_quota"
+   },
+   "pre": {
+    "ok": true,
+    "out": "billing_or_quota"
+   },
+   "post": {
+    "ok": true,
+    "out": "billing_or_quota"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "ModelNotFoundUnavailable",
+   "input": {
+    "encoded": "openai:636f6d6d616e64206e6f7420666f756e64206d6f64656c5f6e6f745f666f756e64",
+    "shown": "adapter=openai output=\"command not found model_not_found\""
+   },
+   "ref": {
+    "encoded": "missing_cli",
+    "shown": "missing_cli"
+   },
+   "pre": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "post": {
+    "ok": true,
+    "out": "missing_cli"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "ModelNotFoundUnavailable",
+   "input": {
+    "encoded": "codex:6d6f64656c5f6e6f745f666f756e6420756e617574686f72697a6564",
+    "shown": "adapter=codex output=\"model_not_found unauthorized\""
+   },
+   "ref": {
+    "encoded": "not_authenticated",
+    "shown": "not_authenticated"
+   },
+   "pre": {
+    "ok": true,
+    "out": "not_authenticated"
+   },
+   "post": {
+    "ok": true,
+    "out": "not_authenticated"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "ModelNotFoundUnavailable",
+   "input": {
+    "encoded": "openai:6d6f64656c5f6e6f745f666f756e642072617465206c696d6974",
+    "shown": "adapter=openai output=\"model_not_found rate limit\""
+   },
+   "ref": {
+    "encoded": "rate_limit",
+    "shown": "rate_limit"
+   },
+   "pre": {
+    "ok": true,
+    "out": "rate_limit"
+   },
+   "post": {
+    "ok": true,
+    "out": "rate_limit"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 5,
+   "made": 5,
+   "killed": 5,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 15,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 1329,
+   "first_difference": {
+    "input": "codex:3432395f393430342e2e6c6f67696e20746f0a2e",
+    "lean_ref": "rate_limit",
+    "python": "unknown"
+   }
+  }
+ },
+ "first_laws": [
+  "HermesNoProviderAuth",
+  "HermesNoApiKeyAuth",
+  "IgnoresTracebackFrames",
+  "BareAuthWordNotAuth",
+  "CodexSpendCapBilling",
+  "ModelNotFoundUnavailable"
+ ],
+ "cost_usd": 7.44,
+ "seconds": 667
+}

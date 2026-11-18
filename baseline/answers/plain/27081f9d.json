@@ -1,0 +1,8 @@
+{
+  "verdict": "gap",
+  "open_decision": "Whether an unidentified owner whose lock age is exactly equal to stale_after is recovered (age >= stale_after) or kept (age > stale_after).",
+  "input": "{pidKnown := false, alive := false, reused := false, age := some 5, staleAfter := 5}",
+  "result_a": "true (remove the lock file): design that recovers when age >= staleAfter, as ref does",
+  "result_b": "false (keep the lock file): design that recovers only when age > staleAfter",
+  "reason": "The laws force true for age > staleAfter and false for age < staleAfter, but no law covers age = staleAfter with an unknown pid. All other cases are fixed by the laws, so two rules that differ only at this boundary both pass every law."
+}

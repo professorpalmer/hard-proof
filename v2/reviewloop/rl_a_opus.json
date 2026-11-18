@@ -1,0 +1,185 @@
+{
+ "name": "rl_a_opus",
+ "start": "a_opus",
+ "base": "base",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "b2aa77e669",
+   "review": {
+    "flow": "flow_083836613cd3",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 31,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new rows after the old registry, so a design can append the absent starters in starter order or in reverse order.",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       2,
+       0,
+       1,
+       0
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,0,0,0],[2,0,1,0]]",
+    "result_b": "[[2,0,1,0],[1,0,0,0]]",
+    "reason": "Each law only says that a new row is present (membership) and that the old registry is a prefix. No law orders the new rows, so a design that reverses them still passes every law but gives a different registry."
+   },
+   "code_result": "id 1 (adapter 0, model 0, disabled); id 2 (adapter 0, model 1, disabled)",
+   "law_author": {
+    "flow": "flow_2082a70e5e35",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 29,
+    "cost_usd": 0.43
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "StarterOrder": "\u2200 c st r t, DistinctIds st \u2192 f c st r = r ++ t \u2192 (t.map (\u00b7.id)).Sublist (st.map (\u00b7.id))"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "7b5371dd88",
+   "review": {
+    "flow": "flow_7793af687b62",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 23,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, KeepsPrefix gives r ++ t. AddsOnlyAbsent and AddsAllAbsent fix which starter ids are in t, StarterOrder with distinct ids fixes order and forbids repeats, and the SameRow, NewDisabled, LockedDisabled and EnableKeepsState laws fix every field of each new row."
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "2518fe75d3",
+   "review": {
+    "flow": "flow_42c3b2240748",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 18,
+    "cost_usd": 0.38
+   },
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, AddsOnlyAbsent and AddsAllAbsent fix which starters are added, and StarterOrder with distinct ids fixes their order and removes duplicates. SameRow fixes id, adapter and model. NewDisabled, LockedDisabled and EnableKeepsState fix the enabled flag in every case of enable and locked. KeepsPrefix fixes the old registry as the prefix, so the result is unique."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "StarterOrder"
+ ],
+ "reviews": 3,
+ "questions": 1,
+ "laws_added": 1,
+ "cost_usd": 1.61,
+ "seconds": 101,
+ "end_state_complete": false,
+ "finish": {
+  "outcome": "complete",
+  "questions": 1,
+  "final_laws": [
+   "KeepsPrefix",
+   "KeepsRows",
+   "AddsOnlyAbsent",
+   "AddsAllAbsent",
+   "NewDisabled",
+   "LockedDisabled",
+   "EnableKeepsState",
+   "StarterOrder",
+   "OneRowPerAbsent"
+  ],
+  "cost_usd": 1.6,
+  "seconds": 189,
+  "questions_text": [
+   [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]"
+   ]
+  ]
+ }
+}

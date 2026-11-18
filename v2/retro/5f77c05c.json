@@ -1,0 +1,118 @@
+{
+ "bug": "5f77c05c",
+ "title": "Legacy disconnected.json fallback leaks into temp HARNESS_STATE_DIR",
+ "repo": "marionette",
+ "function": "_disconnected_file_path",
+ "kind": "path or glob",
+ "stages": [
+  {
+   "flow_id": "hp2-05a9ef574b",
+   "folder": "~/Projects/hp-work/p/05a9ef574b",
+   "model": "opus",
+   "flow": "flow_969296c2104b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_45e3db18c7e0"
+   ],
+   "seconds": 118,
+   "cost_usd": 1.348,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-defbd5f09c",
+   "folder": "~/Projects/hp-work/p/defbd5f09c",
+   "model": "sonnet",
+   "flow": "flow_1a111db3c559",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_894007cc74a7"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.417,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-5fc505535e",
+   "folder": "~/Projects/hp-work/p/5fc505535e",
+   "model": "sonnet",
+   "flow": "flow_a0673492daaa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f0ce5e3f999d"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.477,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "StateHomeFile",
+   "input": {
+    "encoded": "=a|l|+l",
+    "shown": "HARNESS_STATE_DIR=\"a\" _DISCONNECTED_FILE=\"l\" existing=[l]"
+   },
+   "ref": {
+    "encoded": "l",
+    "shown": "\"l\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "l"
+   },
+   "post": {
+    "ok": true,
+    "out": "a/disconnected.json"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 14,
+   "made": 14,
+   "killed": 14,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 3633,
+   "first_difference": {
+    "input": "=/a/||++",
+    "lean_ref": "",
+    "python": "/a/disconnected.json"
+   }
+  }
+ },
+ "first_laws": [
+  "StateHomeFile"
+ ],
+ "cost_usd": 2.24,
+ "seconds": 173
+}

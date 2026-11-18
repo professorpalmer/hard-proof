@@ -1,0 +1,533 @@
+{
+ "bug": "88ec6e86",
+ "title": "Parent cancel terminalizes a command batch while children still run",
+ "repo": "marionette",
+ "function": "LocalJobsMixin._sync_command_batch_from_children",
+ "kind": "state",
+ "stages": [
+  {
+   "flow_id": "hp2-a1f14e6de1",
+   "folder": "~/Projects/hp-work/p/a1f14e6de1",
+   "model": "opus",
+   "flow": "flow_739cc6f4a032",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e560fcb0c026"
+   ],
+   "seconds": 406,
+   "cost_usd": 2.795,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-1fa405be8d",
+   "folder": "~/Projects/hp-work/p/1fa405be8d",
+   "model": "sonnet",
+   "flow": "flow_267d07740ac8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_daf165299583"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.474,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-833e97e356",
+   "folder": "~/Projects/hp-work/p/833e97e356",
+   "model": "sonnet",
+   "flow": "flow_8e7774d2c6c1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f79c52504cdc"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.429,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-f3149353f9",
+   "folder": "~/Projects/hp-work/p/f3149353f9",
+   "model": "sonnet",
+   "flow": "flow_21563d5f822e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_57a95d1c5468"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.44,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-a3807a4e46",
+   "folder": "~/Projects/hp-work/p/a3807a4e46",
+   "model": "sonnet",
+   "flow": "flow_993089b5872a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1833dc006bc9"
+   ],
+   "seconds": 118,
+   "cost_usd": 0.795,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-61788cf26d",
+   "folder": "~/Projects/hp-work/p/61788cf26d",
+   "model": "sonnet",
+   "flow": "flow_4d7556856d32",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_df9b0dcf627e"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.434,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-7ca6498f9b",
+   "folder": "~/Projects/hp-work/p/7ca6498f9b",
+   "model": "sonnet",
+   "flow": "flow_646860ba2b34",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ee9d189d5838"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.479,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-737e3c7242",
+   "folder": "~/Projects/hp-work/p/737e3c7242",
+   "model": "sonnet",
+   "flow": "flow_07514434cd63",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_219dd6fa527f"
+   ],
+   "seconds": 132,
+   "cost_usd": 0.798,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-c2c7938d85",
+   "folder": "~/Projects/hp-work/p/c2c7938d85",
+   "model": "sonnet",
+   "flow": "flow_dc39736661e4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c4559aa340b4"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.409,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-e850b53e0c",
+   "folder": "~/Projects/hp-work/p/e850b53e0c",
+   "model": "sonnet",
+   "flow": "flow_b521815abe89",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8fae1998eac9"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.426,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-17d034e100",
+   "folder": "~/Projects/hp-work/p/17d034e100",
+   "model": "sonnet",
+   "flow": "flow_55162f107fa9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_eb317d09accc"
+   ],
+   "seconds": 134,
+   "cost_usd": 0.741,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-55d369674f",
+   "folder": "~/Projects/hp-work/p/55d369674f",
+   "model": "sonnet",
+   "flow": "flow_7a38252ff12f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_16c15cdad1b9"
+   ],
+   "seconds": 60,
+   "cost_usd": 0.607,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-958bd9ee2f",
+   "folder": "~/Projects/hp-work/p/958bd9ee2f",
+   "model": "sonnet",
+   "flow": "flow_cdabba47801c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b405807190af"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.407,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-83cbee8a1e",
+   "folder": "~/Projects/hp-work/p/83cbee8a1e",
+   "model": "sonnet",
+   "flow": "flow_295207072575",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3915df571621"
+   ],
+   "seconds": 193,
+   "cost_usd": 0.0,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-99cb7730d6",
+   "folder": "~/Projects/hp-work/p/99cb7730d6",
+   "model": "sonnet",
+   "flow": "flow_d2d2e09fd0b7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_346c6cd492f1"
+   ],
+   "seconds": 67,
+   "cost_usd": 0.599,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-71516713a1",
+   "folder": "~/Projects/hp-work/p/71516713a1",
+   "model": "sonnet",
+   "flow": "flow_66e45c9edcc9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_058e6a5819ad"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.474,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-d77662ac0c",
+   "folder": "~/Projects/hp-work/p/d77662ac0c",
+   "model": "sonnet",
+   "flow": "flow_9f8771468d24",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_14efe26ef119"
+   ],
+   "seconds": 181,
+   "cost_usd": 0.924,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-d6248d91cb",
+   "folder": "~/Projects/hp-work/p/d6248d91cb",
+   "model": "sonnet",
+   "flow": "flow_93d22fa16ecd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d12bb15f4950"
+   ],
+   "seconds": 90,
+   "cost_usd": 0.703,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-351b78e9e9",
+   "folder": "~/Projects/hp-work/p/351b78e9e9",
+   "model": "sonnet",
+   "flow": "flow_7efbb6750e21",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9175d7cd7237"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.419,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ChildrenOwnTruth",
+   "input": {
+    "encoded": "S N N S L0 N N N N N L0 F 0",
+    "shown": "S N N S L0 N N N N N L0 F 0"
+   },
+   "ref": {
+    "encoded": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+    "shown": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "N L0 F 0",
+    "shown": "N L0 F 0"
+   },
+   "design_a": {
+    "encoded": "MISSING",
+    "shown": "MISSING"
+   },
+   "design_b": {
+    "encoded": "{}",
+    "shown": "{}"
+   },
+   "ref": {
+    "encoded": "MISSING",
+    "shown": "MISSING"
+   },
+   "pre": {
+    "ok": true,
+    "out": "MISSING"
+   },
+   "post": {
+    "ok": true,
+    "out": "MISSING"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "S S 'running S L1 'a S L1 EM S 'a N N S 'completed N N N N N N N N L1 'a S 'completed N N N N T 0",
+    "shown": "S S 'running S L1 'a S L1 EM S 'a N N S 'completed N N N N N N N N L1 'a S 'completed N N N N T 0"
+   },
+   "design_a": {
+    "encoded": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\"}",
+    "shown": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\"}"
+   },
+   "design_b": {
+    "encoded": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\",\"updated_at\":1}",
+    "shown": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\",\"updated_at\":1}"
+   },
+   "ref": {
+    "encoded": "{\"artifacts\":[{\"headline\":\"batch cancelled: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"cancelled\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"cancelled\",\"summary\":\"batch cancelled: 1 completed\"},\"updated_at\":0}",
+    "shown": "{\"artifacts\":[{\"headline\":\"batch cancelled: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"cancelled\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"cancelled\",\"summary\":\"batch cancelled: 1 completed\"},\"updated_at\":0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"artifacts\":[{\"headline\":\"batch cancelled: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"cancelled\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"cancelled\",\"summary\":\"batch cancelled: 1 completed\"},\"updated_at\":0}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"artifacts\":[{\"headline\":\"batch cancelled: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"cancelled\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"cancelled\",\"summary\":\"batch cancelled: 1 completed\"},\"updated_at\":0}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "S S 'running S L1 'a S L1 EM S 'a N N S 'completed N N N N N N N N L1 'a S 'completed N N N N F 0",
+    "shown": "S S 'running S L1 'a S L1 EM S 'a N N S 'completed N N N N N N N N L1 'a S 'completed N N N N F 0"
+   },
+   "design_a": {
+    "encoded": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\"}",
+    "shown": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\"}"
+   },
+   "design_b": {
+    "encoded": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\",\"updated_at\":0}",
+    "shown": "{\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"status\":\"running\",\"updated_at\":0}"
+   },
+   "ref": {
+    "encoded": "{\"artifacts\":[{\"headline\":\"batch completed: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"completed\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"completed\",\"summary\":\"batch completed: 1 completed\"},\"updated_at\":0}",
+    "shown": "{\"artifacts\":[{\"headline\":\"batch completed: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"completed\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"completed\",\"summary\":\"batch completed: 1 completed\"},\"updated_at\":0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"artifacts\":[{\"headline\":\"batch completed: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"completed\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"completed\",\"summary\":\"batch completed: 1 completed\"},\"updated_at\":0}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"artifacts\":[{\"headline\":\"batch completed: 1 completed\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"a\"],\"children\":[{\"job_id\":\"a\",\"status\":\"completed\"}],\"mixed_terminal\":false,\"status\":\"completed\",\"terminal_receipt\":{\"child_job_ids\":[\"a\"],\"child_statuses\":{\"completed\":1},\"finished_at\":0,\"mixed_terminal\":false,\"status\":\"completed\",\"summary\":\"batch completed: 1 completed\"},\"updated_at\":0}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "S S 'running N N N N N N N L0 F 0",
+    "shown": "S S 'running N N N N N N N L0 F 0"
+   },
+   "design_a": {
+    "encoded": "{\"status\":\"running\"}",
+    "shown": "{\"status\":\"running\"}"
+   },
+   "design_b": {
+    "encoded": "{\"status\":\"running\",\"updated_at\":7}",
+    "shown": "{\"status\":\"running\",\"updated_at\":7}"
+   },
+   "ref": {
+    "encoded": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+    "shown": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "S N N N N N N N N L0 F 0",
+    "shown": "S N N N N N N N N L0 F 0"
+   },
+   "design_a": {
+    "encoded": "{\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+    "shown": "{\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}"
+   },
+   "design_b": {
+    "encoded": "{}",
+    "shown": "{}"
+   },
+   "ref": {
+    "encoded": "{}",
+    "shown": "{}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{}"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 2,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 3706,
+   "first_difference": {
+    "input": "S S 'failed S L2 ' ' S L2 EM S 'q S 'qB N S 'failed N N N EM S ' S 'eB6v N N N N S 3 S L1 TD N N N N N N L2 'b S 'pending S 'vI S ' S RM 6 S 3 'f S 'Running S ' S 'seu N N T 641863",
+    "lean_ref": "{\"artifacts\":[{\"headline\":\"batch cancelled: 2 registered\",\"type\":\"command_batch\"}],\"child_job_ids\":[\"\",\"\"],\"children\":[{\"command_fingerprint\":\"qB\",\"job_id\":\"q\",\"status\":\"failed\"},{\"command_fingerprint\":\"eB6v\",\"job_id\":\"\",\"status\":\"registered\",\"x\":3}],\"mixed_terminal\":false,\"status\":\"cancelled\",\"tasks\":[{\"status\":\"cancelled\"}],\"terminal_receipt\":{\"child_job_ids\":[\"\",\"\"],\"child_statuses\":{\"registered\":2},\"finished_at\":641863,\"mixed_terminal\":false,\"status\":\"cancelled\",\"summary\":\"batch cancelled: 2 registered\"},\"updated_at\":641863}",
+    "python": "{\"child_job_ids\":[\"\",\"\"],\"children\":[{\"command_fingerprint\":\"qB\",\"job_id\":\"q\",\"status\":\"failed\"},{\"command_fingerprint\":\"eB6v\",\"job_id\":\"\",\"status\":\"registered\",\"x\":3}],\"mixed_terminal\":false,\"status\":\"running\",\"tasks\":[{\"status\":\"running\"}],\"updated_at\":641863}"
+   }
+  }
+ },
+ "first_laws": [
+  "ChildrenOwnTruth",
+  "CancelKeepsCompleted"
+ ],
+ "cost_usd": 12.35,
+ "seconds": 1662
+}

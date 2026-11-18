@@ -1,0 +1,142 @@
+{
+ "start": "a_opus",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "DeadOwnerRecovered",
+  "ReusedOwnerRecovered",
+  "LiveOwnerKept",
+  "UnknownStaleRecovered",
+  "UnknownFreshKept",
+  "StaleAfterOnlyUnidentified"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_7a0ba942b1a3",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 33,
+    "cost_usd": 0.41
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "DeadOwnerRecovered",
+    "ReusedOwnerRecovered",
+    "LiveOwnerKept",
+    "UnknownStaleRecovered",
+    "UnknownFreshKept",
+    "StaleAfterOnlyUnidentified"
+   ],
+   "question": [
+    "case: owner pid known=false pid alive=false pid reused=false age=unknown stale_after=0 s",
+    "rule A: keep the lock file",
+    "rule B: remove the lock file",
+    "shipped code: keep the lock file"
+   ],
+   "answer": "keep the lock file",
+   "law_author": {
+    "flow": "flow_be0880d05da6",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 32,
+    "cost_usd": 0.43
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "UnknownAgeKept": "\u2200 c : Case, c.pidKnown = false \u2192 c.age = none \u2192 f c = false"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_46819c46c9c4",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 31,
+    "cost_usd": 0.43
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "DeadOwnerRecovered",
+    "ReusedOwnerRecovered",
+    "LiveOwnerKept",
+    "UnknownStaleRecovered",
+    "UnknownFreshKept",
+    "StaleAfterOnlyUnidentified",
+    "UnknownAgeKept"
+   ],
+   "question": [
+    "case: owner pid known=false pid alive=false pid reused=false age=5 s stale_after=5 s",
+    "rule A: remove the lock file",
+    "rule B: keep the lock file",
+    "shipped code: remove the lock file"
+   ],
+   "answer": "remove the lock file",
+   "law_author": {
+    "flow": "flow_adc1da097a35",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 26,
+    "cost_usd": 0.42
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "UnknownReachedStaleRecovered": "\u2200 c : Case, \u2200 a : Nat, c.pidKnown = false \u2192 c.age = some a \u2192 a \u2265 c.staleAfter \u2192 f c = true"
+   }
+  },
+  {
+   "round": 3,
+   "adversary": {
+    "flow": "flow_675a0e882ab6",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 30,
+    "cost_usd": 0.43
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "DeadOwnerRecovered",
+    "ReusedOwnerRecovered",
+    "LiveOwnerKept",
+    "UnknownStaleRecovered",
+    "UnknownFreshKept",
+    "StaleAfterOnlyUnidentified",
+    "UnknownAgeKept",
+    "UnknownReachedStaleRecovered"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "DeadOwnerRecovered",
+  "ReusedOwnerRecovered",
+  "LiveOwnerKept",
+  "UnknownStaleRecovered",
+  "UnknownFreshKept",
+  "StaleAfterOnlyUnidentified",
+  "UnknownAgeKept",
+  "UnknownReachedStaleRecovered"
+ ],
+ "questions": 2
+}

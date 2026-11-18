@@ -1,0 +1,2 @@
+{"at": "2026-11-18T01:01:19-0500", "actor": "pilot-verify", "modes": ["gap", "complete"], "verdict": "reject", "mode": null, "seconds": 0.0}
+{"at": "2026-11-18T01:36:56-0500", "actor": "verify-all", "modes": ["gap", "complete"], "verdict": "reject", "mode": null, "seconds": 0.0}

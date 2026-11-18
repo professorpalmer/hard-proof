@@ -1,0 +1,148 @@
+{
+ "bug": "d2e22309",
+ "title": "Antigravity billing calls agy on PATH or an empty settings dir an authenticated plan",
+ "repo": "Puppetmaster",
+ "function": "detect_antigravity_billing",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-ca9ec6415f",
+   "folder": "~/Projects/hp-work/p/ca9ec6415f",
+   "model": "opus",
+   "flow": "flow_83d7303edbc6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dee2cbb348ad"
+   ],
+   "seconds": 132,
+   "cost_usd": 1.373,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-52e790c2c1",
+   "folder": "~/Projects/hp-work/p/52e790c2c1",
+   "model": "sonnet",
+   "flow": "flow_67264e415e92",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2843f4933b06"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.445,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-cba99e7417",
+   "folder": "~/Projects/hp-work/p/cba99e7417",
+   "model": "sonnet",
+   "flow": "flow_2413b61f3e1b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0521a17f9cfe"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.441,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-43f19d7807",
+   "folder": "~/Projects/hp-work/p/43f19d7807",
+   "model": "sonnet",
+   "flow": "flow_9001db3a0de2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_479f807fd86e"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.405,
+   "stage": "A1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "-|-|-|-|n|",
+    "shown": "GEMINI_API_KEY=unset GOOGLE_API_KEY=unset AGY_COMMAND=unset ANTIGRAVITY_COMMAND=unset settings_dir=n PATH_entries=[]"
+   },
+   "design_a": {
+    "encoded": "|unknown|0||",
+    "shown": "adapter= billing=unknown healthy=false detail=\"\" evidence=[]"
+   },
+   "design_b": {
+    "encoded": "x|unknown|0||",
+    "shown": "adapter=x billing=unknown healthy=false detail=\"\" evidence=[]"
+   },
+   "ref": {
+    "encoded": "antigravity|unknown|0|No GEMINI_API_KEY/GOOGLE_API_KEY and no Antigravity CLI session found \u2014 run `agy` to authenticate.|antigravity_auth:missing",
+    "shown": "adapter=antigravity billing=unknown healthy=false detail=\"No GEMINI_API_KEY/GOOGLE_API_KEY and no Antigravity CLI session found \u2014 run `agy` to authenticate.\" evidence=[antigravity_auth:missing]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "antigravity|unknown|0|No GEMINI_API_KEY/GOOGLE_API_KEY and no Antigravity CLI session found \u2014 run `agy` to authenticate.|antigravity_auth:missing"
+   },
+   "post": {
+    "ok": true,
+    "out": "antigravity|unknown|0|No GEMINI_API_KEY/GOOGLE_API_KEY bound to `agy` and no Antigravity session files \u2014 `agy` on PATH is not an authenticated session. Run `agy` interactively to log in, or install `agy` and set a Gemini API key.|antigravity_auth:missing"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 41,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 11,
+   "not_found": [
+    "billing: str  # \\\"plan\\\" | \\\"api\\\" | \\\"unknown\\\"",
+    "Detect, per platform/adapter, whether work bills against a subscription\nthe user"
+   ]
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 20000,
+   "first_difference": {
+    "input": "-|=ay|=ga|-|f|agy:d,ga:e",
+    "lean_ref": "antigravity|api|1|GEMINI_API_KEY/GOOGLE_API_KEY is set \u2014 Antigravity bills per-token to that account (out-of-pocket).|gemini_api_key:set",
+    "python": "antigravity|api|1|GEMINI_API_KEY/GOOGLE_API_KEY is set and `agy` is on PATH \u2014 Antigravity bills per-token to that account (out-of-pocket).|gemini_api_key:set,agy_on_path"
+   }
+  }
+ },
+ "first_laws": [
+  "ApiWhenKey",
+  "PlanWhenSession",
+  "BillingValues",
+  "HealthyIffCredentials"
+ ],
+ "cost_usd": 2.66,
+ "seconds": 228
+}

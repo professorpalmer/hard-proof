@@ -1,0 +1,509 @@
+{
+ "bug": "d486f0f2",
+ "title": "Antigravity effort added to a model slug that already encodes effort",
+ "repo": "Puppetmaster",
+ "function": "resolve_antigravity_model",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-ebaafa8c78",
+   "folder": "~/Projects/hp-work/p/ebaafa8c78",
+   "model": "opus",
+   "flow": "flow_690c7d002d0c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5f31dcf3b09d"
+   ],
+   "seconds": 140,
+   "cost_usd": 1.519,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-9796989716",
+   "folder": "~/Projects/hp-work/p/9796989716",
+   "model": "sonnet",
+   "flow": "flow_0bda5e4719eb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_08c0c2c61ac0"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.429,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-8f163103bc",
+   "folder": "~/Projects/hp-work/p/8f163103bc",
+   "model": "sonnet",
+   "flow": "flow_4c2159b84d69",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_51717646d448"
+   ],
+   "seconds": 39,
+   "cost_usd": 0.464,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-071629a4ee",
+   "folder": "~/Projects/hp-work/p/071629a4ee",
+   "model": "sonnet",
+   "flow": "flow_1b869ed55437",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dbf8bc6f302b"
+   ],
+   "seconds": 14,
+   "cost_usd": 0.387,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-94e0d00ec4",
+   "folder": "~/Projects/hp-work/p/94e0d00ec4",
+   "model": "sonnet",
+   "flow": "flow_a83182a046b6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f9c8bf0b968d"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.53,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-edef9bb849",
+   "folder": "~/Projects/hp-work/p/edef9bb849",
+   "model": "sonnet",
+   "flow": "flow_242fe4aad4f0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_aa8b73c37871"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.432,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-75376fa429",
+   "folder": "~/Projects/hp-work/p/75376fa429",
+   "model": "sonnet",
+   "flow": "flow_762b94cc639e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_82787490af66"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.406,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-a7a07f2966",
+   "folder": "~/Projects/hp-work/p/a7a07f2966",
+   "model": "sonnet",
+   "flow": "flow_288dde60f61e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4f43ddf7d1f1"
+   ],
+   "seconds": 77,
+   "cost_usd": 0.623,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-deb151bd78",
+   "folder": "~/Projects/hp-work/p/deb151bd78",
+   "model": "sonnet",
+   "flow": "flow_c52215ba267f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d2bafa6a0c14"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.396,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-dadd12fd44",
+   "folder": "~/Projects/hp-work/p/dadd12fd44",
+   "model": "sonnet",
+   "flow": "flow_880b2f111f57",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1ab417f7a99a"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.39,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-5fd9bdd811",
+   "folder": "~/Projects/hp-work/p/5fd9bdd811",
+   "model": "sonnet",
+   "flow": "flow_4d089ab3eb1f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_51d2ec2d4935"
+   ],
+   "seconds": 54,
+   "cost_usd": 0.528,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-fe8aef5148",
+   "folder": "~/Projects/hp-work/p/fe8aef5148",
+   "model": "sonnet",
+   "flow": "flow_5f3a97eb17af",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_eb178085c9a9"
+   ],
+   "seconds": 12,
+   "cost_usd": 0.363,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-955daa3ad9",
+   "folder": "~/Projects/hp-work/p/955daa3ad9",
+   "model": "sonnet",
+   "flow": "flow_6986a6540810",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_82f9b230c302"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.439,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-6838526fb3",
+   "folder": "~/Projects/hp-work/p/6838526fb3",
+   "model": "sonnet",
+   "flow": "flow_97ee63efb204",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7684ed22e16d"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.425,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-756750c7ba",
+   "folder": "~/Projects/hp-work/p/756750c7ba",
+   "model": "sonnet",
+   "flow": "flow_2f8ec972ebe9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1acd53bdf021"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.4,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-1d55e8c2ac",
+   "folder": "~/Projects/hp-work/p/1d55e8c2ac",
+   "model": "sonnet",
+   "flow": "flow_aecc53ece812",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_be121899e25d"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.525,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-73365722d4",
+   "folder": "~/Projects/hp-work/p/73365722d4",
+   "model": "sonnet",
+   "flow": "flow_466999f5a408",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e057bea956da"
+   ],
+   "seconds": 67,
+   "cost_usd": 0.525,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-9284eca198",
+   "folder": "~/Projects/hp-work/p/9284eca198",
+   "model": "sonnet",
+   "flow": "flow_5915c33b369e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7c5e0941397a"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.418,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "DefaultEffortWhenRequired",
+   "input": {
+    "encoded": "P;0;-;i0",
+    "shown": "resolve_antigravity_model({\"effort\": 0, +0 other keys})"
+   },
+   "ref": {
+    "encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s48",
+    "shown": "(\"gemini-3.7-flash\", \"0\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s48"
+   },
+   "post": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s48"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "N",
+    "shown": "resolve_antigravity_model(None)"
+   },
+   "design_a": {
+    "encoded": "111.116.104.101.114;s104.105.103.104",
+    "shown": "(\"other\", \"high\")"
+   },
+   "design_b": {
+    "encoded": "98;s104.105.103.104",
+    "shown": "(\"b\", \"high\")"
+   },
+   "ref": {
+    "encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104",
+    "shown": "(\"gemini-3.7-flash\", \"high\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "post": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "P;0;s111.116.104.101.114;-",
+    "shown": "resolve_antigravity_model({\"model\": \"other\", +0 other keys})"
+   },
+   "design_a": {
+    "encoded": "111.116.104.101.114;-",
+    "shown": "(\"other\", None)"
+   },
+   "design_b": {
+    "encoded": "122.122.122;-",
+    "shown": "(\"zzz\", None)"
+   },
+   "ref": {
+    "encoded": "111.116.104.101.114;-",
+    "shown": "(\"other\", None)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "111.116.104.101.114;-"
+   },
+   "post": {
+    "ok": true,
+    "out": "111.116.104.101.114;-"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "OtherModelKept",
+   "input": {
+    "encoded": "P;0;s;-",
+    "shown": "resolve_antigravity_model({\"model\": \"\", +0 other keys})"
+   },
+   "ref": {
+    "encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104",
+    "shown": "(\"gemini-3.7-flash\", \"high\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "post": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "P;0;b1;-",
+    "shown": "resolve_antigravity_model({\"model\": True, +0 other keys})"
+   },
+   "design_a": {
+    "encoded": "97;-",
+    "shown": "(\"a\", None)"
+   },
+   "design_b": {
+    "encoded": "98;-",
+    "shown": "(\"b\", None)"
+   },
+   "ref": {
+    "encoded": "84.114.117.101;-",
+    "shown": "(\"True\", None)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "84.114.117.101;-"
+   },
+   "post": {
+    "ok": true,
+    "out": "84.114.117.101;-"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "P;0;b0;-",
+    "shown": "resolve_antigravity_model({\"model\": False, +0 other keys})"
+   },
+   "design_a": {
+    "encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104",
+    "shown": "(\"gemini-3.7-flash\", \"high\")"
+   },
+   "design_b": {
+    "encoded": "122.122.122;-",
+    "shown": "(\"zzz\", None)"
+   },
+   "ref": {
+    "encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104",
+    "shown": "(\"gemini-3.7-flash\", \"high\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "post": {
+    "ok": true,
+    "out": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s104.105.103.104"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 17,
+   "made": 17,
+   "killed": 17,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "DefaultEffortWhenRequired",
+  "EffortKept",
+  "SupportedModelKept"
+ ],
+ "cost_usd": 9.2,
+ "seconds": 766
+}

@@ -1,0 +1,11 @@
+{
+  "name": "swarm_policy",
+  "namespace": "HP",
+  "python": {
+    "module": "harness.pilot_guards",
+    "function": "swarm_policy_table"
+  },
+  "banned_in_laws": [
+    "ref"
+  ]
+}

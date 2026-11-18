@@ -1,0 +1,434 @@
+{
+ "bug": "c373ac69",
+ "title": "final routing selection kept superseded ROUTING artifacts",
+ "repo": "Puppetmaster",
+ "function": "final_routing_artifacts",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-50168bb010",
+   "folder": "~/Projects/hp-work/p/50168bb010",
+   "model": "opus",
+   "flow": "flow_bcfe2e0243b9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0061f1a2958d"
+   ],
+   "seconds": 123,
+   "cost_usd": 1.512,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-4f356365ac",
+   "folder": "~/Projects/hp-work/p/4f356365ac",
+   "model": "sonnet",
+   "flow": "flow_1d52f548d66d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4f29e6094b24"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.458,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-d03042d912",
+   "folder": "~/Projects/hp-work/p/d03042d912",
+   "model": "sonnet",
+   "flow": "flow_188f7417b8db",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7e8f7fc6fffb"
+   ],
+   "seconds": 127,
+   "cost_usd": 0.0,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-a00e2c9142",
+   "folder": "~/Projects/hp-work/p/a00e2c9142",
+   "model": "sonnet",
+   "flow": "flow_8f798decba5d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dfd13018576c"
+   ],
+   "seconds": 101,
+   "cost_usd": 0.625,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-368d96d19c",
+   "folder": "~/Projects/hp-work/p/368d96d19c",
+   "model": "sonnet",
+   "flow": "flow_407226902e33",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2dcb33fd0870"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.401,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-b189c43cf6",
+   "folder": "~/Projects/hp-work/p/b189c43cf6",
+   "model": "sonnet",
+   "flow": "flow_0dec350f2ae8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f5966862f296"
+   ],
+   "seconds": 248,
+   "cost_usd": 0.0,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-1a7cf23bf7",
+   "folder": "~/Projects/hp-work/p/1a7cf23bf7",
+   "model": "sonnet",
+   "flow": "flow_b122ecc0deb4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_54cfdb40f7e4"
+   ],
+   "seconds": 205,
+   "cost_usd": 0.937,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-9f4554aa4e",
+   "folder": "~/Projects/hp-work/p/9f4554aa4e",
+   "model": "sonnet",
+   "flow": "flow_5b6b75aec552",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2129d3868802"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.4,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-eee388d518",
+   "folder": "~/Projects/hp-work/p/eee388d518",
+   "model": "sonnet",
+   "flow": "flow_5f5359b56292",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_67260fe75552"
+   ],
+   "seconds": 239,
+   "cost_usd": 0.0,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-7dac833446",
+   "folder": "~/Projects/hp-work/p/7dac833446",
+   "model": "sonnet",
+   "flow": "flow_52a18a74d7d3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_667c7398f44f"
+   ],
+   "seconds": 196,
+   "cost_usd": 0.864,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-4e3e87d639",
+   "folder": "~/Projects/hp-work/p/4e3e87d639",
+   "model": "sonnet",
+   "flow": "flow_7eef3fe6e7ef",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a889a4a2487a"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.397,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-b2280bbac5",
+   "folder": "~/Projects/hp-work/p/b2280bbac5",
+   "model": "sonnet",
+   "flow": "flow_9b430429a6c3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_124557f70dfe"
+   ],
+   "seconds": 287,
+   "cost_usd": 1.301,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-0de5f1cb44",
+   "folder": "~/Projects/hp-work/p/0de5f1cb44",
+   "model": "sonnet",
+   "flow": "flow_cb9e7c87ac86",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d4c50b5e961e"
+   ],
+   "seconds": 215,
+   "cost_usd": 1.019,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-737d94da95",
+   "folder": "~/Projects/hp-work/p/737d94da95",
+   "model": "sonnet",
+   "flow": "flow_6a8f99bdbe3c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a0ed9185f697"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.404,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-2abb26fddd",
+   "folder": "~/Projects/hp-work/p/2abb26fddd",
+   "model": "sonnet",
+   "flow": "flow_60128a4f5a76",
+   "flow_status": "done",
+   "visits": 2,
+   "verdicts": [
+    "FAIL",
+    "PASS"
+   ],
+   "jobs": [
+    "job_6c969a969299",
+    "job_ee501bae45e9"
+   ],
+   "seconds": 383,
+   "cost_usd": 1.45,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-7b2fff610e",
+   "folder": "~/Projects/hp-work/p/7b2fff610e",
+   "model": "sonnet",
+   "flow": "flow_9a3db69b6a82",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bd447df62a37"
+   ],
+   "seconds": 63,
+   "cost_usd": 0.547,
+   "stage": "A5"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "routing/=router/=a;routing/=router/=b",
+    "shown": "artifacts=[(type routing, created_by \"router\", task_id \"a\"), (type routing, created_by \"router\", task_id \"b\")]"
+   },
+   "design_a": {
+    "encoded": "a:0;b:1",
+    "shown": "{\"a\": artifact #0, \"b\": artifact #1}"
+   },
+   "design_b": {
+    "encoded": "b:1;a:0",
+    "shown": "{\"b\": artifact #1, \"a\": artifact #0}"
+   },
+   "ref": {
+    "encoded": "a:0;b:1",
+    "shown": "{\"a\": artifact #0, \"b\": artifact #1}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "a:0;b:1"
+   },
+   "post": {
+    "ok": true,
+    "out": "a:0;b:1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "routing/=router/=t;routing/=router/=t",
+    "shown": "artifacts=[(type routing, created_by \"router\", task_id \"t\"), (type routing, created_by \"router\", task_id \"t\")]"
+   },
+   "design_a": {
+    "encoded": "t:0",
+    "shown": "{\"t\": artifact #0}"
+   },
+   "design_b": {
+    "encoded": "t:1",
+    "shown": "{\"t\": artifact #1}"
+   },
+   "ref": {
+    "encoded": "t:0",
+    "shown": "{\"t\": artifact #0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "t:0"
+   },
+   "post": {
+    "ok": true,
+    "out": "t:0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "routing/~/=t",
+    "shown": "artifacts=[(type routing, created_by None, task_id \"t\")]"
+   },
+   "design_a": {
+    "encoded": "",
+    "shown": "{}"
+   },
+   "design_b": {
+    "encoded": "t:0",
+    "shown": "{\"t\": artifact #0}"
+   },
+   "ref": {
+    "encoded": "",
+    "shown": "{}"
+   },
+   "pre": {
+    "ok": true,
+    "out": ""
+   },
+   "post": {
+    "ok": true,
+    "out": ""
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "routing/=router/=",
+    "shown": "artifacts=[(type routing, created_by \"router\", task_id \"\")]"
+   },
+   "design_a": {
+    "encoded": "",
+    "shown": "{}"
+   },
+   "design_b": {
+    "encoded": ":0",
+    "shown": "{\"\": artifact #0}"
+   },
+   "ref": {
+    "encoded": "",
+    "shown": "{}"
+   },
+   "pre": {
+    "ok": true,
+    "out": ""
+   },
+   "post": {
+    "ok": true,
+    "out": ""
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 31,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "ChosenIsRoutingOfTask",
+  "ChosenIsFinal",
+  "EveryRoutedTaskCovered",
+  "OneEntryPerTask"
+ ],
+ "cost_usd": 10.31,
+ "seconds": 2303
+}

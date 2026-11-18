@@ -1,0 +1,429 @@
+{
+ "bug": "14de48f8",
+ "title": "_write_candidate overwrites the candidate of another job with the same goal on the same day",
+ "repo": "Puppetmaster",
+ "function": "_write_candidate",
+ "kind": "path or glob",
+ "stages": [
+  {
+   "flow_id": "hp2-f4c9c468fc",
+   "folder": "~/Projects/hp-work/p/f4c9c468fc",
+   "model": "opus",
+   "flow": "flow_01120b056b65",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0c12748b21e1"
+   ],
+   "seconds": 287,
+   "cost_usd": 2.104,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-f481dd2682",
+   "folder": "~/Projects/hp-work/p/f481dd2682",
+   "model": "sonnet",
+   "flow": "flow_b826d4627e5f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a29dd32e229a"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.421,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-bc4eda07c0",
+   "folder": "~/Projects/hp-work/p/bc4eda07c0",
+   "model": "sonnet",
+   "flow": "flow_11d8e8b0888b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5cd740d81ce4"
+   ],
+   "seconds": 133,
+   "cost_usd": 0.752,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-6a5e2cf102",
+   "folder": "~/Projects/hp-work/p/6a5e2cf102",
+   "model": "sonnet",
+   "flow": "flow_c865bb3668c3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_660a904d02a7"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.38,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-3dee12e1e9",
+   "folder": "~/Projects/hp-work/p/3dee12e1e9",
+   "model": "sonnet",
+   "flow": "flow_1908b3a6dac3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ab8dd2821798"
+   ],
+   "seconds": 63,
+   "cost_usd": 0.51,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-357e42c841",
+   "folder": "~/Projects/hp-work/p/357e42c841",
+   "model": "sonnet",
+   "flow": "flow_46ecb94c67c8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_03da5c6ddfb9"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.379,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-b094c68c4f",
+   "folder": "~/Projects/hp-work/p/b094c68c4f",
+   "model": "sonnet",
+   "flow": "flow_3754f0ebb5ad",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a03a96c7da8a"
+   ],
+   "seconds": 111,
+   "cost_usd": 0.802,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-36e592897a",
+   "folder": "~/Projects/hp-work/p/36e592897a",
+   "model": "sonnet",
+   "flow": "flow_1a15c1e253ad",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4c37ff8d6783"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.382,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-d715b6a4ef",
+   "folder": "~/Projects/hp-work/p/d715b6a4ef",
+   "model": "sonnet",
+   "flow": "flow_05d3a2593fa8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fec13957b0c0"
+   ],
+   "seconds": 546,
+   "cost_usd": 3.025,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-723e9c08f2",
+   "folder": "~/Projects/hp-work/p/723e9c08f2",
+   "model": "sonnet",
+   "flow": "flow_d441994f7316",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f4c188808ded"
+   ],
+   "seconds": 57,
+   "cost_usd": 0.49,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-3e1c553dd8",
+   "folder": "~/Projects/hp-work/p/3e1c553dd8",
+   "model": "sonnet",
+   "flow": "flow_192878c10c5a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_19d0d54b3beb"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.427,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-b8b0b150b4",
+   "folder": "~/Projects/hp-work/p/b8b0b150b4",
+   "model": "sonnet",
+   "flow": "flow_e7525f03fcce",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c586b4e50d73"
+   ],
+   "seconds": 530,
+   "cost_usd": 2.226,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-4d4e76c2e7",
+   "folder": "~/Projects/hp-work/p/4d4e76c2e7",
+   "model": "sonnet",
+   "flow": "flow_00a2127c050c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dfa03285e51d"
+   ],
+   "seconds": 54,
+   "cost_usd": 0.5,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-2891e26658",
+   "folder": "~/Projects/hp-work/p/2891e26658",
+   "model": "sonnet",
+   "flow": "flow_6ec403477856",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_85d0dc83bd89"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.393,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-0ce782e987",
+   "folder": "~/Projects/hp-work/p/0ce782e987",
+   "model": "sonnet",
+   "flow": "flow_8786b1438b96",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e8d9c9761950"
+   ],
+   "seconds": 705,
+   "cost_usd": 0.0,
+   "stage": "R6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "CandidateHasFields",
+   "input": {
+    "encoded": "2000 1 1 - - 0 A",
+    "shown": "{ year := 2000, month := 1, day := 1, slug := \"\", skillMd := \"\", metaPairs := [], base := HP.Base.absent }"
+   },
+   "ref": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{}\\n\" }"
+   },
+   "pre": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10"
+   },
+   "post": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "CandidateHasFields",
+   "input": {
+    "encoded": "2000 1 1 - - 1 - n A",
+    "shown": "{ year := 2000,"
+   },
+   "ref": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,34,58,32,110,117,108,108,10,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\": null\\n}\\n\" }"
+   },
+   "pre": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,34,58,32,110,117,108,108,10,125,10"
+   },
+   "post": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,34,58,32,110,117,108,108,10,125,10"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "CandidateHasFields",
+   "input": {
+    "encoded": "2000 1 1 - - 1 9 n A",
+    "shown": "{ year := 2000,"
+   },
+   "ref": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,92,116,34,58,32,110,117,108,108,10,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\\t\\\": null\\n}\\n\" }"
+   },
+   "pre": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,92,116,34,58,32,110,117,108,108,10,125,10"
+   },
+   "post": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,92,116,34,58,32,110,117,108,108,10,125,10"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "2000 1 1 - - 0 A",
+    "shown": "{ year := 2000, month := 1, day := 1, slug := \"\", skillMd := \"\", metaPairs := [], base := HP.Base.absent }"
+   },
+   "design_a": {
+    "encoded": "none",
+    "shown": "none"
+   },
+   "design_b": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - -",
+    "shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"\" }"
+   },
+   "ref": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{}\\n\" }"
+   },
+   "pre": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10"
+   },
+   "post": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "2000 1 1 115 - 0 A",
+    "shown": "{ year := 2000, month := 1, day := 1, slug := \"s\", skillMd := \"\", metaPairs := [], base := HP.Base.absent }"
+   },
+   "design_a": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45,115 - 123,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-s\", skill := \"\", candidate := \"{}\\n\" }"
+   },
+   "design_b": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45,115 120 123,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-s\", skill := \"x\", candidate := \"{}\\n\" }"
+   },
+   "ref": {
+    "encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45,115 - 123,125,10",
+    "shown": "some { path := \"skills-candidates/20000101-s\", skill := \"\", candidate := \"{}\\n\" }"
+   },
+   "pre": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45,115 - 123,125,10"
+   },
+   "post": {
+    "ok": true,
+    "out": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45,115 - 123,125,10"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "prover failed",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 18,
+   "made": 18,
+   "killed": 17,
+   "survived": [
+    "line 11: swap the values of `parents` and `exist_ok` in `target.mkdir(parents=True, exist_ok=True)`"
+   ],
+   "kill_rate": 0.944
+  },
+  "quotes": {
+   "quotes": 10,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2797,
+   "first_difference": {
+    "input": "1000 1 28 110,103,53,98,121,49,46,97,50,114,111,95,103 13,98,98,98,65535,97,0,92,127,98,57344,47,233,8364,128512,47,8,47,47,255,44,98,31,128512,48,95,44,49 4 55295,34,10 s 55295,1,1114111,99,256,123,1 66 s 99,10,1114111,1114111,1,45,45 106,111,98,95,105,100 f 99,119,100 s 90,233,55295,48,45 D 5 51,114,57,46,97,121 obj 4 74,111,98,95,105,100 s 78,111,110,101 128512,92,127,88 i -1 97 s 48 115,111,117,114,99,101 n 49,48,48,48,48,49,50,56,45,110,103,53,98,121,49,46,97,50,114,111,95,103 file 57,113 file 101,102,98,50,97,114,112,114,104,32,108 junk 0 107,113,55 obj 4 256,49,98 s 78,111,110,101 99,114,101,97,116,101,100,95,105,115,111 n 106,111,98,95,105,100 i -1 115,111,117,114,99,101 n",
+    "lean_ref": "none",
+    "python": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,49,48,48,48,48,49,50,56,45,110,103,53,98,121,49,46,97,50,114,111,95,103,45,102,97,108,115,101 13,98,98,98,65535,97,0,92,127,98,57344,47,233,8364,128512,47,8,47,47,255,44,98,31,128512,48,95,44,49 123,10,32,32,34,66,34,58,32,34,99,92,110,92,117,100,98,102,102,92,117,100,102,102,102,92,117,100,98,102,102,92,117,100,102,102,102,92,117,48,48,48,49,45,45,34,44,10,32,32,34,99,119,100,34,58,32,34,90,92,117,48,48,101,57,92,117,100,55,102,102,48,45,34,44,10,32,32,34,106,111,98,95,105,100,34,58,32,102,97,108,115,101,44,10,32,32,34,92,117,100,55,102,102,92,34,92,110,34,58,32,34,92,117,100,55,102,102,92,117,48,48,48,49,92,117,100,98,102,102,92,117,100,102,102,102,99,92,117,48,49,48,48,123,92,117,48,48,48,49,34,10,125,10"
+   }
+  }
+ },
+ "first_laws": [
+  "PathUnderCandidates",
+  "PathNamesFolder",
+  "NoneWhenExists",
+  "CandidateHasFields"
+ ],
+ "cost_usd": 12.79,
+ "seconds": 2618
+}

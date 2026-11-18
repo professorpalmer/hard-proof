@@ -1,0 +1,66 @@
+{
+ "plain/7a23d41f": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/6d1956a6": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/13166124": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/64154e68": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/5148d1df": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/78c95f18": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/a9eafb70": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/5b17e2f3": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/ed60cece": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/27081f9d": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/f59c832b": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/e862da11": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/b25aa2a4": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/127f464b": {
+  "valid": true,
+  "note": "same decision as the certified question of this decision point"
+ },
+ "plain/149d9172": {
+  "valid": true,
+  "note": "same decision as the certified question of the next round of the same loop (age equal to stale_after)"
+ },
+ "plain/a1bf04a4": {
+  "valid": true,
+  "note": "same decision as the certified question of the next round of the same loop (age equal to stale_after)"
+ }
+}

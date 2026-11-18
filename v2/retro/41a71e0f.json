@@ -1,0 +1,492 @@
+{
+ "bug": "41a71e0f",
+ "title": "Self-heal keeps first-seen recoverable failure, not the latest",
+ "repo": "Puppetmaster",
+ "function": "Orchestrator._recoverable_failure_by_task",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-4220687690",
+   "folder": "~/Projects/hp-work/p/4220687690",
+   "model": "opus",
+   "flow": "flow_1b9890f85cf9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_322172bdbb62"
+   ],
+   "seconds": 175,
+   "cost_usd": 1.861,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-c6a944e84a",
+   "folder": "~/Projects/hp-work/p/c6a944e84a",
+   "model": "sonnet",
+   "flow": "flow_126c6276f48a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7a672b1a5e4d"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.395,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-dedc02e090",
+   "folder": "~/Projects/hp-work/p/dedc02e090",
+   "model": "sonnet",
+   "flow": "flow_b1e3e3a16f87",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_74576f37443f"
+   ],
+   "seconds": 54,
+   "cost_usd": 0.516,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-33d98bb274",
+   "folder": "~/Projects/hp-work/p/33d98bb274",
+   "model": "sonnet",
+   "flow": "flow_4960df4996cc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4eceb554452b"
+   ],
+   "seconds": 82,
+   "cost_usd": 0.63,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-edd94b1d4b",
+   "folder": "~/Projects/hp-work/p/edd94b1d4b",
+   "model": "sonnet",
+   "flow": "flow_8f0fe7d9bd5a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_50af455914cd"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.526,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-715cf509d4",
+   "folder": "~/Projects/hp-work/p/715cf509d4",
+   "model": "sonnet",
+   "flow": "flow_d2ae026b025f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_981cd59f4f28"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.401,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-52e0468d6b",
+   "folder": "~/Projects/hp-work/p/52e0468d6b",
+   "model": "sonnet",
+   "flow": "flow_aa6158ba563d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e3e509db0ba6"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.384,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-33b8c5a55f",
+   "folder": "~/Projects/hp-work/p/33b8c5a55f",
+   "model": "sonnet",
+   "flow": "flow_00e1f7ff5108",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0696b0d4fda4"
+   ],
+   "seconds": 47,
+   "cost_usd": 0.507,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-2e4d53718e",
+   "folder": "~/Projects/hp-work/p/2e4d53718e",
+   "model": "sonnet",
+   "flow": "flow_62362ee8c8f2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ab32ad1ac8bf"
+   ],
+   "seconds": 53,
+   "cost_usd": 0.509,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-bfe512d291",
+   "folder": "~/Projects/hp-work/p/bfe512d291",
+   "model": "sonnet",
+   "flow": "flow_883ddddb701c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_81ecafefd9d9"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.478,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-b70428fc20",
+   "folder": "~/Projects/hp-work/p/b70428fc20",
+   "model": "sonnet",
+   "flow": "flow_c4cef5523b9e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f708c314079d"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.499,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-b3369f3af4",
+   "folder": "~/Projects/hp-work/p/b3369f3af4",
+   "model": "sonnet",
+   "flow": "flow_b2c1eb71102d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3862de498311"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.409,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-17cd34f138",
+   "folder": "~/Projects/hp-work/p/17cd34f138",
+   "model": "sonnet",
+   "flow": "flow_85fc4399dc3c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_00af9fb6009a"
+   ],
+   "seconds": 58,
+   "cost_usd": 0.539,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-77768bebe3",
+   "folder": "~/Projects/hp-work/p/77768bebe3",
+   "model": "sonnet",
+   "flow": "flow_8dfa56a9408f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_12da024dfb6b"
+   ],
+   "seconds": 95,
+   "cost_usd": 0.653,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-e9e9c11e13",
+   "folder": "~/Projects/hp-work/p/e9e9c11e13",
+   "model": "sonnet",
+   "flow": "flow_d785a29af9d8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_09d305104f33"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.51,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-94225d166a",
+   "folder": "~/Projects/hp-work/p/94225d166a",
+   "model": "sonnet",
+   "flow": "flow_9417a47896f2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4284479c100b"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.402,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-a7f79cdec3",
+   "folder": "~/Projects/hp-work/p/a7f79cdec3",
+   "model": "sonnet",
+   "flow": "flow_4cabd21ae9a9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c0b5c019644a"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.384,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "design_a": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "design_b": {
+    "encoded": "D;s116|s109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "{\"t\": \"missing_cli\"}"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "ConflictingClassesNoValue",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "design_a": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "design_b": {
+    "encoded": "D;s116|s109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "{\"t\": \"missing_cli\"}"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "ConflictingDuplicatesNoOutput",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "design_a": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "design_b": {
+    "encoded": "D;s116|s109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "{\"t\": \"missing_cli\"}"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "ConflictingDuplicatesNoMap",
+   "input": {
+    "encoded": "A;s116|Fs97,117,116,104;s116|Fs109,105,115,115,105,110,103,95,99,108,105",
+    "shown": "[(task_id=\"t\", payload={\"failure\": \"auth\"}), (task_id=\"t\", payload={\"failure\": \"missing_cli\"})]"
+   },
+   "ref": {
+    "encoded": "D;s116|s97,117,116,104",
+    "shown": "{\"t\": \"auth\"}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "D;s116|s97,117,116,104"
+   },
+   "post": {
+    "ok": false,
+    "out": "AttributeError",
+    "message": "'types.SimpleNamespace' object has no attribute 'created_at'"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 6,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": null,
+   "first_difference": {
+    "input": "A;s116,49|Fs112,114,101,102,108,105,103,104,116,95,98,108,111,99,107,101,100",
+    "error": "AttributeError: 'types.SimpleNamespace' object has no attribute 'created_at'"
+   }
+  }
+ },
+ "first_laws": [
+  "EntriesFromArtifacts",
+  "RecoverableArtifactsListed",
+  "KeysUnique",
+  "ValuesRecoverable"
+ ],
+ "cost_usd": 9.6,
+ "seconds": 851
+}

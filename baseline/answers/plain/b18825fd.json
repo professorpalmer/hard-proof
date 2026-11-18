@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "The laws fix the result for every case. With a known pid: dead or reused gives true, and alive and not reused gives false. With an unknown pid: age none gives false, age below staleAfter gives false, and age at or above staleAfter gives true (this includes the boundary). So each rule that passes is equal to ref."}

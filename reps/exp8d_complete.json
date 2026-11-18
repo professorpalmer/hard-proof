@@ -1,0 +1,206 @@
+{
+ "task": "exp8d_complete",
+ "seconds": 235,
+ "runs": [
+  {
+   "task": "exp8d_complete",
+   "model": "haiku",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/haiku_1",
+   "flow": "flow_0841799ad7a6",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 95,
+   "cost_usd": 0.24,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "haiku",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/haiku_2",
+   "flow": "flow_719a9cdbc971",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 117,
+   "cost_usd": 0.22,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "haiku",
+   "rep": 3,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/haiku_3",
+   "flow": "flow_3eea923ee45e",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 75,
+   "cost_usd": 0.18,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "haiku",
+   "rep": 4,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/haiku_4",
+   "flow": "flow_7e83ba6392ac",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 119,
+   "cost_usd": 0.26,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "haiku",
+   "rep": 5,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/haiku_5",
+   "flow": "flow_b5ac44aac740",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 111,
+   "cost_usd": 0.23,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "sonnet",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/sonnet_1",
+   "flow": "flow_7f62e47c02b9",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 56,
+   "cost_usd": 0.51,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "sonnet",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/sonnet_2",
+   "flow": "flow_074d1a62fa5f",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 46,
+   "cost_usd": 0.46,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "sonnet",
+   "rep": 3,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/sonnet_3",
+   "flow": "flow_7d21ced2ff2b",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 30,
+   "cost_usd": 0.42,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "sonnet",
+   "rep": 4,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/sonnet_4",
+   "flow": "flow_83e492aed690",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 41,
+   "cost_usd": 0.42,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp8d_complete",
+   "model": "sonnet",
+   "rep": 5,
+   "dir": "~/Projects/hard-proof/reps/exp8d_complete/sonnet_5",
+   "flow": "flow_8871d58e465d",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 50,
+   "cost_usd": 0.43,
+   "changed_files": [
+    "SyncCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  }
+ ]
+}

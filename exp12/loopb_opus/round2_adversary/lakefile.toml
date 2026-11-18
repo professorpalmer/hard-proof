@@ -1,0 +1,22 @@
+name = "exp12"
+defaultTargets = ["Exp12"]
+
+[[lean_lib]]
+name = "Exp12"
+roots = ["Sync"]
+
+[[lean_lib]]
+name = "LawWork"
+roots = ["SyncLaws"]
+
+[[lean_lib]]
+name = "Challenges"
+roots = ["SyncGapChallenge", "SyncCompleteChallenge"]
+
+[[lean_lib]]
+name = "GapWork"
+roots = ["SyncGapSolution"]
+
+[[lean_lib]]
+name = "CompleteWork"
+roots = ["SyncCompleteSolution"]

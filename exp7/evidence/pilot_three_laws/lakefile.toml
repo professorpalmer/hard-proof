@@ -1,0 +1,6 @@
+name = "pre7"
+defaultTargets = ["Pre7"]
+
+[[lean_lib]]
+name = "Pre7"
+roots = ["Laws", "Complete"]

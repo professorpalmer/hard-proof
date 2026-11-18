@@ -1,0 +1,228 @@
+{
+ "bug": "aaeae23f",
+ "title": "Hook classifier redirects any shell search that contains a slash",
+ "repo": "Puppetmaster",
+ "function": "classify_tool",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-1677a0ff54",
+   "folder": "~/Projects/hp-work/p/1677a0ff54",
+   "model": "opus",
+   "flow": "flow_fea98af3317c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1524e14ed5b5"
+   ],
+   "seconds": 191,
+   "cost_usd": 1.745,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-f4da6b1e06",
+   "folder": "~/Projects/hp-work/p/f4da6b1e06",
+   "model": "sonnet",
+   "flow": "flow_caf666c2f747",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4c3980736a3b"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.467,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-8bb905375e",
+   "folder": "~/Projects/hp-work/p/8bb905375e",
+   "model": "sonnet",
+   "flow": "flow_ba0e0a74afc6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6d9b357cad17"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.521,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-4c9e2e2e50",
+   "folder": "~/Projects/hp-work/p/4c9e2e2e50",
+   "model": "sonnet",
+   "flow": "flow_b6eda1537ab0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_72fd9051199b"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.443,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-a7950abd25",
+   "folder": "~/Projects/hp-work/p/a7950abd25",
+   "model": "sonnet",
+   "flow": "flow_5cf6a15970aa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_953205ebd071"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.403,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-aad8e25143",
+   "folder": "~/Projects/hp-work/p/aad8e25143",
+   "model": "sonnet",
+   "flow": "flow_068cfcea1938",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_10c77fbc2cf4"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.515,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-b001ba0ce0",
+   "folder": "~/Projects/hp-work/p/b001ba0ce0",
+   "model": "sonnet",
+   "flow": "flow_a1d606e74197",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c660ab4e45c9"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.475,
+   "stage": "A2"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "-|n",
+    "shown": "tool_name=None tool_input=None"
+   },
+   "design_a": {
+    "encoded": "0|",
+    "shown": "(should_redirect=false, suggested_verb=\"\")"
+   },
+   "design_b": {
+    "encoded": "0|v",
+    "shown": "(should_redirect=false, suggested_verb=\"v\")"
+   },
+   "ref": {
+    "encoded": "0|",
+    "shown": "(should_redirect=false, suggested_verb=\"\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0|"
+   },
+   "post": {
+    "ok": true,
+    "out": "0|"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "x103.114.101.112|n",
+    "shown": "tool_name=\"grep\" tool_input=None"
+   },
+   "design_a": {
+    "encoded": "1|a",
+    "shown": "(should_redirect=true, suggested_verb=\"a\")"
+   },
+   "design_b": {
+    "encoded": "1|b",
+    "shown": "(should_redirect=true, suggested_verb=\"b\")"
+   },
+   "ref": {
+    "encoded": "1|puppetmaster_codegraph_search",
+    "shown": "(should_redirect=true, suggested_verb=\"puppetmaster_codegraph_search\")"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1|puppetmaster_codegraph_search"
+   },
+   "post": {
+    "ok": true,
+    "out": "0|"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 36,
+   "made": 20,
+   "killed": 19,
+   "survived": [
+    "line 11: delete `return (False, '')`"
+   ],
+   "kill_rate": 0.95
+  },
+  "quotes": {
+   "quotes": 11,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 1821,
+   "first_difference": {
+    "input": "x9.114.105.112.103.114.101.112.9|t:x",
+    "lean_ref": "1|puppetmaster_codegraph_search",
+    "python": "0|"
+   }
+  }
+ },
+ "first_laws": [
+  "OwnToolsAllowed",
+  "OnlyBroadRedirected",
+  "NativeBroadRedirected",
+  "BroadShellRedirected",
+  "FocusedShellAllowed"
+ ],
+ "cost_usd": 4.57,
+ "seconds": 422
+}

@@ -1,0 +1,7 @@
+{
+  "challenge_module": "RecoverGapChallenge",
+  "solution_module": "RecoverGapSolution",
+  "theorem_names": ["RecoverGap.a_passes", "RecoverGap.b_passes", "RecoverGap.differ"],
+  "definition_names": ["RecoverGap.designA", "RecoverGap.designB", "RecoverGap.input"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

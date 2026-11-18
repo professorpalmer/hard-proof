@@ -1,0 +1,333 @@
+{
+ "bug": "a1db3869",
+ "title": "Provider HTTP 402/404 returns raw reason, not a failure class",
+ "repo": "Puppetmaster",
+ "function": "classify_provider_failure",
+ "kind": "boundary",
+ "stages": [
+  {
+   "flow_id": "hp2-371b7184bf",
+   "folder": "~/Projects/hp-work/p/371b7184bf",
+   "model": "opus",
+   "flow": "flow_343429aca217",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8b4ca9ec8e06"
+   ],
+   "seconds": 205,
+   "cost_usd": 1.913,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-a14a29b5b1",
+   "folder": "~/Projects/hp-work/p/a14a29b5b1",
+   "model": "sonnet",
+   "flow": "flow_d5aff3f117be",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d83c1614e7e5"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.442,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-61aa1bdfef",
+   "folder": "~/Projects/hp-work/p/61aa1bdfef",
+   "model": "sonnet",
+   "flow": "flow_4e7048e5e426",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_97d183e8f1bd"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.402,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-1067cbe3b6",
+   "folder": "~/Projects/hp-work/p/1067cbe3b6",
+   "model": "sonnet",
+   "flow": "flow_4c6fafadc35e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PARTIAL"
+   ],
+   "jobs": [
+    "job_a859825ee0cf"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.372,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-a843b0bebe",
+   "folder": "~/Projects/hp-work/p/a843b0bebe",
+   "model": "sonnet",
+   "flow": "flow_067f59c4247d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4da8cf453cc1"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.434,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-41e9446ccb",
+   "folder": "~/Projects/hp-work/p/41e9446ccb",
+   "model": "sonnet",
+   "flow": "flow_fe25cc57be68",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PARTIAL"
+   ],
+   "jobs": [
+    "job_20f3e95b00cc"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.379,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-40d383dc9c",
+   "folder": "~/Projects/hp-work/p/40d383dc9c",
+   "model": "sonnet",
+   "flow": "flow_ee5bcf88bb5b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_85ccc52227cf"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.401,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-2aa25e95a4",
+   "folder": "~/Projects/hp-work/p/2aa25e95a4",
+   "model": "sonnet",
+   "flow": "flow_c3f85b8670e0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PARTIAL"
+   ],
+   "jobs": [
+    "job_a9cae4fd86ee"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.385,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-25473a7e8b",
+   "folder": "~/Projects/hp-work/p/25473a7e8b",
+   "model": "sonnet",
+   "flow": "flow_59634fee9abc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a0ff96c444e7"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.418,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-e3a44f417c",
+   "folder": "~/Projects/hp-work/p/e3a44f417c",
+   "model": "sonnet",
+   "flow": "flow_1ba7144aaaf4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_086271e36d7c"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.387,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-4936b40443",
+   "folder": "~/Projects/hp-work/p/4936b40443",
+   "model": "sonnet",
+   "flow": "flow_a664cadc26e3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bad925aaecea"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.421,
+   "stage": "R5"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": null,
+   "input": null,
+   "ref": null,
+   "pre": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "post": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": null,
+   "input": null,
+   "ref": null,
+   "pre": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "post": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": null,
+   "input": null,
+   "ref": null,
+   "pre": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "post": {
+    "ok": false,
+    "out": "ValueError",
+    "message": "not enough values to unpack (expected 3, got 1)"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "CanonicalCategory",
+   "input": {
+    "encoded": "120;_;_",
+    "shown": "classify_provider_failure(\"x\", http_status=None, body=None)"
+   },
+   "ref": {
+    "encoded": "S120",
+    "shown": "\"x\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "S120"
+   },
+   "post": {
+    "ok": true,
+    "out": "S120"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "CanonicalCategory",
+   "input": {
+    "encoded": "120;404;_",
+    "shown": "classify_provider_failure(\"x\", http_status=404, body=None)"
+   },
+   "ref": {
+    "encoded": "S120",
+    "shown": "\"x\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "S120"
+   },
+   "post": {
+    "ok": true,
+    "out": "S109,111,100,101,108,95,117,110,97,118,97,105,108,97,98,108,101"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 53,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 13,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 709,
+   "first_difference": {
+    "input": "110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100;404;112,121,97,109,34,66,98,98",
+    "lean_ref": "S110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100",
+    "python": "S109,111,100,101,108,95,117,110,97,118,97,105,108,97,98,108,101"
+   }
+  }
+ },
+ "first_laws": [
+  "CanonicalCategory",
+  "BlockedUnauthorizedIsServerError",
+  "BlockedUnauthorizedNotDeadKey",
+  "LegacyServerErrorLiteral"
+ ],
+ "cost_usd": 5.95,
+ "seconds": 440
+}

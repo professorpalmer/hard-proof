@@ -1,0 +1,16 @@
+{
+  "challenge_module": "SyncChallenge",
+  "solution_module": "SyncSolution",
+  "theorem_names": [
+    "Sync.ref_keeps_rows",
+    "Sync.ref_only_absent_starter",
+    "Sync.ref_nothing_left",
+    "Sync.ref_disabled_by_default",
+    "Sync.ref_locked_stays_disabled",
+    "Sync.ref_enable_keeps_starter_state",
+    "Sync.ref_idempotent",
+    "Sync.ref_exact_additions"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

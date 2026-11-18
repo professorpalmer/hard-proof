@@ -1,0 +1,94 @@
+{
+ "start": "a_sonnet",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "DeadOwnerRecovered",
+  "ReusedPidRecovered",
+  "LiveOwnerKept",
+  "UnknownOwnerOldRecovered",
+  "StaleAfterIgnoredForKnownOwner",
+  "UnknownOwnerYoungKept"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_35b6a93bb158",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 27,
+    "cost_usd": 0.41
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "DeadOwnerRecovered",
+    "ReusedPidRecovered",
+    "LiveOwnerKept",
+    "UnknownOwnerOldRecovered",
+    "StaleAfterIgnoredForKnownOwner",
+    "UnknownOwnerYoungKept"
+   ],
+   "question": [
+    "case: owner pid known=false pid alive=false pid reused=false age=unknown stale_after=0 s",
+    "rule A: keep the lock file",
+    "rule B: remove the lock file",
+    "shipped code: keep the lock file"
+   ],
+   "answer": "keep the lock file",
+   "law_author": {
+    "flow": "flow_fbfd5db5dd78",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 25,
+    "cost_usd": 0.42
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "UnknownOwnerUnknownAgeKept": "\u2200 c : Case, c.pidKnown = false \u2192 c.age = none \u2192 f c = false"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_d7895104304b",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 28,
+    "cost_usd": 0.43
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "DeadOwnerRecovered",
+    "ReusedPidRecovered",
+    "LiveOwnerKept",
+    "UnknownOwnerOldRecovered",
+    "StaleAfterIgnoredForKnownOwner",
+    "UnknownOwnerYoungKept",
+    "UnknownOwnerUnknownAgeKept"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "DeadOwnerRecovered",
+  "ReusedPidRecovered",
+  "LiveOwnerKept",
+  "UnknownOwnerOldRecovered",
+  "StaleAfterIgnoredForKnownOwner",
+  "UnknownOwnerYoungKept",
+  "UnknownOwnerUnknownAgeKept"
+ ],
+ "questions": 1
+}

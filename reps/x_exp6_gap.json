@@ -1,0 +1,86 @@
+{
+ "task": "x_exp6_gap",
+ "seconds": 260,
+ "runs": [
+  {
+   "task": "x_exp6_gap",
+   "model": "luna",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/luna_1",
+   "flow": "flow_7c32351805c5",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 248,
+   "cost_usd": null,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "luna",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/luna_2",
+   "flow": "flow_ed7172270b65",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 188,
+   "cost_usd": null,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "sol",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/sol_1",
+   "flow": "flow_5dba70e23ff1",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 237,
+   "cost_usd": null,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "sol",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/sol_2",
+   "flow": "flow_b4c3539cfef3",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 129,
+   "cost_usd": null,
+   "changed_files": [
+    "GapSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": null,
+   "outcome": "accept"
+  }
+ ]
+}

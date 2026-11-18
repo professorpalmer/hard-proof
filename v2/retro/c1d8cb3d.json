@@ -1,0 +1,150 @@
+{
+ "bug": "c1d8cb3d",
+ "title": "Criterion reported passed without evidence stays passed",
+ "repo": "Puppetmaster",
+ "function": "criterion_status_records",
+ "kind": "state",
+ "stages": [
+  {
+   "flow_id": "hp2-b8be1717d0",
+   "folder": "~/Projects/hp-work/p/b8be1717d0",
+   "model": "opus",
+   "flow": "flow_c3ce7c9c4489",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ab1a527a054c"
+   ],
+   "seconds": 257,
+   "cost_usd": 2.035,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-4552142f1a",
+   "folder": "~/Projects/hp-work/p/4552142f1a",
+   "model": "sonnet",
+   "flow": "flow_b7c9330460ba",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1e7f5ccd2059"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.45,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-fbe94a6064",
+   "folder": "~/Projects/hp-work/p/fbe94a6064",
+   "model": "sonnet",
+   "flow": "flow_c0ec8f17a919",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5f15322282fc"
+   ],
+   "seconds": 116,
+   "cost_usd": 0.724,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-b7aa27ffc4",
+   "folder": "~/Projects/hp-work/p/b7aa27ffc4",
+   "model": "sonnet",
+   "flow": "flow_773371261913",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d78accffe93d"
+   ],
+   "seconds": 83,
+   "cost_usd": 0.587,
+   "stage": "A1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "1 S:97 + 1 D S:97 N S:102,97,105,108,101,100 N",
+    "shown": "criteria=[\"a\"] reported=[{criterion: \"a\", text: None, status: \"failed\", evidence: None}]"
+   },
+   "design_a": {
+    "encoded": "1 S:97 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100",
+    "shown": "[{criterion: \"a\", status: \"unknown\", evidence: \"not_reported\"}]"
+   },
+   "design_b": {
+    "encoded": "1 S:97 S:102,97,105,108,101,100 S:110,111,116,95,114,101,112,111,114,116,101,100",
+    "shown": "[{criterion: \"a\", status: \"failed\", evidence: \"not_reported\"}]"
+   },
+   "ref": {
+    "encoded": "1 S:97 S:102,97,105,108,101,100 S:110,111,116,95,114,101,112,111,114,116,101,100",
+    "shown": "[{criterion: \"a\", status: \"failed\", evidence: \"not_reported\"}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1 S:97 S:102,97,105,108,101,100 S:110,111,116,95,114,101,112,111,114,116,101,100"
+   },
+   "post": {
+    "ok": true,
+    "out": "1 S:97 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 43,
+   "made": 20,
+   "killed": 17,
+   "survived": [
+    "line 17: delete `if not key:     continue`",
+    "line 18: delete `continue`",
+    "line 24: negate the condition `status in {'unknown', 'not_reported'}`"
+   ],
+   "kill_rate": 0.85
+  },
+  "quotes": {
+   "quotes": 10,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 6906,
+   "first_difference": {
+    "input": "3 I:1 S:11,32,31,66,101,116,97,32,42,11,11,28 I:12 + 7 X B:1 D S:32,66,101,116,97,32,42,10,30 A S:112,97,115,115,101,100 S: X A X A D S:32 I:0 S:85,78,75,78,79,87,78 N D I:1 A I:0 S: D B:1 A S:116,114,117,101 S:",
+    "lean_ref": "3 S:49 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100 S:66,101,116,97,32,42 S:112,97,115,115,101,100 S:110,111,116,95,114,101,112,111,114,116,101,100 S:49,50 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100",
+    "python": "3 S:49 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100 S:66,101,116,97,32,42 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100 S:49,50 S:117,110,107,110,111,119,110 S:110,111,116,95,114,101,112,111,114,116,101,100"
+   }
+  }
+ },
+ "first_laws": [
+  "RowsAreCriteria",
+  "UnmatchedIsUnknown",
+  "PassedNeedsReport",
+  "BoundedCount",
+  "BoundedLength"
+ ],
+ "cost_usd": 3.8,
+ "seconds": 494
+}

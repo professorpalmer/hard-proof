@@ -1,0 +1,93 @@
+{
+ "id": "hardproof-exp11-k10-l032-gap-sonnet",
+ "entry": "prove",
+ "defaults": {
+  "adapter": "claude-code",
+  "model": "claude-sonnet-5-5",
+  "timeout_seconds": 3000,
+  "finish": "criteria"
+ },
+ "nodes": [
+  {
+   "id": "prove",
+   "kind": "agent",
+   "role": "code",
+   "files": [
+    "TblGapSolution.lean",
+    "TblCompleteSolution.lean"
+   ],
+   "task": "Context: this Lean 4 project has a decision rule with boolean inputs. `Tbl.lean` has the model: a `Case` is one set of inputs, and a `Decide` is a rule that gives one answer for each case. `TblLaws.lean` has the laws for the rule. The owner believes that these laws describe the rule completely.\n\nYour role: you are the adversary. Test that belief. One of two results is true, and you must find out which one:\n\n1. A gap exists. Two rules each pass every law (`Tbl.Passes`), but they give different answers for one case. To show this, write `TblGapSolution.lean` (read `TblGapChallenge.lean`): `namespace TblGap` with `designA`, `designB`, `input`, and complete proofs of `a_passes`, `b_passes`, and `differ`.\n\n2. No gap exists. Each two rules that pass every law give the same answer for each case. To show this, write `TblCompleteSolution.lean` (read `TblCompleteChallenge.lean`): `namespace TblComplete` with a complete proof of `laws_complete`.\n\nEach statement must be the same as the statement in the challenge file. The gate is `python3 gate11.py check gap complete`. It prints a JSON report and accepts one correct result of either kind. Verdict `accept` is the only success.\n\nRules:\n- Edit `TblGapSolution.lean` and `TblCompleteSolution.lean` only. The gate rejects the run if another file changes.\n- Do not use `sorry`, a new `axiom`, or `native_decide`.\n- The toolchain is Lean 4.36.0 with no Mathlib. `lake build TblGapSolution` or `lake build TblCompleteSolution` gives the compiler errors.\n- If you cannot complete either result, report how far you got, and end your reply with `VERDICT: FAIL - <reason>`.\n\nReport: say in plain words which result is true and why.",
+   "payload": {
+    "allowed_tools": [
+     "Bash(cd:*)",
+     "Bash(ls:*)",
+     "Bash(pwd)",
+     "Bash(cat:*)",
+     "Bash(git status:*)",
+     "Bash(git diff:*)",
+     "Bash(git log:*)",
+     "Bash(lake:*)",
+     "Bash(lean:*)",
+     "Bash(python3 gate11.py:*)",
+     "Bash(shasum:*)",
+     "Bash(grep:*)",
+     "Bash(wc:*)",
+     "Bash(head:*)",
+     "Bash(sed -n:*)"
+    ]
+   }
+  },
+  {
+   "id": "gate",
+   "kind": "shell",
+   "command": "printf '%s  %s\\n' 5c112191ac52cd52603f3be69d81170cfb534e397157a732278fc446a52ecc82 Tbl.lean f9889094df2dcbfa7c403b30dfe75924ba005e0501e376d4de63a7f5a4aabd4c TblLaws.lean 7f6b0ed576b2bd1fea0ae7070ed4d4cebd68683420c5ade996e73cbe09f2a133 TblGapChallenge.lean 37626538759c4fb917ff8323de2b9e1f865c69b1caab66792bd8d297f3ae80b8 TblCompleteChallenge.lean ccbaf80070e61d06d28f0047075ae35326863bd7b94a2c1934650899822f32b3 TblGapRunner.lean f7171398a5945d70530f5fead3f33de08049f515ce86bdd88f03a3fdcaad6bb9 comparator_gap.json c50935ad187109a95d7f43711a4229dabd3c29c6d500a2f6071ac83b9912b654 comparator_complete.json 31a42b02d4f1891a8779fb1a3a8f0731e7cf46149e3664a5880bce1b18564b7b gate11.py 9a718b051f4a41bb5b5092ccce46aeb1c3a5bdd283f4db95a20893f8f0c17bfb lakefile.toml 582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a lean-toolchain | shasum -a 256 -c - && python3 gate11.py check gap complete --actor flow"
+  },
+  {
+   "id": "done",
+   "kind": "end",
+   "status": "pass"
+  },
+  {
+   "id": "objected",
+   "kind": "end",
+   "status": "fail"
+  },
+  {
+   "id": "failed",
+   "kind": "end",
+   "status": "fail"
+  }
+ ],
+ "edges": [
+  {
+   "from": "prove",
+   "to": "objected",
+   "when": "FAIL"
+  },
+  {
+   "from": "prove",
+   "to": "gate",
+   "when": "ok"
+  },
+  {
+   "from": "gate",
+   "to": "done",
+   "when": "ok"
+  },
+  {
+   "from": "gate",
+   "to": "prove",
+   "when": "fail",
+   "max": 3
+  },
+  {
+   "from": "gate",
+   "to": "failed",
+   "when": "fail"
+  },
+  {
+   "from": "prove",
+   "to": "failed"
+  }
+ ]
+}

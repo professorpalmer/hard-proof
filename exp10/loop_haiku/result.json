@@ -1,0 +1,142 @@
+{
+ "start": "a_haiku",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "PidDeadRemoved",
+  "PidReusedRemoved",
+  "LiveOwnerKept",
+  "UnknownOlderRemoved",
+  "UnknownYoungerKept",
+  "StaleAfterOnlyUnknown"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_d0b8159b8f00",
+    "status": "failed",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 20,
+    "cost_usd": 0.38
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "PidDeadRemoved",
+    "PidReusedRemoved",
+    "LiveOwnerKept",
+    "UnknownOlderRemoved",
+    "UnknownYoungerKept",
+    "StaleAfterOnlyUnknown"
+   ],
+   "question": [
+    "case: owner pid known=false pid alive=false pid reused=false age=5 s stale_after=5 s",
+    "rule A: remove the lock file",
+    "rule B: keep the lock file",
+    "shipped code: remove the lock file"
+   ],
+   "answer": "remove the lock file",
+   "law_author": {
+    "flow": "flow_a47fb61c6ecf",
+    "status": "failed",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 28,
+    "cost_usd": 0.43
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "UnknownReachedRemoved": "\u2200 (c : Case) (a : Nat), c.pidKnown = false \u2192 c.age = some a \u2192 c.staleAfter \u2264 a \u2192 f c = true"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_aebefd458cd7",
+    "status": "failed",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 39,
+    "cost_usd": 0.41
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "PidDeadRemoved",
+    "PidReusedRemoved",
+    "LiveOwnerKept",
+    "UnknownOlderRemoved",
+    "UnknownYoungerKept",
+    "StaleAfterOnlyUnknown",
+    "UnknownReachedRemoved"
+   ],
+   "question": [
+    "case: owner pid known=false pid alive=false pid reused=false age=unknown stale_after=0 s",
+    "rule A: keep the lock file",
+    "rule B: remove the lock file",
+    "shipped code: keep the lock file"
+   ],
+   "answer": "keep the lock file",
+   "law_author": {
+    "flow": "flow_85b8a8fb1ad4",
+    "status": "failed",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 34,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "UnknownAgeKept": "\u2200 (c : Case), c.pidKnown = false \u2192 c.age = none \u2192 f c = false"
+   }
+  },
+  {
+   "round": 3,
+   "adversary": {
+    "flow": "flow_a89a39d05913",
+    "status": "failed",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 31,
+    "cost_usd": 0.44
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "PidDeadRemoved",
+    "PidReusedRemoved",
+    "LiveOwnerKept",
+    "UnknownOlderRemoved",
+    "UnknownYoungerKept",
+    "StaleAfterOnlyUnknown",
+    "UnknownReachedRemoved",
+    "UnknownAgeKept"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "PidDeadRemoved",
+  "PidReusedRemoved",
+  "LiveOwnerKept",
+  "UnknownOlderRemoved",
+  "UnknownYoungerKept",
+  "StaleAfterOnlyUnknown",
+  "UnknownReachedRemoved",
+  "UnknownAgeKept"
+ ],
+ "questions": 2
+}

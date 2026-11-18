@@ -1,0 +1,257 @@
+{
+ "name": "rl_a_sonnet",
+ "start": "a_sonnet",
+ "base": "base",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "e03b12da61",
+   "review": {
+    "flow": "flow_80aa2e42ae6b",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 31,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new rows (or whether a new row repeats), so a design can append the absent starters in any order.",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       0
+      ],
+      [
+       2,
+       2,
+       2,
+       0
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,1,1,0],[2,2,2,0]]",
+    "result_b": "[[2,2,2,0],[1,1,1,0]]",
+    "reason": "KeepsExisting only says the result is the old registry followed by some list, and no other law orders that list. Design A appends the starters in list order. Design B appends them in reverse order. Both pass every law."
+   },
+   "code_result": "id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)",
+   "law_author": {
+    "flow": "flow_d5243f14148d",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 36,
+    "cost_usd": 0.45
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 \u2203 new, f c st r = r ++ new \u2227 List.Sublist (new.map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "a93742e522",
+   "review": {
+    "flow": "flow_bee33f701ff5",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 24,
+    "cost_usd": 0.41
+   },
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether the command may append a copy of a row that the registry already has, when a starter entry has the id of that row.",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       0
+      ]
+     ],
+     "registry": [
+      [
+       1,
+       1,
+       1,
+       0
+      ]
+     ]
+    },
+    "result_a": "[[1,1,1,0]]",
+    "result_b": "[[1,1,1,0],[1,1,1,0]]",
+    "reason": "Every law that limits new rows skips a row that is already in the registry (x not in r). The starter id order law allows the id 1 once. So a design can append one exact copy of an existing row and still pass all laws."
+   },
+   "code_result": "id 1 (adapter 1, model 1, disabled)",
+   "law_author": {
+    "flow": "flow_c87718c0c301",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 34,
+    "cost_usd": 0.47
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NoDuplicateOfExisting": "\u2200 c st r, DistinctIds st \u2192 \u2200 new, f c st r = r ++ new \u2192 \u2200 x \u2208 new, hasId r x.id = false"
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "2b162595d4",
+   "review": {
+    "flow": "flow_bd535e02d363",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 27,
+    "cost_usd": 0.39
+   },
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateOfExisting"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, the laws fix the old registry as a prefix and the new rows as exactly one row per absent starter (AddsOnlyAbsent, AddsAllAbsent, and NoDuplicateOfExisting rule out extras and rows equal to old ones). Distinct ids plus NewInStarterOrder fix their order, copied id, adapter and model fix the identity, and the three enabled laws fix the flag in every case of enable and lock."
+   }
+  },
+  {
+   "round": 4,
+   "review_folder": "9613eb4f93",
+   "review": {
+    "flow": "flow_0a3dd036efc6",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 25,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsExisting",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "NewDisabledByDefault",
+    "EnableKeepsStarter",
+    "LockedAlwaysDisabled",
+    "NewInStarterOrder",
+    "NoDuplicateOfExisting"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal starter list, the laws fix the new rows: the prefix is r, new ids are a sublist of starter ids (no duplicates), each absent starter must give exactly one row, rows of non-absent starters are barred, adapter and model come from the starter, and enabled is fixed in all three cases (enable off, locked, enable on and unlocked)."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled",
+  "NewInStarterOrder",
+  "NoDuplicateOfExisting"
+ ],
+ "reviews": 4,
+ "questions": 2,
+ "laws_added": 2,
+ "cost_usd": 2.52,
+ "seconds": 177,
+ "end_state_complete": false,
+ "finish": {
+  "outcome": "complete",
+  "questions": 1,
+  "final_laws": [
+   "KeepsExisting",
+   "AddsOnlyAbsent",
+   "AddsAllAbsent",
+   "NoSameIdentity",
+   "NewDisabledByDefault",
+   "EnableKeepsStarter",
+   "LockedAlwaysDisabled",
+   "NewInStarterOrder",
+   "NoDuplicateOfExisting",
+   "OneRowPerAbsentEntry"
+  ],
+  "cost_usd": 1.47,
+  "seconds": 146,
+  "questions_text": [
+   [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ]
+  ]
+ }
+}

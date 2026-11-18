@@ -1,0 +1,424 @@
+{
+ "bug": "d7e7ed59",
+ "title": "extra_fields reasoning_effort overwritten by the medium default",
+ "repo": "Puppetmaster",
+ "function": "merge_routing_payload",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-b9e673f03e",
+   "folder": "~/Projects/hp-work/p/b9e673f03e",
+   "model": "opus",
+   "flow": "flow_70b339101321",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_90df1e1863de"
+   ],
+   "seconds": 529,
+   "cost_usd": 0.0,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-1f763aaf29",
+   "folder": "~/Projects/hp-work/p/1f763aaf29",
+   "model": "sonnet",
+   "flow": "flow_818995f2e3f8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_946138e11e4d"
+   ],
+   "seconds": 54,
+   "cost_usd": 0.509,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9efb33de3b",
+   "folder": "~/Projects/hp-work/p/9efb33de3b",
+   "model": "sonnet",
+   "flow": "flow_1e997773c24f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2465db63821c"
+   ],
+   "seconds": 50,
+   "cost_usd": 0.541,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-09a42b98b9",
+   "folder": "~/Projects/hp-work/p/09a42b98b9",
+   "model": "sonnet",
+   "flow": "flow_c0a2c1e3a982",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1d73636ab721"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.407,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-c58b6ddcb3",
+   "folder": "~/Projects/hp-work/p/c58b6ddcb3",
+   "model": "sonnet",
+   "flow": "flow_3e9f40686397",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_676cc6a96520"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.489,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-7e9fac66c0",
+   "folder": "~/Projects/hp-work/p/7e9fac66c0",
+   "model": "sonnet",
+   "flow": "flow_92b051c87937",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_506e8ac67ece"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.4,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-ee349b062b",
+   "folder": "~/Projects/hp-work/p/ee349b062b",
+   "model": "sonnet",
+   "flow": "flow_709d9c34c84c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ac5c982af265"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.474,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-bbe5ef8a9e",
+   "folder": "~/Projects/hp-work/p/bbe5ef8a9e",
+   "model": "sonnet",
+   "flow": "flow_6d32b3b866fd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9f591641ebc6"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.401,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-1af77b9b90",
+   "folder": "~/Projects/hp-work/p/1af77b9b90",
+   "model": "sonnet",
+   "flow": "flow_43fa087a8fb8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8b949dd758cd"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.477,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-d473576549",
+   "folder": "~/Projects/hp-work/p/d473576549",
+   "model": "sonnet",
+   "flow": "flow_da1a6335e713",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dfdad2903013"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.424,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-a5c248056d",
+   "folder": "~/Projects/hp-work/p/a5c248056d",
+   "model": "sonnet",
+   "flow": "flow_a6e470612e72",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_506dc7fbf005"
+   ],
+   "seconds": 41,
+   "cost_usd": 0.501,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-c0a2b316a8",
+   "folder": "~/Projects/hp-work/p/c0a2b316a8",
+   "model": "sonnet",
+   "flow": "flow_a08b4b10b324",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_255a622a114b"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.416,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-ce8618cd57",
+   "folder": "~/Projects/hp-work/p/ce8618cd57",
+   "model": "sonnet",
+   "flow": "flow_3101be255721",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2ba59f47d690"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.498,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-baf982ff4d",
+   "folder": "~/Projects/hp-work/p/baf982ff4d",
+   "model": "sonnet",
+   "flow": "flow_450c340275a2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_517f4891d239"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.402,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "CallerKeysWin",
+   "input": {
+    "encoded": "{s5:model:s1:a}|_|s1:b|N|_|_|N|N|N|_|_|_|_|_",
+    "shown": "payload={'model': 'a'} payload_defaults=None adapter_model_name='b' model.id=None model.billing=<absent> model.adapter=<absent> policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields=None"
+   },
+   "ref": {
+    "encoded": "{s5:model:s1:b,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'model': 'b', 'router_model_id': None, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s5:model:s1:b,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s5:model:s1:b,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "CallerKeysWin",
+   "input": {
+    "encoded": "{s13:router_policy:s1:a}|_|N|N|_|_|s1:b|N|N|_|_|_|_|_",
+    "shown": "payload={'router_policy': 'a'} payload_defaults=None adapter_model_name=None model.id=None model.billing=<absent> model.adapter=<absent> policy='b' capability_needed=None estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields=None"
+   },
+   "ref": {
+    "encoded": "{s13:router_policy:s1:b,s5:model:N,s15:router_model_id:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'router_policy': 'b', 'model': None, 'router_model_id': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s13:router_policy:s1:b,s5:model:N,s15:router_model_id:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s13:router_policy:s1:b,s5:model:N,s15:router_model_id:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "CallerKeysWin",
+   "input": {
+    "encoded": "{s15:router_model_id:s1:a}|_|N|s1:b|_|_|N|N|N|_|_|_|_|_",
+    "shown": "payload={'router_model_id': 'a'} payload_defaults=None adapter_model_name=None model.id='b' model.billing=<absent> model.adapter=<absent> policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields=None"
+   },
+   "ref": {
+    "encoded": "{s15:router_model_id:s1:b,s5:model:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'router_model_id': 'b', 'model': None, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s15:router_model_id:s1:b,s5:model:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s15:router_model_id:s1:b,s5:model:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "CallerKeysWin",
+   "input": {
+    "encoded": "{s24:router_capability_needed:s1:a}|_|N|N|_|_|N|s1:b|N|_|_|_|_|_",
+    "shown": "payload={'router_capability_needed': 'a'} payload_defaults=None adapter_model_name=None model.id=None model.billing=<absent> model.adapter=<absent> policy=None capability_needed='b' estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields=None"
+   },
+   "ref": {
+    "encoded": "{s24:router_capability_needed:s1:b,s5:model:N,s15:router_model_id:N,s13:router_policy:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'router_capability_needed': 'b', 'model': None, 'router_model_id': None, 'router_policy': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s24:router_capability_needed:s1:b,s5:model:N,s15:router_model_id:N,s13:router_policy:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s24:router_capability_needed:s1:b,s5:model:N,s15:router_model_id:N,s13:router_policy:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "BillingStamped",
+   "input": {
+    "encoded": "_|_|N|N|N|_|N|N|N|_|_|_|_|_",
+    "shown": "payload=None payload_defaults=None adapter_model_name=None model.id=None model.billing=None model.adapter=<absent> policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields=None"
+   },
+   "ref": {
+    "encoded": "{s5:model:N,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'model': None, 'router_model_id': None, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s5:model:N,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s5:model:N,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "ModelStamped",
+   "input": {
+    "encoded": "_|_|N|N|_|_|N|N|N|_|_|_|_|{s5:model:s1:x}",
+    "shown": "payload=None payload_defaults=None adapter_model_name=None model.id=None model.billing=<absent> model.adapter=<absent> policy=None capability_needed=None estimated_cost_usd=None allowed_model_ids=None effective_capability_score=<absent> score_source=<absent> score_provenance=<absent> extra_fields={'model': 'x'}"
+   },
+   "ref": {
+    "encoded": "{s5:model:s1:x,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}",
+    "shown": "{'model': 'x', 'router_model_id': None, 'router_policy': None, 'router_capability_needed': None, 'router_estimated_cost_usd': None, 'reasoning_effort': 'medium'}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{s5:model:s1:x,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{s5:model:s1:x,s15:router_model_id:N,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:N,s16:reasoning_effort:s6:medium}"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 44,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 15,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2327,
+   "first_difference": {
+    "input": "{s7:billing:N,s6:effort:s2:  ,s3:foo:{s2:id:s1:0},s10:extra_args:[s9:--effort=,s2:  ,s4:HIGH,s2:-c],s15:router_model_id:()}|_|s7:lowhigh|i0;|i3;|s6:cursor|N|N|s1:0|[N,N,s6:effort]|s1:x|s6:manual|{s6:source:s6:manual}|{s16:reasoning_effort:s5: Low }",
+    "lean_ref": "{s7:billing:i3;,s6:effort:s2:  ,s3:foo:{s2:id:s1:0},s10:extra_args:[s15:--effort=medium,s2:  ,s4:HIGH,s2:-c],s15:router_model_id:i0;,s5:model:s7:lowhigh,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:s1:0,s17:allowed_model_ids:[N,N,s6:effort],s27:router_effective_capability:s1:x,s19:router_score_source:s6:manual,s23:router_score_provenance:{s6:source:s6:manual},s16:reasoning_effort:s6:medium,s6:params:[{s2:id:s6:effort,s5:value:s6:medium}]}",
+    "python": "{s7:billing:i3;,s6:effort:s2:  ,s3:foo:{s2:id:s1:0},s10:extra_args:[s12:--effort=low,s2:  ,s4:HIGH,s2:-c],s15:router_model_id:i0;,s5:model:s7:lowhigh,s13:router_policy:N,s24:router_capability_needed:N,s25:router_estimated_cost_usd:s1:0,s17:allowed_model_ids:[N,N,s6:effort],s27:router_effective_capability:s1:x,s19:router_score_source:s6:manual,s23:router_score_provenance:{s6:source:s6:manual},s16:reasoning_effort:s3:low,s6:params:[{s2:id:s6:effort,s5:value:s3:low}]}"
+   }
+  }
+ },
+ "first_laws": [
+  "CallerKeysWin",
+  "MediumUnlessPinned",
+  "PinKept",
+  "BillingStamped",
+  "AllowlistSnapshot",
+  "ModelStamped",
+  "CursorParams",
+  "ClaudeEffort",
+  "CodexEffort",
+  "AntigravityEffort"
+ ],
+ "cost_usd": 5.94,
+ "seconds": 929
+}

@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "I split the 1024 cases by b0, then b4, then b1/b8 and the other inputs. Each case matches at least one law, so the laws fix every answer. Overlapping laws agree, so passing rules cannot differ."}

@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "The 32 laws partition all 1024 cases with no conflicts. Splitting on b0, b4, b1, b8, and b6 shows every case is fixed by a law with one answer, so any two passing rules agree on every case."}

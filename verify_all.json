@@ -1,0 +1,1485 @@
+{
+ "summary": {
+  "gate_runs": 184,
+  "extra_kernels": true,
+  "accept": 179,
+  "reject": 5,
+  "same_as_record": 184,
+  "different": [],
+  "seconds": 9
+ },
+ "results": [
+  {
+   "id": "reps/exp11_k06_l008_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp11_k06_l008_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp11_k06_l008_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp11_k06_l008_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.2
+  },
+  {
+   "id": "reps/exp11_k06_l008_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 9.3
+  },
+  {
+   "id": "reps/exp11_k06_l008_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.1
+  },
+  {
+   "id": "reps/exp11_k10_l032_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.8
+  },
+  {
+   "id": "reps/exp11_k10_l032_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp11_k10_l032_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp11_k10_l032_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 19.5
+  },
+  {
+   "id": "reps/exp11_k10_l032_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp11_k10_l032_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp11_k14_l128_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp11_k14_l128_complete/sonnet_1",
+   "recorded": "reject",
+   "now": "reject",
+   "mode": null,
+   "same": true,
+   "seconds": 0.0
+  },
+  {
+   "id": "reps/exp11_k14_l128_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp11_k14_l128_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.6
+  },
+  {
+   "id": "reps/exp11_k14_l128_gap/sonnet_1",
+   "recorded": "reject",
+   "now": "reject",
+   "mode": null,
+   "same": true,
+   "seconds": 0.0
+  },
+  {
+   "id": "reps/exp11_k14_l128_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/exp11_k18_l512_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 10.0
+  },
+  {
+   "id": "reps/exp11_k18_l512_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 10.3
+  },
+  {
+   "id": "reps/exp11_k18_l512_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 20.1
+  },
+  {
+   "id": "reps/exp11_k18_l512_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 13.4
+  },
+  {
+   "id": "reps/exp11_k18_l512_gap/sonnet_1",
+   "recorded": "reject",
+   "now": "reject",
+   "mode": null,
+   "same": true,
+   "seconds": 0.0
+  },
+  {
+   "id": "reps/exp11_k18_l512_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 13.2
+  },
+  {
+   "id": "reps/exp11b_b06_l008_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp11b_b06_l008_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp11b_b06_l008_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp11b_b06_l008_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.2
+  },
+  {
+   "id": "reps/exp11b_b06_l008_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.1
+  },
+  {
+   "id": "reps/exp11b_b06_l008_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.1
+  },
+  {
+   "id": "reps/exp11b_b10_l032_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.1
+  },
+  {
+   "id": "reps/exp11b_b10_l032_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.9
+  },
+  {
+   "id": "reps/exp11b_b10_l032_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp11b_b10_l032_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 14.8
+  },
+  {
+   "id": "reps/exp11b_b10_l032_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 28.3
+  },
+  {
+   "id": "reps/exp11b_b10_l032_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 32.1
+  },
+  {
+   "id": "reps/exp11b_b14_l128_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 10.7
+  },
+  {
+   "id": "reps/exp11b_b14_l128_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.7
+  },
+  {
+   "id": "reps/exp11b_b14_l128_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.7
+  },
+  {
+   "id": "reps/exp11b_b14_l128_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 31.0
+  },
+  {
+   "id": "reps/exp11b_b14_l128_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 83.7
+  },
+  {
+   "id": "reps/exp11b_b14_l128_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 9.1
+  },
+  {
+   "id": "reps/exp11b_b18_l512_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 10.6
+  },
+  {
+   "id": "reps/exp11b_b18_l512_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.0
+  },
+  {
+   "id": "reps/exp11b_b18_l512_complete/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/exp11b_b18_l512_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 16.4
+  },
+  {
+   "id": "reps/exp11b_b18_l512_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 12.9
+  },
+  {
+   "id": "reps/exp11b_b18_l512_gap/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 29.1
+  },
+  {
+   "id": "reps/exp6_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.5
+  },
+  {
+   "id": "reps/exp6_gap/haiku_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp6_gap/haiku_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp6_gap/haiku_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp6_gap/haiku_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp6_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 9.0
+  },
+  {
+   "id": "reps/exp6_gap/sonnet_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 9.0
+  },
+  {
+   "id": "reps/exp6_gap/sonnet_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.8
+  },
+  {
+   "id": "reps/exp6_gap/sonnet_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.8
+  },
+  {
+   "id": "reps/exp6_gap/sonnet_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/exp6_gap_opus/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/exp6_gap_opus/opus_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/exp6_gap_opus/opus_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/exp7_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp7_complete/haiku_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp7_complete/haiku_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp7_complete/haiku_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp7_complete/haiku_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp7_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.5
+  },
+  {
+   "id": "reps/exp7_complete/sonnet_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp7_complete/sonnet_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.2
+  },
+  {
+   "id": "reps/exp7_complete/sonnet_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp7_complete/sonnet_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp7_complete_opus/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp7_complete_opus/opus_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp7_complete_opus/opus_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8a_code/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/haiku_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8a_code/haiku_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/haiku_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8a_code/haiku_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8a_code/sonnet_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/sonnet_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/sonnet_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code/sonnet_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code_opus/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8a_code_opus/opus_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8a_code_opus/opus_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "reps/exp8c_gap/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap/haiku_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "reps/exp8c_gap/haiku_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "reps/exp8c_gap/haiku_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap/haiku_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap/sonnet_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "reps/exp8c_gap/sonnet_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "reps/exp8c_gap/sonnet_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "reps/exp8c_gap/sonnet_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap_opus/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap_opus/opus_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8c_gap_opus/opus_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "reps/exp8d_complete/haiku_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8d_complete/haiku_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/exp8d_complete/haiku_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete/haiku_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete/haiku_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete/sonnet_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete/sonnet_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp8d_complete/sonnet_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp8d_complete/sonnet_4",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "reps/exp8d_complete/sonnet_5",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.8
+  },
+  {
+   "id": "reps/exp8d_complete_opus/opus_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete_opus/opus_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/exp8d_complete_opus/opus_3",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "reps/x_exp6_gap/luna_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/x_exp6_gap/luna_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/x_exp6_gap/sol_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.4
+  },
+  {
+   "id": "reps/x_exp6_gap/sol_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "reps/x_exp7_complete/luna_1",
+   "recorded": "reject",
+   "now": "reject",
+   "mode": null,
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "reps/x_exp7_complete/luna_2",
+   "recorded": "reject",
+   "now": "reject",
+   "mode": null,
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "reps/x_exp7_complete/sol_1",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "reps/x_exp7_complete/sol_2",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "exp6/haiku (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "exp6/sonnet (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "exp6/opus (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": null,
+   "same": true,
+   "seconds": 8.3
+  },
+  {
+   "id": "exp7/haiku (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "exp7/sonnet (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "exp7/opus (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "exp8/a_haiku (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp8/a_sonnet (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp8/a_opus (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "code",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp8/c_haiku (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "exp8/c_sonnet (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "exp8/c_opus (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp8/d_haiku (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.0
+  },
+  {
+   "id": "exp8/d_sonnet (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "exp8/d_opus (first run)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  },
+  {
+   "id": "exp10/loop2_haiku/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.9
+  },
+  {
+   "id": "exp10/loop2_haiku/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp10/loop2_haiku/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.0
+  },
+  {
+   "id": "exp10/loop2_haiku/round2_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp10/loop2_haiku/round3_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.8
+  },
+  {
+   "id": "exp10/loop2_opus/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 9.1
+  },
+  {
+   "id": "exp10/loop2_opus/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp10/loop2_opus/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 9.0
+  },
+  {
+   "id": "exp10/loop2_opus/round2_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp10/loop2_opus/round3_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 8.8
+  },
+  {
+   "id": "exp10/loop2_sonnet/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.3
+  },
+  {
+   "id": "exp10/loop2_sonnet/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp10/loop2_sonnet/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "exp12/loop_haiku/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.5
+  },
+  {
+   "id": "exp12/loop_haiku/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp12/loop_haiku/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp12/loop_haiku/round2_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loop_haiku/round3_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp12/loop_opus/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp12/loop_opus/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp12/loop_opus/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp12/loop_opus/round2_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.3
+  },
+  {
+   "id": "exp12/loop_opus/round3_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.2
+  },
+  {
+   "id": "exp12/loop_sonnet/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.5
+  },
+  {
+   "id": "exp12/loop_sonnet/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loop_sonnet/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.9
+  },
+  {
+   "id": "exp12/loop_sonnet/round2_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loop_sonnet/round3_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.8
+  },
+  {
+   "id": "exp12/loop_sonnet/round3_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loop_sonnet/round4_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.7
+  },
+  {
+   "id": "exp10/a_haiku (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp10/a_opus (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp10/a_sonnet (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/a_haiku (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/a_opus (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/a_sonnet (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/b_haiku (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/b_opus (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/b_sonnet (first laws)",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loopb_haiku/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 7.6
+  },
+  {
+   "id": "exp12/loopb_haiku/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loopb_haiku/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.4
+  },
+  {
+   "id": "exp12/loopb_opus/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.5
+  },
+  {
+   "id": "exp12/loopb_opus/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loopb_opus/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.5
+  },
+  {
+   "id": "exp12/loopb_sonnet/round1_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "gap",
+   "same": true,
+   "seconds": 8.5
+  },
+  {
+   "id": "exp12/loopb_sonnet/round1_law",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "laws",
+   "same": true,
+   "seconds": 0.4
+  },
+  {
+   "id": "exp12/loopb_sonnet/round2_adversary",
+   "recorded": "accept",
+   "now": "accept",
+   "mode": "complete",
+   "same": true,
+   "seconds": 7.1
+  }
+ ]
+}

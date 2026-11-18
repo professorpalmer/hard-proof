@@ -1,0 +1,88 @@
+{
+  "id": "hardproof-exp6-gap-opus",
+  "entry": "prove",
+  "defaults": {
+    "adapter": "claude-code",
+    "model": "claude-opus-5-5",
+    "timeout_seconds": 2400,
+    "finish": "criteria"
+  },
+  "nodes": [
+    {
+      "id": "prove",
+      "kind": "agent",
+      "role": "code",
+      "files": [
+        "GapSolution.lean"
+      ],
+      "task": "Context: this Lean 4 project models a lock. `Laws.lean` defines the model and three laws: `Mutex`, `NoOrphanHold`, and `HolderKeepsLock`. `Solution.lean` has a lock design `Exp.lock` and proofs that it obeys each law. The owner believes that the laws describe a correct lock completely.\n\nYour role: you are the adversary. Test that belief. Find two lock designs that each pass every law (`Laws.Passes`) but behave differently: after one sequence of events, a process is in the critical section for one design and not for the other design. Such a pair shows that the laws leave behavior open.\n\nYour work: read `GapChallenge.lean`. Write `GapSolution.lean` with `namespace Gap` and the same names: `designA`, `designB`, `trace`, `who`, and complete proofs of `a_passes`, `b_passes`, and `differ`. Each statement must be the same as the statement in `GapChallenge.lean`. Start the file with `import Laws` and `import Solution`. You can use the proofs in `Solution.lean`. For example, `designA` can be `Exp.lock`.\n\nThe gate is `python3 gap_gate.py check`. It prints a JSON report. Verdict `accept` is the only success.\n\nRules:\n- Edit `GapSolution.lean` only. The gate rejects the run if another file changes.\n- Do not use `sorry`, a new `axiom`, or `native_decide`. The gate rejects them.\n- The toolchain is Lean 4.36.0 with no Mathlib. `lake build GapSolution` gives the compiler errors.\n- If you conclude that no such pair of designs exists, stop. Report the reason, and end your reply with `VERDICT: FAIL - <reason>`.\n\nReport: say in plain words what behavior the laws leave open, and how you found it. Give the number of gate runs that you made.",
+      "payload": {
+        "allowed_tools": [
+          "Bash(cd:*)",
+          "Bash(ls:*)",
+          "Bash(pwd)",
+          "Bash(cat:*)",
+          "Bash(git status:*)",
+          "Bash(git diff:*)",
+          "Bash(git log:*)",
+          "Bash(lake:*)",
+          "Bash(lean:*)",
+          "Bash(python3 gap_gate.py:*)",
+          "Bash(shasum:*)"
+        ]
+      }
+    },
+    {
+      "id": "gate",
+      "kind": "shell",
+      "command": "printf '%s  %s\\n' 4fc9a3fb2151c2d713d7cf7f05cec69063c241695c3272b00c5219bea44c759f Laws.lean 7fcfec433f14aaec3285d1e8aa3f2e10815dfe23f91f2e9f3893a95b6281f0ef Mutants.lean f9273cba360a2672b88ae5ec7fdb6b38214b5bd2fdca6d3bd6367ea3e8c4be31 GapChallenge.lean f6154769603a75318e8c06ee469654c2504776ee3c13bdee683a2b43da2d0dc4 GapRunner.lean 2e7a26929f97a35d708eba5022c8d004d53715f9290f34fe86428283394bbbbd comparator_gap.json 2170992b91c8710c300c8735a7a3138dfe709aab9cb11573a7179a1e4aa98fd0 gap_gate.py 77a361c56c517c7c202b79d132ae97efb52abc90cbe85e3b0bb50ba8bcf15d5d lakefile.toml 582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a lean-toolchain | shasum -a 256 -c - && python3 gap_gate.py check --actor flow"
+    },
+    {
+      "id": "done",
+      "kind": "end",
+      "status": "pass"
+    },
+    {
+      "id": "objected",
+      "kind": "end",
+      "status": "fail"
+    },
+    {
+      "id": "failed",
+      "kind": "end",
+      "status": "fail"
+    }
+  ],
+  "edges": [
+    {
+      "from": "prove",
+      "to": "objected",
+      "when": "FAIL"
+    },
+    {
+      "from": "prove",
+      "to": "gate",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "done",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "prove",
+      "when": "fail",
+      "max": 3
+    },
+    {
+      "from": "gate",
+      "to": "failed",
+      "when": "fail"
+    },
+    {
+      "from": "prove",
+      "to": "failed"
+    }
+  ]
+}

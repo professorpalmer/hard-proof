@@ -1,0 +1,491 @@
+{
+ "bug": "8184b3a0",
+ "title": "Conflicting exact-tier prices fall through to a weaker fuzzy match",
+ "repo": "marionette",
+ "function": "_registry_rates",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-f75861a7d6",
+   "folder": "~/Projects/hp-work/p/f75861a7d6",
+   "model": "opus",
+   "flow": "flow_af96b0d176b7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7b4978f0840b"
+   ],
+   "seconds": 239,
+   "cost_usd": 1.944,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-b34518974c",
+   "folder": "~/Projects/hp-work/p/b34518974c",
+   "model": "sonnet",
+   "flow": "flow_0b2db2a07b4a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d765b4d9e58f"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.466,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-b5af402db4",
+   "folder": "~/Projects/hp-work/p/b5af402db4",
+   "model": "sonnet",
+   "flow": "flow_5aa6ca2c5e69",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_657a6f12b546"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.415,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-705a87547c",
+   "folder": "~/Projects/hp-work/p/705a87547c",
+   "model": "sonnet",
+   "flow": "flow_8115f514c11d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d7ebda6deb6d"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.389,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-74ef09fd29",
+   "folder": "~/Projects/hp-work/p/74ef09fd29",
+   "model": "sonnet",
+   "flow": "flow_a41af02701a3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f5b43bb26330"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.436,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-c3228a5f78",
+   "folder": "~/Projects/hp-work/p/c3228a5f78",
+   "model": "sonnet",
+   "flow": "flow_eece2d576171",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bf333516288b"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.367,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-7d9b2532c4",
+   "folder": "~/Projects/hp-work/p/7d9b2532c4",
+   "model": "sonnet",
+   "flow": "flow_adff80fbbc7d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f846d4c5f303"
+   ],
+   "seconds": 50,
+   "cost_usd": 0.5,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-6d36eeb84f",
+   "folder": "~/Projects/hp-work/p/6d36eeb84f",
+   "model": "sonnet",
+   "flow": "flow_b3aadcb68a53",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1fcb496efc97"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.518,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-dc8aecfed3",
+   "folder": "~/Projects/hp-work/p/dc8aecfed3",
+   "model": "sonnet",
+   "flow": "flow_670c09ccea28",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b3d2ebe7a50b"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.394,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-475d9b19ab",
+   "folder": "~/Projects/hp-work/p/475d9b19ab",
+   "model": "sonnet",
+   "flow": "flow_6d80455e1c5c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d0af41365791"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.492,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-4100a03e28",
+   "folder": "~/Projects/hp-work/p/4100a03e28",
+   "model": "sonnet",
+   "flow": "flow_a8a41948e9de",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6e5ef8a60b87"
+   ],
+   "seconds": 43,
+   "cost_usd": 0.535,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-46eeec5b13",
+   "folder": "~/Projects/hp-work/p/46eeec5b13",
+   "model": "sonnet",
+   "flow": "flow_d6a1d95ed7d7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_387dc844ea3d"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.417,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-40b032eaab",
+   "folder": "~/Projects/hp-work/p/40b032eaab",
+   "model": "sonnet",
+   "flow": "flow_ee3b2054a220",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1f2f1e838c8c"
+   ],
+   "seconds": 58,
+   "cost_usd": 0.53,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-7e04e6276e",
+   "folder": "~/Projects/hp-work/p/7e04e6276e",
+   "model": "sonnet",
+   "flow": "flow_f30bdf766e8c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3eecae42e2b3"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.435,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-88a61571d0",
+   "folder": "~/Projects/hp-work/p/88a61571d0",
+   "model": "sonnet",
+   "flow": "flow_56b96b76e50c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5b49ea1aeb6f"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.408,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-502eb19308",
+   "folder": "~/Projects/hp-work/p/502eb19308",
+   "model": "sonnet",
+   "flow": "flow_4b994beffeb5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1837dd8ae8f7"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.446,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-1f52887352",
+   "folder": "~/Projects/hp-work/p/1f52887352",
+   "model": "sonnet",
+   "flow": "flow_2641e14075e8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_117e97674db2"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.394,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "FromRegistryOrZeros",
+   "input": {
+    "encoded": "s61 s61 n i4 i-4",
+    "shown": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-4/4)])"
+   },
+   "ref": {
+    "encoded": "4 0",
+    "shown": "(4/4, 0/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "4 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "4 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "NonzeroIsPositivePair",
+   "input": {
+    "encoded": "s61 s61 n i4 i-1",
+    "shown": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-1/4)])"
+   },
+   "ref": {
+    "encoded": "4 0",
+    "shown": "(4/4, 0/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "4 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "4 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "s n n i4 i8",
+    "shown": "_registry_rates(\"\", [(id=None, adapter_model_name=None, in=4/4, out=8/4)])"
+   },
+   "design_a": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "design_b": {
+    "encoded": "4 8",
+    "shown": "(4/4, 8/4)"
+   },
+   "ref": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "s s61 n i4 i4",
+    "shown": "_registry_rates(\"\", [(id=\"a\", adapter_model_name=None, in=4/4, out=4/4)])"
+   },
+   "design_a": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "design_b": {
+    "encoded": "4 4",
+    "shown": "(4/4, 4/4)"
+   },
+   "ref": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "s61 s62 n i4 i4",
+    "shown": "_registry_rates(\"a\", [(id=\"b\", adapter_model_name=None, in=4/4, out=4/4)])"
+   },
+   "design_a": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "design_b": {
+    "encoded": "4 4",
+    "shown": "(4/4, 4/4)"
+   },
+   "ref": {
+    "encoded": "0 0",
+    "shown": "(0/4, 0/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "NonzeroFromMatchingRow",
+   "input": {
+    "encoded": "s2d s2e n i4 i4",
+    "shown": "_registry_rates(\"-\", [(id=\".\", adapter_model_name=None, in=4/4, out=4/4)])"
+   },
+   "ref": {
+    "encoded": "4 4",
+    "shown": "(4/4, 4/4)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "4 4"
+   },
+   "post": {
+    "ok": true,
+    "out": "4 4"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 56,
+   "made": 20,
+   "killed": 18,
+   "survived": [
+    "line 3: delete `if not model_id:     return (0.0, 0.0)`",
+    "line 4: delete `return (0.0, 0.0)`"
+   ],
+   "kill_rate": 0.9
+  },
+  "quotes": {
+   "quotes": 9,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 1018,
+   "first_difference": {
+    "input": "s437572736f722f613a s6e61746976652f782e793a62 s435552534f522f413a t3 t6 s437572736f722f613a s4167656e7469632f437572736f722f2d2d2020 i3 N s20437572736f722f613a20 s20437572736f722f613a20 i3 t3 s6167656e7469632f637572736f722f67726f6b5f345f36 s637572736f722d636c693a2d2d2020 B i3",
+    "lean_ref": "3 6",
+    "python": "0 0"
+   }
+  }
+ },
+ "first_laws": [
+  "FromRegistryOrZeros",
+  "NonzeroIsPositivePair"
+ ],
+ "cost_usd": 9.09,
+ "seconds": 755
+}

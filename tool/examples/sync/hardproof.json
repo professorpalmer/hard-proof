@@ -1,0 +1,6 @@
+{
+  "name": "sync",
+  "namespace": "HP",
+  "python": {"module": "puppetmaster.registry_sync", "function": "plan_starter_sync"},
+  "banned_in_laws": ["ref", "adjust"]
+}

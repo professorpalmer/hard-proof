@@ -1,0 +1,128 @@
+{
+ "bug": "453b6524",
+ "title": "_gate_write_scope passes a run outside Git that it could not observe",
+ "repo": "Puppetmaster",
+ "function": "_gate_write_scope",
+ "kind": "state",
+ "stages": [
+  {
+   "flow_id": "hp2-ec22b2f5da",
+   "folder": "~/Projects/hp-work/p/ec22b2f5da",
+   "model": "opus",
+   "flow": "flow_8a11b11cf5fd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_69e7f8acc8b6"
+   ],
+   "seconds": 460,
+   "cost_usd": 2.849,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-af793fb604",
+   "folder": "~/Projects/hp-work/p/af793fb604",
+   "model": "sonnet",
+   "flow": "flow_d0ceea875e2a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bb10790ea2ef"
+   ],
+   "seconds": 97,
+   "cost_usd": 0.0,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-1ba0270bf1",
+   "folder": "~/Projects/hp-work/p/1ba0270bf1",
+   "model": "sonnet",
+   "flow": "flow_1c7608a7b609",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5fd1bdbe9dff"
+   ],
+   "seconds": 59,
+   "cost_usd": 0.532,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "UnattributedStrayFails",
+   "input": {
+    "encoded": "t|l,a|-|p;-;-;-;l,c;-;l,b|l,b|l|l|-|-",
+    "shown": "{ name := \"t\","
+   },
+   "ref": {
+    "encoded": "t|write_scope|1|all writes within declared scope|scope=l,a#changed_files=l,b#concurrent_changes=l,b",
+    "shown": "{ name := \"t\","
+   },
+   "pre": {
+    "ok": true,
+    "out": "t|write_scope|1|all writes within declared scope|scope=l,a#changed_files=l,b#concurrent_changes=l,b"
+   },
+   "post": {
+    "ok": true,
+    "out": "t|write_scope|0|change observation unavailable: cwd is not a git work tree and the run has no attributed delta, so writes outside the scope cannot be ruled out|scope=l,a#observation=l,u,n,a,v,a,i,l,a,b,l,e#changed_files=l,b"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 83,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 40,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2957,
+   "first_difference": {
+    "input": "g-1|l,  ,src/sub/**,/.pytest_cache|l,new/deep/er/,,**/*.py,new/deep/er/?.*||l,__pycache__/|l|l,new/deep/er/a.py|l,new/,src/sub/**|l,new/deep/er/",
+    "lean_ref": "g-1|write_scope|1|all writes within declared scope|scope=l,src/sub/**,/.pytest_cache#changed_files=l,__pycache__/",
+    "python": "g-1|write_scope|0|change observation unavailable: cwd is not a git work tree and the run has no attributed delta, so writes outside the scope cannot be ruled out|scope=l,src/sub/**,/.pytest_cache#observation=l,u,n,a,v,a,i,l,a,b,l,e#changed_files=l,__pycache__/"
+   }
+  }
+ },
+ "first_laws": [
+  "ZeroDirectoryGlob",
+  "StarCrossesSlash",
+  "PlainPathMatchesItself",
+  "UnattributedStrayFails",
+  "NamedStrayFails",
+  "NewUnclaimedFails",
+  "SiblingNotCharged",
+  "CacheNotCharged",
+  "ConcurrentChangeNotFailure",
+  "ClaimedUnnamedNotCharged",
+  "DirectoryJudgedByFiles"
+ ],
+ "cost_usd": 3.38,
+ "seconds": 616
+}

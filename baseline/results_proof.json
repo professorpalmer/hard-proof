@@ -1,0 +1,246 @@
+{
+ "arm": "proof",
+ "runs": [
+  {
+   "id": "d7daddbf",
+   "arm": "proof",
+   "flow": "flow_ed3a6cbed2a9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.16,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "29e4a791",
+   "arm": "proof",
+   "flow": "flow_e2e91556b0e7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.379,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "1669c7a0",
+   "arm": "proof",
+   "flow": "flow_d947f9e0d3ce",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 48,
+   "cost_usd": 0.151,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "b9af6116",
+   "arm": "proof",
+   "flow": "flow_f6ca96b86644",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.392,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "faff41a1",
+   "arm": "proof",
+   "flow": "flow_3fd85fcba192",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 90,
+   "cost_usd": 0.226,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "fd144f00",
+   "arm": "proof",
+   "flow": "flow_8e00447b0dd3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 45,
+   "cost_usd": 0.475,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "5eae034c",
+   "arm": "proof",
+   "flow": "flow_40934bd7f498",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 68,
+   "cost_usd": 0.179,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "3188d38b",
+   "arm": "proof",
+   "flow": "flow_009f808908e5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 64,
+   "cost_usd": 0.495,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "59ee53e8",
+   "arm": "proof",
+   "flow": "flow_0eaccaf594fc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 181,
+   "cost_usd": 0.309,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "433436ec",
+   "arm": "proof",
+   "flow": "flow_fe67227d65a7",
+   "flow_status": "running",
+   "visits": 2,
+   "verdicts": [
+    "PASS",
+    "PARTIAL"
+   ],
+   "seconds": 2875,
+   "cost_usd": 1.334,
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "correct": false
+  },
+  {
+   "id": "714f6d1d",
+   "arm": "proof",
+   "flow": "flow_692ee91b5cbb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 106,
+   "cost_usd": 0.249,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "5030e8d4",
+   "arm": "proof",
+   "flow": "flow_70f77a1f5655",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 68,
+   "cost_usd": 0.504,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "24af0a62",
+   "arm": "proof",
+   "flow": "flow_e8a4aab3003e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 291,
+   "cost_usd": 0.427,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "9b260ba0",
+   "arm": "proof",
+   "flow": "flow_6bc54743abd2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 128,
+   "cost_usd": 0.569,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "gap",
+   "correct": true
+  },
+  {
+   "id": "7e8fdb14",
+   "arm": "proof",
+   "flow": "flow_712da7bec3d6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 107,
+   "cost_usd": 0.265,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  },
+  {
+   "id": "2505b991",
+   "arm": "proof",
+   "flow": "flow_008112807a28",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "seconds": 439,
+   "cost_usd": 0.646,
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "correct": true
+  }
+ ]
+}

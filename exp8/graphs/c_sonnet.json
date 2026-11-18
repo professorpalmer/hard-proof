@@ -1,0 +1,88 @@
+{
+  "id": "hardproof-exp8c-gap-sonnet",
+  "entry": "prove",
+  "defaults": {
+    "adapter": "claude-code",
+    "model": "claude-sonnet-5-5",
+    "timeout_seconds": 3000,
+    "finish": "criteria"
+  },
+  "nodes": [
+    {
+      "id": "prove",
+      "kind": "agent",
+      "role": "code",
+      "files": [
+        "SyncGapSolution.lean"
+      ],
+      "task": "Context: this Lean 4 project models the command `puppetmaster models sync`. The command adds the starter models that a registry lacks. `SyncLaws.lean` defines the model and seven laws. Each law restates one sentence of the release notes. `refSync` is a model of the shipped code, and `SyncSolution.lean` proves that `refSync` obeys each law. The owner believes that the seven laws describe the command completely.\n\nYour role: you are the adversary. Test that belief. Find two sync designs that each pass every law (`SyncLaws.Passes`) but give different registries for one legal input. Such a pair shows that the laws leave behavior open.\n\nYour work: read `SyncGapChallenge.lean`. Write `SyncGapSolution.lean` with `import SyncLaws`, `import SyncSolution`, `namespace SyncGap`, and the same names: `designA`, `designB`, `config`, `starter`, `registry`, and complete proofs of `a_passes`, `b_passes`, `starter_distinct`, and `differ`. Each statement must be the same as the statement in `SyncGapChallenge.lean`. You can use the proofs in `SyncSolution.lean`. For example, `designA` can be `refSync`.\n\nThe gate is `python3 gate8.py check gap`. It prints a JSON report. Verdict `accept` is the only success.\n\nRules:\n- Edit `SyncGapSolution.lean` only. The gate rejects the run if another file changes.\n- Do not use `sorry`, a new `axiom`, or `native_decide`. The gate rejects them.\n- The toolchain is Lean 4.36.0 with no Mathlib. `lake build SyncGapSolution` gives the compiler errors.\n- If you conclude that no such pair of designs exists, stop. Report the reason, and end your reply with `VERDICT: FAIL - <reason>`.\n\nReport: say in plain words what behavior the laws leave open, and how you found it. If you see more than one kind of open behavior, name each kind. Give the number of gate runs that you made.",
+      "payload": {
+        "allowed_tools": [
+          "Bash(cd:*)",
+          "Bash(ls:*)",
+          "Bash(pwd)",
+          "Bash(cat:*)",
+          "Bash(git status:*)",
+          "Bash(git diff:*)",
+          "Bash(git log:*)",
+          "Bash(lake:*)",
+          "Bash(lean:*)",
+          "Bash(python3 gate8.py:*)",
+          "Bash(shasum:*)"
+        ]
+      }
+    },
+    {
+      "id": "gate",
+      "kind": "shell",
+      "command": "printf '%s  %s\\n' 6cac4bb761d60177c4441f2e64443c3a67b2d2b007e2ad85645be03afdcaef7c SyncLaws.lean bdcdc2da1058e5134b1ac51468f30cf1e2b0979ba98988d45374c7ac535feeab SyncChallenge.lean 071eb6cb7da3719eb2eadbcba7c9151e183c950eb05826c18bcca3c5ab110bb0 SyncGapChallenge.lean 6068ecc8b0474082279996171423546372b8b8ef4987698674d8ebf17a958ae2 SyncGapRunner.lean c373d9843a008383afe9f20dcfb10f12d105dbf3906bc3f2a9afdd3daf9e422f SyncRunner.lean f8e32732b3a75c8fbb5d32e0a05586e50d54d892d1f51fdf74b65894812420bb comparator_sync.json 17e043124cde1e0e1bad9cc14da21d62ee71be7a07837fdf86535240e7d1afe0 comparator_syncgap.json 478e0bf3057022c75a33effc61f15d346e1f2f23530ab620f65eb4b5b11a0db1 gate8.py 1712fc092a95a7f68d7045bc613ad944b43c5569827237e2e85a72161870abb6 lakefile.toml 582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a lean-toolchain | shasum -a 256 -c - && python3 gate8.py check gap --actor flow"
+    },
+    {
+      "id": "done",
+      "kind": "end",
+      "status": "pass"
+    },
+    {
+      "id": "objected",
+      "kind": "end",
+      "status": "fail"
+    },
+    {
+      "id": "failed",
+      "kind": "end",
+      "status": "fail"
+    }
+  ],
+  "edges": [
+    {
+      "from": "prove",
+      "to": "objected",
+      "when": "FAIL"
+    },
+    {
+      "from": "prove",
+      "to": "gate",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "done",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "prove",
+      "when": "fail",
+      "max": 3
+    },
+    {
+      "from": "gate",
+      "to": "failed",
+      "when": "fail"
+    },
+    {
+      "from": "prove",
+      "to": "failed"
+    }
+  ]
+}

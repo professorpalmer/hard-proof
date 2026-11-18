@@ -1,0 +1,433 @@
+{
+ "bug": "1f3119d9",
+ "title": "Live browser profile check only knows the current host's profile paths",
+ "repo": "marionette",
+ "function": "is_live_browser_user_data_dir",
+ "kind": "path or glob",
+ "stages": [
+  {
+   "flow_id": "hp2-1bff6962a4",
+   "folder": "~/Projects/hp-work/p/1bff6962a4",
+   "model": "opus",
+   "flow": "flow_c5070f3a6bab",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_374968299464"
+   ],
+   "seconds": 366,
+   "cost_usd": 2.457,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-e5631900ae",
+   "folder": "~/Projects/hp-work/p/e5631900ae",
+   "model": "sonnet",
+   "flow": "flow_75566812983a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_20b55d3bf72f"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.437,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-3bb273484c",
+   "folder": "~/Projects/hp-work/p/3bb273484c",
+   "model": "sonnet",
+   "flow": "flow_65b863a4f0b2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d5cc704f62b0"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.432,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-fef201ee21",
+   "folder": "~/Projects/hp-work/p/fef201ee21",
+   "model": "sonnet",
+   "flow": "flow_9f0f9c732ef0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_71634dc8ebfc"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.399,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-127144331f",
+   "folder": "~/Projects/hp-work/p/127144331f",
+   "model": "sonnet",
+   "flow": "flow_19e05e1d5754",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_06e4b06287f9"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.42,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-0f8e170aa5",
+   "folder": "~/Projects/hp-work/p/0f8e170aa5",
+   "model": "sonnet",
+   "flow": "flow_084718b27164",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_af6bc99b4584"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.426,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-b6e003e95d",
+   "folder": "~/Projects/hp-work/p/b6e003e95d",
+   "model": "sonnet",
+   "flow": "flow_07379aa90d1c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ed801ce22448"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.416,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-172df0eded",
+   "folder": "~/Projects/hp-work/p/172df0eded",
+   "model": "sonnet",
+   "flow": "flow_4ad4de9e2ca3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_70c5de02e7b9"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.392,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-e029bfa683",
+   "folder": "~/Projects/hp-work/p/e029bfa683",
+   "model": "sonnet",
+   "flow": "flow_8eb499f569c0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1a468e03ed86"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.435,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-ab5a9b71ce",
+   "folder": "~/Projects/hp-work/p/ab5a9b71ce",
+   "model": "sonnet",
+   "flow": "flow_dfd20121a75e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4069c2a5adb3"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.433,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-0c48610e1d",
+   "folder": "~/Projects/hp-work/p/0c48610e1d",
+   "model": "sonnet",
+   "flow": "flow_ae5b7d01cc7b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_56ccf55f8938"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.405,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-397006898a",
+   "folder": "~/Projects/hp-work/p/397006898a",
+   "model": "sonnet",
+   "flow": "flow_b887fd895945",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_94cbdd343880"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.452,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-7309ffc622",
+   "folder": "~/Projects/hp-work/p/7309ffc622",
+   "model": "sonnet",
+   "flow": "flow_2f51d448b47d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_85e9f6f508e0"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.42,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-840f93dccc",
+   "folder": "~/Projects/hp-work/p/840f93dccc",
+   "model": "sonnet",
+   "flow": "flow_6a3133775923",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_629080cf60a8"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.368,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-0938b5c340",
+   "folder": "~/Projects/hp-work/p/0938b5c340",
+   "model": "sonnet",
+   "flow": "flow_d11179a7cc17",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3e714a7f26a0"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.441,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-bc1c2a4ec1",
+   "folder": "~/Projects/hp-work/p/bc1c2a4ec1",
+   "model": "sonnet",
+   "flow": "flow_71d33a2bd919",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2792806553e3"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.421,
+   "stage": "A5"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "N|D|47,97|N|N",
+    "shown": "path=None system=Darwin HOME=\"/a\" LOCALAPPDATA=None XDG_CONFIG_HOME=None (cwd /)"
+   },
+   "design_a": {
+    "encoded": "1",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "S|D|47,97|N|N",
+    "shown": "path=\"\" system=Darwin HOME=\"/a\" LOCALAPPDATA=None XDG_CONFIG_HOME=None (cwd /)"
+   },
+   "design_a": {
+    "encoded": "1",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "S126,97|D|47,97|N|N",
+    "shown": "path=\"~a\" system=Darwin HOME=\"/a\" LOCALAPPDATA=None XDG_CONFIG_HOME=None (cwd /)"
+   },
+   "design_a": {
+    "encoded": "1",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "S47,97|D|47,98|N|N",
+    "shown": "path=\"/a\" system=Darwin HOME=\"/b\" LOCALAPPDATA=None XDG_CONFIG_HOME=None (cwd /)"
+   },
+   "design_a": {
+    "encoded": "1",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "0",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 24,
+   "made": 20,
+   "killed": 17,
+   "survived": [
+    "line 4: delete `if not raw:     return False`",
+    "line 5: delete `return False`",
+    "line 15: delete `continue`"
+   ],
+   "kill_rate": 0.85
+  },
+  "quotes": {
+   "quotes": 3,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "LiveOrInsideTrue"
+ ],
+ "cost_usd": 8.75,
+ "seconds": 747
+}

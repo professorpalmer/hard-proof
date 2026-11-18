@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "Law6 forces true when b0 is false and Law7 forces true when b0 and b2 are true. For b0 true and b2 false, every one of the 16 combinations of b1, b3, b4, b5 is caught by Law0 through Law5, and each of those forces false. So every passing rule equals (not b0) or b2 on all 64 cases."}

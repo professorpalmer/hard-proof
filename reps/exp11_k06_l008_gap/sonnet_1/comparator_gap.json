@@ -1,0 +1,7 @@
+{
+  "challenge_module": "TblGapChallenge",
+  "solution_module": "TblGapSolution",
+  "theorem_names": ["TblGap.a_passes", "TblGap.b_passes", "TblGap.differ"],
+  "definition_names": ["TblGap.designA", "TblGap.designB", "TblGap.input"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

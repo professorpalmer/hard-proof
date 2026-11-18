@@ -1,0 +1,114 @@
+{
+ "bug": "1e29a408",
+ "title": "_reads_request searches the nested graph of an entry map and skips entry parallel branches",
+ "repo": "Puppetmaster",
+ "function": "_reads_request",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-2d7e89bce8",
+   "folder": "~/Projects/hp-work/p/2d7e89bce8",
+   "model": "opus",
+   "flow": "flow_889953695e50",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d822547a1a8e"
+   ],
+   "seconds": 353,
+   "cost_usd": 0.0,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-b6bc0106c9",
+   "folder": "~/Projects/hp-work/p/b6bc0106c9",
+   "model": "sonnet",
+   "flow": "flow_2f7fa43702e9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_aacb594aa8c4"
+   ],
+   "seconds": 45,
+   "cost_usd": 0.473,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-f9480d7708",
+   "folder": "~/Projects/hp-work/p/f9480d7708",
+   "model": "sonnet",
+   "flow": "flow_28a94af4ea1c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dd8ba26ce5d5"
+   ],
+   "seconds": 510,
+   "cost_usd": 1.974,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-030553c1e5",
+   "folder": "~/Projects/hp-work/p/030553c1e5",
+   "model": "sonnet",
+   "flow": "flow_e493240960a4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5b0c5bb6add5"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.371,
+   "stage": "A1"
+  }
+ ],
+ "items": [],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 10,
+   "made": 10,
+   "killed": 10,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 35,
+   "first_difference": {
+    "input": "N L2 O2 q123,123,9,112,114,101,118,125,125,233,123,123,105,110,112,117,116,95,120,125,125 q123,123,105,110,112,117,116,95,120,125,125,123,123,123,112,114,101,118,125,125 q99,111,109,109,97,110,100 O2 q123,123,32,112,114,101,118,32,125,125 i-15 q114,101,118,105,115,101 q123,123,115,116,97,116,101,46,105,110,100,101,120,125,125,123,123,123,112,114,101,118,125,125 O0",
+    "lean_ref": "1",
+    "python": "0"
+   }
+  }
+ },
+ "first_laws": [
+  "InputReads",
+  "PrevReads",
+  "NoOtherReads"
+ ],
+ "cost_usd": 2.82,
+ "seconds": 926
+}

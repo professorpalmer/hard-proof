@@ -1,0 +1,492 @@
+{
+ "bug": "b7e0a8d5",
+ "title": "Slug-equivalent catalog id bypasses a disabled registry overlay",
+ "repo": "Puppetmaster",
+ "function": "catalog_to_specs",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-61532afc23",
+   "folder": "~/Projects/hp-work/p/61532afc23",
+   "model": "opus",
+   "flow": "flow_ea264f383355",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_bc4d6c276afe"
+   ],
+   "seconds": 277,
+   "cost_usd": 2.146,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-713323ac03",
+   "folder": "~/Projects/hp-work/p/713323ac03",
+   "model": "sonnet",
+   "flow": "flow_a253f631cac9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_93586f8209ea"
+   ],
+   "seconds": 49,
+   "cost_usd": 0.505,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-76496503aa",
+   "folder": "~/Projects/hp-work/p/76496503aa",
+   "model": "sonnet",
+   "flow": "flow_18d5eebcda80",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3513cd97785e"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.448,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-22ac8d3185",
+   "folder": "~/Projects/hp-work/p/22ac8d3185",
+   "model": "sonnet",
+   "flow": "flow_971b827eb93e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b9e508de9dc9"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.386,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-83f911b596",
+   "folder": "~/Projects/hp-work/p/83f911b596",
+   "model": "sonnet",
+   "flow": "flow_a70026e92e4a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_832f5ccf5bbf"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.481,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-f5245664ce",
+   "folder": "~/Projects/hp-work/p/f5245664ce",
+   "model": "sonnet",
+   "flow": "flow_df83ebecb350",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_37f153b69800"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.401,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-91781d2641",
+   "folder": "~/Projects/hp-work/p/91781d2641",
+   "model": "sonnet",
+   "flow": "flow_57303f5979df",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f724f7fa249f"
+   ],
+   "seconds": 80,
+   "cost_usd": 0.642,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-fffaf9d95f",
+   "folder": "~/Projects/hp-work/p/fffaf9d95f",
+   "model": "sonnet",
+   "flow": "flow_774edaf97031",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_017edfcdb0d1"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.407,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-db23c4e96c",
+   "folder": "~/Projects/hp-work/p/db23c4e96c",
+   "model": "sonnet",
+   "flow": "flow_21f4261d86df",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8231575d41ba"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.42,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-84d57228bd",
+   "folder": "~/Projects/hp-work/p/84d57228bd",
+   "model": "sonnet",
+   "flow": "flow_bc2a2dd27812",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_59446882b3e3"
+   ],
+   "seconds": 157,
+   "cost_usd": 0.0,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-1a33f69e34",
+   "folder": "~/Projects/hp-work/p/1a33f69e34",
+   "model": "sonnet",
+   "flow": "flow_7f654bc56a17",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fe93cfd0d1ca"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.405,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-e7f03cb042",
+   "folder": "~/Projects/hp-work/p/e7f03cb042",
+   "model": "sonnet",
+   "flow": "flow_b7c49ef59e84",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_67963a53bff5"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.42,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-7b94f94e96",
+   "folder": "~/Projects/hp-work/p/7b94f94e96",
+   "model": "sonnet",
+   "flow": "flow_a4ded37cad10",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_de8c9711b920"
+   ],
+   "seconds": 144,
+   "cost_usd": 0.0,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-ad194b6aa6",
+   "folder": "~/Projects/hp-work/p/ad194b6aa6",
+   "model": "sonnet",
+   "flow": "flow_f0e381f11827",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4ffa009044e6"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.457,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-b2663c61d0",
+   "folder": "~/Projects/hp-work/p/b2663c61d0",
+   "model": "sonnet",
+   "flow": "flow_16a33986db35",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_81184ef8ff78"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.427,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-5e43bfa5c9",
+   "folder": "~/Projects/hp-work/p/5e43bfa5c9",
+   "model": "sonnet",
+   "flow": "flow_2da0919e1c35",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_16e11d59e4e3"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.519,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-34e32d5fef",
+   "folder": "~/Projects/hp-work/p/34e32d5fef",
+   "model": "sonnet",
+   "flow": "flow_800610074f8e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f7aad13cbb7d"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.389,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "InheritSibling",
+   "input": {
+    "encoded": "97 97.112.105 1 S 109 A 1 _ 98 109 0 1 0 0 97.112.105 0 _ 1",
+    "shown": "adapter=\"a\" billing=\"api\" catalog=[{id=\"m\" displayName=absent}] existing=[{id=\"\" adapter=\"b\" name=\"m\" cap=0 in=1/8 out=0/8 ctx=0 billing=\"api\" tags=[] notes=\"\" enabled=true}]"
+   },
+   "ref": {
+    "encoded": "OK 1 97.47.109 97 109 0 0 0 0 97.112.105 2 97 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.97.32.99.97.116.97.108.111.103.32.40.109.41.59.32.99.97.112.97.98.105.108.105.116.121.32.105.110.104.101.114.105.116.101.100.32.102.114.111.109.32.46.32.83.101.116.32.112.114.105.99.105.110.103.32.116.111.32.114.111.117.116.101.32.111.110.32.99.111.115.116.46 1",
+    "shown": "[{id=\"a/m\" adapter=\"a\" name=\"m\" cap=0 in=0/8 out=0/8 ctx=0 billing=\"api\" tags=[a, discovered] notes=\"Discovered from the a catalog (m); capability inherited from . Set pricing to route on cost.\" enabled=true}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK 1 97.47.109 97 109 0 0 0 0 97.112.105 2 97 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.97.32.99.97.116.97.108.111.103.32.40.109.41.59.32.99.97.112.97.98.105.108.105.116.121.32.105.110.104.101.114.105.116.101.100.32.102.114.111.109.32.46.32.83.101.116.32.112.114.105.99.105.110.103.32.116.111.32.114.111.117.116.101.32.111.110.32.99.111.115.116.46 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK 1 97.47.109 97 109 0 0 0 0 97.112.105 2 97 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.97.32.99.97.116.97.108.111.103.32.40.109.41.59.32.99.97.112.97.98.105.108.105.116.121.32.105.110.104.101.114.105.116.101.100.32.102.114.111.109.32.46.32.83.101.116.32.112.114.105.99.105.110.103.32.116.111.32.114.111.117.116.101.32.111.110.32.99.111.115.116.46 1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "BillingIsCallers",
+   "input": {
+    "encoded": "97 97.112.105 1 S 109 A 1 120 97 109 1 0 0 0 112.108.97.110 0 _ 1",
+    "shown": "adapter=\"a\" billing=\"api\" catalog=[{id=\"m\" displayName=absent}] existing=[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[] notes=\"\" enabled=true}]"
+   },
+   "ref": {
+    "encoded": "OK 1 120 97 109 1 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1",
+    "shown": "[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[discovered] notes=\"\" enabled=true}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK 1 120 97 109 1 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK 1 120 97 109 1 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "_ _ 0 0",
+    "shown": "adapter=\"\" billing=\"\" catalog=[] existing=[]"
+   },
+   "design_a": {
+    "encoded": "OK 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "ERR",
+    "shown": "ValueError"
+   },
+   "ref": {
+    "encoded": "OK 0",
+    "shown": "[]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK 0"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK 0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "_ _ 1 I 0 A 0",
+    "shown": "adapter=\"\" billing=\"\" catalog=[{id=0 displayName=absent}] existing=[]"
+   },
+   "design_a": {
+    "encoded": "OK 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "ERR",
+    "shown": "ValueError"
+   },
+   "ref": {
+    "encoded": "ERR",
+    "shown": "ValueError"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ERR"
+   },
+   "post": {
+    "ok": true,
+    "out": "ERR"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "_ _ 1 S _ A 1 _ _ _ 0 0 0 0 112.108.97.110 0 _ 1",
+    "shown": "adapter=\"\" billing=\"\" catalog=[{id=\"\" displayName=absent}] existing=[{id=\"\" adapter=\"\" name=\"\" cap=0 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[] notes=\"\" enabled=true}]"
+   },
+   "design_a": {
+    "encoded": "OK 0",
+    "shown": "[]"
+   },
+   "design_b": {
+    "encoded": "ERR",
+    "shown": "ValueError"
+   },
+   "ref": {
+    "encoded": "OK 1 _ _ _ 0 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1",
+    "shown": "[{id=\"\" adapter=\"\" name=\"\" cap=0 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[discovered] notes=\"\" enabled=true}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK 1 _ _ _ 0 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "OK 1 _ _ _ 0 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "BackedItemKept",
+   "input": {
+    "encoded": "_ _ 1 S _ A 1 _ _ _ 0 0 0 0 117.110.107.110.111.119.110 0 _ 1",
+    "shown": "adapter=\"\" billing=\"\" catalog=[{id=\"\" displayName=absent}] existing=[{id=\"\" adapter=\"\" name=\"\" cap=0 in=0/8 out=0/8 ctx=0 billing=\"unknown\" tags=[] notes=\"\" enabled=true}]"
+   },
+   "ref": {
+    "encoded": "ERR",
+    "shown": "ValueError"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ERR"
+   },
+   "post": {
+    "ok": true,
+    "out": "ERR"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 62,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 6,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 535,
+   "first_difference": {
+    "input": "111.112.101.110.97.105 97.112.105 3 S 77.111.100.101.108.32.32.57.33 A S 45.45.97.46.46.98.45.45 D 120 S 32.90 D 67.108.97.117.100.101.32.40.110.101.119.41 3 109.50 111.112.101.110.97.105 90 90 39 3 0 97.112.105 2 97.110.116.104.114.111.112.105.99 118.105.115.105.111.110 110.252 1 107.105.110 95.46.33.7838.46.90 77.111.100.101.108.32.32.57.33 61 0 349 225528 117.110.107.110.111.119.110 4 90 97 90 102.97.115.116 104.97.110.100.32.116.117.110.101.100 1 _ 79.112.101.110.32.65.73 233.20013.90 60 0 40 -1 117.110.107.110.111.119.110 1 111.112.101.110.97.105 104.97.110.100.32.116.117.110.101.100 1",
+    "lean_ref": "OK 3 111.112.101.110.97.105.47.109.111.100.101.108.45.57 111.112.101.110.97.105 77.111.100.101.108.32.32.57.33 61 0 0 225528 97.112.105 5 90 97 100.105.115.99.111.118.101.114.101.100 102.97.115.116 111.112.101.110.97.105 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.111.112.101.110.97.105.32.99.97.116.97.108.111.103.32.40.77.111.100.101.108.32.32.57.33.41.59.32.99.97.112.97.98.105.108.105.116.121.32.105.110.104.101.114.105.116.101.100.32.102.114.111.109.32.107.105.110.46.32.83.101.116.32.112.114.105.99.105.110.103.32.116.111.32.114.111.117.116.101.32.111.110.32.99.111.115.116.46 1 111.112.101.110.97.105.47.97.45.98 111.112.101.110.97.105 45.45.97.46.46.98.45.45 60 0 0 0 97.112.105 2 111.112.101.110.97.105 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.111.112.101.110.97.105.32.99.97.116.97.108.111.103.32.40.120.41.46.32.84.117.110.101.32.99.97.112.97.98.105.108.105.116.121.95.115.99.111.114.101.32.97.110.100.32.112.114.105.99.105.110.103.32.115.111.32.116.104.101.32.114.111.117.116.101.114.32.114.97.110.107.115.47.99.104.97.114.103.101.115.32.105.116.32.99.111.114.114.101.99.116.108.121.46 1 111.112.101.110.97.105.47.122 111.112.101.110.97.105 32.90 60 0 0 0 97.112.105 2 111.112.101.110.97.105 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.111.112.101.110.97.105.32.99.97.116.97.108.111.103.32.40.67.108.97.117.100.101.32.40.110.101.119.41.41.46.32.84.117.110.101.32.99.97.112.97.98.105.108.105.116.121.95.115.99.111.114.101.32.97.110.100.32.112.114.105.99.105.110.103.32.115.111.32.116.104.101.32.114.111.117.116.101.114.32.114.97.110.107.115.47.99.104.97.114.103.101.115.32.105.116.32.99.111.114.114.101.99.116.108.121.46 1",
+    "python": "OK 3 111.112.101.110.97.105.47.109.111.100.101.108.45.57 111.112.101.110.97.105 77.111.100.101.108.32.32.57.33 61 0 0 225528 97.112.105 5 90 97 100.105.115.99.111.118.101.114.101.100 102.97.115.116 111.112.101.110.97.105 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.111.112.101.110.97.105.32.99.97.116.97.108.111.103.32.40.77.111.100.101.108.32.32.57.33.41.59.32.99.97.112.97.98.105.108.105.116.121.32.105.110.104.101.114.105.116.101.100.32.102.114.111.109.32.107.105.110.46.32.83.101.116.32.112.114.105.99.105.110.103.32.116.111.32.114.111.117.116.101.32.111.110.32.99.111.115.116.46 1 111.112.101.110.97.105.47.97.45.98 111.112.101.110.97.105 45.45.97.46.46.98.45.45 60 0 0 0 97.112.105 2 111.112.101.110.97.105 100.105.115.99.111.118.101.114.101.100 68.105.115.99.111.118.101.114.101.100.32.102.114.111.109.32.116.104.101.32.111.112.101.110.97.105.32.99.97.116.97.108.111.103.32.40.120.41.46.32.84.117.110.101.32.99.97.112.97.98.105.108.105.116.121.95.115.99.111.114.101.32.97.110.100.32.112.114.105.99.105.110.103.32.115.111.32.116.104.101.32.114.111.117.116.101.114.32.114.97.110.107.115.47.99.104.97.114.103.101.115.32.105.116.32.99.111.114.114.101.99.116.108.121.46 1 109.50 111.112.101.110.97.105 32.90 90 39 3 0 97.112.105 3 97.110.116.104.114.111.112.105.99 100.105.115.99.111.118.101.114.101.100 118.105.115.105.111.110 110.252 1"
+   }
+  }
+ },
+ "first_laws": [
+  "SpecsForAdapter",
+  "InheritSameAdapter",
+  "InheritSibling",
+  "SeedCapabilityLaw",
+  "SeedIsNoted",
+  "BillingIsCallers"
+ ],
+ "cost_usd": 8.45,
+ "seconds": 1025
+}

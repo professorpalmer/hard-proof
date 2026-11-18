@@ -1,0 +1,89 @@
+{
+  "id": "hardproof-exp8d-complete-haiku",
+  "entry": "prove",
+  "defaults": {
+    "adapter": "claude-code",
+    "model": "claude-haiku-5-5",
+    "timeout_seconds": 3000,
+    "finish": "criteria"
+  },
+  "nodes": [
+    {
+      "id": "prove",
+      "kind": "agent",
+      "role": "code",
+      "files": [
+        "SyncGapSolution.lean",
+        "SyncCompleteSolution.lean"
+      ],
+      "task": "Context: this Lean 4 project models the command `puppetmaster models sync`. The command adds the starter models that a registry lacks. `SyncLaws.lean` defines the model and eight laws. `refSync` is a model of the shipped code, and `SyncSolution.lean` proves that `refSync` obeys each law. The owner added Law 8 (`ExactAdditions`) after adversaries showed that the first seven laws allow a different row order, and allow each new row two times. The owner now believes that the eight laws describe the command completely.\n\nYour role: you are the adversary. Test that belief. One of two results is true, and you must find out which one:\n\n1. A gap exists. Two sync designs each pass every law (`SyncLaws.Passes`), but they give different registries for one legal input. To show this, write `SyncGapSolution.lean` (read `SyncGapChallenge.lean`): `namespace SyncGap` with `designA`, `designB`, `config`, `starter`, `registry`, and complete proofs of `a_passes`, `b_passes`, `starter_distinct`, and `differ`.\n\n2. No gap exists. Each two designs that pass every law give the same registry for each legal input. To show this, write `SyncCompleteSolution.lean` (read `SyncCompleteChallenge.lean`): `namespace SyncComplete` with a complete proof of `laws_complete`.\n\nEach statement must be the same as the statement in the challenge file. The gate is `python3 gate8.py check gap complete`. It prints a JSON report and accepts one correct result of either kind. Verdict `accept` is the only success.\n\nRules:\n- Edit `SyncGapSolution.lean` and `SyncCompleteSolution.lean` only. The gate rejects the run if another file changes.\n- Do not use `sorry`, a new `axiom`, or `native_decide`. The gate rejects them.\n- The toolchain is Lean 4.36.0 with no Mathlib. `lake build SyncGapSolution` or `lake build SyncCompleteSolution` gives the compiler errors.\n- If you cannot complete either result, report how far you got, and end your reply with `VERDICT: FAIL - <reason>`.\n\nReport: say in plain words which result is true and why. Give the number of gate runs that you made.",
+      "payload": {
+        "allowed_tools": [
+          "Bash(cd:*)",
+          "Bash(ls:*)",
+          "Bash(pwd)",
+          "Bash(cat:*)",
+          "Bash(git status:*)",
+          "Bash(git diff:*)",
+          "Bash(git log:*)",
+          "Bash(lake:*)",
+          "Bash(lean:*)",
+          "Bash(python3 gate8.py:*)",
+          "Bash(shasum:*)"
+        ]
+      }
+    },
+    {
+      "id": "gate",
+      "kind": "shell",
+      "command": "printf '%s  %s\\n' 79c1b586bdf960e07a2a6c0b1f4ae218334f6c3878bff1593d463e9fd50f7eed SyncLaws.lean 6cef460afbf1662a70cdb00af9101efd5d8bcfa1e2796b1e337d6ae02a49c88c SyncChallenge.lean 071eb6cb7da3719eb2eadbcba7c9151e183c950eb05826c18bcca3c5ab110bb0 SyncGapChallenge.lean fb3503c0bbb3f1c95779a378990dd9c2e87d6e692680b572c0b6a1d1cb7e1c57 SyncCompleteChallenge.lean 6068ecc8b0474082279996171423546372b8b8ef4987698674d8ebf17a958ae2 SyncGapRunner.lean c373d9843a008383afe9f20dcfb10f12d105dbf3906bc3f2a9afdd3daf9e422f SyncRunner.lean 35a4e6ff99d2b29cb8477c3a1c2c6b6a4dcc5fe933ca7957373687b1af18c13a comparator_sync.json 17e043124cde1e0e1bad9cc14da21d62ee71be7a07837fdf86535240e7d1afe0 comparator_syncgap.json 539c718f2ea1f1cfa8de58fbc6f6a9b6ca9c5ca966f250b489bfa377b3a13a74 comparator_synccomplete.json 478e0bf3057022c75a33effc61f15d346e1f2f23530ab620f65eb4b5b11a0db1 gate8.py 6917246d40dd7690b3be6678aa7cb2bd7ff24807a1163766ca4549825674a2ee lakefile.toml 582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a lean-toolchain | shasum -a 256 -c - && python3 gate8.py check gap complete --actor flow"
+    },
+    {
+      "id": "done",
+      "kind": "end",
+      "status": "pass"
+    },
+    {
+      "id": "objected",
+      "kind": "end",
+      "status": "fail"
+    },
+    {
+      "id": "failed",
+      "kind": "end",
+      "status": "fail"
+    }
+  ],
+  "edges": [
+    {
+      "from": "prove",
+      "to": "objected",
+      "when": "FAIL"
+    },
+    {
+      "from": "prove",
+      "to": "gate",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "done",
+      "when": "ok"
+    },
+    {
+      "from": "gate",
+      "to": "prove",
+      "when": "fail",
+      "max": 3
+    },
+    {
+      "from": "gate",
+      "to": "failed",
+      "when": "fail"
+    },
+    {
+      "from": "prove",
+      "to": "failed"
+    }
+  ]
+}

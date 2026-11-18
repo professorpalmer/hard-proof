@@ -1,0 +1,161 @@
+{
+ "arm": "plain_opus",
+ "runs": [
+  {
+   "id": "59ee53e8",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_c1f31a1543ff",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_e5fe5fabf0d1"
+   ],
+   "seconds": 76,
+   "cost_usd": 1.276,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": true,
+     "b7": true,
+     "b8": true,
+     "b9": true,
+     "b10": true,
+     "b11": false,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "The rule has 128 leaves but TblLaws.lean has only 127 laws (Law0..Law126). The missing leaf is b13=F, b0=T, b9=T, b5=T, b8=T, b2=T, b10=T, b11=F, b4=F, b7=T, b12=F, b6=T: no law constrains it (Law14 needs b12=T, Law47 and Law99 need b6=F), so two passing rules can answer true and false there."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "714f6d1d",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_c83d98f7da00",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_3cbec82ff72a"
+   ],
+   "seconds": 76,
+   "cost_usd": 1.269,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The 128 laws are the 128 leaves of one complete decision tree (split on b13, then b0, b9, b5, b8, b2, b10, b11 and so on), and each branch at each split has a law under it, so every case matches exactly one law. That law fixes the answer, so any two rules that pass every law agree on every case."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "9b260ba0",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_790b26ef8425",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_ef926a1853a8"
+   ],
+   "seconds": 250,
+   "cost_usd": 2.271,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": false,
+     "b1": true,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": false,
+     "b7": true,
+     "b8": true,
+     "b9": false,
+     "b10": false,
+     "b11": false,
+     "b12": true,
+     "b13": true,
+     "b14": true,
+     "b15": false,
+     "b16": true,
+     "b17": true
+    },
+    "reason": "TblLaws.lean has 511 laws (Law0..Law510) for a rule with 512 leaves. The leaf b1=T, b0=F, b6=F, b12=T, b7=T, b17=T, b3=F, b13=T, b14=T, b16=T, b2=T, b5=T, b11=F, b15=F, b8=T has no law (its sibling Law445 has b8=F), so a rule that gives true there and one that gives false there both pass every law."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "6b5d23e7",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_097c00b504b9",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_d7349c827bf8"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.834,
+   "answer": {
+    "verdict": "complete",
+    "reason": "On a legal input, the starter ids are distinct, so the laws fix the tail exactly: AddsOnlyAbsent and AddsEveryAbsent make the tail ids equal the ids of the absent starters, NewInStarterOrder fixes their order and forbids duplicates, and each id names one starter, so AddsOnlyAbsent and EnabledRule fix the adapter, model and enabled flag of each row. RowsStay and NewAtEnd fix the prefix as the old registry, and Entry has no other field, so each two passing designs give the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "45724140",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_bca54ebc0ba2",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_388684216bd0"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.871,
+   "answer": {
+    "verdict": "complete",
+    "reason": "KeepsExisting makes the result r ++ new. NoDuplicateId keeps rows of r out of new, AddsOnlyAbsent and AddsAllAbsent with distinct starter ids make new hold exactly one row for each absent starter entry, and the three enabled laws fix the enabled flag in every case (enable false, locked, enable true and not locked). NewInStarterOrder then fixes the order, and an Entry has no other field, so two passing designs give the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "07bd809d",
+   "arm": "plain_opus",
+   "model": "opus",
+   "flow": "flow_fe35f7e3c7e1",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_1142819d074e"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.829,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, KeepsPrefix fixes the result as r ++ t. AddsOnlyAbsent, AddsAllAbsent and KeepsStarterOrder (with distinct starter ids) then fix t as exactly one entry per absent starter entry, in starter order, with its id, adapter and model, and NewDisabled, LockedDisabled and EnableKeepsState fix the enabled flag in all three cases (no --enable; --enable with a locked adapter; --enable with an unlocked adapter), so every Entry field is fixed and two designs that pass all laws are equal on each legal input."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  }
+ ]
+}

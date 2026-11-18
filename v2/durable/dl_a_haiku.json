@@ -1,0 +1,195 @@
+{
+ "name": "dl_a_haiku",
+ "start": "a_haiku",
+ "base": "base",
+ "folder": "389f8ddf75",
+ "flow": "flow_1dec4f260d64",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 38,
+   "cost_usd": 0.415,
+   "jobs": [
+    "job_31674c131c79"
+   ],
+   "session_cost_usd": 0.415
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 45,
+   "cost_usd": 0.47,
+   "jobs": [
+    "job_7b2e00cf1c76"
+   ],
+   "session_cost_usd": 0.47
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 43,
+   "cost_usd": 0.174,
+   "jobs": [
+    "job_b16dc295b6b9"
+   ],
+   "session_cost_usd": 0.589
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 24,
+   "cost_usd": 0.096,
+   "jobs": [
+    "job_edf4a1577d01"
+   ],
+   "session_cost_usd": 0.566
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 57,
+   "cost_usd": 0.201,
+   "jobs": [
+    "job_70a8ce494e3d"
+   ],
+   "session_cost_usd": 0.79
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 25,
+   "cost_usd": 0.086,
+   "jobs": [
+    "job_34cbf832585f"
+   ],
+   "session_cost_usd": 0.652
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 33,
+   "cost_usd": 0.113,
+   "jobs": [
+    "job_92eb35a81f35"
+   ],
+   "session_cost_usd": 0.903
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 3,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled)]",
+   "new_laws": {
+    "AddsOnce": "\u2200 (c : Config) (st r tail : List Entry), (st.map Entry.id).Nodup \u2192 f c st r = r ++ tail \u2192 (tail.map Entry.id).Nodup"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 1 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 1 (adapter 0, model 0, disabled)]",
+    "design B result: [id 1 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 1 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 1 (adapter 0, model 0, disabled)]",
+   "new_laws": {
+    "AddsInStarterOrder": "\u2200 (c : Config) (st r tail : List Entry), f c st r = r ++ tail \u2192 List.Sublist (tail.map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+   "new_laws": {
+    "OneNewPerAbsent": "\u2200 (c : Config) (st r tail : List Entry), f c st r = r ++ tail \u2192 tail.map (fun e => (e.id, e.adapter, e.model)) = (st.filter (absent r)).map (fun s => (s.id, s.adapter, s.model))"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 7,
+ "cost_usd": 1.55,
+ "seconds": 265,
+ "final_laws": [
+  "RowsStay",
+  "NewAtEnd",
+  "AddsOnlyAbsent",
+  "AddsEveryAbsent",
+  "NoSameIdentity",
+  "EnabledRule",
+  "AddsOnce",
+  "AddsInStarterOrder",
+  "OneNewPerAbsent"
+ ]
+}

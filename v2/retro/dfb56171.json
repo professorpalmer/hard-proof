@@ -1,0 +1,487 @@
+{
+ "bug": "dfb56171",
+ "title": "Polling steer fires on a wait that reports progress",
+ "repo": "marionette",
+ "function": "observe_step",
+ "kind": "state",
+ "stages": [
+  {
+   "flow_id": "hp2-d0a0822351",
+   "folder": "~/Projects/hp-work/p/d0a0822351",
+   "model": "opus",
+   "flow": "flow_6f22cb84405f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4fa955d6f0e3"
+   ],
+   "seconds": 248,
+   "cost_usd": 2.005,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-d206d1d808",
+   "folder": "~/Projects/hp-work/p/d206d1d808",
+   "model": "sonnet",
+   "flow": "flow_e3c9cc6997aa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_83f86b4b23c6"
+   ],
+   "seconds": 34,
+   "cost_usd": 0.469,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-91002cdcf6",
+   "folder": "~/Projects/hp-work/p/91002cdcf6",
+   "model": "sonnet",
+   "flow": "flow_7c814a7f80bb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_70d6e881a138"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.419,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-d7f725ba4e",
+   "folder": "~/Projects/hp-work/p/d7f725ba4e",
+   "model": "sonnet",
+   "flow": "flow_831fc1db1e67",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9dd7c7814edb"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.396,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-a4e37714d9",
+   "folder": "~/Projects/hp-work/p/a4e37714d9",
+   "model": "sonnet",
+   "flow": "flow_91a1f34c785b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7cad842c098b"
+   ],
+   "seconds": 244,
+   "cost_usd": 1.076,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-17b47b4f7a",
+   "folder": "~/Projects/hp-work/p/17b47b4f7a",
+   "model": "sonnet",
+   "flow": "flow_c6a344ecae73",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b5464bd52f54"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.416,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-06763de133",
+   "folder": "~/Projects/hp-work/p/06763de133",
+   "model": "sonnet",
+   "flow": "flow_09593253ec01",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5ebaef9371b9"
+   ],
+   "seconds": 42,
+   "cost_usd": 0.505,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-951f809da7",
+   "folder": "~/Projects/hp-work/p/951f809da7",
+   "model": "sonnet",
+   "flow": "flow_526845bae0cf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_20f4011110e0"
+   ],
+   "seconds": 169,
+   "cost_usd": 1.064,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-40f93dec81",
+   "folder": "~/Projects/hp-work/p/40f93dec81",
+   "model": "sonnet",
+   "flow": "flow_832de8ed9612",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f1cee5f099da"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.421,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-469bb4f5ad",
+   "folder": "~/Projects/hp-work/p/469bb4f5ad",
+   "model": "sonnet",
+   "flow": "flow_6160c02f36ab",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f134d45ddb8a"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.452,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-72411a4a25",
+   "folder": "~/Projects/hp-work/p/72411a4a25",
+   "model": "sonnet",
+   "flow": "flow_06c54d062510",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f4ac976ac0c5"
+   ],
+   "seconds": 265,
+   "cost_usd": 1.44,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-1b27f5e030",
+   "folder": "~/Projects/hp-work/p/1b27f5e030",
+   "model": "sonnet",
+   "flow": "flow_e5b9a42057f1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8477df5f0955"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.454,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-f779713e38",
+   "folder": "~/Projects/hp-work/p/f779713e38",
+   "model": "sonnet",
+   "flow": "flow_7c8ce5cc664c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3df2c6b8ef93"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.458,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-dc2c4fb43a",
+   "folder": "~/Projects/hp-work/p/dc2c4fb43a",
+   "model": "sonnet",
+   "flow": "flow_fbccac8253ca",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_01a32bf8ada9"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.433,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-e8d3d99a45",
+   "folder": "~/Projects/hp-work/p/e8d3d99a45",
+   "model": "sonnet",
+   "flow": "flow_84d5de74709b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a7c9174f7e17"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.381,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-fcb22d97df",
+   "folder": "~/Projects/hp-work/p/fcb22d97df",
+   "model": "sonnet",
+   "flow": "flow_f494d6ab760f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0fd43586ed2b"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.435,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-1374a43e7f",
+   "folder": "~/Projects/hp-work/p/1374a43e7f",
+   "model": "sonnet",
+   "flow": "flow_ae9c21943d24",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_12b40540bf03"
+   ],
+   "seconds": 60,
+   "cost_usd": 0.481,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "NeverVetoes",
+   "input": {
+    "encoded": "N f0 x20 T _",
+    "shown": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \" \", isError := some true, afterEnv := none }"
+   },
+   "ref": {
+    "encoded": "T . f0 _ 0 _ 0 _ 0 _ 0 .",
+    "shown": "{ raised := true,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "T . f0 _ 0 _ 0 _ 0 _ 0 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "T . f0 _ 0 _ 0 _ 0 _ 0 ."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "N f0 x _ _",
+    "shown": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"\", isError := none, afterEnv := none }"
+   },
+   "design_a": {
+    "encoded": "F . . _ 0 _ 0 _ 0 _ 0 .",
+    "shown": "{ raised := false,"
+   },
+   "design_b": {
+    "encoded": "F P . _ 0 _ 0 _ 0 _ 0 .",
+    "shown": "{ raised := false,"
+   },
+   "ref": {
+    "encoded": "F . f0 _ 0 _ 0 _ 0 x 1 .",
+    "shown": "{ raised := false,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x 1 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x 1 ."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "N f0 x _ _",
+    "shown": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"\", isError := none, afterEnv := none }"
+   },
+   "design_a": {
+    "encoded": "F . . _ 0 _ 0 _ 0 x 1 .",
+    "shown": "{ raised := false,"
+   },
+   "design_b": {
+    "encoded": "F P . _ 0 _ 0 _ 0 x 1 .",
+    "shown": "{ raised := false,"
+   },
+   "ref": {
+    "encoded": "F . f0 _ 0 _ 0 _ 0 x 1 .",
+    "shown": "{ raised := false,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x 1 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x 1 ."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "N f0 x78 _ _",
+    "shown": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"x\", isError := none, afterEnv := none }"
+   },
+   "design_a": {
+    "encoded": "F . . _ 0 _ 0 _ 0 _ 0 .",
+    "shown": "{ raised := false,"
+   },
+   "design_b": {
+    "encoded": "F P . _ 0 _ 0 _ 0 _ 0 .",
+    "shown": "{ raised := false,"
+   },
+   "ref": {
+    "encoded": "F . f0 _ 0 _ 0 _ 0 x78 1 .",
+    "shown": "{ raised := false,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x78 1 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "F . f0 _ 0 _ 0 _ 0 x78 1 ."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "NoPolicyKindNoFamilySignals",
+   "input": {
+    "encoded": "N f0 x4552524f52 _ _",
+    "shown": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"ERROR\", isError := none, afterEnv := none }"
+   },
+   "ref": {
+    "encoded": "F . f0 x4552524f52 1 _ 0 _ 0 x4552524f52 1 .",
+    "shown": "{ raised := false,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "F . f0 x4552524f52 1 _ 0 _ 0 x4552524f52 1 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "F . f0 x4552524f52 1 _ 0 _ 0 x4552524f52 1 ."
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "NoPolicyKindNoFamilySignals",
+   "input": {
+    "encoded": "N f0 x6572726f723a2078 F _",
+    "shown": "{ state := none,"
+   },
+   "ref": {
+    "encoded": "F . f0 x6572726f723a2078 1 _ 0 _ 0 x6572726f723a2078 1 .",
+    "shown": "{ raised := false,"
+   },
+   "pre": {
+    "ok": true,
+    "out": "F . f0 x6572726f723a2078 1 _ 0 _ 0 x6572726f723a2078 1 ."
+   },
+   "post": {
+    "ok": true,
+    "out": "F . f0 x6572726f723a2078 1 _ 0 _ 0 x6572726f723a2078 1 ."
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 136,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2394,
+   "first_difference": {
+    "input": "S w0,w1 x6572726f723a2066696c65204e206d697373696e67 2 w0 7 x6572726f723a2066696c65203132206d697373696e67 1 x4572726f723a2062616420330a6e657874206c696e652034 1 . w0 x6572726f723a2066696c65203132206d697373696e67 T 5",
+    "lean_ref": "F P w0,w1,w0 x6572726f723a2066696c65204e206d697373696e67 3 w0 8 x6572726f723a2066696c65203132206d697373696e67 2 x6572726f723a2066696c65203132206d697373696e67 1 p8",
+    "python": "F . w0,w1,w0 x6572726f723a2066696c65204e206d697373696e67 3 w0 8 x6572726f723a2066696c65203132206d697373696e67 2 x6572726f723a2066696c65203132206d697373696e67 1 ."
+   }
+  }
+ },
+ "first_laws": [
+  "NeverVetoes"
+ ],
+ "cost_usd": 11.3,
+ "seconds": 1360
+}

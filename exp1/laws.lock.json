@@ -1,0 +1,13 @@
+{
+  "signed_by": "agent (experiment 1 only, no human review)",
+  "signed_at": "2026-11-17T21:55:17-0500",
+  "files": {
+    "Laws.lean": "ae84199d3dd6b16e8f32d905d094de13d2a4dc3e86de92ba400cdb365e270419",
+    "Mutants.lean": "cb6becc63d4d0899bdf3a5cf466ee1d0319fe297b1928e2a82ba8f5e5e6c4393",
+    "Challenge.lean": "0ddf238fa54e846e1588d935acea09cf6d728ccd5d7d201eb04cb2bfef21f7ac",
+    "comparator.json": "ca1c842e8c58f085bfb6d3102050538eb5c1935be09a33bc34985aab6e88f5c5",
+    "laws.json": "eab764d14918eaae5ff2787bade5769565f8858ae6325987e48e256634c8cbc0",
+    "lakefile.toml": "cbb04c84d054b6a20d2eb5a5ed29d8761d7caf80c1775bdced8eb868c19db60c",
+    "lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a"
+  }
+}

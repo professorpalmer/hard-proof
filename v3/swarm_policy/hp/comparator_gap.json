@@ -1,0 +1,20 @@
+{
+  "challenge_module": "HPGapChallenge",
+  "solution_module": "GapSolution",
+  "theorem_names": [
+    "HPGap.a_passes",
+    "HPGap.b_passes",
+    "HPGap.input_legal",
+    "HPGap.differ"
+  ],
+  "definition_names": [
+    "HPGap.designA",
+    "HPGap.designB",
+    "HPGap.input"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

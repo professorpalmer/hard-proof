@@ -1,0 +1,14 @@
+name = "exp7"
+defaultTargets = ["Exp7"]
+
+[[lean_lib]]
+name = "Exp7"
+roots = ["Laws", "Mutants", "Solution", "GapChallenge", "CompleteChallenge"]
+
+[[lean_lib]]
+name = "GapWork"
+roots = ["GapSolution"]
+
+[[lean_lib]]
+name = "CompleteWork"
+roots = ["CompleteSolution"]

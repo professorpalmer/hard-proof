@@ -1,0 +1,26 @@
+{
+ "name": "b_opus",
+ "model": "claude-opus-5-5",
+ "flow": {
+  "flow": "flow_15c6ee725b08",
+  "status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "seconds": 99,
+  "cost_usd": 1.19
+ },
+ "pilot_gate": "accept",
+ "laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled"
+ ]
+}

@@ -1,0 +1,493 @@
+{
+ "bug": "5ea489a3",
+ "title": "Explicit-swarm classifier ignores a later opt-out clause",
+ "repo": "marionette",
+ "function": "is_explicit_swarm_user_message",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-f74a0780d1",
+   "folder": "~/Projects/hp-work/p/f74a0780d1",
+   "model": "opus",
+   "flow": "flow_0a0ef144c40a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d7011b5067a0"
+   ],
+   "seconds": 224,
+   "cost_usd": 1.912,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-b280838871",
+   "folder": "~/Projects/hp-work/p/b280838871",
+   "model": "sonnet",
+   "flow": "flow_9e6a2b5087f5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_671bc3427113"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.423,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-586c81a29f",
+   "folder": "~/Projects/hp-work/p/586c81a29f",
+   "model": "sonnet",
+   "flow": "flow_77e63bd4cf4b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_914338028633"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.409,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-6ec1f54070",
+   "folder": "~/Projects/hp-work/p/6ec1f54070",
+   "model": "sonnet",
+   "flow": "flow_70bc30446994",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9242d0e9d953"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.384,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-59bd0b8781",
+   "folder": "~/Projects/hp-work/p/59bd0b8781",
+   "model": "sonnet",
+   "flow": "flow_260b318fcd1b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5d73f8fa3ba5"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.409,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-c69b2c0c1e",
+   "folder": "~/Projects/hp-work/p/c69b2c0c1e",
+   "model": "sonnet",
+   "flow": "flow_b34d37881c1e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ebd728b2fd73"
+   ],
+   "seconds": 63,
+   "cost_usd": 0.537,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-659e8a7689",
+   "folder": "~/Projects/hp-work/p/659e8a7689",
+   "model": "sonnet",
+   "flow": "flow_f74a8c087001",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_054eb8119028"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.422,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-4cf1684b0f",
+   "folder": "~/Projects/hp-work/p/4cf1684b0f",
+   "model": "sonnet",
+   "flow": "flow_7dd990764bbc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3eadb3dde866"
+   ],
+   "seconds": 42,
+   "cost_usd": 0.458,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-2b784db8f3",
+   "folder": "~/Projects/hp-work/p/2b784db8f3",
+   "model": "sonnet",
+   "flow": "flow_1027de520605",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cd624857dcca"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.367,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-59e0f18347",
+   "folder": "~/Projects/hp-work/p/59e0f18347",
+   "model": "sonnet",
+   "flow": "flow_18eb6b390a81",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f3924e91672c"
+   ],
+   "seconds": 243,
+   "cost_usd": 0.998,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-f4dedd9715",
+   "folder": "~/Projects/hp-work/p/f4dedd9715",
+   "model": "sonnet",
+   "flow": "flow_a87d99a1dee8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dc6f199bf2ff"
+   ],
+   "seconds": 13,
+   "cost_usd": 0.368,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-e9fac6a37a",
+   "folder": "~/Projects/hp-work/p/e9fac6a37a",
+   "model": "sonnet",
+   "flow": "flow_938075d5f78e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a4aab23bb42f"
+   ],
+   "seconds": 1017,
+   "cost_usd": 1.569,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-e901ad658e",
+   "folder": "~/Projects/hp-work/p/e901ad658e",
+   "model": "sonnet",
+   "flow": "flow_252ec95fe64c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_40c8c8debe18"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.53,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-1045172962",
+   "folder": "~/Projects/hp-work/p/1045172962",
+   "model": "sonnet",
+   "flow": "flow_64321ca3a7f6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8e812b13191d"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.411,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-5a4ac0131b",
+   "folder": "~/Projects/hp-work/p/5a4ac0131b",
+   "model": "sonnet",
+   "flow": "flow_55106b68a018",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_8daca206989f"
+   ],
+   "seconds": 505,
+   "cost_usd": 1.993,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-55bfc42268",
+   "folder": "~/Projects/hp-work/p/55bfc42268",
+   "model": "sonnet",
+   "flow": "flow_e3db34e21f8b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a4ebb83c30d7"
+   ],
+   "seconds": 68,
+   "cost_usd": 0.585,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-1d3c9bc90d",
+   "folder": "~/Projects/hp-work/p/1d3c9bc90d",
+   "model": "sonnet",
+   "flow": "flow_e089ee5755f9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_412d4ebd3a15"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.442,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "122,122,122",
+    "shown": "is_explicit_swarm_user_message(\"zzz\")"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "NoSwarmWordNotSwarm",
+   "input": {
+    "encoded": "102,97,110,111,117,116",
+    "shown": "is_explicit_swarm_user_message(\"fanout\")"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "NoSwarmWordNotSwarm",
+   "input": {
+    "encoded": "102,97,110,45,111,117,116",
+    "shown": "is_explicit_swarm_user_message(\"fan-out\")"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "NoSwarmWordNotSwarm",
+   "input": {
+    "encoded": "112,117,112,112,101,116,109,97,115,116,101,114,32,97,103,101,110,116,105,99",
+    "shown": "is_explicit_swarm_user_message(\"puppetmaster agentic\")"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "115,119,97,114,109",
+    "shown": "is_explicit_swarm_user_message(\"swarm\")"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "115,119,97,114,109,32,110,111,119",
+    "shown": "is_explicit_swarm_user_message(\"swarm now\")"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 16,
+   "made": 16,
+   "killed": 14,
+   "survived": [
+    "line 4: delete `if not text:     return False`",
+    "line 5: delete `return False`"
+   ],
+   "kill_rate": 0.875
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 145,
+   "first_difference": {
+    "input": "12,115,87,97,114,77,32,99,108,97,85,100,69,10,85,83,101,32,75,73,109,105,32,87,79,114,75,101,114,115,63,117,115,101,32,97,108,108,32,106,117,115,116,32,116,104,101,32,103,108,109,32,49,32,49,32,49,32,119,111,114,107,101,114,115,120,44,32,85,115,101,32,79,110,101,32,87,111,114,107,101,114",
+    "lean_ref": "false",
+    "python": "true"
+   }
+  }
+ },
+ "first_laws": [
+  "NamesRunSwarm",
+  "NamesPuppetmasterSwarm",
+  "NamesMultiWorkers",
+  "ExistingWorkersNotSwarm"
+ ],
+ "cost_usd": 12.22,
+ "seconds": 2431
+}

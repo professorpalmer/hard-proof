@@ -1,0 +1,419 @@
+{
+ "bug": "2726eed8",
+ "title": "Snapshot absorber keeps a first frame that is one paragraph twice",
+ "repo": "marionette",
+ "function": "absorb_stream_snapshot",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-9fe688e93b",
+   "folder": "~/Projects/hp-work/p/9fe688e93b",
+   "model": "opus",
+   "flow": "flow_e93905a7415c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_47104197e2e3"
+   ],
+   "seconds": 121,
+   "cost_usd": 1.332,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-5b6e34f35e",
+   "folder": "~/Projects/hp-work/p/5b6e34f35e",
+   "model": "sonnet",
+   "flow": "flow_4ce68191fdbc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d45b694654e4"
+   ],
+   "seconds": 223,
+   "cost_usd": 0.474,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-c36534b800",
+   "folder": "~/Projects/hp-work/p/c36534b800",
+   "model": "sonnet",
+   "flow": "flow_6ba0e62edcdc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_15ff6c6a4d5b"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.4,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-d623160032",
+   "folder": "~/Projects/hp-work/p/d623160032",
+   "model": "sonnet",
+   "flow": "flow_9addc303909b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_48df03b44f32"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.446,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-4ecb3b5469",
+   "folder": "~/Projects/hp-work/p/4ecb3b5469",
+   "model": "sonnet",
+   "flow": "flow_37b2d6e7394d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e4889c175321"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.469,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-ea0cbd5b71",
+   "folder": "~/Projects/hp-work/p/ea0cbd5b71",
+   "model": "sonnet",
+   "flow": "flow_6f6e67bc894b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c57dd76f059a"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.398,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-809ea5d67f",
+   "folder": "~/Projects/hp-work/p/809ea5d67f",
+   "model": "sonnet",
+   "flow": "flow_b3a5ef957a33",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_54126ae00bb2"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.427,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-47a0beadb0",
+   "folder": "~/Projects/hp-work/p/47a0beadb0",
+   "model": "sonnet",
+   "flow": "flow_fcbb1860b372",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e0d390980109"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.412,
+   "stage": "LF3"
+  },
+  {
+   "flow_id": "hp2-edb05f9ce1",
+   "folder": "~/Projects/hp-work/p/edb05f9ce1",
+   "model": "sonnet",
+   "flow": "flow_133f1c305cce",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2b9ab081327b"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.428,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-fe20c0bca9",
+   "folder": "~/Projects/hp-work/p/fe20c0bca9",
+   "model": "sonnet",
+   "flow": "flow_a0f3294d6ff8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_200dfcdc5715"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.37,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-0722cd5cf8",
+   "folder": "~/Projects/hp-work/p/0722cd5cf8",
+   "model": "sonnet",
+   "flow": "flow_aa314b0a06d5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_be0ae77cecfb"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.428,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-569ed11fb7",
+   "folder": "~/Projects/hp-work/p/569ed11fb7",
+   "model": "sonnet",
+   "flow": "flow_1f9f7326a5f1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_69459a4aeddc"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.402,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-caeb7fa3ac",
+   "folder": "~/Projects/hp-work/p/caeb7fa3ac",
+   "model": "sonnet",
+   "flow": "flow_cd8a53995f49",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1e2e8827da95"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.431,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-0e5ba9ebac",
+   "folder": "~/Projects/hp-work/p/0e5ba9ebac",
+   "model": "sonnet",
+   "flow": "flow_1557068901f2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_68fe60b79932"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.37,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "NonCumulativeKept",
+   "input": {
+    "encoded": "s97 s32.97 1",
+    "shown": "accumulated=\"a\", incoming=\" a\", min_chunk=1"
+   },
+   "ref": {
+    "encoded": "s",
+    "shown": "\"\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s"
+   },
+   "post": {
+    "ok": true,
+    "out": "s"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "NonCumulativeKept",
+   "input": {
+    "encoded": "s32.97.97.97.97.97.97.97.97.97.97.97.97 s97.97.97.97.97.97.97.97.97.97.97.97 none",
+    "shown": "accumulated=\" aaaaaaaaaaaa\", incoming=\"aaaaaaaaaaaa\", min_chunk=(default)"
+   },
+   "ref": {
+    "encoded": "s",
+    "shown": "\"\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s"
+   },
+   "post": {
+    "ok": true,
+    "out": "s"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "conflict",
+   "law": "SnapshotSuffix",
+   "input": {
+    "encoded": "s97 s97.97 1",
+    "shown": "accumulated=\"a\", incoming=\"aa\", min_chunk=1"
+   },
+   "ref": {
+    "encoded": "s",
+    "shown": "\"\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s"
+   },
+   "post": {
+    "ok": true,
+    "out": "s"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "ShortAccKept",
+   "input": {
+    "encoded": "s97 s97.98 none",
+    "shown": "accumulated=\"a\", incoming=\"ab\", min_chunk=(default)"
+   },
+   "ref": {
+    "encoded": "s98",
+    "shown": "\"b\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s98"
+   },
+   "post": {
+    "ok": true,
+    "out": "s98"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "SnapshotSuffix",
+   "input": {
+    "encoded": "s97.98 s97.98.97.98 1",
+    "shown": "accumulated=\"ab\", incoming=\"abab\", min_chunk=1"
+   },
+   "ref": {
+    "encoded": "s",
+    "shown": "\"\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s"
+   },
+   "post": {
+    "ok": true,
+    "out": "s"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "SnapshotSuffix",
+   "input": {
+    "encoded": "s97.98.99.100.101.102.103.104.105.106.107.108 s97.98.99.100.101.102.103.104.105.106.107.108.32.97.98.99.100.101.102.103.104.105.106.107.108 none",
+    "shown": "accumulated=\"abcdefghijkl\", incoming=\"abcdefghijkl abcdefghijkl\", min_chunk=(default)"
+   },
+   "ref": {
+    "encoded": "s",
+    "shown": "\"\""
+   },
+   "pre": {
+    "ok": true,
+    "out": "s"
+   },
+   "post": {
+    "ok": true,
+    "out": "s"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 42,
+   "made": 20,
+   "killed": 19,
+   "survived": [
+    "line 6: delete `return ''`"
+   ],
+   "kill_rate": 0.95
+  },
+  "quotes": {
+   "quotes": 9,
+   "not_found": [
+    "Snapshot floor: a \\\"snapshot\\\" of fewer chars than this is just a short delta.",
+    "Exact replay. Short acc is a repeated character (\\\"#\\\" + \\\"#\\\"), not a Completio"
+   ]
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "NonCumulativeKept",
+  "ShortAccKept",
+  "SnapshotSuffix",
+  "ExactReplayEmpty"
+ ],
+ "cost_usd": 6.79,
+ "seconds": 627
+}

@@ -1,0 +1,55 @@
+# hardproof: TOOL-OWNED FILE. The tool writes it again before each check.
+# One lean_lib for each solution, so that a broken solution of one kind
+# does not stop the check of another kind.
+name = "hardproof_domain"
+defaultTargets = ["HPModel"]
+
+[[lean_lib]]
+name = "HPModel"
+srcDir = ".."
+roots = ["Types", "Ref", "Codec"]
+
+[[lean_lib]]
+name = "HPLaws"
+srcDir = ".."
+roots = ["Laws"]
+
+[[lean_lib]]
+name = "HPRefChallenge"
+srcDir = "."
+roots = ["HPRefChallenge"]
+
+[[lean_lib]]
+name = "HPRefWork"
+srcDir = ".."
+roots = ["RefPassesSolution"]
+
+[[lean_lib]]
+name = "HPConflictChallenge"
+srcDir = "."
+roots = ["HPConflictChallenge"]
+
+[[lean_lib]]
+name = "HPConflictWork"
+srcDir = ".."
+roots = ["ConflictSolution"]
+
+[[lean_lib]]
+name = "HPGapChallenge"
+srcDir = "."
+roots = ["HPGapChallenge"]
+
+[[lean_lib]]
+name = "HPGapWork"
+srcDir = ".."
+roots = ["GapSolution"]
+
+[[lean_lib]]
+name = "HPCompleteChallenge"
+srcDir = "."
+roots = ["HPCompleteChallenge"]
+
+[[lean_lib]]
+name = "HPCompleteWork"
+srcDir = ".."
+roots = ["CompleteSolution"]

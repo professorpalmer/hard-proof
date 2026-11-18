@@ -1,0 +1,505 @@
+{
+ "bug": "b5550c4f",
+ "title": "Deleting the active session promotes a session from another workspace",
+ "repo": "marionette",
+ "function": "SessionStore.delete",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-44c4c58b63",
+   "folder": "~/Projects/hp-work/p/44c4c58b63",
+   "model": "opus",
+   "flow": "flow_320e0c5fe5e7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f10361204164"
+   ],
+   "seconds": 150,
+   "cost_usd": 1.578,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-b5947d4ea5",
+   "folder": "~/Projects/hp-work/p/b5947d4ea5",
+   "model": "sonnet",
+   "flow": "flow_171e75402919",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_415b30939689"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.387,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-cb5420de6e",
+   "folder": "~/Projects/hp-work/p/cb5420de6e",
+   "model": "sonnet",
+   "flow": "flow_970a36df7535",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d777c16d6948"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.407,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-20c6647551",
+   "folder": "~/Projects/hp-work/p/20c6647551",
+   "model": "sonnet",
+   "flow": "flow_844f517b23a6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_687ac02626d6"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.401,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-97b919ab18",
+   "folder": "~/Projects/hp-work/p/97b919ab18",
+   "model": "sonnet",
+   "flow": "flow_8a7e47321f8e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5ea8d5eb282e"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.423,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-4f58640840",
+   "folder": "~/Projects/hp-work/p/4f58640840",
+   "model": "sonnet",
+   "flow": "flow_d9ce88e6d28b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_391d91db67d6"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.413,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-fe8d819d76",
+   "folder": "~/Projects/hp-work/p/fe8d819d76",
+   "model": "sonnet",
+   "flow": "flow_06cc51b6e9ca",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_119a0bba7149"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.38,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-7293261aa9",
+   "folder": "~/Projects/hp-work/p/7293261aa9",
+   "model": "sonnet",
+   "flow": "flow_6707c0bfd277",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_18e7ed543ff0"
+   ],
+   "seconds": 14,
+   "cost_usd": 0.376,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-571e140a88",
+   "folder": "~/Projects/hp-work/p/571e140a88",
+   "model": "sonnet",
+   "flow": "flow_d1ec9908f7e3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f8c56085ec94"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.384,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-00268eda67",
+   "folder": "~/Projects/hp-work/p/00268eda67",
+   "model": "sonnet",
+   "flow": "flow_18693d664a38",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1269573f6ba1"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.389,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-7f22cd6adb",
+   "folder": "~/Projects/hp-work/p/7f22cd6adb",
+   "model": "sonnet",
+   "flow": "flow_d614c51ed206",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7637523f8a77"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.41,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-ba1ae1832e",
+   "folder": "~/Projects/hp-work/p/ba1ae1832e",
+   "model": "sonnet",
+   "flow": "flow_327089f3c068",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_eac47dfe0c41"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.428,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-078f9788d8",
+   "folder": "~/Projects/hp-work/p/078f9788d8",
+   "model": "sonnet",
+   "flow": "flow_844eba370fb7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ef2ddac4a7e9"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.399,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-26c70383d1",
+   "folder": "~/Projects/hp-work/p/26c70383d1",
+   "model": "sonnet",
+   "flow": "flow_a11ea35a5893",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a197cc4ed7fd"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.444,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-9fd9f3cab7",
+   "folder": "~/Projects/hp-work/p/9fd9f3cab7",
+   "model": "sonnet",
+   "flow": "flow_6cd792c3cc7b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_00eac5879519"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.401,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-63ce1ab9ca",
+   "folder": "~/Projects/hp-work/p/63ce1ab9ca",
+   "model": "sonnet",
+   "flow": "flow_a247e80fa8bf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e969a8d00114"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.405,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-c39c3c6045",
+   "folder": "~/Projects/hp-work/p/c39c3c6045",
+   "model": "sonnet",
+   "flow": "flow_c09571776f48",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c3b0a8a27773"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.415,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-17a9837941",
+   "folder": "~/Projects/hp-work/p/17a9837941",
+   "model": "sonnet",
+   "flow": "flow_3ed33b64a54d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5d7c74fe979c"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.399,
+   "stage": "LF6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "0 0 .",
+    "shown": "delete sid=0 active=0 sessions=[.]"
+   },
+   "design_a": {
+    "encoded": "0 . . 0",
+    "shown": "returns 0 sessions=[.] file sessions=[.] file active=0"
+   },
+   "design_b": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "ref": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "post": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "AbsentActiveClears",
+   "input": {
+    "encoded": "0 0 1:-",
+    "shown": "delete sid=0 active=0 sessions=[1:-]"
+   },
+   "ref": {
+    "encoded": "1 1:- 1:- 1",
+    "shown": "returns 1 sessions=[1:-] file sessions=[1:-] file active=1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1 1:- 1:- 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "1 1:- 1:- 1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "0 - .",
+    "shown": "delete sid=0 active=- sessions=[.]"
+   },
+   "design_a": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "design_b": {
+    "encoded": "0 . . 0",
+    "shown": "returns 0 sessions=[.] file sessions=[.] file active=0"
+   },
+   "ref": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "post": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "1 - 0:-",
+    "shown": "delete sid=1 active=- sessions=[0:-]"
+   },
+   "design_a": {
+    "encoded": "- 0:- 0:- -",
+    "shown": "returns - sessions=[0:-] file sessions=[0:-] file active=-"
+   },
+   "design_b": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "ref": {
+    "encoded": "- 0:- 0:- -",
+    "shown": "returns - sessions=[0:-] file sessions=[0:-] file active=-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "- 0:- 0:- -"
+   },
+   "post": {
+    "ok": true,
+    "out": "- 0:- 0:- -"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "0 0 .",
+    "shown": "delete sid=0 active=0 sessions=[.]"
+   },
+   "design_a": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "design_b": {
+    "encoded": "7 . . 7",
+    "shown": "returns 7 sessions=[.] file sessions=[.] file active=7"
+   },
+   "ref": {
+    "encoded": "- . . -",
+    "shown": "returns - sessions=[.] file sessions=[.] file active=-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "post": {
+    "ok": true,
+    "out": "- . . -"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "conflict",
+   "law": "ClearsActiveWhenActiveDeleted",
+   "input": {
+    "encoded": "0 0 0:-,1:-",
+    "shown": "delete sid=0 active=0 sessions=[0:-,1:-]"
+   },
+   "ref": {
+    "encoded": "1 1:- 1:- 1",
+    "shown": "returns 1 sessions=[1:-] file sessions=[1:-] file active=1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1 1:- 1:- 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "1 1:- 1:- 1"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "PersistsList",
+  "PersistsActive"
+ ],
+ "cost_usd": 8.44,
+ "seconds": 497
+}

@@ -1,0 +1,179 @@
+{
+ "name": "rl_a_haiku",
+ "start": "a_haiku",
+ "base": "base",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "RowsStay",
+  "NewAtEnd",
+  "AddsOnlyAbsent",
+  "AddsEveryAbsent",
+  "NoSameIdentity",
+  "EnabledRule"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "c19a864366",
+   "review": {
+    "flow": "flow_417d3a0c0b18",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 33,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "RowsStay",
+    "NewAtEnd",
+    "AddsOnlyAbsent",
+    "AddsEveryAbsent",
+    "NoSameIdentity",
+    "EnabledRule"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new entries inside the appended tail (nor whether an entry appears twice), so a design can reverse the new entries.",
+    "input": {
+     "enable": true,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       1
+      ],
+      [
+       2,
+       2,
+       2,
+       1
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,1,1,1],[2,2,2,1]] (starter order, as the shipped code gives)",
+    "result_b": "[[2,2,2,1],[1,1,1,1]] (same entries, reversed order)",
+    "reason": "NewAtEnd only says the result is registry ++ some tail, and AddsOnlyAbsent and AddsEveryAbsent only talk about membership of the tail, so any permutation of the tail passes every law."
+   },
+   "code_result": "id 1 (adapter 1, model 1, enabled); id 2 (adapter 2, model 2, enabled)",
+   "law_author": {
+    "flow": "flow_498a98553b9d",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 35,
+    "cost_usd": 0.46
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "StarterOrder": "\u2200 (c : Config) (st r tail : List Entry), DistinctIds st \u2192 f c st r = r ++ tail \u2192 (tail.map Entry.id).Sublist (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "2bcd9f3be4",
+   "review": {
+    "flow": "flow_a437347fb270",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 19,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "RowsStay",
+    "NewAtEnd",
+    "AddsOnlyAbsent",
+    "AddsEveryAbsent",
+    "NoSameIdentity",
+    "EnabledRule",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, NewAtEnd and RowsStay fix the prefix as the registry. AddsOnlyAbsent and AddsEveryAbsent make the tail hold exactly the absent starters, and DistinctIds makes each starter unique by id. StarterOrder removes duplicates and fixes the order. EnabledRule fixes the enabled flag, and id, adapter and model are pinned, so the result is unique."
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "e4e2789308",
+   "review": {
+    "flow": "flow_2b16dc3536f7",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 22,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "RowsStay",
+    "NewAtEnd",
+    "AddsOnlyAbsent",
+    "AddsEveryAbsent",
+    "NoSameIdentity",
+    "EnabledRule",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "With DistinctIds, each tail entry maps to one absent starter by id (AddsOnlyAbsent, EnabledRule), each absent starter appears (AddsEveryAbsent), ids in the tail are a Sublist of the distinct starter ids so no repeats and starter order (StarterOrder), and enabled is fixed by EnabledRule. NewAtEnd and RowsStay fix the prefix. So the tail, and the registry, is unique."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "RowsStay",
+  "NewAtEnd",
+  "AddsOnlyAbsent",
+  "AddsEveryAbsent",
+  "NoSameIdentity",
+  "EnabledRule",
+  "StarterOrder"
+ ],
+ "reviews": 3,
+ "questions": 1,
+ "laws_added": 1,
+ "cost_usd": 1.66,
+ "seconds": 109,
+ "end_state_complete": false,
+ "finish": {
+  "outcome": "complete",
+  "questions": 1,
+  "final_laws": [
+   "RowsStay",
+   "NewAtEnd",
+   "AddsOnlyAbsent",
+   "AddsEveryAbsent",
+   "NoSameIdentity",
+   "EnabledRule",
+   "StarterOrder",
+   "AbsentStartersKeepMultiplicity"
+  ],
+  "cost_usd": 1.46,
+  "seconds": 141,
+  "questions_text": [
+   [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, enabled); id 1 (adapter 1, model 1, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ]
+  ]
+ }
+}

@@ -1,0 +1,567 @@
+{
+ "bug": "7b8aeb19",
+ "title": "Valid JSON payload followed by a brace-bearing trailer parses as None",
+ "repo": "Puppetmaster",
+ "function": "parse_cursor_artifact_payload (with helper _json_object_slice)",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-bf7f32f5fc",
+   "folder": "~/Projects/hp-work/p/bf7f32f5fc",
+   "model": "opus",
+   "flow": "flow_15bcbb4ea3cf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_020f150affef"
+   ],
+   "seconds": 373,
+   "cost_usd": 2.587,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-bd9c659720",
+   "folder": "~/Projects/hp-work/p/bd9c659720",
+   "model": "sonnet",
+   "flow": "flow_bba8d4e71a20",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c6da1729c7b2"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.469,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-a01d4e055f",
+   "folder": "~/Projects/hp-work/p/a01d4e055f",
+   "model": "sonnet",
+   "flow": "flow_d98097848641",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c53c46c542f2"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.467,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-e417a7019d",
+   "folder": "~/Projects/hp-work/p/e417a7019d",
+   "model": "sonnet",
+   "flow": "flow_a44aa2418f04",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_eef7cc523154"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.499,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-f9be00ea44",
+   "folder": "~/Projects/hp-work/p/f9be00ea44",
+   "model": "sonnet",
+   "flow": "flow_3167dfd496c3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_46704123aec0"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.424,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-1f7965175a",
+   "folder": "~/Projects/hp-work/p/1f7965175a",
+   "model": "sonnet",
+   "flow": "flow_f830fb5b54b1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cf1a433c5e5c"
+   ],
+   "seconds": 192,
+   "cost_usd": 0.958,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-bb888a0851",
+   "folder": "~/Projects/hp-work/p/bb888a0851",
+   "model": "sonnet",
+   "flow": "flow_7ccf2a1bbdc6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_38ea6b24d278"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.48,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-e0cfcb43e7",
+   "folder": "~/Projects/hp-work/p/e0cfcb43e7",
+   "model": "sonnet",
+   "flow": "flow_0bf7d719beb2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_60fe7561eae6"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.413,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-c23b6677a3",
+   "folder": "~/Projects/hp-work/p/c23b6677a3",
+   "model": "sonnet",
+   "flow": "flow_c1142301ca7e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9d784ab5516c"
+   ],
+   "seconds": 330,
+   "cost_usd": 0.0,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-b61a604ace",
+   "folder": "~/Projects/hp-work/p/b61a604ace",
+   "model": "sonnet",
+   "flow": "flow_330058d0cb9c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_796bb1d4463f"
+   ],
+   "seconds": 99,
+   "cost_usd": 0.722,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-c7aa8e2603",
+   "folder": "~/Projects/hp-work/p/c7aa8e2603",
+   "model": "sonnet",
+   "flow": "flow_a817e8864d8f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fea91c996a39"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.406,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-c9e9a68bc4",
+   "folder": "~/Projects/hp-work/p/c9e9a68bc4",
+   "model": "sonnet",
+   "flow": "flow_a6c986756a8b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1d7cf54f8da4"
+   ],
+   "seconds": 320,
+   "cost_usd": 1.534,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-29ed28edd1",
+   "folder": "~/Projects/hp-work/p/29ed28edd1",
+   "model": "sonnet",
+   "flow": "flow_767aafb71e83",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_321a6c7f316f"
+   ],
+   "seconds": 121,
+   "cost_usd": 0.0,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-4ead0474fa",
+   "folder": "~/Projects/hp-work/p/4ead0474fa",
+   "model": "sonnet",
+   "flow": "flow_6086415c2995",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ba77505a0219"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.41,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-296f91f9f4",
+   "folder": "~/Projects/hp-work/p/296f91f9f4",
+   "model": "sonnet",
+   "flow": "flow_d9d483cff847",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_50b97f65521f"
+   ],
+   "seconds": 345,
+   "cost_usd": 1.647,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-bceec5ae58",
+   "folder": "~/Projects/hp-work/p/bceec5ae58",
+   "model": "sonnet",
+   "flow": "flow_fa83a5750093",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0cb13517fe9b"
+   ],
+   "seconds": 172,
+   "cost_usd": 0.978,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-53caa40eb5",
+   "folder": "~/Projects/hp-work/p/53caa40eb5",
+   "model": "sonnet",
+   "flow": "flow_ba7020cc86a0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b51b57c2fad9"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.389,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-40b09e3832",
+   "folder": "~/Projects/hp-work/p/40b09e3832",
+   "model": "sonnet",
+   "flow": "flow_2cbfc64a7759",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e946712eb1ea"
+   ],
+   "seconds": 320,
+   "cost_usd": 1.481,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-cc9f56a5c9",
+   "folder": "~/Projects/hp-work/p/cc9f56a5c9",
+   "model": "sonnet",
+   "flow": "flow_50bafd85e13a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c5718e62881b"
+   ],
+   "seconds": 222,
+   "cost_usd": 0.0,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-15e4873e76",
+   "folder": "~/Projects/hp-work/p/15e4873e76",
+   "model": "sonnet",
+   "flow": "flow_dd6c3714087f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5cdeb02a56c4"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.409,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:120",
+    "shown": "\"x\""
+   },
+   "design_a": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "design_b": {
+    "encoded": "t",
+    "shown": "t"
+   },
+   "ref": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "pre": {
+    "ok": true,
+    "out": "n"
+   },
+   "post": {
+    "ok": true,
+    "out": "n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:53",
+    "shown": "\"5\""
+   },
+   "design_a": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "design_b": {
+    "encoded": "i1;",
+    "shown": "i1;"
+   },
+   "ref": {
+    "encoded": "i5;",
+    "shown": "i5;"
+   },
+   "pre": {
+    "ok": true,
+    "out": "i5;"
+   },
+   "post": {
+    "ok": true,
+    "out": "i5;"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:116,114,117,101",
+    "shown": "\"true\""
+   },
+   "design_a": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "design_b": {
+    "encoded": "t",
+    "shown": "t"
+   },
+   "ref": {
+    "encoded": "t",
+    "shown": "t"
+   },
+   "pre": {
+    "ok": true,
+    "out": "t"
+   },
+   "post": {
+    "ok": true,
+    "out": "t"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:91,49,93",
+    "shown": "\"[1]\""
+   },
+   "design_a": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "design_b": {
+    "encoded": "[i1;]",
+    "shown": "[i1;]"
+   },
+   "ref": {
+    "encoded": "[i1;]",
+    "shown": "[i1;]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "[i1;]"
+   },
+   "post": {
+    "ok": true,
+    "out": "[i1;]"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:110,117,108,108",
+    "shown": "\"null\""
+   },
+   "design_a": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "design_b": {
+    "encoded": "i7;",
+    "shown": "i7;"
+   },
+   "ref": {
+    "encoded": "n",
+    "shown": "n"
+   },
+   "pre": {
+    "ok": true,
+    "out": "n"
+   },
+   "post": {
+    "ok": true,
+    "out": "n"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "c:34,97,34",
+    "shown": "\"\\\"a\\\"\""
+   },
+   "design_a": {
+    "encoded": "s97;",
+    "shown": "s97;"
+   },
+   "design_b": {
+    "encoded": "s98;",
+    "shown": "s98;"
+   },
+   "ref": {
+    "encoded": "s97;",
+    "shown": "s97;"
+   },
+   "pre": {
+    "ok": true,
+    "out": "s97;"
+   },
+   "post": {
+    "ok": true,
+    "out": "s97;"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 13,
+   "made": 13,
+   "killed": 9,
+   "survived": [
+    "line 3: delete `if not text:     return None`",
+    "line 12: delete `return None`",
+    "line 4: delete `return None`",
+    "line 11: delete `continue`"
+   ],
+   "kill_rate": 0.692
+  },
+  "quotes": {
+   "quotes": 5,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2206,
+   "first_difference": {
+    "input": "c:10,91,91,13,9,91,9,9,56,51,51,53,55,55,51,54,53,56,57,52,51,48,49,56,53,50,56,93,52,52,93,9,32,96,96,96,32,91,49,127,93,32,91,49,93",
+    "lean_ref": "n",
+    "python": "[i8335773658943018528;]"
+   }
+  }
+ },
+ "first_laws": [
+  "ParsesEmptyObject",
+  "ParsesEmptyArray",
+  "FenceDoesNotChangeResult",
+  "ProseAroundDoesNotChangeResult"
+ ],
+ "cost_usd": 14.27,
+ "seconds": 2762
+}

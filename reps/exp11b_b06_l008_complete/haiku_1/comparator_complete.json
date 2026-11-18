@@ -1,0 +1,7 @@
+{
+  "challenge_module": "TblCompleteChallenge",
+  "solution_module": "TblCompleteSolution",
+  "theorem_names": ["TblComplete.laws_complete"],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

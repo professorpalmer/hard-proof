@@ -1,0 +1,24 @@
+<h2 id="sync2">7. Domain 2 again: laws written by an agent</h2>
+<p>Domain 3 is a decision over five fields. A reader can say that it is too small to show much. We ran the same test on the sync command of domain 2, which has lists and quantifiers, and for which the pilot's own laws had two gaps.</p>
+<h3>The description</h3>
+<p>The description file has seven sentences from Puppetmaster 1.51.0: four from the release notes, two from the routing guide, and one from the docstring of the module. The pilot wrote the model types and a mirror of the code, and wrote no law. The gate rejects a law that names the mirror or its helper function. The workers of this domain did not have the folders of domain 2.</p>
+<p>A link test compares the mirror with the real function on 100,000 random cases, with 0 differences. Two changed versions of the code differ in 2,797 and 6,662 of 20,000 cases.</p>
+<h3>Three agents write the laws</h3>
+<p>Haiku 5.5 wrote six laws, and Sonnet 5.5 and Opus 5.5 wrote seven laws each. The gate accepted each law set on the first visit. The pilot read the laws and did not edit them.</p>
+<h3>The loop</h3>
+<p>A script ran the loop with Sonnet 5.5 workers, with the same rules as in domain 3. The answer to each question was the result of the mirror for that input.</p>
+{{TABLE_EXP12}}
+<p>These are the questions that the gate printed:</p>
+{{EXP12_QUESTIONS}}
+<h3>What the loop found</h3>
+<ul>
+<li><strong>The same gap, with no pilot.</strong> The first question was the same for the three law sets: the order of the new rows. This is the first gap of domain 2, where the pilot wrote the laws. Three agents read the sentence "New entries go to the end of the file" and none of them wrote a law for the order of those entries. The sentence does not state an order.</li>
+<li><strong>A fault in a law that an agent wrote.</strong> Two laws by Sonnet 5.5 speak about each row that is "not in the old registry". A copy of an old row is "in the old registry", so the laws allowed a sync that appends a second copy of a row. The adversary found it in round 2.</li>
+<li><strong>A fault in a definition that the pilot wrote.</strong> Three questions use a starter list that has one entry two times. The pilot's definition of a legal starter list says "two entries with one id are the same entry". Two copies of one entry satisfy that sentence. The pilot intended "no two entries have one id". The adversaries used the hole. A human who reads the printed question sees at once that the input is odd. The proofs did not show it, and the reader of the definition did not see it.</li>
+</ul>
+<p>We then ran the link test on starter lists with an entry two or more times: 50,000 cases, 0 differences. The real function also writes the row two times. The built-in starter list has 43 ids with no id two times, so this is not a live defect. It is a property that the documentation does not state.</p>
+<h3>A second set with the corrected definition</h3>
+<p>We corrected the definition to "the ids are pairwise different", and ran the full experiment again: three new law sets, then three loops.</p>
+{{TABLE_EXP12B}}
+{{EXP12B_QUESTIONS}}
+{{EXP12B_TEXT}}

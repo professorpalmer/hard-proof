@@ -1,0 +1,181 @@
+{
+ "name": "rl_b_sonnet",
+ "start": "b_sonnet",
+ "base": "base_b",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "review_folder": "896b3228df",
+   "review": {
+    "flow": "flow_f7a5705f5248",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 25,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd"
+   ],
+   "verdict": "gap",
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the added rows among themselves; they only fix that the added rows follow the old registry.",
+    "input": {
+     "enable": false,
+     "locked_adapters": [],
+     "starter": [
+      [
+       1,
+       1,
+       1,
+       0
+      ],
+      [
+       2,
+       2,
+       2,
+       0
+      ]
+     ],
+     "registry": []
+    },
+    "result_a": "[[1,1,1,0],[2,2,2,0]] (starter order, as ref gives)",
+    "result_b": "[[2,2,2,0],[1,1,1,0]] (the added rows in reverse order)",
+    "reason": "NewAtEnd only says the result is the old registry followed by the added rows. No law fixes the order inside the added rows, so the reversed design keeps every row, adds only absent entries, adds all of them, and passes every law, but gives a different registry."
+   },
+   "code_result": "id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)",
+   "law_author": {
+    "flow": "flow_13660c120710",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 34,
+    "cost_usd": 0.46
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "StarterOrder": "\u2200 c st r, ((added f c st r).map Entry.id).Sublist (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "review_folder": "bb8cd60733",
+   "review": {
+    "flow": "flow_2939c0c9c6d5",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 24,
+    "cost_usd": 0.4
+   },
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input the added rows are fixed: AddsOnlyAbsent and AddsAllAbsent make them exactly the absent starters, StarterOrder with distinct ids fixes order and forbids repeats, and the enabled flag is fixed by DisabledByDefault, LockedDisabled and EnableKeepsState; KeepsRows and NewAtEnd fix the old rows and the position."
+   }
+  },
+  {
+   "round": 3,
+   "review_folder": "5ed14890fd",
+   "review": {
+    "flow": "flow_30ac2c82a981",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 21,
+    "cost_usd": 0.38
+   },
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd",
+    "StarterOrder"
+   ],
+   "verdict": "complete",
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, AddsOnlyAbsent, AddsAllAbsent and StarterOrder fix the added ids to exactly the absent starter ids, each once, in starter order; NewAtEnd and KeepsRows fix the old rows as a prefix; adapter and model come from the starter with that id, and enabled is fixed by DisabledByDefault, LockedDisabled and EnableKeepsState, so the registry is unique."
+   }
+  }
+ ],
+ "outcome": "reviewer says complete",
+ "final_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "StarterOrder"
+ ],
+ "reviews": 3,
+ "questions": 1,
+ "laws_added": 1,
+ "cost_usd": 1.64,
+ "seconds": 104,
+ "end_state_complete": true,
+ "finish": {
+  "outcome": "complete",
+  "questions": 0,
+  "final_laws": [
+   "KeepsRows",
+   "AddsOnlyAbsent",
+   "AddsAllAbsent",
+   "NoSameIdentity",
+   "DisabledByDefault",
+   "LockedDisabled",
+   "EnableKeepsState",
+   "NewAtEnd",
+   "StarterOrder"
+  ],
+  "cost_usd": 0.7,
+  "seconds": 114,
+  "questions_text": []
+ }
+}

@@ -1,0 +1,2 @@
+{"at": "2026-11-18T00:51:34-0500", "actor": "flow", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 2.27}
+{"at": "2026-11-18T00:51:52-0500", "actor": "pilot-verify", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 7.85}

@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "All 128 laws parse to non-vacuous cubes over the 14 inputs. Every one of the 16384 cases is fixed by at least one law, and no two laws that cover the same case disagree, so Passes determines each rule's answer at every case."}

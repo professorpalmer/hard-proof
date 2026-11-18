@@ -1,0 +1,1 @@
+{"verdict": "gap", "case": {"b0": true, "b1": false, "b2": false, "b3": true, "b4": true, "b5": false}, "reason": "With b0=true and b2=false, Laws 0, 2, 3, 4 cover every case with b4=false or b5=true, and Law6 covers b4=true, b5=false only when b3=false. The case b0=true, b2=false, b3=true, b4=true, b5=false has no law, so one passing rule can answer true and another false."}

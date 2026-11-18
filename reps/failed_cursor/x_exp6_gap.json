@@ -1,0 +1,82 @@
+{
+ "task": "x_exp6_gap",
+ "seconds": 7,
+ "runs": [
+  {
+   "task": "x_exp6_gap",
+   "model": "grok",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/grok_1",
+   "flow": "flow_9a246be1a2c0",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_81b847b19a9c failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 2,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "grok",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/grok_2",
+   "flow": "flow_bf6bf175113d",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_0274b3fbeaef failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 2,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "luna",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/luna_1",
+   "flow": "flow_099d0d526308",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_55d1657104b5 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 3,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp6_gap",
+   "model": "luna",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp6_gap/luna_2",
+   "flow": "flow_d86293012280",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_de7c893035e5 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 2,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  }
+ ]
+}

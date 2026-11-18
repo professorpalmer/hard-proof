@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "With distinct starter ids, the laws fix the tail: AddsOnlyAbsent and AddsEveryAbsent make its ids exactly the absent starter ids, NewInStarterOrder makes the ids a sublist of the nodup starter ids (so no duplicates and a fixed order), and EnabledRule fixes each enabled flag. RowsStay and NewAtEnd fix the prefix, so the result is unique."}

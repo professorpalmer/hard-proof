@@ -1,0 +1,25 @@
+{
+ "name": "b_sonnet",
+ "model": "claude-sonnet-5-5",
+ "flow": {
+  "flow": "flow_b4569824f03e",
+  "status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "seconds": 67,
+  "cost_usd": 0.53
+ },
+ "pilot_gate": "accept",
+ "laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd"
+ ]
+}

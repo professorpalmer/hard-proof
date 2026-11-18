@@ -1,0 +1,4 @@
+{"at": "2026-11-18T00:58:51-0500", "actor": "flow", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 1.63}
+{"at": "2026-11-18T00:59:00-0500", "actor": "flow", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 1.53}
+{"at": "2026-11-18T00:59:10-0500", "actor": "pilot-verify", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 7.18}
+{"at": "2026-11-18T01:36:49-0500", "actor": "verify-all", "modes": ["gap", "complete"], "verdict": "accept", "mode": "gap", "seconds": 8.15}

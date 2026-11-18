@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "For a legal input, KeepsExisting fixes the old rows as a prefix. AddsOnlyAbsent, AddsAllAbsent and NoDuplicateId force one new row per absent starter. NewInStarterOrder fixes the order. The enabled laws fix the flag in every case (enable off, locked, or enable on and unlocked). So every passing design gives the same registry."}

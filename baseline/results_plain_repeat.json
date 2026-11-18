@@ -1,0 +1,161 @@
+{
+ "arm": "plain_repeat",
+ "runs": [
+  {
+   "id": "59ee53e8",
+   "arm": "plain_repeat",
+   "model": "haiku",
+   "flow": "flow_729d1b334a05",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_bbb8ba22c2f9"
+   ],
+   "seconds": 403,
+   "cost_usd": 0.481,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": true,
+     "b7": true,
+     "b8": true,
+     "b9": true,
+     "b10": true,
+     "b11": false,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "The 127 laws cover all cases except a 4-case cube: b0, b2, b5, b6, b7, b8, b9, b10 true and b4, b11, b12, b13 false, with b1 and b3 free. No law's literals match this cube, so a passing rule can take either answer on it, and the laws look consistent (they partition the other cases), so two passing rules differ there."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "714f6d1d",
+   "arm": "plain_repeat",
+   "model": "haiku",
+   "flow": "flow_d090eaa043d1",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_60816ddf770c"
+   ],
+   "seconds": 66,
+   "cost_usd": 0.17,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The 128 laws are 128 subcubes of the 14-input space, and their sizes sum to exactly 2^14, so they look like the leaves of one decision tree. I checked by hand that the b13=true half (6 laws, 8192 cases) is disjoint and exhaustive, but I did not fully verify the b13=false half (122 laws, 8192 cases), so this verdict rests on the exact size sum and a partial check."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "9b260ba0",
+   "arm": "plain_repeat",
+   "model": "sonnet",
+   "flow": "flow_68c45335a286",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_93b4f3ea411c"
+   ],
+   "seconds": 679,
+   "cost_usd": 2.331,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": false,
+     "b1": true,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": false,
+     "b7": true,
+     "b8": true,
+     "b9": false,
+     "b10": false,
+     "b11": false,
+     "b12": true,
+     "b13": true,
+     "b14": true,
+     "b15": false,
+     "b16": true,
+     "b17": true
+    },
+    "reason": "The laws list 511 leaves (Law0 to Law510) but the rule has 512, and no law covers this case. Any rule can answer it either way and still pass every law."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "6b5d23e7",
+   "arm": "plain_repeat",
+   "model": "sonnet",
+   "flow": "flow_d2b851daf6a4",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_c222b0d8a0d6"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.403,
+   "answer": {
+    "verdict": "complete",
+    "reason": "On a legal input (distinct starter ids) the laws fix the tail fully. AddsOnlyAbsent and AddsEveryAbsent make the tail entries match exactly the absent starters by id, adapter and model. NewInStarterOrder with distinct ids allows no duplicate and forces starter order. EnabledRule fixes each enabled flag, and RowsStay with NewAtEnd fix the prefix, so every passing design gives the same registry as ref."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "45724140",
+   "arm": "plain_repeat",
+   "model": "sonnet",
+   "flow": "flow_43ba8c4d712e",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_0b5901a4d308"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.423,
+   "answer": {
+    "verdict": "complete",
+    "reason": "KeepsExisting fixes the output as r ++ new. AddsOnlyAbsent, NoDuplicateId and NewInStarterOrder with DistinctIds make new hold exactly one row for each absent starter id, in starter order, and AddsAllAbsent forbids omissions. Those rows have fixed id, adapter and model, and the three enabled laws fix the flag in every case of enable and locked, so the result is unique."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "07bd809d",
+   "arm": "plain_repeat",
+   "model": "sonnet",
+   "flow": "flow_912ffdf7a70b",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_2ea22abf4251"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.391,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input (distinct starter ids), KeepsPrefix gives r ++ t. AddsOnlyAbsent and AddsAllAbsent fix the set of new ids to the absent starters, and SameRow fixes id, adapter and model. KeepsStarterOrder fixes the order and rules out duplicates, because a sublist of a distinct-id list has distinct ids. NewDisabled, LockedDisabled and EnableKeepsState fix enabled in every case (enable off, locked adapter, enable on with unlocked adapter). So each design that passes gives the same registry as ref."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  }
+ ]
+}

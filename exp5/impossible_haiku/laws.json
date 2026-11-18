@@ -1,0 +1,62 @@
+{
+  "experiment": "exp4-impossible-challenge",
+  "human_files": [
+    "Laws.lean",
+    "Mutants.lean",
+    "Challenge.lean",
+    "comparator.json",
+    "laws.json",
+    "lakefile.toml",
+    "lean-toolchain"
+  ],
+  "agent_files": [
+    "Solution.lean"
+  ],
+  "laws": [
+    {
+      "id": "mutex",
+      "statement": "Two processes are never in the critical section together.",
+      "theorem": "Exp.mutex",
+      "witness": "Exp.can_enter",
+      "min_grade": "P"
+    },
+    {
+      "id": "no_orphan_hold",
+      "statement": "When the lock refuses a request, a live process is in the critical section.",
+      "theorem": "Exp.no_orphan_hold",
+      "witness": "Exp.can_refuse",
+      "min_grade": "P"
+    },
+    {
+      "id": "record_ignores_token",
+      "statement": "The lock record does not contain the start token.",
+      "theorem": "Exp.record_ignores_token",
+      "witness": "Exp.can_enter",
+      "min_grade": "P"
+    }
+  ],
+  "mutants": [
+    {
+      "id": "Mutants.pidOnly",
+      "description": "The lock stores the pid alone as the owner identity.",
+      "kills": [
+        "Exp.kill_pid_only"
+      ]
+    }
+  ],
+  "recorded_facts": [
+    "Exp.mutex_alone_misses_pid_only"
+  ],
+  "assumptions": [
+    "The kernel gives a new start token to each process start.",
+    "Only acquire and release change the lock record.",
+    "Each event is atomic. There is no torn write and no crash inside an event.",
+    "Events occur one at a time. There is no concurrent step.",
+    "A process that exits does not release the lock."
+  ],
+  "link": {
+    "type": "none",
+    "grade": "none",
+    "note": "The laws are proved on a model. No test compares the model with production lock code."
+  }
+}

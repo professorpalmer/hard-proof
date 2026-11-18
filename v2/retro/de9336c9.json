@@ -1,0 +1,515 @@
+{
+ "bug": "de9336c9",
+ "title": "429 with rate-limit window headers gets a synthetic 30 s Retry-After",
+ "repo": "Puppetmaster",
+ "function": "parse_rate_limit_headers",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-748d250aa1",
+   "folder": "~/Projects/hp-work/p/748d250aa1",
+   "model": "opus",
+   "flow": "flow_534245da405f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cfb3dfe7fa6d"
+   ],
+   "seconds": 352,
+   "cost_usd": 2.318,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-d8c5573d4e",
+   "folder": "~/Projects/hp-work/p/d8c5573d4e",
+   "model": "sonnet",
+   "flow": "flow_a4baaacf53c2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_01fc0947daa7"
+   ],
+   "seconds": 49,
+   "cost_usd": 0.473,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-4617334400",
+   "folder": "~/Projects/hp-work/p/4617334400",
+   "model": "sonnet",
+   "flow": "flow_3a50dbb01c4f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4635f11fd944"
+   ],
+   "seconds": 272,
+   "cost_usd": 1.378,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-bdfe9d8698",
+   "folder": "~/Projects/hp-work/p/bdfe9d8698",
+   "model": "sonnet",
+   "flow": "flow_9aacf7d310bb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9712d2756748"
+   ],
+   "seconds": 195,
+   "cost_usd": 1.076,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-c1e21d5ae0",
+   "folder": "~/Projects/hp-work/p/c1e21d5ae0",
+   "model": "sonnet",
+   "flow": "flow_54819c5fc315",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0bb67ee89cc6"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.413,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-21ec49d834",
+   "folder": "~/Projects/hp-work/p/21ec49d834",
+   "model": "sonnet",
+   "flow": "flow_2a8edc7a3a17",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_034c8cf98f12"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.431,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-29fc601d12",
+   "folder": "~/Projects/hp-work/p/29fc601d12",
+   "model": "sonnet",
+   "flow": "flow_465d18609ed2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_da2c3ccdb26c"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.463,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-dd27a8fad8",
+   "folder": "~/Projects/hp-work/p/dd27a8fad8",
+   "model": "sonnet",
+   "flow": "flow_beccdefb50d7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_368f28089cc9"
+   ],
+   "seconds": 404,
+   "cost_usd": 1.795,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-a0690e15c4",
+   "folder": "~/Projects/hp-work/p/a0690e15c4",
+   "model": "sonnet",
+   "flow": "flow_fdac28d9a86d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a6107def83ce"
+   ],
+   "seconds": 238,
+   "cost_usd": 1.228,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-7484c37b63",
+   "folder": "~/Projects/hp-work/p/7484c37b63",
+   "model": "sonnet",
+   "flow": "flow_594cdbf82f3b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2c5fdaaaa2e6"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.426,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-66177412cb",
+   "folder": "~/Projects/hp-work/p/66177412cb",
+   "model": "sonnet",
+   "flow": "flow_b3c2a93e9aaa",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_30d5841de1bc"
+   ],
+   "seconds": 46,
+   "cost_usd": 0.538,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-7d73f54e7d",
+   "folder": "~/Projects/hp-work/p/7d73f54e7d",
+   "model": "sonnet",
+   "flow": "flow_e563249c6117",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4cc1d83c4f48"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.408,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-d00cf44e87",
+   "folder": "~/Projects/hp-work/p/d00cf44e87",
+   "model": "sonnet",
+   "flow": "flow_cbcc8d5b11ab",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_87166b61525a"
+   ],
+   "seconds": 487,
+   "cost_usd": 2.06,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-0a79b0dfb4",
+   "folder": "~/Projects/hp-work/p/0a79b0dfb4",
+   "model": "sonnet",
+   "flow": "flow_5f3c4750548a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9cca8ed2effb"
+   ],
+   "seconds": 213,
+   "cost_usd": 1.031,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-023422c824",
+   "folder": "~/Projects/hp-work/p/023422c824",
+   "model": "sonnet",
+   "flow": "flow_8507b6b012be",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_319609a47975"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.396,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-e6fb2ece4a",
+   "folder": "~/Projects/hp-work/p/e6fb2ece4a",
+   "model": "sonnet",
+   "flow": "flow_8e25dc315715",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_60706ac5e3e2"
+   ],
+   "seconds": 597,
+   "cost_usd": 2.59,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-db4c8edc10",
+   "folder": "~/Projects/hp-work/p/db4c8edc10",
+   "model": "sonnet",
+   "flow": "flow_c43a27cd1f08",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_342e69fd4a41"
+   ],
+   "seconds": 191,
+   "cost_usd": 1.061,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-fa63998c24",
+   "folder": "~/Projects/hp-work/p/fa63998c24",
+   "model": "sonnet",
+   "flow": "flow_6f6d953fe436",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_558d815fc4cb"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.414,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "0|429|retry-after=5",
+    "shown": "0|429|retry-after=5"
+   },
+   "design_a": {
+    "encoded": "S -|-|0/1",
+    "shown": "S -|-|0/1"
+   },
+   "design_b": {
+    "encoded": "S -|-|1/1",
+    "shown": "S -|-|1/1"
+   },
+   "ref": {
+    "encoded": "S -|-|5/1",
+    "shown": "S -|-|5/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S -|-|5/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "S -|-|5/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "RetryAfterIsClockPlusSeconds",
+   "input": {
+    "encoded": "1|429|retry-after=1000000000",
+    "shown": "1|429|retry-after=1000000000"
+   },
+   "ref": {
+    "encoded": "S -|-|1000000000/1",
+    "shown": "S -|-|1000000000/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S -|-|1000000000/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "S -|-|1000000000/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "0|n|x-ratelimit-limit-requests=5",
+    "shown": "0|n|x-ratelimit-limit-requests=5"
+   },
+   "design_a": {
+    "encoded": "S requests,-,-,-|-|-",
+    "shown": "S requests,-,-,-|-|-"
+   },
+   "design_b": {
+    "encoded": "S req,-,-,-|-|-",
+    "shown": "S req,-,-,-|-|-"
+   },
+   "ref": {
+    "encoded": "S requests,5,-,-|-|-",
+    "shown": "S requests,5,-,-|-|-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S requests,5,-,-|-|-"
+   },
+   "post": {
+    "ok": true,
+    "out": "S requests,5,-,-|-|-"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "RequestWindowKindAndLimit",
+   "input": {
+    "encoded": "0|n|x-ratelimit-limit-requests=9007199254740993",
+    "shown": "0|n|x-ratelimit-limit-requests=9007199254740993"
+   },
+   "ref": {
+    "encoded": "S requests,9007199254740992,-,-|-|-",
+    "shown": "S requests,9007199254740992,-,-|-|-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S requests,9007199254740992,-,-|-|-"
+   },
+   "post": {
+    "ok": true,
+    "out": "S requests,9007199254740992,-,-|-|-"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "0|n|x-ratelimit-limit-tokens=5",
+    "shown": "0|n|x-ratelimit-limit-tokens=5"
+   },
+   "design_a": {
+    "encoded": "S -|tokens,-,-,-|-",
+    "shown": "S -|tokens,-,-,-|-"
+   },
+   "design_b": {
+    "encoded": "S -|other,-,-,-|-",
+    "shown": "S -|other,-,-,-|-"
+   },
+   "ref": {
+    "encoded": "S -|tokens,5,-,-|-",
+    "shown": "S -|tokens,5,-,-|-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S -|tokens,5,-,-|-"
+   },
+   "post": {
+    "ok": true,
+    "out": "S -|tokens,5,-,-|-"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "0|n|x-ratelimit-limit-requests=5",
+    "shown": "0|n|x-ratelimit-limit-requests=5"
+   },
+   "design_a": {
+    "encoded": "S requests,5,0,-|-|-",
+    "shown": "S requests,5,0,-|-|-"
+   },
+   "design_b": {
+    "encoded": "S requests,5,1,-|-|-",
+    "shown": "S requests,5,1,-|-|-"
+   },
+   "ref": {
+    "encoded": "S requests,5,-,-|-|-",
+    "shown": "S requests,5,-,-|-|-"
+   },
+   "pre": {
+    "ok": true,
+    "out": "S requests,5,-,-|-|-"
+   },
+   "post": {
+    "ok": true,
+    "out": "S requests,5,-,-|-|-"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 51,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 15,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 2548,
+   "first_difference": {
+    "input": "100|429|__x-RAteliMit-reMaINInG-ReQUEstS=2m5ms;ANThROPic-ratelimIt-Input-tokeNS-limit=20000000001;_anthropic-ratelimit-requests-remaining=1.5;anthropic-ratelimit-tokens-reset=1.h;_anthropic-ratelimit-tokens-remaining=999999999999;ANThROPiC-RaTELImIt-INpUt-ToKENS-LimIT=_7_",
+    "lean_ref": "S -|tokens,7,999999999999,-|130/1",
+    "python": "S -|tokens,7,999999999999,-|-"
+   }
+  }
+ },
+ "first_laws": [
+  "NoSignalNone",
+  "RetryAfterOn429",
+  "RequestHeadersRecognized",
+  "TokenHeadersRecognized",
+  "HeadersNormalized"
+ ],
+ "cost_usd": 18.5,
+ "seconds": 3203
+}

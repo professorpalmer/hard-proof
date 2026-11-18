@@ -1,0 +1,151 @@
+{
+ "start": "a_opus",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_a97bec48af50",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 27,
+    "cost_usd": 0.41
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 0, model 1, disabled); id 2 (adapter 0, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 0, model 1, disabled); id 2 (adapter 0, model 2, disabled)]",
+    "design B result: [id 2 (adapter 0, model 2, disabled); id 1 (adapter 0, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 0, model 1, disabled); id 2 (adapter 0, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 0, model 1, disabled); id 2 (adapter 0, model 2, disabled)]",
+   "law_author": {
+    "flow": "flow_70e2fbd7b1a4",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 28,
+    "cost_usd": 0.45
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "KeepsStarterOrder": "\u2200 c st r t, DistinctIds st \u2192 f c st r = r ++ t \u2192 List.Sublist (t.map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_c16a9af4ee32",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 58,
+    "cost_usd": 0.52
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "KeepsStarterOrder"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+   "law_author": {
+    "flow": "flow_8a3b0762a216",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 32,
+    "cost_usd": 0.45
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "CountsAbsent": "\u2200 c st r t, DistinctIds st \u2192 f c st r = r ++ t \u2192 t.length = (st.filter (absent r)).length"
+   }
+  },
+  {
+   "round": 3,
+   "adversary": {
+    "flow": "flow_255cb0b6a2d1",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 115,
+    "cost_usd": 0.66
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "KeepsStarterOrder",
+    "CountsAbsent"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "KeepsStarterOrder",
+  "CountsAbsent"
+ ],
+ "questions": 2
+}

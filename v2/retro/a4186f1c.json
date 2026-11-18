@@ -1,0 +1,353 @@
+{
+ "bug": "a4186f1c",
+ "title": "adapter_cli_present reads antigravity, hermes and fx as installed",
+ "repo": "Puppetmaster",
+ "function": "adapter_cli_present (with adapter_cli_executable and the _ADAPTER_CLI_DEFAULT table, lines 946-949)",
+ "kind": "list or set logic",
+ "stages": [
+  {
+   "flow_id": "hp2-21097d19aa",
+   "folder": "~/Projects/hp-work/p/21097d19aa",
+   "model": "opus",
+   "flow": "flow_b72870fdcdf2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2bcb1150d308"
+   ],
+   "seconds": 140,
+   "cost_usd": 1.416,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-08bebbdf0a",
+   "folder": "~/Projects/hp-work/p/08bebbdf0a",
+   "model": "sonnet",
+   "flow": "flow_fc108a254fd8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_788408fe7e05"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.444,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-5b15d43c8e",
+   "folder": "~/Projects/hp-work/p/5b15d43c8e",
+   "model": "sonnet",
+   "flow": "flow_d54e784a54c0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e9b7f2b7fd85"
+   ],
+   "seconds": 43,
+   "cost_usd": 0.476,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-640cc3ac13",
+   "folder": "~/Projects/hp-work/p/640cc3ac13",
+   "model": "sonnet",
+   "flow": "flow_961bb8efa0cf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_363f065005b9"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.412,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-fbb9c001f0",
+   "folder": "~/Projects/hp-work/p/fbb9c001f0",
+   "model": "sonnet",
+   "flow": "flow_12f10ecc00f8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e3718aeef3f0"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.404,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-e0546bb0cc",
+   "folder": "~/Projects/hp-work/p/e0546bb0cc",
+   "model": "sonnet",
+   "flow": "flow_f75eca793af6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4b3933f0c601"
+   ],
+   "seconds": 60,
+   "cost_usd": 0.548,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-e2e0943d99",
+   "folder": "~/Projects/hp-work/p/e2e0943d99",
+   "model": "sonnet",
+   "flow": "flow_083c688f9d1f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_eff13f386d3e"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.466,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-02e73b85b5",
+   "folder": "~/Projects/hp-work/p/02e73b85b5",
+   "model": "sonnet",
+   "flow": "flow_3ec4eb5518bb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_56a1af580ffd"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.394,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-d80fffcc0d",
+   "folder": "~/Projects/hp-work/p/d80fffcc0d",
+   "model": "sonnet",
+   "flow": "flow_ad1964d74e18",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e501c4f73a97"
+   ],
+   "seconds": 41,
+   "cost_usd": 0.453,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-0b9a76e032",
+   "folder": "~/Projects/hp-work/p/0b9a76e032",
+   "model": "sonnet",
+   "flow": "flow_84cf31795ed5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_387cdc2939da"
+   ],
+   "seconds": 52,
+   "cost_usd": 0.509,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-b34ce602f5",
+   "folder": "~/Projects/hp-work/p/b34ce602f5",
+   "model": "sonnet",
+   "flow": "flow_4d7fd65c5ed2",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0102f48c23ff"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.381,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-2a5a4cebe4",
+   "folder": "~/Projects/hp-work/p/2a5a4cebe4",
+   "model": "sonnet",
+   "flow": "flow_094f96ec82af",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c7c86e7a6652"
+   ],
+   "seconds": 58,
+   "cost_usd": 0.526,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-a9a051c225",
+   "folder": "~/Projects/hp-work/p/a9a051c225",
+   "model": "sonnet",
+   "flow": "flow_f5c4d6e7e5c7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c5d1041b6baa"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.423,
+   "stage": "A4"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "scodex|SsCODEX_COMMAND=s||N|",
+    "shown": "adapter=\"codex\" env={\"CODEX_COMMAND\": \"\"} os.environ={} resolver=None (default resolver) default_resolver_finds=[]"
+   },
+   "design_a": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "sclaude-code|SsCLAUDE_CODE_COMMAND=s||N|sclaude",
+    "shown": "adapter=\"claude-code\" env={\"CLAUDE_CODE_COMMAND\": \"\"} os.environ={} resolver=None (default resolver) default_resolver_finds=[\"claude\"]"
+   },
+   "design_a": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "design_b": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "ref": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "pre": {
+    "ok": true,
+    "out": "true"
+   },
+   "post": {
+    "ok": true,
+    "out": "true"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "scodex|SsCODEX_COMMAND=s||Ss|",
+    "shown": "adapter=\"codex\" env={\"CODEX_COMMAND\": \"\"} os.environ={} resolver=finds [\"\"] default_resolver_finds=[]"
+   },
+   "design_a": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "design_b": {
+    "encoded": "true",
+    "shown": "True"
+   },
+   "ref": {
+    "encoded": "false",
+    "shown": "False"
+   },
+   "pre": {
+    "ok": true,
+    "out": "false"
+   },
+   "post": {
+    "ok": true,
+    "out": "false"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 12,
+   "made": 12,
+   "killed": 12,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 13,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "NoCliTrue",
+  "DefaultCli",
+  "OverrideCli",
+  "ResolverDecides",
+  "DefaultResolverOnly"
+ ],
+ "cost_usd": 6.85,
+ "seconds": 587
+}

@@ -1,0 +1,244 @@
+{
+ "name": "dl_a_sonnet",
+ "start": "a_sonnet",
+ "base": "base",
+ "folder": "2ed75f7d61",
+ "flow": "flow_74b3760fbb38",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 36,
+   "cost_usd": 0.415,
+   "jobs": [
+    "job_3e7f22b188e0"
+   ],
+   "session_cost_usd": 0.415
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 46,
+   "cost_usd": 0.494,
+   "jobs": [
+    "job_c44f1bb1f94c"
+   ],
+   "session_cost_usd": 0.494
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 52,
+   "cost_usd": 0.194,
+   "jobs": [
+    "job_68f1b8a46c2d"
+   ],
+   "session_cost_usd": 0.609
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 36,
+   "cost_usd": 0.124,
+   "jobs": [
+    "job_2a7c657a2f68"
+   ],
+   "session_cost_usd": 0.618
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 65,
+   "cost_usd": 0.261,
+   "jobs": [
+    "job_1a02da326fbd"
+   ],
+   "session_cost_usd": 0.87
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 20,
+   "cost_usd": 0.066,
+   "jobs": [
+    "job_7f478342da35"
+   ],
+   "session_cost_usd": 0.684
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 84,
+   "cost_usd": 0.245,
+   "jobs": [
+    "job_db4f30ccb625"
+   ],
+   "session_cost_usd": 1.115
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 19,
+   "cost_usd": 0.069,
+   "jobs": [
+    "job_1995257d6d92"
+   ],
+   "session_cost_usd": 0.753
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 40,
+   "cost_usd": 0.136,
+   "jobs": [
+    "job_9def7fdc61aa"
+   ],
+   "session_cost_usd": 1.251
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 4,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "new_laws": {
+    "NewInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 \u2200 l1 s l2 s' l3, st = l1 ++ s :: l2 ++ s' :: l3 \u2192 absent r s = true \u2192 absent r s' = true \u2192 \u2203 A x B y C, f c st r = A ++ x :: B ++ y :: C \u2227 x.id = s.id \u2227 y.id = s'.id"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled)]",
+   "new_laws": {
+    "NewRowsDistinct": "\u2200 c st r, (st.map Entry.id).Nodup \u2192 \u2200 new, f c st r = r ++ new \u2192 (new.map Entry.id).Nodup"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+   "new_laws": {
+    "OneRowPerAbsentStarter": "\u2200 c st r new, f c st r = r ++ new \u2192 new.length = st.countP (absent r)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "new_laws": {
+    "NewIdsFollowStarter": "\u2200 c st r new, f c st r = r ++ new \u2192 new.map Entry.id = (st.filter (absent r)).map Entry.id"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 9,
+ "cost_usd": 2.0,
+ "seconds": 398,
+ "final_laws": [
+  "KeepsExisting",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "NewDisabledByDefault",
+  "EnableKeepsStarter",
+  "LockedAlwaysDisabled",
+  "NewInStarterOrder",
+  "NewRowsDistinct",
+  "OneRowPerAbsentStarter",
+  "NewIdsFollowStarter"
+ ]
+}

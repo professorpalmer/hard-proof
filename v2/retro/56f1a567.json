@@ -1,0 +1,114 @@
+{
+ "bug": "56f1a567",
+ "title": "Broad audit goal collapses to one explorer role",
+ "repo": "marionette",
+ "function": "infer_roles",
+ "kind": "text",
+ "stages": [
+  {
+   "flow_id": "hp2-103f56ab4c",
+   "folder": "~/Projects/hp-work/p/103f56ab4c",
+   "model": "opus",
+   "flow": "flow_d0f9464cb91d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_02fd6add46e3"
+   ],
+   "seconds": 122,
+   "cost_usd": 1.398,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-75cf0c0766",
+   "folder": "~/Projects/hp-work/p/75cf0c0766",
+   "model": "sonnet",
+   "flow": "flow_08d380073404",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5de7e7ac91f4"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.433,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-dbf4771ee8",
+   "folder": "~/Projects/hp-work/p/dbf4771ee8",
+   "model": "sonnet",
+   "flow": "flow_d255e0909f5f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_acd8f1586b4e"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.407,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-08b296143d",
+   "folder": "~/Projects/hp-work/p/08b296143d",
+   "model": "sonnet",
+   "flow": "flow_22d5952396fb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b21bf02e73fc"
+   ],
+   "seconds": 30,
+   "cost_usd": 0.432,
+   "stage": "A1"
+  }
+ ],
+ "items": [],
+ "outcome": "complete, bug not detected",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 14,
+   "made": 14,
+   "killed": 14,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 232,
+   "first_difference": {
+    "input": "str:233.241.84.106.68.116.104.101.32.99.111.100.101.109.97.112.32.116.104.101.32",
+    "lean_ref": "explore",
+    "python": "explore,conflict-auditor,pipeline-mapper"
+   }
+  }
+ },
+ "first_laws": [
+  "BroadFansOut",
+  "FlowAddsPipeline",
+  "OtherSingleExplorer"
+ ],
+ "cost_usd": 2.67,
+ "seconds": 200
+}

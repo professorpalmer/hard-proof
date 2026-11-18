@@ -1,0 +1,22 @@
+name = "exp10"
+defaultTargets = ["Exp10"]
+
+[[lean_lib]]
+name = "Exp10"
+roots = ["Recover"]
+
+[[lean_lib]]
+name = "LawWork"
+roots = ["RecoverLaws"]
+
+[[lean_lib]]
+name = "Challenges"
+roots = ["RecoverGapChallenge", "RecoverCompleteChallenge"]
+
+[[lean_lib]]
+name = "GapWork"
+roots = ["RecoverGapSolution"]
+
+[[lean_lib]]
+name = "CompleteWork"
+roots = ["RecoverCompleteSolution"]

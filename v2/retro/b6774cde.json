@@ -1,0 +1,513 @@
+{
+ "bug": "b6774cde",
+ "title": "Claude Code cache token names not read by usage_from_sdk",
+ "repo": "Puppetmaster",
+ "function": "usage_from_sdk",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-61bcc40f03",
+   "folder": "~/Projects/hp-work/p/61bcc40f03",
+   "model": "opus",
+   "flow": "flow_8ef9b33c3c3e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_72569b357e86"
+   ],
+   "seconds": 173,
+   "cost_usd": 1.802,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-8a97c8395a",
+   "folder": "~/Projects/hp-work/p/8a97c8395a",
+   "model": "sonnet",
+   "flow": "flow_d4cf5bd6edac",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_01868700354f"
+   ],
+   "seconds": 49,
+   "cost_usd": 0.485,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-bae7b57845",
+   "folder": "~/Projects/hp-work/p/bae7b57845",
+   "model": "sonnet",
+   "flow": "flow_2db76c689670",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_874d306b6ffa"
+   ],
+   "seconds": 98,
+   "cost_usd": 0.583,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-a7382c426c",
+   "folder": "~/Projects/hp-work/p/a7382c426c",
+   "model": "sonnet",
+   "flow": "flow_e70605f4d97d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_89f06beafdb6"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.385,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-21168c2403",
+   "folder": "~/Projects/hp-work/p/21168c2403",
+   "model": "sonnet",
+   "flow": "flow_5daa1bb189a7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1d7dd55392b6"
+   ],
+   "seconds": 69,
+   "cost_usd": 0.555,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-acdbb8ea2f",
+   "folder": "~/Projects/hp-work/p/acdbb8ea2f",
+   "model": "sonnet",
+   "flow": "flow_0821b8121545",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_54ccdcd8f27e"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.398,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-fbfb1eb0f2",
+   "folder": "~/Projects/hp-work/p/fbfb1eb0f2",
+   "model": "sonnet",
+   "flow": "flow_2d17500ad073",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a4712e35fa7d"
+   ],
+   "seconds": 68,
+   "cost_usd": 0.576,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-1681a026cc",
+   "folder": "~/Projects/hp-work/p/1681a026cc",
+   "model": "sonnet",
+   "flow": "flow_66215bf199b8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_a557d998bc42"
+   ],
+   "seconds": 79,
+   "cost_usd": 0.588,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-c6cd5d82a3",
+   "folder": "~/Projects/hp-work/p/c6cd5d82a3",
+   "model": "sonnet",
+   "flow": "flow_4bae6c8e4332",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5d6487785827"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.403,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-b327ca8b3b",
+   "folder": "~/Projects/hp-work/p/b327ca8b3b",
+   "model": "sonnet",
+   "flow": "flow_7170767d3b8b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c21ca5282325"
+   ],
+   "seconds": 100,
+   "cost_usd": 0.676,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-d1eb3bcf2e",
+   "folder": "~/Projects/hp-work/p/d1eb3bcf2e",
+   "model": "sonnet",
+   "flow": "flow_234ece6b911e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2caae6f7981b"
+   ],
+   "seconds": 69,
+   "cost_usd": 0.542,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-d7c8bcd113",
+   "folder": "~/Projects/hp-work/p/d7c8bcd113",
+   "model": "sonnet",
+   "flow": "flow_0111beaaf712",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_efaafe490010"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.385,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-2c8906a5a7",
+   "folder": "~/Projects/hp-work/p/2c8906a5a7",
+   "model": "sonnet",
+   "flow": "flow_bb9d80a1e9b8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_501f51eb5ae5"
+   ],
+   "seconds": 108,
+   "cost_usd": 0.71,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-0664229638",
+   "folder": "~/Projects/hp-work/p/0664229638",
+   "model": "sonnet",
+   "flow": "flow_a07bc5d8fba9",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9fbceb77ebb6"
+   ],
+   "seconds": 108,
+   "cost_usd": 0.752,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-76d4cc2065",
+   "folder": "~/Projects/hp-work/p/76d4cc2065",
+   "model": "sonnet",
+   "flow": "flow_cd44958bf0b4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2d690d3ce256"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.42,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-595e4adfd8",
+   "folder": "~/Projects/hp-work/p/595e4adfd8",
+   "model": "sonnet",
+   "flow": "flow_940af672415c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_16667207d2a1"
+   ],
+   "seconds": 93,
+   "cost_usd": 0.656,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-12c6c495cd",
+   "folder": "~/Projects/hp-work/p/12c6c495cd",
+   "model": "sonnet",
+   "flow": "flow_3504adaa2b6e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_78df7607870f"
+   ],
+   "seconds": 130,
+   "cost_usd": 0.0,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-cf37762e16",
+   "folder": "~/Projects/hp-work/p/cf37762e16",
+   "model": "sonnet",
+   "flow": "flow_39d635567426",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7198c2ed7e34"
+   ],
+   "seconds": 15,
+   "cost_usd": 0.382,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "CacheReadKept",
+   "input": {
+    "encoded": "d0|a;a;a;a;a;a;a;a;i5;a;a;a",
+    "shown": "sdk_usage={cacheReadTokens: 5}"
+   },
+   "ref": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "none"
+   },
+   "post": {
+    "ok": true,
+    "out": "none"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "CacheWriteKept",
+   "input": {
+    "encoded": "d0|a;a;a;a;a;a;a;a;a;a;i5;a",
+    "shown": "sdk_usage={cacheWriteTokens: 5}"
+   },
+   "ref": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "none"
+   },
+   "post": {
+    "ok": true,
+    "out": "none"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "d0|i5;i7;a;a;a;a;a;a;a;a;a;a",
+    "shown": "sdk_usage={inputTokens: 5, input_tokens: 7}"
+   },
+   "design_a": {
+    "encoded": "tokens_in=5;tokens_out=0",
+    "shown": "{tokens_in: 5, tokens_out: 0}"
+   },
+   "design_b": {
+    "encoded": "tokens_in=7;tokens_out=0",
+    "shown": "{tokens_in: 7, tokens_out: 0}"
+   },
+   "ref": {
+    "encoded": "tokens_in=5;tokens_out=0",
+    "shown": "{tokens_in: 5, tokens_out: 0}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "tokens_in=5;tokens_out=0"
+   },
+   "post": {
+    "ok": true,
+    "out": "tokens_in=5;tokens_out=0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "d0|a;a;a;a;i5;a;a;a;a;a;a;a",
+    "shown": "sdk_usage={outputTokens: 5}"
+   },
+   "design_a": {
+    "encoded": "tokens_in=0;tokens_out=5",
+    "shown": "{tokens_in: 0, tokens_out: 5}"
+   },
+   "design_b": {
+    "encoded": "tokens_in=1;tokens_out=5",
+    "shown": "{tokens_in: 1, tokens_out: 5}"
+   },
+   "ref": {
+    "encoded": "tokens_in=0;tokens_out=5",
+    "shown": "{tokens_in: 0, tokens_out: 5}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "tokens_in=0;tokens_out=5"
+   },
+   "post": {
+    "ok": true,
+    "out": "tokens_in=0;tokens_out=5"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "n0",
+    "shown": "sdk_usage=None"
+   },
+   "design_a": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "design_b": {
+    "encoded": "",
+    "shown": "{}"
+   },
+   "ref": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "none"
+   },
+   "post": {
+    "ok": true,
+    "out": "none"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "d0|i1;a;a;a;i5;i7;a;a;a;a;a;a",
+    "shown": "sdk_usage={inputTokens: 1, outputTokens: 5, output_tokens: 7}"
+   },
+   "design_a": {
+    "encoded": "tokens_in=1;tokens_out=5",
+    "shown": "{tokens_in: 1, tokens_out: 5}"
+   },
+   "design_b": {
+    "encoded": "tokens_in=1;tokens_out=7",
+    "shown": "{tokens_in: 1, tokens_out: 7}"
+   },
+   "ref": {
+    "encoded": "tokens_in=1;tokens_out=5",
+    "shown": "{tokens_in: 1, tokens_out: 5}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "tokens_in=1;tokens_out=5"
+   },
+   "post": {
+    "ok": true,
+    "out": "tokens_in=1;tokens_out=5"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 48,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 7,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "NoCountsNone",
+  "InputSpelling",
+  "OutputSpelling",
+  "CacheReadKept",
+  "CacheWriteKept",
+  "NoInventedCacheRead",
+  "NoInventedCacheWrite"
+ ],
+ "cost_usd": 10.3,
+ "seconds": 1264
+}

@@ -1,0 +1,302 @@
+{
+ "bug": "d73c86ce",
+ "title": "Hooks added from the UI store a string command that the runner always skips",
+ "repo": "marionette",
+ "function": "post_hooks_add (unit with harness/hooks.py _valid_record, lines 50-60)",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-37a641e6a5",
+   "folder": "~/Projects/hp-work/p/37a641e6a5",
+   "model": "opus",
+   "flow": "flow_0547a269adb0",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b1fc45258c45"
+   ],
+   "seconds": 217,
+   "cost_usd": 1.882,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-e5cad3c226",
+   "folder": "~/Projects/hp-work/p/e5cad3c226",
+   "model": "sonnet",
+   "flow": "flow_170d36ad537e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_06490c74b817"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.468,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-7256d6289b",
+   "folder": "~/Projects/hp-work/p/7256d6289b",
+   "model": "sonnet",
+   "flow": "flow_81af97c2e2da",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0bea0eddbb21"
+   ],
+   "seconds": 42,
+   "cost_usd": 0.472,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-5ebfbad36b",
+   "folder": "~/Projects/hp-work/p/5ebfbad36b",
+   "model": "sonnet",
+   "flow": "flow_c55b42d75e03",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0e082a9b76cb"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.382,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-3b09f60472",
+   "folder": "~/Projects/hp-work/p/3b09f60472",
+   "model": "sonnet",
+   "flow": "flow_a55461dde087",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1d66fb76b97e"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.424,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-4c1c876529",
+   "folder": "~/Projects/hp-work/p/4c1c876529",
+   "model": "sonnet",
+   "flow": "flow_a79521f65f88",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_891275768b32"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.401,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-d1d6e37c30",
+   "folder": "~/Projects/hp-work/p/d1d6e37c30",
+   "model": "sonnet",
+   "flow": "flow_b72cb920cb48",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5ec3ce1bc6f7"
+   ],
+   "seconds": 35,
+   "cost_usd": 0.425,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-26d0777e19",
+   "folder": "~/Projects/hp-work/p/26d0777e19",
+   "model": "sonnet",
+   "flow": "flow_6ff57c0b3189",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1c693fee834f"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.391,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-138a03d600",
+   "folder": "~/Projects/hp-work/p/138a03d600",
+   "model": "sonnet",
+   "flow": "flow_aab2b92db5c4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_2b8c3424c156"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.401,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-44b09780c6",
+   "folder": "~/Projects/hp-work/p/44b09780c6",
+   "model": "sonnet",
+   "flow": "flow_715d804a1798",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f34de8f8415b"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.442,
+   "stage": "A3"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "E M C M U 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 L 0 H 0",
+    "shown": "event=<missing> command=<missing> uuid=00000000000000000000000000000000 legacy_env=false stored=[]"
+   },
+   "design_a": {
+    "encoded": "ERR_EVENT",
+    "shown": "400 Invalid event"
+   },
+   "design_b": {
+    "encoded": "ERR_COMMAND",
+    "shown": "400 Command cannot be empty"
+   },
+   "ref": {
+    "encoded": "ERR_EVENT",
+    "shown": "400 Invalid event"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ERR_EVENT"
+   },
+   "post": {
+    "ok": true,
+    "out": "ERR_EVENT"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "E S 6 112 114 101 82 117 110 C M U 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 L 0 H 0",
+    "shown": "event=\"preRun\" command=<missing> uuid=00000000000000000000000000000000 legacy_env=false stored=[]"
+   },
+   "design_a": {
+    "encoded": "ERR_COMMAND",
+    "shown": "400 Command cannot be empty"
+   },
+   "design_b": {
+    "encoded": "OK S 0 S 6 112 114 101 82 117 110 S 0 1 V 1 H 0",
+    "shown": "200 {id=\"\", event=\"preRun\", command=\"\", enabled=true} valid_record=true saved=[]"
+   },
+   "ref": {
+    "encoded": "ERR_COMMAND",
+    "shown": "400 Command cannot be empty"
+   },
+   "pre": {
+    "ok": true,
+    "out": "ERR_COMMAND"
+   },
+   "post": {
+    "ok": true,
+    "out": "ERR_COMMAND"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "E S 6 112 114 101 82 117 110 C S 1 120 U 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 L 0 H 0",
+    "shown": "event=\"preRun\" command=\"x\" uuid=00000000000000000000000000000000 legacy_env=false stored=[]"
+   },
+   "design_a": {
+    "encoded": "ERR_COMMAND",
+    "shown": "400 Command cannot be empty"
+   },
+   "design_b": {
+    "encoded": "ERR_EVENT",
+    "shown": "400 Invalid event"
+   },
+   "ref": {
+    "encoded": "OK S 12 48 48 48 48 48 48 48 48 48 48 48 48 S 6 112 114 101 82 117 110 S 1 120 1 V 0 H 1 S 12 48 48 48 48 48 48 48 48 48 48 48 48 S 6 112 114 101 82 117 110 S 1 120 1",
+    "shown": "200 {id=\"000000000000\", event=\"preRun\", command=\"x\", enabled=true} valid_record=false saved=[{id=\"000000000000\", event=\"preRun\", command=\"x\", enabled=true}]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "OK S 12 48 48 48 48 48 48 48 48 48 48 48 48 S 6 112 114 101 82 117 110 S 1 120 1 V 0 H 1 S 12 48 48 48 48 48 48 48 48 48 48 48 48 S 6 112 114 101 82 117 110 S 1 120 1"
+   },
+   "post": {
+    "ok": true,
+    "out": "OTHER (200, {'id': '000000000000', 'event': 'preRun', 'command': ['x'], 'enabled': True}, [{'id': '000000000000', 'event': 'preRun', 'command': ['x'], 'enabled': True}], True)"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 28,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 3,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 7909,
+   "first_difference": {
+    "input": "E S 13 115 101 115 115 105 111 110 83 116 97 114 116 12 C S 12 8197 8202 8239 76 86 160 8199 107 46 60 8287 8195 U 4 2 8 3 15 14 15 12 6 3 15 0 12 13 0 14 8 7 3 10 0 0 0 0 12 6 13 0 7 14 15 7 L 1 H 1 S 3 108 50 119 S 6 112 114 101 82 117 110 S 0 1",
+    "lean_ref": "OK S 12 52 50 56 51 102 101 102 99 54 51 102 48 S 12 115 101 115 115 105 111 110 83 116 97 114 116 S 7 76 86 160 8199 107 46 60 1 V 0 H 2 S 3 108 50 119 S 6 112 114 101 82 117 110 S 0 1 S 12 52 50 56 51 102 101 102 99 54 51 102 48 S 12 115 101 115 115 105 111 110 83 116 97 114 116 S 7 76 86 160 8199 107 46 60 1",
+    "python": "OTHER (200, {'id': '4283fefc63f0', 'event': 'sessionStart', 'command': ['LV\\xa0\\u2007k.<'], 'enabled': True}, [{'id': 'l2w', 'event': 'preRun', 'command': '', 'enabled': True}, {'id': '4283fefc63f0', 'event': 'sessionStart', 'command': ['LV\\xa0\\u2007k.<'], 'enabled': True}], True)"
+   }
+  }
+ },
+ "first_laws": [
+  "AddedHookHasLifecycleEvent"
+ ],
+ "cost_usd": 5.69,
+ "seconds": 488
+}

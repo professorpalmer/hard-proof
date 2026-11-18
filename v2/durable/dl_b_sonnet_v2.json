@@ -1,0 +1,149 @@
+{
+ "name": "dl_b_sonnet_v2",
+ "start": "b_sonnet",
+ "base": "base_b",
+ "folder": "2d3335de13",
+ "flow": "flow_f8ce2cd50708",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 39,
+   "cost_usd": 0.432,
+   "jobs": [
+    "job_d6ff2f5a272b"
+   ],
+   "session_cost_usd": 0.432
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 37,
+   "cost_usd": 0.437,
+   "jobs": [
+    "job_150c4ddc0bdf"
+   ],
+   "session_cost_usd": 0.437
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 21,
+   "cost_usd": 0.067,
+   "jobs": [
+    "job_f244aa96d9a2"
+   ],
+   "session_cost_usd": 0.499
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PARTIAL",
+   "ok": true,
+   "seconds": 26,
+   "cost_usd": 0.096,
+   "jobs": [
+    "job_81aa57a1d14d"
+   ],
+   "session_cost_usd": 0.533
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 83,
+   "cost_usd": 0.256,
+   "jobs": [
+    "job_0f6f61309419"
+   ],
+   "session_cost_usd": 0.755
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 2,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled)]",
+    "design B result: [id 1 (adapter 1, model 1, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled)]",
+   "new_laws": {
+    "AddsOnce": "\u2200 c st r, DistinctIds st \u2192 (added f c st r).Pairwise (fun a b => a.id \u2260 b.id)"
+   }
+  },
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "new_laws": {
+    "AddsInStarterOrder": "\u2200 c st r, List.Sublist ((added f c st r).map Entry.id) (st.map Entry.id)"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 5,
+ "cost_usd": 1.29,
+ "seconds": 206,
+ "final_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "AddsOnce",
+  "AddsInStarterOrder"
+ ]
+}

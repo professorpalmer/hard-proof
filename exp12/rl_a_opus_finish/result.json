@@ -1,0 +1,104 @@
+{
+ "start": "rl_a_opus_final",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "StarterOrder"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_c10c3dfd7537",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 78,
+    "cost_usd": 0.6
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "StarterOrder"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 0 (adapter 0, model 0, enabled); id 0 (adapter 0, model 0, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+    "design B result: [id 0 (adapter 0, model 0, disabled)]",
+    "shipped code: [id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]"
+   ],
+   "answer": "[id 0 (adapter 0, model 0, disabled); id 0 (adapter 0, model 0, disabled)]",
+   "law_author": {
+    "flow": "flow_371a82b0b15d",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 33,
+    "cost_usd": 0.43
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "OneRowPerAbsent": "\u2200 c st r t, f c st r = r ++ t \u2192 t.length = (st.filter (absent r)).length"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_484c5016dc35",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 78,
+    "cost_usd": 0.57
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsPrefix",
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NewDisabled",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "StarterOrder",
+    "OneRowPerAbsent"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsPrefix",
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NewDisabled",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "StarterOrder",
+  "OneRowPerAbsent"
+ ],
+ "questions": 1
+}

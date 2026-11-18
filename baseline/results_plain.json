@@ -1,0 +1,1107 @@
+{
+ "arm": "plain",
+ "runs": [
+  {
+   "id": "29e4a791",
+   "arm": "plain",
+   "flow": "flow_70799afc4a67",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_08979a361d28"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.467,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": true,
+     "b4": true,
+     "b5": false
+    },
+    "reason": "With b0=true and b2=false, Laws 0, 2, 3, 4 cover every case with b4=false or b5=true, and Law6 covers b4=true, b5=false only when b3=false. The case b0=true, b2=false, b3=true, b4=true, b5=false has no law, so one passing rule can answer true and another false."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "7a23d41f",
+   "arm": "plain",
+   "flow": "flow_faf9e40ac45f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_d75de4a52eed"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.494,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new rows after the old registry, and they do not forbid repeated identical new rows.",
+    "input": "Config: locked = fun _ => false, enable = false. Starter list: [{id:1, adapter:1, model:1, enabled:true}, {id:2, adapter:2, model:2, enabled:true}]. Registry: [].",
+    "result_a": "ref (starter order): [{id:1, adapter:1, model:1, enabled:false}, {id:2, adapter:2, model:2, enabled:false}]",
+    "result_b": "Same design with the new rows reversed: [{id:2, adapter:2, model:2, enabled:false}, {id:1, adapter:1, model:1, enabled:false}]",
+    "reason": "Every law talks about membership of rows, or about the old registry as a prefix. No law says in what order the new rows follow the prefix. So the reversed design passes every law and gives a different registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "4067c6a9",
+   "arm": "plain",
+   "flow": "flow_b0e590e3f573",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_fb8089ed30f1"
+   ],
+   "seconds": 36,
+   "cost_usd": 0.537,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix the set of processes in the critical section after each event sequence. An acquire must be refused when a live holder exists (Law 1 and Law 3) and granted when none exists (Law 2). A release by the holder must clear it (Law 4), and a release by any other process cannot change the holder (Law 3). The OS part of the state does not depend on the design, so each design that passes gives the same cs by induction on the trace."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "d7daddbf",
+   "arm": "plain",
+   "flow": "flow_5c84c4d8d676",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_202ab986f4ab"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.131,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": true,
+     "b4": true,
+     "b5": false
+    },
+    "reason": "No law's premises hold on this case: L0 needs b4=false, L2 and L4 need b2=false with b4=false or b5=true, L3 needs b5=true, L6 needs b3=false, and L1/L5 need b2=true or b0=false. So no law fixes its answer, and two rules that differ only there both pass every law. The laws are consistent, so passing rules exist."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "1669c7a0",
+   "arm": "plain",
+   "flow": "flow_b65e5ba5c8b7",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_55f3e9791ecc"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.124,
+   "answer": {
+    "verdict": "complete",
+    "reason": "Law6 forces true when b0 is false and Law7 forces true when b0 and b2 are true. For b0 true and b2 false, every one of the 16 combinations of b1, b3, b4, b5 is caught by Law0 through Law5, and each of those forces false. So every passing rule equals (not b0) or b2 on all 64 cases."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "b9af6116",
+   "arm": "plain",
+   "flow": "flow_ef37702f429c",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_490d821dd9c3"
+   ],
+   "seconds": 14,
+   "cost_usd": 0.372,
+   "answer": {
+    "verdict": "complete",
+    "reason": "Laws 6 and 7 fix every case with b0=false or b2=true. For b0=true and b2=false, Laws 1,0,2 (b4=true) and Laws 3,4,5 (b4=false) cover all b5, b3, b1 splits, so every case is fixed."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "faff41a1",
+   "arm": "plain",
+   "flow": "flow_5ab5eda83a3f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_b7f204d9d169"
+   ],
+   "seconds": 44,
+   "cost_usd": 0.159,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": false,
+     "b4": false,
+     "b5": false,
+     "b6": false,
+     "b7": true,
+     "b8": false,
+     "b9": false
+    },
+    "reason": "No law's antecedent matches this case, so no law fixes its answer. Two rules that differ only at this case both pass every law, so the laws do not determine the rule."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "fd144f00",
+   "arm": "plain",
+   "flow": "flow_0784c98a84b5",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_46bd521bb5d1"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.403,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": false,
+     "b4": false,
+     "b5": false,
+     "b6": false,
+     "b7": true,
+     "b8": false,
+     "b9": false
+    },
+    "reason": "With b0=true, b1=false, b4=false, b6=false, b7=true, b8=false, b9=false, no law applies: each law that allows b8=false and b4=false needs b7=false, b6=true or b9=true. So two rules that agree elsewhere can give true and false here and both pass."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "5eae034c",
+   "arm": "plain",
+   "flow": "flow_cccbd885b785",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_c5959abaff21"
+   ],
+   "seconds": 61,
+   "cost_usd": 0.176,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The 32 laws partition all 1024 cases with no conflicts. Splitting on b0, b4, b1, b8, and b6 shows every case is fixed by a law with one answer, so any two passing rules agree on every case."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "3188d38b",
+   "arm": "plain",
+   "flow": "flow_094e7d88da7f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_c3d2ff71b956"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.412,
+   "answer": {
+    "verdict": "complete",
+    "reason": "I split the 1024 cases by b0, then b4, then b1/b8 and the other inputs. Each case matches at least one law, so the laws fix every answer. Overlapping laws agree, so passing rules cannot differ."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "59ee53e8",
+   "arm": "plain",
+   "flow": "flow_2db72378631a",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_39f47f9d4427"
+   ],
+   "seconds": 154,
+   "cost_usd": 0.255,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": false,
+     "b4": true,
+     "b5": true,
+     "b6": true,
+     "b7": false,
+     "b8": false,
+     "b9": false,
+     "b10": false,
+     "b11": true,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "No law in TblLaws.lean constrains this case. I checked each of the 127 laws and each has at least one literal that this case contradicts. Because the case is outside every law, a rule can return true or false here and still pass every law, so two passing rules can differ on it."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "433436ec",
+   "arm": "plain",
+   "flow": "flow_f63bf062fcb4",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_e6e9ad955a1e"
+   ],
+   "seconds": 141,
+   "cost_usd": 0.724,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": true,
+     "b7": true,
+     "b8": true,
+     "b9": true,
+     "b10": true,
+     "b11": false,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "The rule has 128 leaves but TblLaws.lean has only 127 laws. By hand, no law matches this case, because each law that fits most inputs needs one input to differ (for example b4=true, b7=false, b11=true or b12=true). Two passing rules can differ here."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "714f6d1d",
+   "arm": "plain",
+   "flow": "flow_cfc4c04b1e05",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_d412092af40b"
+   ],
+   "seconds": 504,
+   "cost_usd": 0.572,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": true,
+     "b1": false,
+     "b2": false,
+     "b3": false,
+     "b4": false,
+     "b5": false,
+     "b6": true,
+     "b7": true,
+     "b8": false,
+     "b9": false,
+     "b10": false,
+     "b11": true,
+     "b12": false,
+     "b13": false
+    },
+    "reason": "No law in TblLaws.lean has antecedents that all hold at this case, so Passes places no constraint on f at this case. Two rules that differ only there, one true and one false, both pass every law and give different answers."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "5030e8d4",
+   "arm": "plain",
+   "flow": "flow_63ff9bb3b489",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_39ef07cf91c3"
+   ],
+   "seconds": 60,
+   "cost_usd": 0.554,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The 128 laws fix the answer on regions of size 2^-(premises); these sizes sum to exactly 16384/16384, and the regions I checked by hand (all of b13=true, and all of b0=false) are fully covered, so the laws form a full partition and leave no case free."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "24af0a62",
+   "arm": "plain",
+   "flow": "flow_66b0908277c7",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_c6e10c518dd8"
+   ],
+   "seconds": 289,
+   "cost_usd": 0.498,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": false,
+     "b1": true,
+     "b2": true,
+     "b3": false,
+     "b4": false,
+     "b5": true,
+     "b6": false,
+     "b7": true,
+     "b8": true,
+     "b9": false,
+     "b10": false,
+     "b11": false,
+     "b12": true,
+     "b13": true,
+     "b14": true,
+     "b15": false,
+     "b16": true,
+     "b17": true
+    },
+    "reason": "TblLaws.lean defines 511 laws (Law0 to Law510); Law511 is missing from Passes, so the laws cover all cases except one leaf of 8 cases. The case given matches no law, so a passing rule can take either answer there and two passing rules differ."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "9b260ba0",
+   "arm": "plain",
+   "flow": "flow_836dc90917a8",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_5a0de1de92a4"
+   ],
+   "seconds": 157,
+   "cost_usd": 0.839,
+   "answer": {
+    "verdict": "gap",
+    "case": {
+     "b0": false,
+     "b1": true,
+     "b2": false,
+     "b3": false,
+     "b4": true,
+     "b5": false,
+     "b6": false,
+     "b7": true,
+     "b8": true,
+     "b9": false,
+     "b10": true,
+     "b11": false,
+     "b12": true,
+     "b13": false,
+     "b14": false,
+     "b15": false,
+     "b16": false,
+     "b17": false
+    },
+    "reason": "TblLaws.lean defines Law0 to Law510 only, so 511 laws cover a 512-leaf rule; the law cubes cover all but 2^-15 of the case space, so one cube of 8 cases is unconstrained. The case given is a best-effort guess inside that cube and is not verified."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "7e8fdb14",
+   "arm": "plain",
+   "flow": "flow_3446937b3eee",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_6fd8f66a7656"
+   ],
+   "seconds": 109,
+   "cost_usd": 0.291,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The 512 laws are the leaves of one rule. Their cube volumes sum to exactly 2^18 (count by premise length: 4:4, 5:2, 6:11, 7:23, 8:39, 9:41, 10:42, 11:68, 12:66, 13:64, 14:58, 15:44, 16:19, 17:21, 18:10), so they cover every case and each case fixes the answer, so any two passing rules agree everywhere. Caveat: I did not check pairwise disjointness by hand; the exact sum makes a planted gap unlikely but does not prove it."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "2505b991",
+   "arm": "plain",
+   "flow": "flow_4cf4bc527f02",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_b4c1ab4e80af"
+   ],
+   "seconds": 63,
+   "cost_usd": 0.626,
+   "answer": {
+    "verdict": "complete",
+    "reason": "TblLaws.lean has 512 laws, one per leaf of a decision tree. The cube sizes sum to exactly 2^18 (Kraft sum 1), so the laws cover every case and fix its answer."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "149d9172",
+   "arm": "plain",
+   "flow": "flow_7730ae268ace",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_f61339d88ce0"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.384,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether a lock with no valid owner pid is removed when its age equals stale_after exactly (the laws only cover age strictly above or strictly below, and age unknown).",
+    "input": "pidKnown=false, alive=false, reused=false, age=some 10, staleAfter=10",
+    "result_a": "true (remove the lock file; this is the ref rule, age >= stale_after)",
+    "result_b": "false (keep the lock file; strict age > stale_after)",
+    "reason": "UnknownOlderRemoved needs staleAfter < a and UnknownYoungerKept needs a < staleAfter, so age = staleAfter is unconstrained. Both rules pass every law, and no other law applies when pidKnown is false. The same gap exists for age = none."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "5b17e2f3",
+   "arm": "plain",
+   "flow": "flow_4d6b3383cecb",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_d4afe462a55b"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.372,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "When the owner pid is unknown and the known age equals stale_after exactly, the laws do not say whether to remove the lock file.",
+    "input": "pidKnown=false, alive=false, reused=false, age=some 60, staleAfter=60",
+    "result_a": "true (remove): the design that uses age >= staleAfter, as ref does",
+    "result_b": "false (keep): the design that uses age > staleAfter",
+    "reason": "UnknownOlderRemoved needs a strictly greater than staleAfter and UnknownYoungerKept needs a strictly less than staleAfter, so age equal to staleAfter has no law. Both designs pass all seven laws and differ only at this boundary."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "4c298147",
+   "arm": "plain",
+   "flow": "flow_4f0a4a9a25c5",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_d53fe3355105"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.386,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix every case. With a known pid: not alive gives true, reused gives true, and alive with no reuse gives false, so all four alive/reused pairs are set. With no known pid: age none gives false, age below stale_after gives false, age equal gives true, and age above gives true, so every age is set. Any two rules that pass all laws are therefore equal."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "ed60cece",
+   "arm": "plain",
+   "flow": "flow_9cab222b0c00",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_52c9a6f7bad3"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.368,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether a lock file is removed when the owner pid is unknown and the age of the lock is unknown.",
+    "input": "{pidKnown := false, alive := false, reused := false, age := none, staleAfter := 0}",
+    "result_a": "Design A (ref) returns false: keep the lock file.",
+    "result_b": "Design B (ref, but true when pidKnown is false and age is none) returns true: remove the lock file.",
+    "reason": "Each law about an unknown owner needs age = some a, and each law about a known owner needs pidKnown = true. No law constrains pidKnown = false with age = none, so two rules can pass every law and still differ there."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "8c80ea1f",
+   "arm": "plain",
+   "flow": "flow_324ab866f7c3",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_8e024e65dd71"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.367,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix the answer for every case. With a known pid: dead gives true, reused gives true, and alive and not reused gives false. With an unknown pid: age at or above stale_after gives true, age below gives false, and unknown age gives false. These branches cover all cases, so two rules that pass all laws are equal."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "a1bf04a4",
+   "arm": "plain",
+   "flow": "flow_1e20e1b49b4d",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_85f83ef3d770"
+   ],
+   "seconds": 16,
+   "cost_usd": 0.37,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether an unidentified owner whose age equals stale_after exactly is recovered (the laws only cover age strictly above or strictly below).",
+    "input": "{pidKnown := false, alive := false, reused := false, age := some 5, staleAfter := 5}",
+    "result_a": "true (remove the lock file; ref uses a >= staleAfter)",
+    "result_b": "false (keep the lock file; a rule that uses a > staleAfter)",
+    "reason": "For a known pid the laws fix the result in every case. For an unknown pid they fix only age > stale_after and age < stale_after, so the equal boundary (and age = none) is free. Two rules that differ only there both pass every law."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "27081f9d",
+   "arm": "plain",
+   "flow": "flow_11663920844e",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_f621a0241745"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.387,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether an unidentified owner whose lock age is exactly equal to stale_after is recovered (age >= stale_after) or kept (age > stale_after).",
+    "input": "{pidKnown := false, alive := false, reused := false, age := some 5, staleAfter := 5}",
+    "result_a": "true (remove the lock file): design that recovers when age >= staleAfter, as ref does",
+    "result_b": "false (keep the lock file): design that recovers only when age > staleAfter",
+    "reason": "The laws force true for age > staleAfter and false for age < staleAfter, but no law covers age = staleAfter with an unknown pid. All other cases are fixed by the laws, so two rules that differ only at this boundary both pass every law."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "b18825fd",
+   "arm": "plain",
+   "flow": "flow_89a7afe97534",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_026aad797e1f"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.385,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix the result for every case. With a known pid: dead or reused gives true, and alive and not reused gives false. With an unknown pid: age none gives false, age below staleAfter gives false, and age at or above staleAfter gives true (this includes the boundary). So each rule that passes is equal to ref."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "6d1956a6",
+   "arm": "plain",
+   "flow": "flow_71e4cf56d65f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_9b716367812f"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.402,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The order of the new entries inside the appended tail (and whether a starter appears once or more than once) is not fixed by any law.",
+    "input": "enable = false, locked = (fun _ => false), registry = [], starter list = [{id:1, adapter:1, model:1, enabled:true}, {id:2, adapter:2, model:2, enabled:true}] (distinct ids, both absent)",
+    "result_a": "[{id:1, adapter:1, model:1, enabled:false}, {id:2, adapter:2, model:2, enabled:false}] (starter order, as ref does)",
+    "result_b": "[{id:2, adapter:2, model:2, enabled:false}, {id:1, adapter:1, model:1, enabled:false}] (reverse starter order)",
+    "reason": "Both designs keep the registry rows, append only a tail, add every absent starter once, and set enabled by the rule, so they pass every law. NewAtEnd, AddsOnlyAbsent and AddsEveryAbsent talk about membership of the tail only, so the tail order is free."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "6b5d23e7",
+   "arm": "plain",
+   "flow": "flow_88754f655966",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_f516685671a2"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.404,
+   "answer": {
+    "verdict": "complete",
+    "reason": "NewAtEnd gives result = r ++ tail. With distinct starter ids, NewInStarterOrder makes the tail ids a sublist of the starter ids (no repeats, starter order). AddsOnlyAbsent and AddsEveryAbsent make the tail ids exactly the absent starters. AddsOnlyAbsent, AddsEveryAbsent and EnabledRule fix adapter, model and enabled for each id, so the result is unique."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "06bf34e4",
+   "arm": "plain",
+   "flow": "flow_108683b73a1a",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_3073c892b66c"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.402,
+   "answer": {
+    "verdict": "complete",
+    "reason": "NewAtEnd gives result = r ++ tail. With distinct starter ids, AddsOnlyAbsent and AddsEveryAbsent make the tail ids exactly the ids of the absent starters, OneRowPerAbsent fixes the count, and NewInStarterOrder fixes the order. Each tail row then has a unique source starter, so its id, adapter, model (by the laws) and enabled flag (by EnabledRule) are fixed, and every passing design gives the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "a9eafb70",
+   "arm": "plain",
+   "flow": "flow_a77ae27a930a",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_3cd3b9cbc624"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.414,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether the command may append a duplicate copy of a row that is already in the registry, because the laws constrain a new row only when it is not equal to an old row.",
+    "input": "config: enable=false, locked=none; starter=[{id:1,adapter:1,model:1,enabled:false}]; registry=[{id:1,adapter:1,model:1,enabled:true}]",
+    "result_a": "[{id:1,adapter:1,model:1,enabled:true}] (ref: nothing is absent, so nothing is added)",
+    "result_b": "[{id:1,adapter:1,model:1,enabled:true},{id:1,adapter:1,model:1,enabled:true}] (design B appends a copy of the existing row)",
+    "reason": "AddsOnlyAbsent and NoSameIdentity apply only to new rows x with x not in r, so a copy of an old row escapes them. No starter is absent, so the other laws are vacuous. NewInStarterOrder passes because new ids [1] are a sublist of starter ids [1]."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "45724140",
+   "arm": "plain",
+   "flow": "flow_996e242b85f1",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_5a1f00b2fb7e"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.417,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws force the result. KeepsExisting and NoDuplicateId give r ++ new with no new row that copies an old id. AddsOnlyAbsent and AddsAllAbsent make the new ids exactly the absent starter ids. NewInStarterOrder and DistinctIds fix the order and forbid duplicates. The id, adapter and model of each row come from its starter, and the four enabled laws fix the flag in every case of enable and locked."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "92788991",
+   "arm": "plain",
+   "flow": "flow_44e2fb5a5221",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_f9f2454f1b42"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.41,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, OneRowPerAbsent fixes the number of new rows. AddsAllAbsent gives each absent starter one row with its id, adapter and model, and the ids are distinct, so no extra or duplicate row can exist. NewInStarterOrder fixes the order, KeepsExisting fixes the old prefix, and the three enabled laws (default off, enable keeps starter, locked off) fix the one remaining field in every case. Every field of every row is therefore determined."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "13166124",
+   "arm": "plain",
+   "flow": "flow_d507830f290a",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_3fffd8ae4222"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.387,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new entries after the old registry, and they do not forbid repeated copies of a new entry.",
+    "input": "enable=false, locked=none; starter list [{id 1, adapter 1, model 1, enabled true}, {id 2, adapter 2, model 2, enabled true}]; registry []",
+    "result_a": "[{id 1, adapter 1, model 1, enabled false}, {id 2, adapter 2, model 2, enabled false}] (starter order, as ref)",
+    "result_b": "[{id 2, adapter 2, model 2, enabled false}, {id 1, adapter 1, model 1, enabled false}] (reversed starter order)",
+    "reason": "Every law about the tail t only talks about membership of t, so a design that reverses t passes all laws. The registries differ as lists, and sentence 6 says only that new entries go to the end."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "07bd809d",
+   "arm": "plain",
+   "flow": "flow_453bbd49d60d",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_052c5d126573"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.403,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input, the laws fix the new registry. KeepsPrefix gives r ++ t. AddsOnlyAbsent and AddsAllAbsent make t contain exactly the absent starter rows by id, adapter and model. Distinct starter ids and KeepsStarterOrder (a sublist of a duplicate-free id list) give the order with no repeats. NewDisabled, LockedDisabled and EnableKeepsState fix every enabled flag. So two passing designs give the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "bb76718e",
+   "arm": "plain",
+   "flow": "flow_7110c61e62b0",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_4df5c3a2de3f"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.39,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix the result in full. KeepsPrefix gives r ++ t. AddsAllAbsent, AddsOnlyAbsent and CountsAbsent make t hold exactly one row per absent starter id, with the same id, adapter and model. KeepsStarterOrder then fixes the order. NewDisabled, LockedDisabled and EnableKeepsState fix the enabled flag in every case, so two designs that pass give one registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "64154e68",
+   "arm": "plain",
+   "flow": "flow_b7926729ef9e",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_34c02131efdc"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.403,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order of the new entries among themselves (nor how many times each is appended): RowsKept only makes the old registry a prefix.",
+    "input": "enable=true, locked=(fun _ => false), registry=[], starters=[{id:1,adapter:1,model:1,enabled:true},{id:2,adapter:2,model:2,enabled:true}] (distinct ids, both absent)",
+    "result_a": "ref design: [{id:1,adapter:1,model:1,enabled:true},{id:2,adapter:2,model:2,enabled:true}]",
+    "result_b": "design that appends the adjusted absent entries in reverse starter order: [{id:2,adapter:2,model:2,enabled:true},{id:1,adapter:1,model:1,enabled:true}]",
+    "reason": "Both designs keep the registry as a prefix, add exactly the absent starters with the right enabled flag, so they pass every law. No law constrains the order of the appended part, so the results differ."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "faad5806",
+   "arm": "plain",
+   "flow": "flow_23382cd734c0",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_7309435a416e"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.406,
+   "answer": {
+    "verdict": "complete",
+    "reason": "RowsKept fixes the result as r ++ rest. NewInStarterOrder fixes the ids of rest as the ids of the absent starters, in order. A rest row cannot be in r, because its id is absent from r, so OnlyLacking gives its adapter and model from the one starter with that id (ids are distinct). NewEntryEnabled then fixes its enabled flag, so every passing design gives the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "5148d1df",
+   "arm": "plain",
+   "flow": "flow_51211c8dc94b",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_b383a4d5779f"
+   ],
+   "seconds": 24,
+   "cost_usd": 0.399,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The order of the added rows (and how many times each one appears) is not fixed: the laws only need each absent starter to be present among the added rows, with no law on their order, or on repeated rows.",
+    "input": "enable = false, locked = (fun _ => false), registry = [], starter list = [{id 1, adapter 1, model 1, enabled true}, {id 2, adapter 2, model 2, enabled true}]",
+    "result_a": "[{id 1, adapter 1, model 1, enabled false}, {id 2, adapter 2, model 2, enabled false}] (the reference order)",
+    "result_b": "[{id 2, adapter 2, model 2, enabled false}, {id 1, adapter 1, model 1, enabled false}] (the added rows in reverse order; all eight laws still hold)",
+    "reason": "AddsAllAbsent and AddsOnlyAbsent are membership laws on the added rows, and NewAtEnd only fixes where the added rows go. No law fixes their order or their count, so a reversed design (or one that adds each row twice) passes every law and gives a different registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "a4cc85b9",
+   "arm": "plain",
+   "flow": "flow_d5ef5f0fe6ab",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_bbed711a65b8"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.401,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input (distinct starter ids), the laws fix the kept registry prefix, the exact set of added ids (all absent starters, only absent ones), their order (a sublist of the starter ids with distinct ids), and every field of each added row: id, adapter and model come from AddsOnlyAbsent, and enabled is false without --enable or on a locked adapter, and the starter flag otherwise. So two designs that pass all laws give the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "78c95f18",
+   "arm": "plain",
+   "flow": "flow_938f84479c8b",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_76b8ac12316c"
+   ],
+   "seconds": 20,
+   "cost_usd": 0.401,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The order of the new rows after the old registry rows: the laws fix the set and the count of the new rows, but not their order.",
+    "input": "enable = false, locked = anything, registry r = [], starter list st = [{id:1, adapter:1, model:1, enabled:false}, {id:2, adapter:2, model:2, enabled:false}] (ids are distinct, so the list is legal)",
+    "result_a": "[{id:1, adapter:1, model:1, enabled:false}, {id:2, adapter:2, model:2, enabled:false}] (the design ref: new rows in starter order)",
+    "result_b": "[{id:2, adapter:2, model:2, enabled:false}, {id:1, adapter:1, model:1, enabled:false}] (a design that reverses the new rows)",
+    "reason": "Each law talks about membership, length, or the old prefix of the result, so a design that appends the same new rows in reverse order passes every law. The two designs give different registries for this input."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "c80f3611",
+   "arm": "plain",
+   "flow": "flow_565417bf52fe",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_5215e43757a2"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.402,
+   "answer": {
+    "verdict": "complete",
+    "reason": "The laws fix the old rows and their place (take and append laws). Each absent starter has exactly one new row: the count law matches the each-absent law, so the rows map one to one by id. The sub-sequence law fixes the order. The fields id, adapter and model are fixed, and the enabled flag is fixed in all three cases: enable off gives false, a locked adapter gives false, and enable on with an unlocked adapter gives the starter value."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "f59c832b",
+   "arm": "plain",
+   "flow": "flow_e84f63ab9b67",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_9d0ab9bac2e9"
+   ],
+   "seconds": 41,
+   "cost_usd": 0.136,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not decide whether a release by the owner clears the owner record and the critical-section flag, so a design may ignore the owner's release.",
+    "input": "[spawn 5, acquire 5, release 5], with the owner process at pid 5 and token 0",
+    "result_a": "Design A (the Solution lock, isOwner r p = decide (r = p)): after the release, process <5,0> is not in the critical section (cs = false).",
+    "result_b": "Design B (the same lock with isOwner r p = false, so a release never matches the owner): after the release, process <5,0> is still in the critical section (cs = true).",
+    "reason": "Design B passes Mutex, NoOrphanHold, HolderKeepsLock, CanRefuse and CanEnter: the owner stays live until it exits, so grants stays false while the holder is alive, and only release or exit clears cs, with release never clearing it in B. The laws never require a release to free the lock, so the two designs differ on cs for process <5,0>."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "11e09e80",
+   "arm": "plain",
+   "flow": "flow_401f6f561676",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_adf4b0f9bd8c"
+   ],
+   "seconds": 92,
+   "cost_usd": 0.169,
+   "answer": {
+    "verdict": "complete"
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "b25aa2a4",
+   "arm": "plain",
+   "flow": "flow_2713de5bd62e",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_4f8f89bace9f"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.115,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The laws do not fix the order in which the added starter rows are appended to the registry.",
+    "input": "config: enable = false, no adapter locked; starter = [{id 2, adapter 1, model 2, enabled true}, {id 4, adapter 2, model 5, enabled true}]; registry = [] (empty).",
+    "result_a": "designA appends in starter order: [{id 2, adapter 1, model 2, enabled false}, {id 4, adapter 2, model 5, enabled false}].",
+    "result_b": "designB appends in reverse starter order: [{id 4, adapter 2, model 5, enabled false}, {id 2, adapter 1, model 2, enabled false}].",
+    "reason": "Both designs append only absent starters, disable them by default, leave no starter id missing, and add nothing on a second run, so each passes all seven laws. The laws never state the order of the added rows, so the two registries differ."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "202c55a3",
+   "arm": "plain",
+   "flow": "flow_f8cbf8d971b4",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_7226be547bc8"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.117,
+   "answer": {
+    "verdict": "complete"
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "e862da11",
+   "arm": "plain",
+   "flow": "flow_f2bf240e4354",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_4569bce144e1"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.444,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "Whether a release by the lock owner must work: the laws never require that a release takes the owner out of the critical section.",
+    "input": "spawn 5, acquire 5, release 5; process {pid 5, tok 0}",
+    "result_a": "Design A (Exp.lock, isOwner is exact match) is not in the critical section after the release.",
+    "result_b": "Design B (same as Exp.lock but isOwner always returns false, so release does nothing) is still in the critical section.",
+    "reason": "Law 1 to 3 only restrict acquire, exit and non-release events, and they say nothing about a successful release. Design B keeps the owner record and the process in the critical section forever, so it passes every law (mutex, no orphan hold, holder keeps lock, can refuse, can enter) but differs from Design A after the release."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "127f464b",
+   "arm": "plain",
+   "flow": "flow_5cea10c1f33f",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_0b6f86253afc"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.392,
+   "answer": {
+    "verdict": "gap",
+    "open_decision": "The order of the added rows: no law fixes the order in which the new starter entries are appended after the old rows (a design can also add an entry more than once).",
+    "input": "config: locked = none, enable = false. registry: [] . starter: [{id 1, adapter 1, model 1, enabled true}, {id 2, adapter 1, model 2, enabled true}] (distinct ids).",
+    "result_a": "refSync order: [{id 1, adapter 1, model 1, enabled false}, {id 2, adapter 1, model 2, enabled false}]",
+    "result_b": "reversed order of the added rows: [{id 2, adapter 1, model 2, enabled false}, {id 1, adapter 1, model 1, enabled false}]",
+    "reason": "Law 1 only needs the result to be the old registry followed by some added list. Laws 2 to 6 check each added row alone, and law 3 checks presence only, so the reversed design passes every law. A second run adds nothing for both designs, so law 7 holds too."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  },
+  {
+   "id": "fe8be218",
+   "arm": "plain",
+   "flow": "flow_88910f6aada7",
+   "flow_status": "done",
+   "visits": 1,
+   "jobs": [
+    "job_192ff8fce4b2"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.418,
+   "answer": {
+    "verdict": "complete",
+    "reason": "For a legal input (distinct starter ids), Law 1 gives f c st r = r ++ added, so the new rows are unique. Law 8 fixes their id, adapter, model and order. Laws 4, 5 and 6 fix every enabled flag: false without --enable, false on a locked adapter, and the starter's own value with --enable on an unlocked adapter. So two passing designs give the same registry."
+   },
+   "changed_files": [
+    "answer.json"
+   ]
+  }
+ ]
+}

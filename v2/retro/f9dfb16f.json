@@ -1,0 +1,567 @@
+{
+ "bug": "f9dfb16f",
+ "title": "Responses body forwarded Chat Completions reasoning_effort at top level",
+ "repo": "Puppetmaster",
+ "function": "_build_responses_body",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-c4d3e40d8f",
+   "folder": "~/Projects/hp-work/p/c4d3e40d8f",
+   "model": "opus",
+   "flow": "flow_f35ebc64b224",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0d7ced319ef1"
+   ],
+   "seconds": 552,
+   "cost_usd": 2.743,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-8cbfefa409",
+   "folder": "~/Projects/hp-work/p/8cbfefa409",
+   "model": "sonnet",
+   "flow": "flow_f5c036a824c5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4bbcc6414cde"
+   ],
+   "seconds": 43,
+   "cost_usd": 0.481,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-9ad3564cce",
+   "folder": "~/Projects/hp-work/p/9ad3564cce",
+   "model": "sonnet",
+   "flow": "flow_1bb9b2309622",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_51ff6dff1879"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.482,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-29cec32934",
+   "folder": "~/Projects/hp-work/p/29cec32934",
+   "model": "sonnet",
+   "flow": "flow_0185dee4f34d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_39dd3d9fe9f8"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.473,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-d4b0d99aff",
+   "folder": "~/Projects/hp-work/p/d4b0d99aff",
+   "model": "sonnet",
+   "flow": "flow_8b46578c0410",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ed6ab81148a8"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.4,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-8b63722d1d",
+   "folder": "~/Projects/hp-work/p/8b63722d1d",
+   "model": "sonnet",
+   "flow": "flow_fee497223c2b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9478259bbfa4"
+   ],
+   "seconds": 57,
+   "cost_usd": 0.551,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-a5dd51d84e",
+   "folder": "~/Projects/hp-work/p/a5dd51d84e",
+   "model": "sonnet",
+   "flow": "flow_93e1e78d94de",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dcb5746284b1"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.464,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-b2bca1dd38",
+   "folder": "~/Projects/hp-work/p/b2bca1dd38",
+   "model": "sonnet",
+   "flow": "flow_149a118f3065",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6eb9c5b96db8"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.426,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-c5307ceef0",
+   "folder": "~/Projects/hp-work/p/c5307ceef0",
+   "model": "sonnet",
+   "flow": "flow_a3440e0aed73",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4ee22c94828d"
+   ],
+   "seconds": 81,
+   "cost_usd": 0.65,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-046bc75666",
+   "folder": "~/Projects/hp-work/p/046bc75666",
+   "model": "sonnet",
+   "flow": "flow_49ebc9a93917",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_491d15059594"
+   ],
+   "seconds": 33,
+   "cost_usd": 0.469,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-8617f97b39",
+   "folder": "~/Projects/hp-work/p/8617f97b39",
+   "model": "sonnet",
+   "flow": "flow_bb1db5aa5844",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_fd14f84a0fde"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.427,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-0b4034440c",
+   "folder": "~/Projects/hp-work/p/0b4034440c",
+   "model": "sonnet",
+   "flow": "flow_5c1a0d18c0c4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7d22354276a9"
+   ],
+   "seconds": 70,
+   "cost_usd": 0.588,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-c5d58bb2aa",
+   "folder": "~/Projects/hp-work/p/c5d58bb2aa",
+   "model": "sonnet",
+   "flow": "flow_c3b8a02c76c5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b2f203dcb2ee"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.477,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-f516d67761",
+   "folder": "~/Projects/hp-work/p/f516d67761",
+   "model": "sonnet",
+   "flow": "flow_c63cb29e3847",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_68f7ba75cfc8"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.419,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-1bcd7e6ba3",
+   "folder": "~/Projects/hp-work/p/1bcd7e6ba3",
+   "model": "sonnet",
+   "flow": "flow_acc7745a6e9a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_294cc4dc956e"
+   ],
+   "seconds": 70,
+   "cost_usd": 0.621,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-579dd4b6b3",
+   "folder": "~/Projects/hp-work/p/579dd4b6b3",
+   "model": "sonnet",
+   "flow": "flow_f1e918705788",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b0e6a87a32b8"
+   ],
+   "seconds": 40,
+   "cost_usd": 0.495,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-612b6bfd74",
+   "folder": "~/Projects/hp-work/p/612b6bfd74",
+   "model": "sonnet",
+   "flow": "flow_1b1d12593753",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1cc639671bd7"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.457,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-a6931b1089",
+   "folder": "~/Projects/hp-work/p/a6931b1089",
+   "model": "sonnet",
+   "flow": "flow_d47862c70384",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d5d2f4b569e6"
+   ],
+   "seconds": 93,
+   "cost_usd": 0.712,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-66abb39113",
+   "folder": "~/Projects/hp-work/p/66abb39113",
+   "model": "sonnet",
+   "flow": "flow_982621329f02",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_690f78d99272"
+   ],
+   "seconds": 37,
+   "cost_usd": 0.499,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-e524473680",
+   "folder": "~/Projects/hp-work/p/e524473680",
+   "model": "sonnet",
+   "flow": "flow_1a2a7f47b88f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1c4879d137b9"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.4,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"x\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"x\", \"input\": [], \"store\": false}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": true}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": true}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false, \"instructions\": \"x\"}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false, \"instructions\": \"x\"}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false, \"max_output_tokens\": 1}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false, \"max_output_tokens\": 1}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false, \"tool_choice\": \"auto\"}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false, \"tool_choice\": \"auto\"}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "' [ ] N N N N N N N N N N N N",
+    "shown": "{ model := \"\","
+   },
+   "design_a": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "design_b": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false, \"top_p\": 1}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false, \"top_p\": 1}"
+   },
+   "ref": {
+    "encoded": "{\"model\": \"\", \"input\": [], \"store\": false}",
+    "shown": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{\"model\": \"\", \"input\": [], \"store\": false}"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 49,
+   "made": 20,
+   "killed": 18,
+   "survived": [
+    "line 9: delete `extra = dict(extra)`",
+    "line 13: swap arguments 1 and 2 in `extra.pop('stream_options', None)`"
+   ],
+   "kill_rate": 0.9
+  },
+  "quotes": {
+   "quotes": 13,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 8943,
+   "first_difference": {
+    "input": "'gpt-6 [ md S 'developer S cv vn S vs ' S vs 'n N md N S cv vs '1wU S vb F S vn S [ cx cd S vs 'C4^D S fd S vs 'mxL N cd S vb F S fd S vs 'lookup S vi #5 ] ] S [ td N S tfd S vs '^ S vs ' S vi #100 N S vo [ p 'effort ' p 'a~b 'Get_Data ] S vi #100 td S vs 'function N S vi #5 S vs ' S vi #100 td S vb T S tfd S vo [ p 'k ' p 'x 'function ] N N S vs 'system N S vs 'auto ] N N N N N N N N S vi #1 S vs ' N",
+    "lean_ref": "{\"model\": \"gpt-6\", \"input\": [{\"type\": \"message\", \"role\": \"developer\", \"content\": [{\"type\": \"input_text\", \"text\": \"\"}]}, {\"type\": \"message\", \"role\": \"user\", \"content\": [{\"type\": \"input_text\", \"text\": \"1wU\"}]}], \"store\": false, \"tools\": [{\"type\": \"function\", \"name\": \"\\n\", \"description\": \"\", \"parameters\": 100}, {\"type\": \"function\", \"name\": \"\", \"description\": \"\", \"parameters\": {\"type\": \"object\", \"properties\": {}}}, {\"type\": \"function\", \"name\": {\"k\": \"\", \"x\": \"function\"}, \"description\": \"\", \"parameters\": {\"type\": \"object\", \"properties\": {}}}], \"tool_choice\": \"auto\", \"reasoning\": 1, \"reasoning_effort\": \"\"}",
+    "python": "{\"model\": \"gpt-6\", \"input\": [{\"type\": \"message\", \"role\": \"developer\", \"content\": [{\"type\": \"input_text\", \"text\": \"\"}]}, {\"type\": \"message\", \"role\": \"user\", \"content\": [{\"type\": \"input_text\", \"text\": \"1wU\"}]}], \"store\": false, \"tools\": [{\"type\": \"function\", \"name\": \"\\n\", \"description\": \"\", \"parameters\": 100}, {\"type\": \"function\", \"name\": \"\", \"description\": \"\", \"parameters\": {\"type\": \"object\", \"properties\": {}}}, {\"type\": \"function\", \"name\": {\"k\": \"\", \"x\": \"function\"}, \"description\": \"\", \"parameters\": {\"type\": \"object\", \"properties\": {}}}], \"tool_choice\": \"auto\", \"reasoning\": 1}"
+   }
+  }
+ },
+ "first_laws": [
+  "SessionIdIgnored",
+  "StreamOptionsIgnored",
+  "UnknownExtraIgnored",
+  "TemperatureNotInvented",
+  "NoSystemItems",
+  "PartTypeFollowsRole"
+ ],
+ "cost_usd": 12.23,
+ "seconds": 1333
+}

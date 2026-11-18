@@ -1,0 +1,2936 @@
+[
+ {
+  "slug": "mn-harness-pilot-guards",
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "test_file": "tests/test_hpfix_harness_pilot_guards.py",
+  "bugs": [
+   {
+    "id": "1af9b7d4-1",
+    "group": "1af9b7d4",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "A user who asks to launch a swarm and also asks a separate 'where is' question gets the turn note 'did not ask for a swarm. Do not open with run_swarm', so the pilot does not launch the swarm the user asked for.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/pilot_guards.py:778",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Apply the narrow-intent veto per clause inside _delegation_preference, so a narrow question in another clause does not cancel a launch clause.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 866,
+      "quote": "\"\"\"True when the user asked to launch a swarm, not merely mentioned one.\"\"\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 870,
+      "quote": "if _NARROW_INTENT_RE.search(text):"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 854,
+      "quote": "for clause in _INTENT_CLAUSE_SPLIT_RE.split(text):"
+     },
+     {
+      "file": "project/harness/send_loop.py",
+      "line": 1611,
+      "quote": "policy_note = swarm_policy_turn_note("
+     }
+    ],
+    "claim": "The narrow-intent veto ('where is') applies to the whole message, so a clear swarm launch request with a separate question in the same message returns False.",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 1,
+      "run": "4b3c9063c2",
+      "n": 2,
+      "result_now": "False"
+     }
+    ]
+   },
+   {
+    "id": "1af9b7d4-2",
+    "group": "1af9b7d4",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "claims": [
+     2
+    ],
+    "what_goes_wrong": "A user who refuses agentic workers gets the opposite policy ('the user asked for a swarm. Call run_swarm or run_parallel now') and a stored pending swarm mandate.",
+    "caller": "project/harness/send_loop_phases.py:238",
+    "caller_sonnet": "project/harness/conversation.py:2985",
+    "severity": [
+     "high",
+     "high"
+    ],
+    "fix_idea": "Let the opt-out pattern accept qualifiers before workers (for example 'do not use (\\w+ ){0,3}workers'), or add the negated form to _EXPLICIT_SWARM_NEG_RE.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 253,
+      "quote": "r\"\\bagentic\\s+workers\\b|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 287,
+      "quote": "r\"\\b(?:do\\s+not|don'?t)\\s+(?:use|launch|start|run|dispatch)\\s+\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 288,
+      "quote": "r\"(?:an?\\s+)?(?:swarm|workers?)\\b|\""
+     },
+     {
+      "file": "project/harness/send_loop_phases.py",
+      "line": 238,
+      "quote": "apply_session_pending_swarm_mandate(session, user_message)"
+     }
+    ],
+    "claim": "Refusing agentic workers ('do not use agentic workers') matches the 'agentic workers' pattern and counts as an explicit swarm request.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 2,
+      "run": "4b3c9063c2",
+      "n": 3,
+      "result_now": "True"
+     }
+    ]
+   },
+   {
+    "id": "1af9b7d4-3",
+    "group": "1af9b7d4",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "claims": [
+     3,
+     4
+    ],
+    "what_goes_wrong": "A user who types or pastes 'Don\u2019t swarm the repo' with a typographic apostrophe gets the explicit swarm policy and a pending swarm mandate, which is the opposite of the request.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/conversation.py:2985",
+    "severity": [
+     "medium",
+     "high"
+    ],
+    "fix_idea": "Fold \\u2019 and \\u2018 to ASCII in _norm_whitespace (as compaction_residual._fold_apostrophes does), or accept ['\\u2019]? in both negative patterns.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 273,
+      "quote": "r\"don'?t\\s+swarm|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 286,
+      "quote": "r\"\\b(?:do\\s+not|don'?t)\\s+(?:delegate|swarm)\\b|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 964,
+      "quote": "return re.sub(r\"\\s+\", \" \", (text or \"\").strip())"
+     },
+     {
+      "file": "project/harness/compaction_residual.py",
+      "line": 188,
+      "quote": "return (text or \"\").replace(\"\\u2019\", \"'\").replace(\"\\u2018\", \"'\")"
+     },
+     {
+      "file": "project/tests/test_compaction_residual.py",
+      "line": 740,
+      "quote": "\"content\": \"please don\\u2019t write to the live ledger.\","
+     }
+    ],
+    "claim": "A message with a typographic apostrophe, \"Don\u2019t swarm the repo\", returns True. The negative regex only accepts the ASCII apostrophe, so the refusal is missed and \"swarm the repo\" matches.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 3,
+      "run": "628583fda6",
+      "n": 2,
+      "result_now": "True"
+     },
+     {
+      "k": 4,
+      "run": "02b0986855",
+      "n": 3,
+      "result_now": "True"
+     }
+    ]
+   },
+   {
+    "id": "1af9b7d4-5",
+    "group": "1af9b7d4",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "claims": [
+     5
+    ],
+    "what_goes_wrong": "The explicit order 'Launch a swarm to find where is the auth token validated' gets the solo turn note 'Do not open with run_swarm', because the narrow veto wins over a launch verb in the same clause.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/pilot_guards.py:778",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Let an explicit launch verb (launch/start/run/spin up a swarm, run_swarm) win over the narrow veto. Keep the veto only for clauses with no launch verb, such as 'Where is run_swarm defined?'.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 866,
+      "quote": "\"\"\"True when the user asked to launch a swarm, not merely mentioned one.\"\"\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 870,
+      "quote": "if _NARROW_INTENT_RE.search(text):"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 332,
+      "quote": "r\"where\\s+is\\b|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 247,
+      "quote": "r\"\\b(?:start|spin\\s+up|launch|dispatch|run|do|use)\\s+\""
+     }
+    ],
+    "claim": "The narrow-intent veto runs before the launch check, so the explicit order \"Launch a swarm to find where is the auth token validated\" returns False because the text contains \"where is\".",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 5,
+      "run": "02b0986855",
+      "n": 4,
+      "result_now": "False"
+     }
+    ]
+   },
+   {
+    "id": "e3af4031-2",
+    "group": "e3af4031",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "normalize_action_args",
+    "claims": [
+     2,
+     3
+    ],
+    "what_goes_wrong": "When the pilot searches the same query in two different 'paths' scopes in one turn, the second search gets a cached replay of the first scope's results, so the pilot sees wrong matches for the second scope.",
+    "caller": "project/harness/send_loop_actions.py:173",
+    "caller_sonnet": "project/harness/pilot_guards.py:2390",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Put the normalized, sorted 'paths' list in the search_files key (and the other result-shaping arguments: glob, case_insensitive, context_lines, files_only).",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 1098,
+      "quote": "payload[\"path\"] = _norm_path(args.get(\"path\", \"\") or \"\")"
+     },
+     {
+      "file": "project/harness/pilot.py",
+      "line": 1696,
+      "quote": "\"paths\": {"
+     },
+     {
+      "file": "project/harness/tool_dispatch.py",
+      "line": 783,
+      "quote": "requested = act.arguments.get(\"paths\") or \"\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 2095,
+      "quote": "key = (kind, normalize_action_args(kind, act))"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 2143,
+      "quote": "reason=\"loop_replay\","
+     },
+     {
+      "file": "project/harness/send_loop_actions.py",
+      "line": 173,
+      "quote": "guard_verdict = check_pilot_guards(guard_state, act.kind, act)"
+     }
+    ],
+    "claim": "For search_files, the key reads only arguments['path']. The executor (_do_search_files) also reads arguments['paths'] when 'path' is empty. Two searches with the same query but different 'paths' get the same key, so the loop guard treats them as duplicates and replays or suppresses the second one.",
+    "result_now": "(True, '{\"kind\":\"search_files\",\"max_results\":null,\"path\":\"\",\"query\":\"foo\"}', '{\"kind\":\"search_files\",\"max_results\":null,\"path\":\"\",\"query\":\"foo\"}')",
+    "repros": [
+     {
+      "k": 2,
+      "run": "d72abcdc36",
+      "n": 1,
+      "result_now": "(True, '{\"kind\":\"search_files\",\"max_results\":null,\"path\":\"\",\"query\":\"foo\"}', '{\"kind\":\"search_files\",\"max_results\":null,\"path\":\"\",\"query\":\"foo\"}')"
+     },
+     {
+      "k": 3,
+      "run": "3cf6b00fc0",
+      "n": 1,
+      "result_now": "True"
+     }
+    ]
+   },
+   {
+    "id": "e3af4031-5",
+    "group": "e3af4031",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "normalize_action_args",
+    "claims": [
+     5
+    ],
+    "what_goes_wrong": "Two edit_file calls on one file whose old_str/new_str differ only in whitespace (for example the same line at two indent levels) get one key, so the second edit is not applied and the pilot gets a '[cached repeat]' of the first edit's success.",
+    "caller": "project/harness/send_loop_actions.py:461",
+    "caller_sonnet": "project/harness/send_loop_phases.py:3674",
+    "severity": [
+     "high",
+     "medium"
+    ],
+    "fix_idea": "Use the exact old_str and new_str (or a SHA-256 of each) in the edit_file key, as write_file does with content_fingerprint.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 1060,
+      "quote": "payload[\"old_str\"] = _norm_whitespace(getattr(act, \"old_str\", \"\") or \"\")"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 964,
+      "quote": "return re.sub(r\"\\s+\", \" \", (text or \"\").strip())"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 2174,
+      "quote": "WORKSPACE_READ_KINDS = frozenset({\"read_file\", \"list_dir\", \"search_files\", \"search_codegraph\"})"
+     },
+     {
+      "file": "project/harness/conversation.py",
+      "line": 3889,
+      "quote": "record_successful_result(gs, kind, act, clamped_content)"
+     },
+     {
+      "file": "project/harness/send_loop_actions.py",
+      "line": 461,
+      "quote": "guard_verdict = check_pilot_guards(guard_state, act.kind, act)"
+     }
+    ],
+    "claim": "edit_file collapses all whitespace in old_str and new_str. Two different edits whose old_str differs only in whitespace get the same key, so the second edit is replayed from cache and is not applied.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 5,
+      "run": "3cf6b00fc0",
+      "n": 3,
+      "result_now": "True"
+     }
+    ]
+   },
+   {
+    "id": "791b83f9-1",
+    "group": "791b83f9",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_broad_intent_user_message",
+    "claims": [
+     1,
+     3,
+     5
+    ],
+    "what_goes_wrong": "A broad audit request that contains 'everywhere is' matches the narrow veto inside the word, so the pilot gets the 'not broad-intent ... Do not open with run_swarm' turn note and guard state broad_intent=False instead of the broad-intent policy.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/pilot_guards.py:2466",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Add a leading word boundary: r\"\\bwhere\\s+is\\b\" (and the same for the other narrow alternatives), plus a regression test with 'everywhere is'.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 332,
+      "quote": "r\"where\\s+is\\b|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 844,
+      "quote": "if _NARROW_INTENT_RE.search(text):"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 780,
+      "quote": "if is_broad_intent_user_message(message):"
+     },
+     {
+      "file": "project/harness/send_loop.py",
+      "line": 1611,
+      "quote": "policy_note = swarm_policy_turn_note("
+     },
+     {
+      "file": "project/harness/send_loop_actions.py",
+      "line": 145,
+      "quote": "guard_state = reuse_or_new_turn_guard_state("
+     }
+    ],
+    "claim": "The narrow-intent pattern 'where\\s+is\\b' has no leading word boundary, so it matches inside words such as 'everywhere is' or 'nowhere is'. A clear audit request is then classified as narrow and returns False.",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 1,
+      "run": "8db9bdf63a",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 3,
+      "run": "27864bea01",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 5,
+      "run": "bf48b028a5",
+      "n": 1,
+      "result_now": "False"
+     }
+    ]
+   },
+   {
+    "id": "791b83f9-2",
+    "group": "791b83f9",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_broad_intent_user_message",
+    "claims": [
+     2,
+     4,
+     6
+    ],
+    "what_goes_wrong": "A plain request with 'bitmap the' matches the broad pattern inside the word, so the pilot gets the broad-intent turn note (and the swarm gate when HARNESS_SWARM_GATE=1) for a small task.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/pilot_guards.py:2466",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Use r\"\\bmap\\s+the\\b\"; the test only needs the verb 'Map the' at a word start. Add a negative test with 'bitmap the'.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 230,
+      "quote": "r\"map\\s+the\\b|\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 846,
+      "quote": "if _BROAD_INTENT_RE.search(text):"
+     },
+     {
+      "file": "project/tests/test_pilot_guards.py",
+      "line": 106,
+      "quote": "\"Map the pipeline architecture\","
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 2466,
+      "quote": "broad_intent=is_broad_intent_user_message(user_message or \"\"),"
+     }
+    ],
+    "claim": "The broad pattern 'map\\s+the\\b' has no leading word boundary, so it matches inside 'bitmap the' or 'sitemap the'. A message with no broad intent returns True.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 2,
+      "run": "8db9bdf63a",
+      "n": 2,
+      "result_now": "True"
+     },
+     {
+      "k": 4,
+      "run": "27864bea01",
+      "n": 2,
+      "result_now": "True"
+     },
+     {
+      "k": 6,
+      "run": "bf48b028a5",
+      "n": 2,
+      "result_now": "True"
+     }
+    ]
+   },
+   {
+    "id": "791b83f9-7",
+    "group": "791b83f9",
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_broad_intent_user_message",
+    "claims": [
+     7
+    ],
+    "what_goes_wrong": "A how-to question about 'browser windows on my Mac' has both words, so the helper reports a Windows-vs-Mac contrast and the pilot gets the broad-intent turn note for a simple question.",
+    "caller": "project/harness/send_loop.py:1611",
+    "caller_sonnet": "project/harness/pilot_guards.py:2466",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Require a contrast cue (vs, versus, compare, works on one but not the other) or OS context for 'windows' (such as 'on Windows'), and keep the two positive tests.",
+    "evidence": [
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 765,
+      "quote": "\"\"\"True when a message contrasts Windows with Mac/macOS/Linux.\"\"\""
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 766,
+      "quote": "return bool(_WINDOWS_OS_RE.search(text) and _OTHER_OS_RE.search(text))"
+     },
+     {
+      "file": "project/harness/pilot_guards.py",
+      "line": 848,
+      "quote": "return _is_cross_platform_compare(text)"
+     },
+     {
+      "file": "project/tests/test_pilot_guards.py",
+      "line": 118,
+      "quote": "\"Compare Windows vs Mac browser launch\","
+     }
+    ],
+    "claim": "`_is_cross_platform_compare` is documented as 'True when a message contrasts Windows with Mac/macOS/Linux', but it only checks that both words occur, so 'browser windows on my Mac' is classified as broad intent.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 7,
+      "run": "bf48b028a5",
+      "n": 3,
+      "result_now": "True"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-gates",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/gates.py",
+  "test_file": "tests/test_hpfix_puppetmaster_gates.py",
+  "bugs": [
+   {
+    "id": "56e0b53a-1",
+    "group": "56e0b53a",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/gates.py",
+    "function": "_gate_write_scope",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "A worker that only names the root README.md (for example `cat README.md`) is charged for a concurrent writer's edit to the pre-dirty file docs/README.md, so the write_scope gate fails the worker and starts a needless repair loop for an edit that the worker did not make.",
+    "caller": "puppetmaster/gates.py:242",
+    "caller_sonnet": "project/puppetmaster/gates.py:242",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Compare normalized repo-relative paths for equality (plus the baseline directory-prefix rule) instead of suffix matching in _same_path, and normalize relative command tokens against the worker cwd at capture time.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/worker_attribution.py",
+      "line": 271,
+      "quote": "return left.endswith(\"/\" + right) or right.endswith(\"/\" + left)"
+     },
+     {
+      "file": "project/puppetmaster/worker_attribution.py",
+      "line": 178,
+      "quote": "return any(_same_path(target, known) for known in references.paths)"
+     },
+     {
+      "file": "project/puppetmaster/gates.py",
+      "line": 356,
+      "quote": "reported as a concurrent change instead of a failure. So is a path the"
+     },
+     {
+      "file": "project/puppetmaster/adapters/codex.py",
+      "line": 540,
+      "quote": "attribution = attribution_payload(codex_event_references(events, cwd), before)"
+     }
+    ],
+    "claim": "The attribution helpers match paths by suffix (_same_path), so a worker reference to root 'README.md' counts as naming 'docs/README.md', and a baseline-dirty entry 'x.py' counts as covering 'pkg/x.py'. A pre-dirty file in another directory that the worker never named is charged as out_of_scope inste",
+    "result_now": "(False, None, ['docs/README.md'])",
+    "repros": [
+     {
+      "k": 1,
+      "run": "7313b476b9",
+      "n": 1,
+      "result_now": "(False, None, ['docs/README.md'])"
+     }
+    ]
+   },
+   {
+    "id": "56e0b53a-4",
+    "group": "56e0b53a",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/gates.py",
+    "function": "_gate_write_scope",
+    "claims": [
+     4
+    ],
+    "what_goes_wrong": "When the root README.md is dirty at worker start, a new out-of-scope file docs/README.md that the run generates through a command (not named in its events) is excused as a concurrent change, so the write_scope gate passes a stray write that the docstring says must be charged.",
+    "caller": "puppetmaster/gates.py:242",
+    "caller_sonnet": "project/puppetmaster/gates.py:242",
+    "severity": [
+     "high",
+     "medium"
+    ],
+    "fix_idea": "In path_was_dirty_before, match a baseline entry only by exact equality or as a directory prefix (target.startswith(known + '/')), never by suffix. This shares the _same_path root cause with claim 1 but gives a false pass, not a false fail.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/worker_attribution.py",
+      "line": 192,
+      "quote": "if _same_path(target, known) or target.startswith(known + \"/\"):"
+     },
+     {
+      "file": "project/puppetmaster/worker_attribution.py",
+      "line": 271,
+      "quote": "return left.endswith(\"/\" + right) or right.endswith(\"/\" + left)"
+     },
+     {
+      "file": "project/puppetmaster/gates.py",
+      "line": 358,
+      "quote": "the worker never named. A new unclaimed file is still charged: without a"
+     },
+     {
+      "file": "project/puppetmaster/worker_attribution.py",
+      "line": 19,
+      "quote": "it\" is not proof that somebody else did. Only a path that was already dirty or"
+     },
+     {
+      "file": "project/puppetmaster/adapters/codex.py",
+      "line": 540,
+      "quote": "attribution = attribution_payload(codex_event_references(events, cwd), before)"
+     }
+    ],
+    "claim": "The concurrent-change excuse uses path_was_dirty_before, which matches baseline paths by suffix (_same_path). A new out-of-scope file docs/README.md that the run wrote is excused as a concurrent change only because a different file, the root README.md, was dirty before the run, so the gate passes.",
+    "result_now": "(True, None, ['docs/README.md'])",
+    "repros": [
+     {
+      "k": 4,
+      "run": "24ebcd9ee8",
+      "n": 1,
+      "result_now": "(True, None, ['docs/README.md'])"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-cli-helpers",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/cli/helpers.py",
+  "test_file": "tests/test_hpfix_puppetmaster_cli_helpers.py",
+  "bugs": [
+   {
+    "id": "f0603426-1",
+    "group": "f0603426",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/cli/helpers.py",
+    "function": "routing_payload_from_args",
+    "claims": [
+     1,
+     3
+    ],
+    "what_goes_wrong": "A user who runs `puppetmaster cursor --auto-route --allowed-models \"\" ...` (or an MCP call with allowed_model_ids: [], which the MCP schema documents as fail closed) gets a payload with no allowed_model_ids key, so the router picks any model on the adapter instead of refusing with NoEligibleModelError.",
+    "caller": "project/puppetmaster/cli/_dispatch.py:936",
+    "caller_sonnet": "project/puppetmaster/cli/_dispatch.py:936",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Keep the presence of the flag apart from its blank-filtered values: if any --allowed-models flag was given, always set payload['allowed_model_ids'] (an empty list when all values are blank) so the router fails closed. append_allowed_models_cli_flags must also forward an explicit empty list from MCP.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/cli/helpers.py",
+      "line": 328,
+      "quote": "if allowed_models:"
+     },
+     {
+      "file": "project/puppetmaster/cli/helpers.py",
+      "line": 281,
+      "quote": "``frozenset()`` when the key is present but empty (fail closed)"
+     },
+     {
+      "file": "project/puppetmaster/cli/_parser.py",
+      "line": 195,
+      "quote": "\"--allowed-models\","
+     },
+     {
+      "file": "project/puppetmaster/mcp_server.py",
+      "line": 5310,
+      "quote": "grok-4.5 / composer-2.5). An empty array fails closed; omit "
+     },
+     {
+      "file": "project/puppetmaster/router.py",
+      "line": 735,
+      "quote": "\"allowed_model_ids is explicitly empty \u2014 no model may be \""
+     },
+     {
+      "file": "project/tests/test_allowed_model_routing.py",
+      "line": 237,
+      "quote": "def test_explicit_empty_allowlist_fails_closed(self) -> None:"
+     }
+    ],
+    "claim": "When --allowed-models is given but every value is blank, the allowlist is dropped and routing is unrestricted. The sibling helper allowed_model_ids_from_mapping says a present but empty allowlist fails closed.",
+    "result_now": "{'auto_route': True, 'allowed_adapters': ['cursor']}",
+    "repros": [
+     {
+      "k": 1,
+      "run": "0868c432fd",
+      "n": 1,
+      "result_now": "{'auto_route': True, 'allowed_adapters': ['cursor']}"
+     },
+     {
+      "k": 3,
+      "run": "154ff850ee",
+      "n": 1,
+      "result_now": "{'auto_route': True, 'allowed_adapters': ['cursor']}"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-adapters-cursor",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/cursor.py",
+  "test_file": "tests/test_hpfix_puppetmaster_adapters_cursor.py",
+  "bugs": [
+   {
+    "id": "8d28fd94-1",
+    "group": "8d28fd94",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/cursor.py",
+    "function": "cursor_artifact_from_item",
+    "claims": [
+     1,
+     7,
+     16,
+     19
+    ],
+    "what_goes_wrong": "A null entry in a worker's evidence list is stored as the text 'None', so the artifact shows fake evidence and the adapter:<name> fallback does not apply.",
+    "caller": "project/puppetmaster/adapters/codex.py:659",
+    "caller_sonnet": "project/puppetmaster/adapters/cursor.py:609",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "In _string_list, skip None entries before the strip check.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 896,
+      "quote": "return [str(item) for item in value if str(item).strip()]"
+     },
+     {
+      "file": "project/puppetmaster/adapters/agentic.py",
+      "line": 2061,
+      "quote": "\"type\": \"array\", \"items\": {\"type\": \"string\"},"
+     },
+     {
+      "file": "project/puppetmaster/adapters/codex.py",
+      "line": 659,
+      "quote": "parsed_artifacts = cursor_result_artifacts(task, worker_id, last_message, adapter=\"codex\")"
+     }
+    ],
+    "claim": "A null element in the evidence list becomes the literal evidence string 'None' (str(None) passes the blank check).",
+    "result_now": "['a.py:1', 'None']",
+    "repros": [
+     {
+      "k": 1,
+      "run": "9a1a974b4e",
+      "n": 1,
+      "result_now": "['a.py:1', 'None']"
+     },
+     {
+      "k": 7,
+      "run": "d450ceaa20",
+      "n": 1,
+      "result_now": "['None']"
+     },
+     {
+      "k": 16,
+      "run": "5f813daea7",
+      "n": 3,
+      "result_now": "['None', 'a.py:1']"
+     },
+     {
+      "k": 19,
+      "run": "06e1bf7179",
+      "n": 3,
+      "result_now": "['None']"
+     }
+    ]
+   },
+   {
+    "id": "8d28fd94-3",
+    "group": "8d28fd94",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/cursor.py",
+    "function": "cursor_artifact_from_item",
+    "claims": [
+     3,
+     4,
+     8,
+     9,
+     15,
+     18
+    ],
+    "what_goes_wrong": "json.loads accepts NaN, so a worker reply with confidence NaN (or 'nan') gets 0.0, the lowest score, not the 0.75 default for an unusable value.",
+    "caller": "project/puppetmaster/adapters/codex.py:659",
+    "caller_sonnet": "project/puppetmaster/adapters/cursor.py:609",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "After float(), return 0.75 when math.isfinite(parsed) is False.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 904,
+      "quote": "return min(1.0, max(0.0, parsed))"
+     },
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 902,
+      "quote": "except (TypeError, ValueError):"
+     },
+     {
+      "file": "project/puppetmaster/adapters/codex.py",
+      "line": 659,
+      "quote": "parsed_artifacts = cursor_result_artifacts(task, worker_id, last_message, adapter=\"codex\")"
+     }
+    ],
+    "claim": "A NaN confidence is clamped to 0.0 instead of falling back to the 0.75 default used for unparseable values.",
+    "result_now": "0.0",
+    "repros": [
+     {
+      "k": 3,
+      "run": "9a1a974b4e",
+      "n": 3,
+      "result_now": "0.0"
+     },
+     {
+      "k": 4,
+      "run": "de0259a123",
+      "n": 1,
+      "result_now": "0.0"
+     },
+     {
+      "k": 8,
+      "run": "d450ceaa20",
+      "n": 2,
+      "result_now": "0.0"
+     },
+     {
+      "k": 9,
+      "run": "ffc96ca7e1",
+      "n": 2,
+      "result_now": "0.0"
+     },
+     {
+      "k": 15,
+      "run": "5f813daea7",
+      "n": 2,
+      "result_now": "0.0"
+     },
+     {
+      "k": 18,
+      "run": "06e1bf7179",
+      "n": 2,
+      "result_now": "0.0"
+     }
+    ]
+   },
+   {
+    "id": "8d28fd94-14",
+    "group": "8d28fd94",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/cursor.py",
+    "function": "cursor_artifact_from_item",
+    "claims": [
+     14
+    ],
+    "what_goes_wrong": "A Codex wrapper whose inner dict has type \"\" is dropped, although the function treats an empty top-level type as absent, so a valid finding is lost.",
+    "caller": "project/puppetmaster/adapters/codex.py:659",
+    "caller_sonnet": "project/puppetmaster/adapters/cursor.py:609",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Use wrapped.get(\"type\") or wrapped_type so an empty inner type falls back to the wrapper key.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 710,
+      "quote": "item = {**wrapped, \"type\": wrapped.get(\"type\", wrapped_type)}"
+     },
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 698,
+      "quote": "declared = bool(str(item.get(\"type\") or \"\").strip())"
+     }
+    ],
+    "claim": "A wrapped Codex item whose inner dict has an empty \"type\" (for example {\"finding\": {\"type\": \"\", \"claim\": \"x\"}}) is dropped. The unwrap uses wrapped.get(\"type\", wrapped_type), so the empty string wins over the wrapper key, but the same function treats an empty top-level type as absent.",
+    "result_now": "None",
+    "repros": [
+     {
+      "k": 14,
+      "run": "5f813daea7",
+      "n": 1,
+      "result_now": "None"
+     }
+    ]
+   },
+   {
+    "id": "a3347ffc-1",
+    "group": "a3347ffc",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/cursor.py",
+    "function": "CursorAdapter.run",
+    "claims": [
+     1,
+     4,
+     5
+    ],
+    "what_goes_wrong": "When a Cursor analyze worker writes prose with a bracket citation such as 'file [1]' before its JSON findings, _json_prefix_decode returns the list [1], so every finding is lost and the run is marked degraded (empty_or_unstructured_cursor_result).",
+    "caller": "project/puppetmaster/adapters/cursor.py:400",
+    "caller_sonnet": "project/puppetmaster/adapters/cursor.py:400",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "In _json_prefix_decode, skip a decoded container that gives no artifacts (for example a list of scalars) and continue to the next opener.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 651,
+      "quote": "# salvaging genuine prose (which has no parseable opener \u2192 still None)."
+     },
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 831,
+      "quote": "if isinstance(decoded, (dict, list)):"
+     },
+     {
+      "file": "project/tests/test_puppetmaster.py",
+      "line": 28856,
+      "quote": "def test_first_brace_is_false_opener_then_real_json(self) -> None:"
+     },
+     {
+      "file": "project/puppetmaster/adapters/cursor.py",
+      "line": 400,
+      "quote": "cursor_result_artifacts(task, worker_id, result_text)"
+     },
+     {
+      "file": "project/puppetmaster/workers.py",
+      "line": 313,
+      "quote": "artifacts = adapter.run(task, goal, self.worker_id)"
+     }
+    ],
+    "claim": "parse_cursor_artifact_payload falls back to _json_prefix_decode, which returns the first container it can decode. Prose such as 'file [1]' before the real JSON, plus a brace trailer, returns [1], so the real findings are lost and the run is marked degraded.",
+    "result_now": "[]",
+    "repros": [
+     {
+      "k": 1,
+      "run": "d9e5a7dd9c",
+      "n": 1,
+      "result_now": "[]"
+     },
+     {
+      "k": 4,
+      "run": "fb888b17ec",
+      "n": 1,
+      "result_now": "[]"
+     },
+     {
+      "k": 5,
+      "run": "27acc79c84",
+      "n": 2,
+      "result_now": "{'verification': 'empty_or_unstructured_cursor_result', 'types': ['verification', 'risk'], 'claims': []}"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-preflight",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/preflight.py",
+  "test_file": "tests/test_hpfix_puppetmaster_preflight.py",
+  "bugs": [
+   {
+    "id": "06d11534-1",
+    "group": "06d11534",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/preflight.py",
+    "function": "adapter_cli_present (with adapter_cli_executable and the _ADAPTER_CLI_DEFAULT table, lines 946-949)",
+    "claims": [
+     1,
+     2,
+     3
+    ],
+    "what_goes_wrong": "A user who sets the documented CLAUDE_CODE_COMMAND='npx -y @anthropic-ai/claude-code' gets claude-code models removed from auto-route and fallback candidates (and live preflight reports 'not installed'), although the adapter itself launches that command without problems.",
+    "caller": "project/puppetmaster/orchestrator.py:2253",
+    "caller_sonnet": "project/puppetmaster/orchestrator.py:1072",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "In adapter_cli_present, split the configured command with adapters._base.command_parts and resolve only the first part, the same as the adapters do. Add a test with a multi-word CLAUDE_CODE_COMMAND.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/preflight.py",
+      "line": 1015,
+      "quote": "return next((env[name] for name in env_vars if env.get(name)), default)"
+     },
+     {
+      "file": "project/puppetmaster/preflight.py",
+      "line": 1041,
+      "quote": "return resolve(cli) is not None"
+     },
+     {
+      "file": "project/puppetmaster/adapters/claude_code.py",
+      "line": 159,
+      "quote": "command_base = command_parts(executable)"
+     },
+     {
+      "file": "project/puppetmaster/adapters/claude_code.py",
+      "line": 160,
+      "quote": "resolved = facade(\"resolve_command\")(command_base[0])"
+     },
+     {
+      "file": "project/docs/ADAPTERS.md",
+      "line": 78,
+      "quote": "CLAUDE_CODE_COMMAND=\"npx -y @anthropic-ai/claude-code\" puppetmaster claude \"Review this repo\" --permission-mode acceptEdits"
+     },
+     {
+      "file": "project/puppetmaster/cli/_parser.py",
+      "line": 392,
+      "quote": "then CLAUDE_CODE_COMMAND; may be multi-word)."
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 2253,
+      "quote": "if adapter_cli_present(spec.adapter)"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1072,
+      "quote": "if not adapter_cli_present(spec.adapter):"
+     },
+     {
+      "file": "project/puppetmaster/preflight.py",
+      "line": 1092,
+      "quote": "if not adapter_cli_present(adapter):"
+     }
+    ],
+    "claim": "adapter_cli_present passes the whole CLAUDE_CODE_COMMAND/CODEX_COMMAND string (for example 'npx -y @anthropic-ai/claude-code', a documented multi-word form) to the resolver. The adapters split it with command_parts and resolve only the first word. So a runnable adapter reads as not installed.",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 1,
+      "run": "3940a2e5ac",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 2,
+      "run": "44df923082",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 3,
+      "run": "f3bd6bd819",
+      "n": 1,
+      "result_now": "False"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-worker-resume",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "test_file": "tests/test_hpfix_puppetmaster_worker_resume.py",
+  "bugs": [
+   {
+    "id": "7ca3faca-1",
+    "group": "7ca3faca",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/worker_resume.py",
+    "function": "_resolve",
+    "claims": [
+     1,
+     3
+    ],
+    "what_goes_wrong": "A review-loop repair of a codex task requeues the same task id, and if the repair attempt fails before thread.started its receipt has thread_id null and is the newest, so a later resume_from of that task or role runs fresh although an earlier receipt of the same task names a persisted thread.",
+    "caller": "project/puppetmaster/orchestrator.py:1883",
+    "caller_sonnet": "puppetmaster/orchestrator.py:1883",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Filter the verifications to receipts with a non-empty session key before max(), as repair_resume_record does. Keep the ephemeral check on the chosen receipt.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/worker_resume.py",
+      "line": 255,
+      "quote": "latest = max(verifications, key=lambda artifact: str(artifact.created_at or \"\"))"
+     },
+     {
+      "file": "project/puppetmaster/worker_resume.py",
+      "line": 97,
+      "quote": "and str((artifact.payload or {}).get(key) or \"\").strip()"
+     },
+     {
+      "file": "project/puppetmaster/quality_loop.py",
+      "line": 95,
+      "quote": "resume = repair_resume_record(task, artifacts)"
+     },
+     {
+      "file": "project/puppetmaster/swarm_launch.py",
+      "line": 152,
+      "quote": "payload[\"resume_from\"] = dict(role_spec.resume_from)"
+     },
+     {
+      "file": "project/puppetmaster/flow.py",
+      "line": 1849,
+      "quote": "payload[\"resume_from\"] = {\"job_id\": session[\"job_id\"], \"task_id\": session[\"task_id\"]}"
+     },
+     {
+      "file": "project/tests/test_worker_resume.py",
+      "line": 379,
+      "quote": "def test_missing_ambiguous_or_conflicting_threads_record_none(self) -> None:"
+     }
+    ],
+    "claim": "_resolve takes the newest adapter receipt of the prior task even when it has no session id. A later receipt without a session id (for example a failed attempt) hides an earlier receipt that has one, so resume is refused. repair_resume_record skips receipts without a session id.",
+    "result_now": "{'status': 'unavailable', 'reason': \"prior task 't1' recorded no session_id\", 'resume_from': {'job_id': 'j', 'role': 'builder'}}",
+    "repros": [
+     {
+      "k": 1,
+      "run": "b1ce44f974",
+      "n": 1,
+      "result_now": "{'status': 'unavailable', 'reason': \"prior task 't1' recorded no session_id\", 'resume_from': {'job_id': 'j', 'role': 'builder'}}"
+     },
+     {
+      "k": 3,
+      "run": "8288b344ee",
+      "n": 1,
+      "result_now": "{'status': 'unavailable', 'reason': \"prior task 't1' recorded no session_id\", 'resume_from': {'job_id': 'j1', 'task_id': 't1'}}"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-write-intent",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "test_file": "tests/test_hpfix_puppetmaster_write_intent.py",
+  "bugs": [
+   {
+    "id": "18d4efe1-1",
+    "group": "18d4efe1",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/write_intent.py",
+    "function": "adapter_may_write",
+    "claims": [
+     1,
+     6
+    ],
+    "what_goes_wrong": "A read-only `puppetmaster antigravity --mode analyze` worker (agy runs --mode plan) takes an exclusive edit claim on its whole write scope (default \".\"), so other workers on the same repo wait and can fail with EditAdmissionTimeout.",
+    "caller": "project/puppetmaster/cli/_dispatch.py:1152",
+    "caller_sonnet": "project/puppetmaster/edit_admission.py:100",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "In the antigravity branch, return resolve_antigravity_mode(payload) != \"plan\" so the matrix uses the same mapping as the adapter.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/write_intent.py",
+      "line": 85,
+      "quote": "return str(payload.get(\"mode\", default)) != \"plan\""
+     },
+     {
+      "file": "project/puppetmaster/adapters/antigravity.py",
+      "line": 85,
+      "quote": "if raw in (\"plan\", \"analyze\"):"
+     },
+     {
+      "file": "project/puppetmaster/cli/_parser.py",
+      "line": 1684,
+      "quote": "attribution; analyze = read-only (`--mode plan`)."
+     },
+     {
+      "file": "project/puppetmaster/mcp_server.py",
+      "line": 2616,
+      "quote": "command.extend([\"--mode\", \"implement\" if implement else \"analyze\"])"
+     },
+     {
+      "file": "project/puppetmaster/edit_admission.py",
+      "line": 100,
+      "quote": "if not _adapter_may_write(str(getattr(task, \"adapter\", \"\")), payload):"
+     }
+    ],
+    "claim": "For antigravity with payload mode 'analyze', the function returns True. The adapter maps 'analyze' to the read-only 'plan' mode, and docs say analyze is read-only. Only the literal 'plan' is treated as read-only.",
+    "result_now": "True",
+    "repros": [
+     {
+      "k": 1,
+      "run": "da2f213d87",
+      "n": 1,
+      "result_now": "True"
+     },
+     {
+      "k": 6,
+      "run": "f4ca4d8146",
+      "n": 1,
+      "result_now": "may_write=True adapter_mode='plan'"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-metr-seams",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/metr_seams.py",
+  "test_file": "tests/test_hpfix_puppetmaster_metr_seams.py",
+  "bugs": [
+   {
+    "id": "b9b2bd25-7",
+    "group": "b9b2bd25",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/metr_seams.py",
+    "function": "is_coordination_protocol_payload",
+    "claims": [
+     7
+    ],
+    "what_goes_wrong": "A worker proposal with role 'mailbox-protocol' and a neutral instruction is not detected, so the store enqueues a protocol-role task that the worker-protocol guard exists to refuse (probed: 1 task created, no refusal).",
+    "caller": "project/puppetmaster/store.py:938",
+    "caller_sonnet": "project/puppetmaster/store.py:938",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Normalize both the role and PROTOCOL_ROLES to one separator (for example fold '-' to '_' as the key check does) before the lookup.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/metr_seams.py",
+      "line": 55,
+      "quote": "\"mailbox_protocol\","
+     },
+     {
+      "file": "project/puppetmaster/metr_seams.py",
+      "line": 57,
+      "quote": "\"peer-recruit\","
+     },
+     {
+      "file": "project/puppetmaster/metr_seams.py",
+      "line": 134,
+      "quote": "if role.replace(\"_\", \"-\") in PROTOCOL_ROLES or role in PROTOCOL_ROLES:"
+     }
+    ],
+    "claim": "The role check folds '_' to '-', but PROTOCOL_ROLES stores 'mailbox_protocol' with an underscore. So the role 'mailbox-protocol' is not detected, while 'mailbox_protocol', 'peer_recruit' and 'peer-recruit' are.",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 7,
+      "run": "69e4a20863",
+      "n": 2,
+      "result_now": "False"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-dashboard",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/dashboard.py",
+  "test_file": "tests/test_hpfix_puppetmaster_dashboard.py",
+  "bugs": [
+   {
+    "id": "a33abbb6-1",
+    "group": "a33abbb6",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/dashboard.py",
+    "function": "bind_dashboard_server",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "A foreground `puppetmaster dashboard --host ::1` passes '::1' straight to bind_dashboard_server, which binds with the IPv4-only ThreadingHTTPServer and fails with gaierror, so the CLI prints an error and exits 1 for a host that serve() accepts as loopback.",
+    "caller": "project/puppetmaster/cli/_dispatch.py:584",
+    "caller_sonnet": "project/puppetmaster/cli/_dispatch.py:580",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Set address_family = socket.AF_INET6 on the server class when the host contains ':' (or map '::1' to 127.0.0.1 as the background path does).",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/dashboard.py",
+      "line": 1192,
+      "quote": "_LOOPBACK_HOSTS = frozenset({\"127.0.0.1\", \"::1\", \"localhost\", \"\"})"
+     },
+     {
+      "file": "project/puppetmaster/cli/_parser.py",
+      "line": 1134,
+      "quote": "dashboard_cmd.add_argument(\"--host\", default=\"127.0.0.1\", help=\"Bind host (default 127.0.0.1).\")"
+     },
+     {
+      "file": "project/puppetmaster/cli/_dispatch.py",
+      "line": 584,
+      "quote": "host=host,"
+     },
+     {
+      "file": "project/puppetmaster/dashboard.py",
+      "line": 1676,
+      "quote": "class _DashboardServer(ThreadingHTTPServer):"
+     }
+    ],
+    "claim": "The dashboard server class is IPv4 only (ThreadingHTTPServer default AF_INET), but serve() lists '::1' as an allowed loopback host. bind_dashboard_server('::1', 0, handler) fails with socket.gaierror instead of binding.",
+    "result_now": "gaierror",
+    "repros": [
+     {
+      "k": 1,
+      "run": "d438748a01",
+      "n": 1,
+      "result_now": "gaierror"
+     }
+    ]
+   },
+   {
+    "id": "a33abbb6-2",
+    "group": "a33abbb6",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/dashboard.py",
+    "function": "bind_dashboard_server",
+    "claims": [
+     2,
+     4,
+     5,
+     6
+    ],
+    "what_goes_wrong": "When the search hits the 65535 ceiling, the exhausted-range error names ports above 65535 that were never tried, which conflicts with the CHANGELOG promise of an error naming the range tried.",
+    "caller": "project/puppetmaster/cli/_dispatch.py:580",
+    "caller_sonnet": "project/puppetmaster/cli/_dispatch.py:580",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Track the last candidate actually tried and use min(port + attempts - 1, 65535) in the message.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/dashboard.py",
+      "line": 1717,
+      "quote": "if candidate > 65535:"
+     },
+     {
+      "file": "project/puppetmaster/dashboard.py",
+      "line": 1732,
+      "quote": "f\"no free port for the dashboard in {port}-{port + attempts - 1} on {host}. \""
+     },
+     {
+      "file": "project/docs/CHANGELOG.md",
+      "line": 3284,
+      "quote": "error naming the range tried and suggesting `dashboard --stop`)"
+     },
+     {
+      "file": "project/puppetmaster/cli/_dispatch.py",
+      "line": 463,
+      "quote": "auto_port = (not explicit_port) or getattr(args, \"port_search\", False)"
+     }
+    ],
+    "claim": "When the search stops at port 65535, the exhausted-range error still reports the range as port to port+max_attempts-1, naming ports above 65535 that were never tried.",
+    "result_now": "'no free port for the dashboard in 65535-65537 on 127.0.0.1. Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.'",
+    "repros": [
+     {
+      "k": 2,
+      "run": "12563b0931",
+      "n": 1,
+      "result_now": "'no free port for the dashboard in 65535-65537 on 127.0.0.1. Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.'"
+     },
+     {
+      "k": 4,
+      "run": "cffd96605c",
+      "n": 1,
+      "result_now": "'no free port for the dashboard in 65535-65554 on 127.0.0.1. Stop an old dashboard (`puppetmaster dashboard --stop`) or pass an explicit --port.'"
+     },
+     {
+      "k": 5,
+      "run": "558a8ff288",
+      "n": 1,
+      "result_now": "([65530, 65531, 65532, 65533, 65534, 65535], 'no free port for the dashboard in 65530-65549')"
+     },
+     {
+      "k": 6,
+      "run": "d0e1fb0b55",
+      "n": 1,
+      "result_now": "([65530, 65531, 65532, 65533, 65534, 65535], 'no free port for the dashboard in 65530-65549')"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-rate-limit-headers",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "test_file": "tests/test_hpfix_puppetmaster_rate_limit_headers.py",
+  "bugs": [
+   {
+    "id": "fd9aa32e-1",
+    "group": "fd9aa32e",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/rate_limit_headers.py",
+    "function": "parse_rate_limit_headers",
+    "claims": [
+     1,
+     2,
+     4
+    ],
+    "what_goes_wrong": "An Anthropic response with anthropic-ratelimit-requests-remaining: 0 and an RFC 3339 reset gets reset_at=None, so blocking_reset_at ignores the window and admission does not fail over before the hard 429.",
+    "caller": "project/puppetmaster/providers.py:689",
+    "caller_sonnet": "project/puppetmaster/providers.py:689",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "In reset_at, try datetime.fromisoformat (after a 'Z' to '+00:00' replace) before the RFC 2822 parse, and add a test with an Anthropic RFC 3339 reset value.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/rate_limit_headers.py",
+      "line": 118,
+      "quote": "Accepts Go-style durations (``2m59s``), bare seconds, epoch seconds/ms, or"
+     },
+     {
+      "file": "project/puppetmaster/rate_limit_headers.py",
+      "line": 119,
+      "quote": "absolute timestamps."
+     },
+     {
+      "file": "project/puppetmaster/rate_limit_headers.py",
+      "line": 151,
+      "quote": "parsed = parsedate_to_datetime(text)"
+     },
+     {
+      "file": "project/puppetmaster/rate_limit_headers.py",
+      "line": 67,
+      "quote": "and window.reset_at is not None"
+     },
+     {
+      "file": "project/puppetmaster/providers.py",
+      "line": 1100,
+      "quote": "f\"{base_url}/messages\","
+     },
+     {
+      "file": "project/puppetmaster/providers.py",
+      "line": 689,
+      "quote": "_harvest_response_headers(getattr(response, \"headers\", None), http_status=200)"
+     },
+     {
+      "file": "project/puppetmaster/rate_limit_state.py",
+      "line": 407,
+      "quote": "snapshot = parse_rate_limit_headers("
+     },
+     {
+      "file": "project/docs/CHANGELOG.md",
+      "line": 3843,
+      "quote": "``remaining=0`` quota windows preempt"
+     }
+    ],
+    "claim": "reset_at accepts absolute timestamps per its docstring, but an RFC 3339 / ISO 8601 value such as '2026-11-18T10:00:00Z' (the format of anthropic-ratelimit-*-reset headers) gives None, because only RFC 2822 dates are parsed. An exhausted window then has no reset time and never counts as blocking.",
+    "result_now": "None",
+    "repros": [
+     {
+      "k": 1,
+      "run": "8a61e1b8fe",
+      "n": 1,
+      "result_now": "None"
+     },
+     {
+      "k": 2,
+      "run": "7f0f0b3187",
+      "n": 1,
+      "result_now": "None"
+     },
+     {
+      "k": 4,
+      "run": "792ca714c9",
+      "n": 1,
+      "result_now": "(None, False)"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-acceptance-criteria",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/acceptance_criteria.py",
+  "test_file": "tests/test_hpfix_puppetmaster_acceptance_criteria.py",
+  "bugs": [
+   {
+    "id": "f35c046c-2",
+    "group": "f35c046c",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/acceptance_criteria.py",
+    "function": "criterion_status_records",
+    "claims": [
+     2,
+     3,
+     5
+    ],
+    "what_goes_wrong": "The prompt shows each criterion as a '- text' or '1. text' line, an agentic worker that echoes the line with its marker gets no match, and its passed/failed result is lost as unknown/not_reported.",
+    "caller": "project/puppetmaster/adapters/_base.py:646",
+    "caller_sonnet": "project/puppetmaster/adapters/_base.py:646",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Run reported keys through the same marker strip and length cut as normalize_acceptance_criteria before the match, and add a test for a marker echo.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/acceptance_criteria.py",
+      "line": 51,
+      "quote": "text = re.sub(r\"^(?:[-*]|\\d+[.)])\\s+\", \"\", text).strip()"
+     },
+     {
+      "file": "project/puppetmaster/acceptance_criteria.py",
+      "line": 125,
+      "quote": "lines.append(f\"- {item}\")"
+     },
+     {
+      "file": "project/puppetmaster/acceptance_criteria.py",
+      "line": 267,
+      "quote": "key = str(entry.get(\"criterion\") or entry.get(\"text\") or \"\").strip()"
+     },
+     {
+      "file": "project/puppetmaster/acceptance_criteria.py",
+      "line": 350,
+      "quote": "payload[\"acceptance_criteria\"] = criterion_status_records(criteria, reported)"
+     },
+     {
+      "file": "project/puppetmaster/adapters/agentic.py",
+      "line": 778,
+      "quote": "verify_payload[\"acceptance_criteria\"] = submitted_criteria"
+     },
+     {
+      "file": "project/puppetmaster/adapters/agentic.py",
+      "line": 2083,
+      "quote": "\"description\": \"Exact acceptance criterion text from the task.\","
+     }
+    ],
+    "claim": "Criteria have a leading bullet marker stripped by normalization, but the reported key is compared raw. A reported entry with the same bulleted text does not match and the result is lost as unknown.",
+    "result_now": "[('Tests pass', 'unknown', 'not_reported')]",
+    "repros": [
+     {
+      "k": 2,
+      "run": "25ca47deeb",
+      "n": 2,
+      "result_now": "[('Tests pass', 'unknown', 'not_reported')]"
+     },
+     {
+      "k": 3,
+      "run": "4b83c3d829",
+      "n": 1,
+      "result_now": "[{'criterion': 'Tests pass', 'status': 'unknown', 'evidence': 'not_reported'}]"
+     },
+     {
+      "k": 5,
+      "run": "ca8cb044dc",
+      "n": 1,
+      "result_now": "[{'criterion': 'Tests pass', 'status': 'unknown', 'evidence': 'not_reported'}]"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-diagnostics",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/diagnostics.py",
+  "test_file": "tests/test_hpfix_puppetmaster_diagnostics.py",
+  "bugs": [
+   {
+    "id": "d4b6efe1-1",
+    "group": "d4b6efe1",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/diagnostics.py",
+    "function": "_find_cursor_sdk_install",
+    "claims": [
+     1,
+     2
+    ],
+    "what_goes_wrong": "After a bootstrap npm install that is killed by the 180 s timeout (or otherwise interrupted) leaves a partial @cursor/sdk directory beside the package, the next `puppetmaster install-cursor-mcp` reports 'unchanged' and never repairs it, while doctor says ok and every cursor worker fails because Node cannot import the package.",
+    "caller": "project/puppetmaster/installers.py:160",
+    "caller_sonnet": "project/puppetmaster/installers.py:160",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Count a candidate only when it holds a package.json (in _find_cursor_sdk_install and in cursor_sdk_home._sdk_beside/home_sdk), so a partial directory is not an install and the bootstrap runs again.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/diagnostics.py",
+      "line": 901,
+      "quote": "if candidate.exists():"
+     },
+     {
+      "file": "project/puppetmaster/installers.py",
+      "line": 160,
+      "quote": "existing = _find_cursor_sdk_install(None)"
+     },
+     {
+      "file": "project/puppetmaster/installers.py",
+      "line": 201,
+      "quote": "except subprocess.TimeoutExpired:"
+     },
+     {
+      "file": "project/puppetmaster/diagnostics.py",
+      "line": 869,
+      "quote": "\"\"\"Whether the @cursor/sdk package is resolvable for Puppetmaster's runtime."
+     },
+     {
+      "file": "project/puppetmaster/cursor_sdk_runner.mjs",
+      "line": 2,
+      "quote": "import { Agent, Cursor, CursorAgentError } from \"@cursor/sdk\";"
+     }
+    ],
+    "claim": "The function treats any existing path at node_modules/@cursor/sdk as an installed SDK. An empty directory (for example after a failed or partial npm install) has no package.json or entry file, so Node cannot resolve it, yet the function returns it. The bootstrap then reports 'unchanged' and skips np",
+    "result_now": "'node_modules/@cursor/sdk'",
+    "repros": [
+     {
+      "k": 1,
+      "run": "c8011577ad",
+      "n": 1,
+      "result_now": "'node_modules/@cursor/sdk'"
+     },
+     {
+      "k": 2,
+      "run": "f3044dee9b",
+      "n": 1,
+      "result_now": "True"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-store",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/store.py",
+  "test_file": "tests/test_hpfix_puppetmaster_store.py",
+  "bugs": [
+   {
+    "id": "38803feb-2",
+    "group": "38803feb",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/store.py",
+    "function": "SwarmStore.retrieve_memory",
+    "claims": [
+     2,
+     3
+    ],
+    "what_goes_wrong": "Query terms keep attached punctuation and match by substring, so a goal word such as 'zebra,' or 'bug.' never matches the stored word and relevant memory is not injected into workers.",
+    "caller": "project/puppetmaster/orchestrator.py:2398",
+    "caller_sonnet": "project/puppetmaster/orchestrator.py:2398",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Split the query into words with a regex (for example re.findall on [a-z0-9_]+ of the lowercased query) before the length filter.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/store.py",
+      "line": 3579,
+      "quote": "terms = {term.lower() for term in query.split() if len(term) > 2}"
+     },
+     {
+      "file": "project/puppetmaster/store.py",
+      "line": 203,
+      "quote": "hits = sum(1 for term in terms if term in haystack)"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 2398,
+      "quote": "memory = self.store.retrieve_memory("
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 538,
+      "quote": "specs = self._with_retrieved_memory(launch_specs, goal, job_id=job.id)"
+     }
+    ],
+    "claim": "Query terms are split on whitespace only, so a term with attached punctuation (\"zebra,\") does not match the word \"zebra\" in a memory statement.",
+    "result_now": "[]",
+    "repros": [
+     {
+      "k": 2,
+      "run": "13d0365c73",
+      "n": 2,
+      "result_now": "[]"
+     },
+     {
+      "k": 3,
+      "run": "8d40b10edf",
+      "n": 1,
+      "result_now": "[]"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-runaway-guard",
+  "repo": "marionette",
+  "file": "harness/runaway_guard.py",
+  "test_file": "tests/test_hpfix_harness_runaway_guard.py",
+  "bugs": [
+   {
+    "id": "146de2cf-6",
+    "group": "146de2cf",
+    "repo": "marionette",
+    "file": "harness/runaway_guard.py",
+    "function": "observe_step",
+    "claims": [
+     6
+    ],
+    "what_goes_wrong": "Waits on different non-command jobs (for example swarm job ids) all get the same generic body '(wait Ns) Jobs still running...', so the third wait gets the unchanged_progress steer, which tells the pilot that progress 'for the same work target' did not change, although each wait polled a different target.",
+    "caller": "project/harness/pilot_wait.py:254",
+    "caller_sonnet": "project/harness/pilot_wait.py:254",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Put the polled target (action key) into the progress fingerprint, or reset progress_count when poll_key changes.",
+    "evidence": [
+     {
+      "file": "project/harness/runaway_guard.py",
+      "line": 241,
+      "quote": "progress = progress_fingerprint(kind, content)"
+     },
+     {
+      "file": "project/harness/runaway_guard.py",
+      "line": 149,
+      "quote": "\"[runaway guard] Verified progress for the same work target has remained \""
+     },
+     {
+      "file": "project/harness/pilot_wait.py",
+      "line": 57,
+      "quote": "if not job_id.startswith(\"local-cmd-\"):"
+     },
+     {
+      "file": "project/harness/pilot_wait.py",
+      "line": 145,
+      "quote": "f\"(wait {seconds:g}s) Jobs still running. Call wait again to \""
+     }
+    ],
+    "claim": "The unchanged-progress fingerprint uses only the result text, not the polled target. Three wait calls on three different jobs that each return \"status: running\" give unchanged_progress_repeat. The steer text for this signal says that progress for the same work target is unchanged.",
+    "result_now": "[[], [], ['unchanged_progress_repeat']]",
+    "repros": [
+     {
+      "k": 6,
+      "run": "42fc80ace2",
+      "n": 2,
+      "result_now": "[[], [], ['unchanged_progress_repeat']]"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-context-budget",
+  "repo": "marionette",
+  "file": "harness/context_budget.py",
+  "test_file": "tests/test_hpfix_harness_context_budget.py",
+  "bugs": [
+   {
+    "id": "a48b7e17-1",
+    "group": "a48b7e17",
+    "repo": "marionette",
+    "file": "harness/context_budget.py",
+    "function": "maybe_persist_result (with _looks_like_command_result, lines 235-239)",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "A large non-command tool result (for example a read_file of a log, transcript or source file) whose first preview_chars contain the text '... [omitted' gets a head-only preview labelled 'Preview (head and tail)', so the model thinks it already sees the end of the output and can skip the spill file read.",
+    "caller": "project/harness/conversation.py:3801",
+    "caller_sonnet": "project/harness/conversation.py:3801",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Pass the head_tail decision from generate_preview to build_persisted_message instead of a text search of the preview.",
+    "evidence": [
+     {
+      "file": "project/harness/context_budget.py",
+      "line": 328,
+      "quote": "head_tail = \"... [omitted\" in preview"
+     },
+     {
+      "file": "project/harness/context_budget.py",
+      "line": 329,
+      "quote": "label = \"head and tail\" if head_tail else f\"first {len(preview)} chars\""
+     },
+     {
+      "file": "project/harness/context_budget.py",
+      "line": 251,
+      "quote": "marker = f\"\\n... [omitted {omitted:,} characters] ...\\n\""
+     },
+     {
+      "file": "project/harness/conversation.py",
+      "line": 3801,
+      "quote": "clamped_content = self._turn_economy.persist_tool_result("
+     },
+     {
+      "file": "project/harness/conversation.py",
+      "line": 3802,
+      "quote": "content, tc_id, tool_name=getattr(act, \"kind\", None),"
+     }
+    ],
+    "claim": "The preview label is chosen by searching the preview for the text '... [omitted'. Content that itself contains that text and gets a head-only preview is labelled 'head and tail'.",
+    "result_now": "['Preview (head and tail):']",
+    "repros": [
+     {
+      "k": 1,
+      "run": "5d384fceaa",
+      "n": 1,
+      "result_now": "['Preview (head and tail):']"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-api-codegraph-index",
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "test_file": "tests/test_hpfix_harness_api_codegraph_index.py",
+  "bugs": [
+   {
+    "id": "d349963d-1",
+    "group": "d349963d",
+    "repo": "marionette",
+    "file": "harness/api/codegraph_index.py",
+    "function": "maybe_refresh_codegraph",
+    "claims": [
+     1,
+     3
+    ],
+    "what_goes_wrong": "In a Lua (or C/C++/Ruby) project, an in-place edit of a .lua file does not mark the index stale, so the turn-start refresh never reindexes and the pilot gets CodeGraph context for the old code.",
+    "caller": "project/harness/api/streams.py:396",
+    "caller_sonnet": "harness/api/streams.py:295",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Use codegraph_preflight.INDEXABLE_EXTENSIONS (one list shared with the indexer config) in codegraph_is_stale instead of the local hard-coded set.",
+    "evidence": [
+     {
+      "file": "project/harness/api/codegraph_index.py",
+      "line": 537,
+      "quote": "extensions = {\".py\", \".ts\", \".tsx\", \".js\", \".jsx\", \".java\", \".swift\", \".go\", \".rs\"}"
+     },
+     {
+      "file": "project/harness/api/codegraph_index.py",
+      "line": 523,
+      "quote": "True if the working tree has changed since the .codegraph index was built."
+     },
+     {
+      "file": "project/harness/codegraph_preflight.py",
+      "line": 424,
+      "quote": "def ensure_lua_includes(root: str) -> bool:"
+     },
+     {
+      "file": "project/harness/codegraph_preflight.py",
+      "line": 50,
+      "quote": "\".lua\","
+     },
+     {
+      "file": "project/harness/api/streams.py",
+      "line": 391,
+      "quote": "# turn, so an index that drifted (files edited/added/DELETED since the last"
+     },
+     {
+      "file": "project/docs/features/capabilities.md",
+      "line": 25,
+      "quote": "The index sees edits, additions, and deletions and refreshes in the background."
+     }
+    ],
+    "claim": "The staleness check only compares mtimes of files with a fixed extension list (.py .ts .tsx .js .jsx .java .swift .go .rs). The indexer also indexes .lua/.luau (ensure_lua_includes) and .cpp, so an in-place edit of such a file is never seen as stale and no refresh starts, which conflicts with the RE",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 1,
+      "run": "d9c9b2bb39",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 3,
+      "run": "981f93cdee",
+      "n": 1,
+      "result_now": "{'main.c': False, 'main.py': True}"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-browser-real-profile",
+  "repo": "marionette",
+  "file": "harness/browser_real_profile.py",
+  "test_file": "tests/test_hpfix_harness_browser_real_profile.py",
+  "bugs": [
+   {
+    "id": "6e747ee7-1",
+    "group": "6e747ee7",
+    "repo": "marionette",
+    "file": "harness/browser_real_profile.py",
+    "function": "is_live_browser_user_data_dir",
+    "claims": [
+     1,
+     2,
+     3
+    ],
+    "what_goes_wrong": "On a Linux host that has both ~/.config/google-chrome and the snap Chrome profile, a PM_BROWSER_USER_DATA_DIR that points at the snap profile passes the live-profile guard, so Marionette launches its shared Chrome on the user's live user-data-dir (SingletonLock conflict, Chrome >= 136 refusal, risk to the real profile).",
+    "caller": "project/harness/browser_auth.py:86",
+    "caller_sonnet": "harness/browser_auth.py:86",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Split the Linux candidate list into a helper and make is_live_browser_user_data_dir check every candidate (XDG, snap, flatpak) for each browser. Keep real_profile_data_dir first-existing for the snapshot source, as its test asserts.",
+    "evidence": [
+     {
+      "file": "project/harness/browser_real_profile.py",
+      "line": 105,
+      "quote": "\"\"\"True when ``path`` is (or is inside) a real installed-browser profile.\"\"\""
+     },
+     {
+      "file": "project/harness/browser_real_profile.py",
+      "line": 116,
+      "quote": "live = real_profile_data_dir(browser, system=host)"
+     },
+     {
+      "file": "project/harness/browser_real_profile.py",
+      "line": 157,
+      "quote": "for candidate in candidates:"
+     },
+     {
+      "file": "project/harness/browser_real_profile.py",
+      "line": 5,
+      "quote": "that copy \u2014 never the live user-data-dir (SingletonLock / Chrome >= 136)."
+     },
+     {
+      "file": "project/harness/browser_auth.py",
+      "line": 86,
+      "quote": "if current_profile and is_live_browser_user_data_dir(current_profile):"
+     },
+     {
+      "file": "project/tests/test_browser_real_profile.py",
+      "line": 295,
+      "quote": "def test_real_profile_data_dir_linux_first_existing(tmp_path, monkeypatch):"
+     }
+    ],
+    "claim": "On Linux the function checks only the first existing install location of each browser (real_profile_data_dir returns one candidate). When both ~/.config/google-chrome and the snap profile exist, the snap profile dir is not reported as a live browser profile.",
+    "result_now": "False",
+    "repros": [
+     {
+      "k": 1,
+      "run": "5dce801296",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 2,
+      "run": "85a1b616d1",
+      "n": 1,
+      "result_now": "False"
+     },
+     {
+      "k": 3,
+      "run": "8a22203cd7",
+      "n": 1,
+      "result_now": "(False, False)"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-skill-store",
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "test_file": "tests/test_hpfix_harness_skill_store.py",
+  "bugs": [
+   {
+    "id": "81081b2d-1",
+    "group": "81081b2d",
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "Skill.slug",
+    "claims": [
+     1,
+     2,
+     3
+    ],
+    "what_goes_wrong": "A manual skill whose name slugs to 47 characters plus a separator gets a slug that ends in '-'. save() stores it at _slug(slug) without the '-', so it silently overwrites a different skill whose slug is that 47-character prefix (probed in .lake: the second save replaced the first). The API also returns a non-canonical slug.",
+    "caller": "project/harness/api/skills.py:101",
+    "caller_sonnet": "project/harness/api/skills.py:67",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Strip '-' again after the cut, for example s = (s[:48].strip('-') or fallback).rstrip('. -'). Add a test that _slug(_slug(x)) == _slug(x).",
+    "evidence": [
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 40,
+      "quote": "s = re.sub(r\"[^a-z0-9]+\", \"-\", name.strip().lower()).strip(\"-\")"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 41,
+      "quote": "s = (s[:48] or fallback).rstrip(\". \")"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 76,
+      "quote": "return _slug(self.name)"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 186,
+      "quote": "safe = _slug(slug)"
+     },
+     {
+      "file": "project/harness/api/skills.py",
+      "line": 101,
+      "quote": "svc.skills.save(sk)"
+     }
+    ],
+    "claim": "After the 48-character cut, the slug can end with '-' because strip('-') runs before the cut. The result is not a clean slug and slug != _slug(slug).",
+    "result_now": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-'",
+    "repros": [
+     {
+      "k": 1,
+      "run": "86431d8231",
+      "n": 1,
+      "result_now": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-'"
+     },
+     {
+      "k": 2,
+      "run": "0754055ab1",
+      "n": 2,
+      "result_now": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-'"
+     },
+     {
+      "k": 3,
+      "run": "2cabfad628",
+      "n": 2,
+      "result_now": "'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-'"
+     }
+    ]
+   },
+   {
+    "id": "f75dc534-1",
+    "group": "f75dc534",
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "SkillStore.propose_update",
+    "claims": [
+     1,
+     3,
+     4
+    ],
+    "what_goes_wrong": "When the auto-distiller proposes an update to skill 'Deploy' while a user-added active skill 'Deploy patch' exists, save() overwrites deploy-patch.md with the pending patch, so the user's approved skill is lost with no snapshot or error.",
+    "caller": "project/harness/skill_distiller.py:357",
+    "caller_sonnet": "project/harness/skill_distiller.py:357",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Before save, check the target slug: if a skill exists there whose supersedes is not root_slug, pick a free slug (for example a numeric suffix) or raise. The comment intends to overwrite only an earlier patch of the same root.",
+    "evidence": [
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 75,
+      "quote": "return _slug(self.supersedes)[:42].rstrip(\"-\") + \"-patch\""
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 423,
+      "quote": "# Stable slug ({root}-patch): re-proposing overwrites the same pending"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 425,
+      "quote": "self.save(patch_skill)"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 352,
+      "quote": "existing.unlink()"
+     },
+     {
+      "file": "project/harness/api/skills.py",
+      "line": 101,
+      "quote": "svc.skills.save(sk)"
+     }
+    ],
+    "claim": "propose_update saves the patch under the fixed slug '<slug>-patch' without a collision check. An unrelated skill with that slug (for example named 'Deploy patch') is silently overwritten and lost.",
+    "result_now": "[('Deploy', 'active', 'a'), ('Deploy', 'pending', 'new')]",
+    "repros": [
+     {
+      "k": 1,
+      "run": "cc299911f5",
+      "n": 1,
+      "result_now": "[('Deploy', 'active', 'a'), ('Deploy', 'pending', 'new')]"
+     },
+     {
+      "k": 3,
+      "run": "9407f6ad35",
+      "n": 1,
+      "result_now": "('pending', 'new x body', 'x', [('pending', 'x'), ('active', 'x')])"
+     },
+     {
+      "k": 4,
+      "run": "a70b167b1d",
+      "n": 1,
+      "result_now": "{'active_names': ['deploy'], 'deploy-patch': ('deploy', 'pending', 'deploy', '1. new deploy')}"
+     }
+    ]
+   },
+   {
+    "id": "f75dc534-2",
+    "group": "f75dc534",
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "SkillStore.propose_update",
+    "claims": [
+     2
+    ],
+    "what_goes_wrong": "When the distiller update carries a new name (merged_name falls back to the candidate name), approval through /api/skills/approve writes the merged skill under the new slug and leaves the old active skill, so the store holds two active skills instead of one updated skill.",
+    "caller": "project/harness/skill_distiller.py:357",
+    "caller_sonnet": "project/harness/skill_distiller.py:357",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "In set_state, keep the original file path before the rename and unlink it after save when the slug changed (as update() already does), or keep the root slug stable on rename.",
+    "evidence": [
+     {
+      "file": "project/harness/skill_distiller.py",
+      "line": 347,
+      "quote": "merged_name = merged_name.strip() or cand.name"
+     },
+     {
+      "file": "project/harness/skill_distiller.py",
+      "line": 131,
+      "quote": "merged_name"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 391,
+      "quote": "orig_sk.name = sk.name"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 393,
+      "quote": "self.save(orig_sk)"
+     },
+     {
+      "file": "project/harness/skill_store.py",
+      "line": 288,
+      "quote": "promoted = self.set_state(slug, \"active\")"
+     },
+     {
+      "file": "project/harness/api/skills.py",
+      "line": 45,
+      "quote": "result = svc.skills.admit(slug, approver)"
+     }
+    ],
+    "claim": "When new_name is given, approving the proposed patch writes the updated skill under the new name's slug but leaves the old file. The store then holds both the old skill and the updated one, so the update does not replace the skill.",
+    "result_now": "[('Deploy', 'active', 'a'), ('Ship', 'active', 'new')]",
+    "repros": [
+     {
+      "k": 2,
+      "run": "cc299911f5",
+      "n": 2,
+      "result_now": "[('Deploy', 'active', 'a'), ('Ship', 'active', 'new')]"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-worker",
+  "repo": "marionette",
+  "file": "harness/worker.py",
+  "test_file": "tests/test_hpfix_harness_worker.py",
+  "bugs": [
+   {
+    "id": "8c8070c4-1",
+    "group": "8c8070c4",
+    "repo": "marionette",
+    "file": "harness/worker.py",
+    "function": "_detect_escaped_writes",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "When an implement worker runs `cp a.txt sub/dir/b.txt` inside its worktree, the finalizer reports a false write to '/dir/b.txt' outside the worktree: it adds a WARNING to the summary, and if the diff is empty (or the worker is an analysis worker), it fails the job with ok=False.",
+    "caller": "project/harness/worker.py:1065",
+    "caller_sonnet": "project/harness/worker.py:1065",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Anchor the absolute-path match to a token start (for example `(?:^|(?<=[\\s=]))/...`) so a '/' inside a relative token does not start a match.",
+    "evidence": [
+     {
+      "file": "project/harness/worker.py",
+      "line": 280,
+      "quote": "_RE_CP_MV = re.compile(r\"\\b(?:cp|mv|install|rsync)\\b[^;|&`\\n]*\")"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 389,
+      "quote": "abs_paths = re.findall(_ABS_PATH, seg)"
+     },
+     {
+      "file": "project/tests/test_worker_escaped_writes.py",
+      "line": 86,
+      "quote": "# Relative paths resolve under the run_command cwd (= worktree), so they"
+     },
+     {
+      "file": "project/tests/test_worker_escaped_writes.py",
+      "line": 92,
+      "quote": "_run_cmd(\"cp a.txt b.txt\"),"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 1065,
+      "quote": "escaped = _detect_escaped_writes(events, wt_path)"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 1074,
+      "quote": "if escaped:"
+     }
+    ],
+    "claim": "For cp/mv/install/rsync the absolute-path regex has no boundary, so a relative path such as 'sub/dir/b.txt' matches its '/dir/b.txt' tail and is reported as an escaped write to '/dir/b.txt'.",
+    "result_now": "['/dir/b.txt']",
+    "repros": [
+     {
+      "k": 1,
+      "run": "df774aa201",
+      "n": 2,
+      "result_now": "['/dir/b.txt']"
+     }
+    ]
+   },
+   {
+    "id": "8c8070c4-2",
+    "group": "8c8070c4",
+    "repo": "marionette",
+    "file": "harness/worker.py",
+    "function": "_detect_escaped_writes",
+    "claims": [
+     2,
+     3
+    ],
+    "what_goes_wrong": "For `cp /etc/hosts ./hosts.txt` the rule takes an absolute token as the destination although the real destination is relative and inside the worktree, so the worker gets a false escaped-write WARNING or an ok=False failure; with only a boundary fix it would still report the source '/etc/hosts'.",
+    "caller": "project/harness/worker.py:1065",
+    "caller_sonnet": "project/harness/worker.py:1065",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Split the segment into tokens and use the last non-option token as the destination; report it only when that token itself is absolute (and handle `-t DIR`).",
+    "evidence": [
+     {
+      "file": "project/harness/worker.py",
+      "line": 278,
+      "quote": "# the command through the end of its shell segment and then pick the LAST"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 390,
+      "quote": "if abs_paths:"
+     },
+     {
+      "file": "project/tests/test_worker_escaped_writes.py",
+      "line": 86,
+      "quote": "# Relative paths resolve under the run_command cwd (= worktree), so they"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 1074,
+      "quote": "if escaped:"
+     }
+    ],
+    "claim": "For cp/mv/install/rsync the last absolute path token is taken as the destination even when the real destination is a relative path. A read from an absolute source into the worktree is reported as an escaped write.",
+    "result_now": "['/hosts.txt']",
+    "repros": [
+     {
+      "k": 2,
+      "run": "5bff3a8833",
+      "n": 1,
+      "result_now": "['/hosts.txt']"
+     },
+     {
+      "k": 3,
+      "run": "bc15ce478a",
+      "n": 1,
+      "result_now": "['/hosts']"
+     }
+    ]
+   },
+   {
+    "id": "8c8070c4-4",
+    "group": "8c8070c4",
+    "repo": "marionette",
+    "file": "harness/worker.py",
+    "function": "_detect_escaped_writes",
+    "claims": [
+     4
+    ],
+    "what_goes_wrong": "A read-only command whose path has a component named install, cp, mv or rsync (for example `ls /opt/install/bin`) matches `\\binstall\\b`, so the worker reports '/bin' as an escaped write and gets a false WARNING or an ok=False failure.",
+    "caller": "project/harness/worker.py:1065",
+    "caller_sonnet": "project/harness/worker.py:1065",
+    "severity": [
+     "low",
+     "medium"
+    ],
+    "fix_idea": "Match the command word only at the start of a shell segment (after ^, ;, |, &, &&, or sudo/env), not at any word boundary.",
+    "evidence": [
+     {
+      "file": "project/harness/worker.py",
+      "line": 280,
+      "quote": "_RE_CP_MV = re.compile(r\"\\b(?:cp|mv|install|rsync)\\b[^;|&`\\n]*\")"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 338,
+      "quote": "\"\"\"Scan run_command events for shell writes to absolute paths that fall"
+     }
+    ],
+    "claim": "_RE_CP_MV uses \\b, so it matches 'install' as a path component of a read-only command. `ls /opt/install/bin` gives the segment 'install/bin', and the function reports '/bin' as an escaped write.",
+    "result_now": "['/bin']",
+    "repros": [
+     {
+      "k": 4,
+      "run": "bc15ce478a",
+      "n": 2,
+      "result_now": "['/bin']"
+     }
+    ]
+   },
+   {
+    "id": "8c8070c4-5",
+    "group": "8c8070c4",
+    "repo": "marionette",
+    "file": "harness/worker.py",
+    "function": "_detect_escaped_writes",
+    "claims": [
+     5
+    ],
+    "what_goes_wrong": "When a worker runs `pip install /tmp/pkg-1.0.whl` (or npm/apt install with an absolute path), the rule treats the read-only package path as a written destination, so the job gets a false escaped-write WARNING or fails with ok=False.",
+    "caller": "project/harness/worker.py:1065",
+    "caller_sonnet": "project/harness/worker.py:1065",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Require `install` to be the command word of the segment (not an argument of pip, npm, apt, brew and similar), the same anchor as the claim 4 fix.",
+    "evidence": [
+     {
+      "file": "project/harness/worker.py",
+      "line": 277,
+      "quote": "# `cp SRC /abs`, `mv SRC /abs`, `install SRC /abs`, `rsync SRC /abs`. We match"
+     },
+     {
+      "file": "project/harness/worker.py",
+      "line": 280,
+      "quote": "_RE_CP_MV = re.compile(r\"\\b(?:cp|mv|install|rsync)\\b[^;|&`\\n]*\")"
+     }
+    ],
+    "claim": "`pip install /tmp/pkg-1.0.whl` only reads the wheel. The cp/mv/install rule treats the last absolute path as a written destination and reports '/tmp/pkg-1.0.whl' as an escaped write.",
+    "result_now": "['/tmp/pkg-1.0.whl']",
+    "repros": [
+     {
+      "k": 5,
+      "run": "bc15ce478a",
+      "n": 3,
+      "result_now": "['/tmp/pkg-1.0.whl']"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-pmharness-drivers-cursor-cli",
+  "repo": "marionette",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "test_file": "tests/test_hpfix_pmharness_drivers_cursor_cli.py",
+  "bugs": [
+   {
+    "id": "67ffe9e8-1",
+    "group": "67ffe9e8",
+    "repo": "marionette",
+    "file": "pmharness/drivers/cursor_cli.py",
+    "function": "_tool_hint_payload",
+    "claims": [
+     1,
+     2
+    ],
+    "what_goes_wrong": "A Cursor stream-json tool_call event with the wrapper key \"tool\" (or no dict payload, which gives \"unknown\") and no nested name produces a hint named 'tool', so the UI paints the 'tool tool' placeholder row that the code comments say it must avoid, while an empty name gives 'tool_call'.",
+    "caller": "project/pmharness/drivers/cursor_cli.py:626",
+    "caller_sonnet": "project/pmharness/drivers/cursor_cli.py:626",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "When humanize_cursor_tool_name returns an empty kind for both the name and args['name'], fall back to 'tool_call' directly instead of to the raw name.",
+    "evidence": [
+     {
+      "file": "project/pmharness/drivers/cursor_cli.py",
+      "line": 375,
+      "quote": "bare ``tool`` / empty \u2192 ``\\\"\\\"`` so callers can fall back."
+     },
+     {
+      "file": "project/pmharness/drivers/cursor_cli.py",
+      "line": 506,
+      "quote": "kind = (name or \"tool_call\").strip() or \"tool_call\""
+     },
+     {
+      "file": "project/pmharness/drivers/cursor_cli.py",
+      "line": 483,
+      "quote": "# Cursor sometimes leaves a placeholder tool name of literally \"tool\"."
+     },
+     {
+      "file": "project/pmharness/drivers/cursor_cli.py",
+      "line": 639,
+      "quote": "# keeps each Cursor-native tool row instead of one sticky"
+     },
+     {
+      "file": "project/pmharness/drivers/cursor_acp.py",
+      "line": 332,
+      "quote": "out: dict = {\"name\": name or \"tool_call\"}"
+     }
+    ],
+    "claim": "When the tool name is a generic wrapper word (\"tool\", \"unknown\", \"function\") and args carry no nested name, the payload name is the raw generic word, e.g. name 'tool'. Calls with an empty name give 'tool_call', so the same case gives two different names. The comment in consume_stream_json says the f",
+    "result_now": "({'name': 'tool'}, {'name': 'tool_call'})",
+    "repros": [
+     {
+      "k": 1,
+      "run": "7edf3fce7e",
+      "n": 1,
+      "result_now": "({'name': 'tool'}, {'name': 'tool_call'})"
+     },
+     {
+      "k": 2,
+      "run": "c1d5f6a1ef",
+      "n": 1,
+      "result_now": "{'name': 'tool', 'status': 'in_progress'}"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-pmharness-intent",
+  "repo": "marionette",
+  "file": "pmharness/intent.py",
+  "test_file": "tests/test_hpfix_pmharness_intent.py",
+  "bugs": [
+   {
+    "id": "11691ae0-1",
+    "group": "11691ae0",
+    "repo": "marionette",
+    "file": "pmharness/intent.py",
+    "function": "infer_roles",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "The pilot omits roles for a narrow question as its tool schema tells it to, and the substring 'review' inside 'previewer' starts five paid workers instead of one explorer.",
+    "caller": "project/pmharness/bridge.py:1736",
+    "caller_sonnet": "project/pmharness/bridge.py:1670",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Match whole words (regex word boundaries) for full words such as 'review', 'scale' and 'bug', and keep prefix match only for the stems such as 'evaluat', 'scalab' and 'vulnerab'. Add a test that 'What does the previewer do?' gives ['explore'].",
+    "evidence": [
+     {
+      "file": "project/pmharness/intent.py",
+      "line": 95,
+      "quote": "\"audit\", \"review\", \"assess\", \"evaluat\", \"quality\", \"robust\", \"scale\","
+     },
+     {
+      "file": "project/pmharness/intent.py",
+      "line": 178,
+      "quote": "if any(signal in text for signal in _BROAD_AUDIT_SIGNALS):"
+     },
+     {
+      "file": "project/pmharness/intent.py",
+      "line": 92,
+      "quote": "# (an audit) rather than one narrow question. Deterministic substring match --"
+     },
+     {
+      "file": "project/harness/pilot.py",
+      "line": 1614,
+      "quote": "\"For a full audit, pass all five. Omit only for a single narrow question.\""
+     },
+     {
+      "file": "project/pmharness/bridge.py",
+      "line": 1736,
+      "quote": "roles = intent.roles or infer_roles(intent.goal)"
+     }
+    ],
+    "claim": "Audit signals match as raw substrings, so a narrow question containing a word like 'previewer' (contains 'review') gets the full five-role audit fan-out.",
+    "result_now": "['explore', 'conflict-auditor', 'test-coverage-reviewer', 'pipeline-mapper', 'decision-explainer']",
+    "repros": [
+     {
+      "k": 1,
+      "run": "1e102ed3b7",
+      "n": 1,
+      "result_now": "['explore', 'conflict-auditor', 'test-coverage-reviewer', 'pipeline-mapper', 'decision-explainer']"
+     }
+    ]
+   },
+   {
+    "id": "11691ae0-2",
+    "group": "11691ae0",
+    "repo": "marionette",
+    "file": "pmharness/intent.py",
+    "function": "infer_roles",
+    "claims": [
+     2
+    ],
+    "what_goes_wrong": "A flow question written as 'data-flow' or 'control-flow' with roles omitted gets one explorer and no pipeline-mapper, so the flow lens that the docstring promises is missing.",
+    "caller": "project/pmharness/bridge.py:1736",
+    "caller_sonnet": "project/pmharness/bridge.py:1670",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Normalize hyphens to spaces in the goal text before the match, or add 'data-flow' and 'control-flow' to _FLOW_SIGNALS, as the list already does for 'end-to-end'.",
+    "evidence": [
+     {
+      "file": "project/pmharness/intent.py",
+      "line": 107,
+      "quote": "_FLOW_SIGNALS = (\"pipeline\", \"data flow\", \"control flow\", \"end to end\", \"end-to-end\", \"trace\")"
+     },
+     {
+      "file": "project/pmharness/intent.py",
+      "line": 160,
+      "quote": "hits the platform from multiple angles at once; a flow-shaped goal adds the"
+     },
+     {
+      "file": "project/harness/pilot.py",
+      "line": 1614,
+      "quote": "\"For a full audit, pass all five. Omit only for a single narrow question.\""
+     },
+     {
+      "file": "project/pmharness/bridge.py",
+      "line": 1736,
+      "quote": "roles = intent.roles or infer_roles(intent.goal)"
+     }
+    ],
+    "claim": "Flow signals list 'data flow' and 'control flow' but not the hyphenated forms 'data-flow' and 'control-flow', so a flow-shaped goal written with a hyphen gets only a single explorer.",
+    "result_now": "['explore']",
+    "repros": [
+     {
+      "k": 2,
+      "run": "1e102ed3b7",
+      "n": 2,
+      "result_now": "['explore']"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mn-harness-providers",
+  "repo": "marionette",
+  "file": "harness/providers.py",
+  "test_file": "tests/test_hpfix_harness_providers.py",
+  "bugs": [
+   {
+    "id": "67cd0a74-1",
+    "group": "67cd0a74",
+    "repo": "marionette",
+    "file": "harness/providers.py",
+    "function": "build_pilot",
+    "claims": [
+     1,
+     2,
+     3
+    ],
+    "what_goes_wrong": "A user who runs `harness --driver deepseek/deepseek-r1:free` with an OpenRouter key gets a driver that sends model 'free' to OpenRouter, so every turn fails with an invalid-model error instead of using the documented bare OpenRouter slug.",
+    "caller": "project/harness/conversation.py:848",
+    "caller_sonnet": "project/harness/exec_cmd.py:118",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Overwrite model only when get_provider(pname) returns a provider. Otherwise keep the full spec as the bare model and as the OpenRouter slug.",
+    "evidence": [
+     {
+      "file": "project/harness/providers.py",
+      "line": 642,
+      "quote": "pilot_models contains it, else OpenRouter slug."
+     },
+     {
+      "file": "project/harness/providers.py",
+      "line": 676,
+      "quote": "pname, model = spec.split(\":\", 1)"
+     },
+     {
+      "file": "project/harness/providers.py",
+      "line": 697,
+      "quote": "provider = get_provider(\"openrouter\")"
+     },
+     {
+      "file": "project/harness/cli.py",
+      "line": 235,
+      "quote": "if args.driver: cfg.driver = args.driver"
+     },
+     {
+      "file": "project/harness/conversation.py",
+      "line": 848,
+      "quote": "self.pilot = prov.build_pilot(config.driver)"
+     },
+     {
+      "file": "project/tests/test_model_fetch.py",
+      "line": 333,
+      "quote": "{\"id\": \"z-ai/glm-5.3:free\", \"endpoints\": chat},"
+     }
+    ],
+    "claim": "A bare model slug that contains a colon (e.g. an OpenRouter ':free' variant) is split as provider:model. The unknown prefix is dropped, so the driver gets the model 'free' instead of the full slug.",
+    "result_now": "'free'",
+    "repros": [
+     {
+      "k": 1,
+      "run": "fcf8aa71b5",
+      "n": 1,
+      "result_now": "'free'"
+     },
+     {
+      "k": 2,
+      "run": "d8be82a6d9",
+      "n": 1,
+      "result_now": "'free'"
+     },
+     {
+      "k": 3,
+      "run": "808171d485",
+      "n": 1,
+      "result_now": "('free', 'https://openrouter.ai/api/v1')"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-failure",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "test_file": "tests/test_hpfix_puppetmaster_failure.py",
+  "bugs": [
+   {
+    "id": "99395a2a-1",
+    "group": "99395a2a",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "claims": [
+     1,
+     2
+    ],
+    "what_goes_wrong": "A worker CLI that ends a sentence with the status ('... status code 401.') gets failure 'unknown', not 'not_authenticated', so the auth failure is not routed as a recoverable credential failure and the user does not see a login diagnosis.",
+    "caller": "project/puppetmaster/adapters/codex.py:661",
+    "caller_sonnet": "project/puppetmaster/adapters/codex.py:661",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Change the lookahead to reject only a dot that a digit follows, for example (?!\\w|\\.\\d), and add a test for 'status 401.'.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/failure.py",
+      "line": 119,
+      "quote": "(_matches(r\"(?<![\\w.])401(?![\\w.])\"), NOT_AUTHENTICATED),"
+     },
+     {
+      "file": "project/docs/CHANGELOG.md",
+      "line": 1155,
+      "quote": "explicit diagnosis: not logged in, 401, unauthorized, an auth / login /"
+     },
+     {
+      "file": "project/tests/test_accounting_integrity.py",
+      "line": 116,
+      "quote": "\"HTTP 401\", \"auth error: token expired\", \"login required\","
+     },
+     {
+      "file": "project/puppetmaster/adapters/codex.py",
+      "line": 661,
+      "quote": "failure = classify_codex_failure("
+     },
+     {
+      "file": "project/puppetmaster/adapters/hermes.py",
+      "line": 593,
+      "quote": "else classify_hermes_failure(hermes_diagnostic(completed.stdout, completed.stderr))"
+     }
+    ],
+    "claim": "The bare-401 rule rejects a 401 that is followed by a period, so an HTTP status at the end of a sentence is not seen. 'Request failed with status code 401.' gives unknown.",
+    "result_now": "'unknown'",
+    "repros": [
+     {
+      "k": 1,
+      "run": "d53c1cab4e",
+      "n": 1,
+      "result_now": "'unknown'"
+     },
+     {
+      "k": 2,
+      "run": "36cc7cd614",
+      "n": 1,
+      "result_now": "'unknown'"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-orchestrator",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/orchestrator.py",
+  "test_file": "tests/test_hpfix_puppetmaster_orchestrator.py",
+  "bugs": [
+   {
+    "id": "1421544b-1",
+    "group": "1421544b",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/orchestrator.py",
+    "function": "Orchestrator._recoverable_failure_by_task",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "After auto-fallback re-queues a task and the new attempt fails with an adapter exception (no failure artifact), the stale 'auth' artifact from the first attempt keeps the task classed as recoverable, so _should_fail_closed and _has_hard_failure do not report the hard error and the job can return without raising (or the task is rerouted again under the wrong reason).",
+    "caller": "project/puppetmaster/orchestrator.py:1772",
+    "caller_sonnet": "puppetmaster/orchestrator.py:1772",
+    "severity": [
+     "medium",
+     "medium"
+    ],
+    "fix_idea": "Only count failure artifacts from the current attempt (for example, artifacts created after the task's last re-queue, or tagged with the attempt or fallback count), so a FAILED status with no new recoverable artifact is a hard failure.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1684,
+      "quote": "\"\"\"Map task_id -> recoverable failure class from the task's *latest*"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1717,
+      "quote": "\"\"\"True when a task FAILED for a non-recoverable reason (a real error"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1718,
+      "quote": "like a bad adapter or an exception) \u2014 i.e. nothing auto-fallback can fix."
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1772,
+      "quote": "recoverable = set(self._recoverable_failure_by_task(job)) | self._review_pending_reroute_ids(job)"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1002,
+      "quote": "failed = [t for t in failed if t.id in failure_by_task]"
+     },
+     {
+      "file": "project/puppetmaster/worker_runtime.py",
+      "line": 422,
+      "quote": "if execution_error is not None:"
+     }
+    ],
+    "claim": "The function maps a task to a recoverable failure from any recoverable artifact of any earlier attempt, and it never checks if that failure is the cause of the current FAILED status. After auto-fallback re-queues the task and the new attempt fails with a hard error (worker exception, no failure arti",
+    "result_now": "({'task_a': 'auth'}, False)",
+    "repros": [
+     {
+      "k": 1,
+      "run": "37e2c3844a",
+      "n": 1,
+      "result_now": "({'task_a': 'auth'}, False)"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "pm-puppetmaster-savings",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/savings.py",
+  "test_file": "tests/test_hpfix_puppetmaster_savings.py",
+  "bugs": [
+   {
+    "id": "9dbccc9d-1",
+    "group": "9dbccc9d",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/savings.py",
+    "function": "collect_routing_records",
+    "claims": [
+     1
+    ],
+    "what_goes_wrong": "A task that the orchestrator re-routes twice off a dead provider writes two router-fallback artifacts, so `puppetmaster savings` reports 2 tasks auto-recovered and a fallback_rate of 2.0 for one routed task.",
+    "caller": "project/puppetmaster/savings.py:365",
+    "caller_sonnet": "project/puppetmaster/savings.py:365 feeding project/puppetmaster/cli/commands_gate.py:526 and :604",
+    "severity": [
+     "medium",
+     "low"
+    ],
+    "fix_idea": "Count distinct (job_id, task_id) pairs for router-fallback artifacts, the same way the router records are de-duplicated by task_id.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/savings.py",
+      "line": 46,
+      "quote": "A 'fallback' is a task"
+     },
+     {
+      "file": "project/puppetmaster/savings.py",
+      "line": 152,
+      "quote": "self_heal.fallbacks += 1"
+     },
+     {
+      "file": "project/puppetmaster/savings.py",
+      "line": 228,
+      "quote": "\"fallback_rate\": rate(self_heal.fallbacks, total_routed),"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 46,
+      "quote": "_MAX_FALLBACK_ATTEMPTS = 2"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1165,
+      "quote": "created_by=\"router-fallback\","
+     },
+     {
+      "file": "project/puppetmaster/cli/commands_gate.py",
+      "line": 526,
+      "quote": "task(s) auto-recovered off a dead/unfunded"
+     },
+     {
+      "file": "project/docs/CLI_REFERENCE.md",
+      "line": 206,
+      "quote": "`fallback_rate` (tasks failed over off a dead provider"
+     }
+    ],
+    "claim": "self_heal.fallbacks counts router-fallback artifacts, not tasks. The orchestrator writes one artifact per fallback attempt (up to 2 per task), so one task that falls back twice counts as 2 re-routed tasks, and fallback_rate (fallbacks / routed tasks) becomes 2.0.",
+    "result_now": "(1, 2)",
+    "repros": [
+     {
+      "k": 1,
+      "run": "79bd96b9a8",
+      "n": 1,
+      "result_now": "(1, 2)"
+     }
+    ]
+   },
+   {
+    "id": "9dbccc9d-2",
+    "group": "9dbccc9d",
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/savings.py",
+    "function": "collect_routing_records",
+    "claims": [
+     2
+    ],
+    "what_goes_wrong": "A task that the orchestrator escalates twice for low confidence writes two router-escalation artifacts, so `puppetmaster savings` reports 2 tasks re-run and an escalation_rate above 1.0.",
+    "caller": "project/puppetmaster/savings.py:365",
+    "caller_sonnet": "project/puppetmaster/savings.py:365 feeding project/puppetmaster/cli/commands_gate.py:527 and :603",
+    "severity": [
+     "low",
+     "low"
+    ],
+    "fix_idea": "Count distinct (job_id, task_id) pairs for router-escalation artifacts. Escalation is off by default, so the effect is smaller than for claim 1.",
+    "evidence": [
+     {
+      "file": "project/puppetmaster/savings.py",
+      "line": 155,
+      "quote": "self_heal.escalations += 1"
+     },
+     {
+      "file": "project/puppetmaster/savings.py",
+      "line": 226,
+      "quote": "\"escalation_rate\": rate(self_heal.escalations, total_routed),"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 55,
+      "quote": "_MAX_ESCALATION_ATTEMPTS = 2"
+     },
+     {
+      "file": "project/puppetmaster/orchestrator.py",
+      "line": 1378,
+      "quote": "created_by=\"router-escalation\","
+     },
+     {
+      "file": "project/puppetmaster/cli/commands_gate.py",
+      "line": 527,
+      "quote": "re-run for confidence (counts, not dollars)"
+     },
+     {
+      "file": "project/docs/CLI_REFERENCE.md",
+      "line": 206,
+      "quote": "`escalation_rate` (tasks bumped a tier"
+     }
+    ],
+    "claim": "self_heal.escalations counts router-escalation artifacts, not tasks. A task escalated twice (_MAX_ESCALATION_ATTEMPTS = 2) counts as 2 escalated tasks, so escalation_rate over routed tasks can be more than 1.0.",
+    "result_now": "(1, 2)",
+    "repros": [
+     {
+      "k": 2,
+      "run": "79bd96b9a8",
+      "n": 2,
+      "result_now": "(1, 2)"
+     }
+    ]
+   }
+  ]
+ }
+]

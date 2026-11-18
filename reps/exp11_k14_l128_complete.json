@@ -1,0 +1,64 @@
+{
+ "task": "exp11_k14_l128_complete",
+ "seconds": 189,
+ "runs": [
+  {
+   "task": "exp11_k14_l128_complete",
+   "model": "haiku",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_complete/haiku_1",
+   "flow": "flow_ade0b8b362c0",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 176,
+   "cost_usd": 0.4,
+   "changed_files": [
+    "TblCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  },
+  {
+   "task": "exp11_k14_l128_complete",
+   "model": "sonnet",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_complete/sonnet_1",
+   "flow": "flow_ac4000e23fc7",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "FAIL"
+   ],
+   "worker_seconds": 31,
+   "cost_usd": 0.46,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "objection"
+  },
+  {
+   "task": "exp11_k14_l128_complete",
+   "model": "opus",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/exp11_k14_l128_complete/opus_1",
+   "flow": "flow_90034885dff0",
+   "flow_status": "done",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    "PASS"
+   ],
+   "worker_seconds": 149,
+   "cost_usd": 1.6,
+   "changed_files": [
+    "TblCompleteSolution.lean"
+   ],
+   "pilot_gate": "accept",
+   "pilot_gate_mode": "complete",
+   "outcome": "accept"
+  }
+ ]
+}

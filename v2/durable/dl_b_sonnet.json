@@ -1,0 +1,101 @@
+{
+ "name": "dl_b_sonnet",
+ "start": "b_sonnet",
+ "base": "base_b",
+ "folder": "359715ce43",
+ "flow": "flow_b1209a99d8dc",
+ "flow_status": "done",
+ "steps": [
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 24,
+   "cost_usd": 0.396,
+   "jobs": [
+    "job_ed447181f9f1"
+   ],
+   "session_cost_usd": 0.396
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "law",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 37,
+   "cost_usd": 0.458,
+   "jobs": [
+    "job_a32249a2a104"
+   ],
+   "session_cost_usd": 0.458
+  },
+  {
+   "node": "lawgate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "adversary",
+   "verdict": "PASS",
+   "ok": true,
+   "seconds": 75,
+   "cost_usd": 0.307,
+   "jobs": [
+    "job_015fc26fdc77"
+   ],
+   "session_cost_usd": 0.703
+  },
+  {
+   "node": "gate",
+   "verdict": null,
+   "ok": true
+  },
+  {
+   "node": "done",
+   "verdict": null,
+   "ok": true
+  }
+ ],
+ "questions": 1,
+ "rounds": [
+  {
+   "mode": "gap",
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "new_laws": {
+    "StarterOrder": "\u2200 c st r, ((added f c st r).map Entry.id).Sublist (st.map Entry.id)"
+   }
+  },
+  {
+   "mode": "complete"
+  }
+ ],
+ "pilot_gate": "accept",
+ "pilot_gate_mode": "complete",
+ "worker_sessions": 2,
+ "worker_visits": 3,
+ "cost_usd": 1.16,
+ "seconds": 136,
+ "final_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "StarterOrder"
+ ]
+}

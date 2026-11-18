@@ -1,0 +1,104 @@
+{
+ "start": "b_sonnet",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_6241e8d981ff",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 36,
+    "cost_usd": 0.43
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "law_author": {
+    "flow": "flow_81c149f4a9f7",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 37,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "StarterOrder": "\u2200 c st r, ((added f c st r).map Entry.id).Sublist (st.map Entry.id)"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_e3c36dba6200",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 104,
+    "cost_usd": 0.68
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsRows",
+    "AddsOnlyAbsent",
+    "AddsAllAbsent",
+    "NoSameIdentity",
+    "DisabledByDefault",
+    "LockedDisabled",
+    "EnableKeepsState",
+    "NewAtEnd",
+    "StarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsRows",
+  "AddsOnlyAbsent",
+  "AddsAllAbsent",
+  "NoSameIdentity",
+  "DisabledByDefault",
+  "LockedDisabled",
+  "EnableKeepsState",
+  "NewAtEnd",
+  "StarterOrder"
+ ],
+ "questions": 1
+}

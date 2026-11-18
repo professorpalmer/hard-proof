@@ -1,0 +1,4 @@
+#!/bin/sh
+# Launcher for hardproof. It runs `python3 -m hardproof` with this folder on PYTHONPATH.
+HERE="$(cd "$(dirname "$0")" && pwd)"
+PYTHONPATH="$HERE${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m hardproof "$@"

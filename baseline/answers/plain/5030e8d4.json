@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "The 128 laws fix the answer on regions of size 2^-(premises); these sizes sum to exactly 16384/16384, and the regions I checked by hand (all of b13=true, and all of b0=false) are fully covered, so the laws form a full partition and leave no case free."}

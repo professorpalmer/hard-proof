@@ -1,0 +1,126 @@
+{
+ "bug": "8428f8d6",
+ "title": "Codex exec argv puts the stdin '-' where variadic --image takes it as a path",
+ "repo": "Puppetmaster",
+ "function": "build_codex_exec_command",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-a8a619ed9d",
+   "folder": "~/Projects/hp-work/p/a8a619ed9d",
+   "model": "opus",
+   "flow": "flow_a88d8992a160",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_38957298200c"
+   ],
+   "seconds": 295,
+   "cost_usd": 2.342,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-ecacd023f7",
+   "folder": "~/Projects/hp-work/p/ecacd023f7",
+   "model": "sonnet",
+   "flow": "flow_bad149284910",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9206b2eb74b2"
+   ],
+   "seconds": 76,
+   "cost_usd": 0.568,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-5a0f0b6393",
+   "folder": "~/Projects/hp-work/p/5a0f0b6393",
+   "model": "sonnet",
+   "flow": "flow_f6b6515c388e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e180aa02506e"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.436,
+   "stage": "R1"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "SandboxGiven",
+   "input": {
+    "encoded": "F0 S s636f646578 n n n s s6e65766572 f f f N",
+    "shown": "{ files := [],"
+   },
+   "ref": {
+    "encoded": "O s636f646578 s65786563 s2d2d6a736f6e s2d63 s617070726f76616c5f706f6c6963793d226e6576657222 s2d",
+    "shown": "[\"codex\", \"exec\", \"--json\", \"-c\", \"approval_policy=\\\"never\\\"\", \"-\"]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "O s636f646578 s65786563 s2d2d6a736f6e s2d63 s617070726f76616c5f706f6c6963793d226e6576657222 s2d"
+   },
+   "post": {
+    "ok": true,
+    "out": "O s636f646578 s65786563 s2d2d6a736f6e s2d63 s617070726f76616c5f706f6c6963793d226e6576657222 s2d2d s2d"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 29,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 14,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 10304,
+   "first_difference": {
+    "input": "F0 S s2761206227 s272d0a s s5c612d2e2f62 s s f f f S s2727",
+    "lean_ref": "O s612062 s65786563 s2d2d6a736f6e s2d63 s617070726f76616c5f706f6c6963793d2222 s2d43 s5c612d2e2f62 s s2d",
+    "python": "O s612062 s65786563 s2d2d6a736f6e s2d63 s617070726f76616c5f706f6c6963793d2222 s2d43 s5c612d2e2f62 s s2d2d s2d"
+   }
+  }
+ },
+ "first_laws": [
+  "TrailingStdin",
+  "PromptIgnored",
+  "ExecJson",
+  "ApprovalPolicySet",
+  "SandboxGiven",
+  "EphemeralFlagOn",
+  "SkipGitFlagOn",
+  "BypassOptIn",
+  "BypassWhenOptedIn"
+ ],
+ "cost_usd": 3.35,
+ "seconds": 399
+}

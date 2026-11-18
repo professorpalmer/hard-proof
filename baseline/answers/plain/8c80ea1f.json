@@ -1,0 +1,1 @@
+{"verdict": "complete", "reason": "The laws fix the answer for every case. With a known pid: dead gives true, reused gives true, and alive and not reused gives false. With an unknown pid: age at or above stale_after gives true, age below gives false, and unknown age gives false. These branches cover all cases, so two rules that pass all laws are equal."}

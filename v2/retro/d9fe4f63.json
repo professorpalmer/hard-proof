@@ -1,0 +1,508 @@
+{
+ "bug": "d9fe4f63",
+ "title": "Dashboard cost_rollup raises on non-numeric estimated_cost_usd",
+ "repo": "Puppetmaster",
+ "function": "cost_rollup",
+ "kind": "parse",
+ "stages": [
+  {
+   "flow_id": "hp2-deefd2105a",
+   "folder": "~/Projects/hp-work/p/deefd2105a",
+   "model": "opus",
+   "flow": "flow_f77092e9adba",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_3bd8a035b9e3"
+   ],
+   "seconds": 465,
+   "cost_usd": 2.69,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-b58669cdc0",
+   "folder": "~/Projects/hp-work/p/b58669cdc0",
+   "model": "sonnet",
+   "flow": "flow_8cca5bb63440",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_e35569431afb"
+   ],
+   "seconds": 41,
+   "cost_usd": 0.465,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-0f22093cfb",
+   "folder": "~/Projects/hp-work/p/0f22093cfb",
+   "model": "sonnet",
+   "flow": "flow_eb9227708d5a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5d9e3cefefa7"
+   ],
+   "seconds": 25,
+   "cost_usd": 0.424,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-f0e3c0f00b",
+   "folder": "~/Projects/hp-work/p/f0e3c0f00b",
+   "model": "sonnet",
+   "flow": "flow_1182560c3d8f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_dead04fcf28c"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.417,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-bdd6a1580d",
+   "folder": "~/Projects/hp-work/p/bdd6a1580d",
+   "model": "sonnet",
+   "flow": "flow_0914705f15e5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_407f0d0666c2"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.515,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-bf58a5de04",
+   "folder": "~/Projects/hp-work/p/bf58a5de04",
+   "model": "sonnet",
+   "flow": "flow_0a5cda657032",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_df9d56ccbda6"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.436,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-924077db09",
+   "folder": "~/Projects/hp-work/p/924077db09",
+   "model": "sonnet",
+   "flow": "flow_cc29d227f9b6",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_627aa2731ec2"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.455,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-890bd43036",
+   "folder": "~/Projects/hp-work/p/890bd43036",
+   "model": "sonnet",
+   "flow": "flow_95c01f7c94e1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9b32361da0be"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.463,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-a4d0e4b25a",
+   "folder": "~/Projects/hp-work/p/a4d0e4b25a",
+   "model": "sonnet",
+   "flow": "flow_cab74a320c52",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1b51866ddc87"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.471,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-d8de12428b",
+   "folder": "~/Projects/hp-work/p/d8de12428b",
+   "model": "sonnet",
+   "flow": "flow_a9f7edd68857",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_b075edefba1e"
+   ],
+   "seconds": 31,
+   "cost_usd": 0.476,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-d4f94c5bed",
+   "folder": "~/Projects/hp-work/p/d4f94c5bed",
+   "model": "sonnet",
+   "flow": "flow_a32a9daefac5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_091620b897aa"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.466,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-4526703d1f",
+   "folder": "~/Projects/hp-work/p/4526703d1f",
+   "model": "sonnet",
+   "flow": "flow_bf06712c217f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f56a04e55783"
+   ],
+   "seconds": 42,
+   "cost_usd": 0.512,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-2daf9cd01f",
+   "folder": "~/Projects/hp-work/p/2daf9cd01f",
+   "model": "sonnet",
+   "flow": "flow_361b3858e166",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_68037539499d"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.387,
+   "stage": "LF4"
+  },
+  {
+   "flow_id": "hp2-ae0b05e12a",
+   "folder": "~/Projects/hp-work/p/ae0b05e12a",
+   "model": "sonnet",
+   "flow": "flow_4abead6a6c6a",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_318c917cb677"
+   ],
+   "seconds": 38,
+   "cost_usd": 0.522,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-b3f5d047f4",
+   "folder": "~/Projects/hp-work/p/b3f5d047f4",
+   "model": "sonnet",
+   "flow": "flow_beae45d6de32",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_12c6100300d3"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.375,
+   "stage": "LF5"
+  },
+  {
+   "flow_id": "hp2-5a840297f4",
+   "folder": "~/Projects/hp-work/p/5a840297f4",
+   "model": "sonnet",
+   "flow": "flow_d6b69bf0176b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_ea77dab941ae"
+   ],
+   "seconds": 566,
+   "cost_usd": 2.142,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-20a97a4051",
+   "folder": "~/Projects/hp-work/p/20a97a4051",
+   "model": "sonnet",
+   "flow": "flow_00c1c02718bb",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1804a1a3a2b1"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.532,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-bc15603d08",
+   "folder": "~/Projects/hp-work/p/bc15603d08",
+   "model": "sonnet",
+   "flow": "flow_843451db73b4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_baee417e7570"
+   ],
+   "seconds": 28,
+   "cost_usd": 0.444,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "L",
+    "shown": "L"
+   },
+   "design_a": {
+    "encoded": "0/1",
+    "shown": "0/1"
+   },
+   "design_b": {
+    "encoded": "0/1 s 0 0/1",
+    "shown": "0/1 s 0 0/1"
+   },
+   "ref": {
+    "encoded": "0/1",
+    "shown": "0/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "0/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "L k6 N",
+    "shown": "L k6 N"
+   },
+   "design_a": {
+    "encoded": "1/1",
+    "shown": "1/1"
+   },
+   "design_b": {
+    "encoded": "2/1",
+    "shown": "2/1"
+   },
+   "ref": {
+    "encoded": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1",
+    "shown": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "L k6 D A A i1",
+    "shown": "L k6 D A A i1"
+   },
+   "design_a": {
+    "encoded": "0/1",
+    "shown": "0/1"
+   },
+   "design_b": {
+    "encoded": "1/1",
+    "shown": "1/1"
+   },
+   "ref": {
+    "encoded": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1",
+    "shown": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "conflict",
+   "law": "UnnamedEstimateCounted",
+   "input": {
+    "encoded": "L k6 D A A b1 k6 N",
+    "shown": "L k6 D A A b1 k6 N"
+   },
+   "ref": {
+    "encoded": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1",
+    "shown": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "conflict",
+   "law": "UnnamedEstimateCounted",
+   "input": {
+    "encoded": "L k6 D A A i1 k6 D s109 A A",
+    "shown": "L k6 D A A i1 k6 D s109 A A"
+   },
+   "ref": {
+    "encoded": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1",
+    "shown": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "L k6 D A A b1 k6 D A A b1",
+    "shown": "L k6 D A A b1 k6 D A A b1"
+   },
+   "design_a": {
+    "encoded": "0/1",
+    "shown": "0/1"
+   },
+   "design_b": {
+    "encoded": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1",
+    "shown": "0/1 s60,117,110,107,110,111,119,110,62 1 0/1"
+   },
+   "ref": {
+    "encoded": "2/1 s60,117,110,107,110,111,119,110,62 2 2/1",
+    "shown": "2/1 s60,117,110,107,110,111,119,110,62 2 2/1"
+   },
+   "pre": {
+    "ok": true,
+    "out": "2/1 s60,117,110,107,110,111,119,110,62 2 2/1"
+   },
+   "post": {
+    "ok": true,
+    "out": "2/1 s60,117,110,107,110,111,119,110,62 2 2/1"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 28,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": false,
+  "link_post": {
+   "verdict": "agree",
+   "differences": 0,
+   "first_difference": null
+  }
+ },
+ "first_laws": [
+  "OnlyRouting",
+  "EmptySumZero"
+ ],
+ "cost_usd": 12.19,
+ "seconds": 1521
+}

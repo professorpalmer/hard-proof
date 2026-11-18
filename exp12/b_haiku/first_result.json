@@ -1,0 +1,22 @@
+{
+ "name": "b_haiku",
+ "model": "claude-haiku-5-5",
+ "flow": {
+  "flow": "flow_72de8eaef909",
+  "status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "seconds": 149,
+  "cost_usd": 0.28
+ },
+ "pilot_gate": "accept",
+ "laws": [
+  "AppendsAbsent",
+  "OnlyLacking",
+  "NewEntryEnabled",
+  "NotAddedByIdentity",
+  "RowsKept"
+ ]
+}

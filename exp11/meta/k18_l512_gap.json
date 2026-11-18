@@ -1,0 +1,53 @@
+{
+ "k": 18,
+ "leaves": 512,
+ "seed": 1,
+ "task": "gap",
+ "laws": 511,
+ "removed_leaf": {
+  "index": 349,
+  "path": [
+   [
+    4,
+    true
+   ],
+   [
+    1,
+    false
+   ],
+   [
+    14,
+    false
+   ],
+   [
+    3,
+    true
+   ],
+   [
+    8,
+    true
+   ],
+   [
+    16,
+    true
+   ],
+   [
+    6,
+    false
+   ],
+   [
+    10,
+    false
+   ],
+   [
+    12,
+    false
+   ],
+   [
+    15,
+    true
+   ]
+  ],
+  "cases_open": 256
+ }
+}

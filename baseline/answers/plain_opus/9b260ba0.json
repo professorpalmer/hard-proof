@@ -1,0 +1,24 @@
+{
+  "verdict": "gap",
+  "case": {
+    "b0": false,
+    "b1": true,
+    "b2": true,
+    "b3": false,
+    "b4": false,
+    "b5": true,
+    "b6": false,
+    "b7": true,
+    "b8": true,
+    "b9": false,
+    "b10": false,
+    "b11": false,
+    "b12": true,
+    "b13": true,
+    "b14": true,
+    "b15": false,
+    "b16": true,
+    "b17": true
+  },
+  "reason": "TblLaws.lean has 511 laws (Law0..Law510) for a rule with 512 leaves. The leaf b1=T, b0=F, b6=F, b12=T, b7=T, b17=T, b3=F, b13=T, b14=T, b16=T, b2=T, b5=T, b11=F, b15=F, b8=T has no law (its sibling Law445 has b8=F), so a rule that gives true there and one that gives false there both pass every law."
+}

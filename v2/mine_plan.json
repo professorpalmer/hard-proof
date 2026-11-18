@@ -1,0 +1,116 @@
+[
+ {
+  "id": "pm-00",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 1 to 480 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '1,480p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-01",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 481 to 960 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '481,960p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-02",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 961 to 1440 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '961,1440p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-03",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 1441 to 1920 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '1441,1920p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-04",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 1921 to 2400 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '1921,2400p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-05",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 2401 to 2880 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '2401,2880p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-06",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 2881 to 3360 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '2881,3360p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-07",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 3361 to 3840 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '3361,3840p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-08",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 3841 to 4320 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '3841,4320p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-09",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 4321 to 4800 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '4321,4800p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-10",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 4801 to 5280 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '4801,5280p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "pm-11",
+  "repo": "~/Projects/hp-work/Puppetmaster",
+  "repo_name": "Puppetmaster",
+  "slice_text": "lines 5281 to 5756 of `docs/CHANGELOG.md` at HEAD (read them with `git -C ~/Projects/hp-work/Puppetmaster show HEAD:docs/CHANGELOG.md | sed -n '5281,5756p'`). The version headings give you the tags (`v1.2.3`)."
+ },
+ {
+  "id": "mn-00",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-00.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-01",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-01.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-02",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-02.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-03",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-03.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-04",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-04.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-05",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 70 commits listed in `~/Projects/hp-work/mine/mn-05.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ },
+ {
+  "id": "mn-06",
+  "repo": "~/Projects/hp-work/marionette",
+  "repo_name": "marionette",
+  "slice_text": "the 68 commits listed in `~/Projects/hp-work/mine/mn-06.commits.txt` (one line each: sha and subject; these commits touch `harness/` or `pmharness/` and have the word fix in the message). Read the file with `cat`."
+ }
+]

@@ -1,0 +1,82 @@
+{
+ "task": "x_exp7_complete",
+ "seconds": 18,
+ "runs": [
+  {
+   "task": "x_exp7_complete",
+   "model": "grok",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/grok_1",
+   "flow": "flow_98f5bf7938be",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_e27e080190e4 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 2,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "grok",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/grok_2",
+   "flow": "flow_97240a0b4f44",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_ca9959aca163 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 15,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "luna",
+   "rep": 1,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/luna_1",
+   "flow": "flow_ae89171de254",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_64763e2334c6 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 4,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  },
+  {
+   "task": "x_exp7_complete",
+   "model": "luna",
+   "rep": 2,
+   "dir": "~/Projects/hard-proof/reps/x_exp7_complete/luna_2",
+   "flow": "flow_cdf8c8c209b0",
+   "flow_status": "failed",
+   "worker_visits": 1,
+   "worker_verdicts": [
+    null
+   ],
+   "error": "RuntimeError: swarm exited with incomplete tasks: prove task_c8628f43a120 failed (unknown) [task: task failed: unknown]",
+   "worker_seconds": 2,
+   "cost_usd": null,
+   "changed_files": [],
+   "pilot_gate": "reject",
+   "pilot_gate_mode": null,
+   "outcome": "reject"
+  }
+ ]
+}

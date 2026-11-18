@@ -1,0 +1,7 @@
+{
+  "challenge_module": "SyncCompleteChallenge",
+  "solution_module": "SyncCompleteSolution",
+  "theorem_names": ["SyncComplete.laws_complete"],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

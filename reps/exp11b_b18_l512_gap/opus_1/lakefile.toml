@@ -1,0 +1,14 @@
+name = "exp11"
+defaultTargets = ["Exp11"]
+
+[[lean_lib]]
+name = "Exp11"
+roots = ["Tbl", "TblLaws", "TblGapChallenge", "TblCompleteChallenge"]
+
+[[lean_lib]]
+name = "GapWork"
+roots = ["TblGapSolution"]
+
+[[lean_lib]]
+name = "CompleteWork"
+roots = ["TblCompleteSolution"]

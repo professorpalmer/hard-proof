@@ -1,0 +1,7 @@
+.lake/
+__pycache__/
+*.pyc
+.DS_Store
+hardproof_runs.jsonl
+hardproof.lock.json
+*_runs.jsonl.tmp

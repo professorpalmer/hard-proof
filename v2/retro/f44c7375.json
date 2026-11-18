@@ -1,0 +1,173 @@
+{
+ "bug": "f44c7375",
+ "title": "Token classes sum past the prompt when cache read and write overlap",
+ "repo": "marionette",
+ "function": "TokenClasses.split",
+ "kind": "arithmetic",
+ "stages": [
+  {
+   "flow_id": "hp2-c838b1ef50",
+   "folder": "~/Projects/hp-work/p/c838b1ef50",
+   "model": "opus",
+   "flow": "flow_d606c2d604b5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_10a90158b8c6"
+   ],
+   "seconds": 127,
+   "cost_usd": 1.689,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-6edbb731a0",
+   "folder": "~/Projects/hp-work/p/6edbb731a0",
+   "model": "sonnet",
+   "flow": "flow_d870aa414c47",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9132012f8068"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.391,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-4eba89efd9",
+   "folder": "~/Projects/hp-work/p/4eba89efd9",
+   "model": "sonnet",
+   "flow": "flow_c65acf0d1f3b",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_016b7fcb80e0"
+   ],
+   "seconds": 26,
+   "cost_usd": 0.43,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-e1f1a5fef2",
+   "folder": "~/Projects/hp-work/p/e1f1a5fef2",
+   "model": "sonnet",
+   "flow": "flow_8cfe3f0c70d1",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_704674c298f1"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.397,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-17e688d182",
+   "folder": "~/Projects/hp-work/p/17e688d182",
+   "model": "sonnet",
+   "flow": "flow_a20ce016c6c8",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_54184a32bed3"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.422,
+   "stage": "R2"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "PromptIsTokensIn",
+   "input": {
+    "encoded": "0,0,5,0,_,_",
+    "shown": "TokenClasses.split(tokens_in=0, tokens_out=0, cache_read=5, cache_write=0)"
+   },
+   "ref": {
+    "encoded": "0,5,0,0,0",
+    "shown": "TokenClasses(input_uncached=0, cache_read=5, cache_write_5m=0, cache_write_1h=0, output=0)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0,5,0,0,0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0,5,0,0,0"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "PromptIsTokensIn",
+   "input": {
+    "encoded": "10,0,8,0,5,_",
+    "shown": "TokenClasses.split(tokens_in=10, tokens_out=0, cache_read=8, cache_write=0, cache_write_5m=5)"
+   },
+   "ref": {
+    "encoded": "0,8,5,0,0",
+    "shown": "TokenClasses(input_uncached=0, cache_read=8, cache_write_5m=5, cache_write_1h=0, output=0)"
+   },
+   "pre": {
+    "ok": true,
+    "out": "0,8,5,0,0"
+   },
+   "post": {
+    "ok": true,
+    "out": "0,8,2,0,0"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a conflict",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "error": "the mutator cannot read the function: the source is not one function definition",
+   "made": 0,
+   "killed": 0
+  },
+  "quotes": {
+   "quotes": 4,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 7620,
+   "first_difference": {
+    "input": "24,6,0,48,_,_",
+    "lean_ref": "0,0,48,0,6",
+    "python": "0,0,24,0,6"
+   }
+  }
+ },
+ "first_laws": [
+  "PromptIsTokensIn",
+  "NoSplitBillsAs5m",
+  "NoSplitNo1h"
+ ],
+ "cost_usd": 3.33,
+ "seconds": 212
+}

@@ -1,0 +1,174 @@
+{
+ "function": "harness.pilot_guards.swarm_policy_table",
+ "repository": "marionette",
+ "commit": "19a431f3",
+ "inputs": 4,
+ "input_cases": 16,
+ "laws": [
+  "RefusalWins",
+  "LaunchIsExplicit",
+  "NarrowIsSolo",
+  "BroadIsBroad",
+  "DefaultIsSolo"
+ ],
+ "raw": {
+  "ref": {
+   "command": "check",
+   "kinds": [
+    "ref"
+   ],
+   "verdict": "accept",
+   "accepted_kind": "ref",
+   "results": [
+    {
+     "kind": "ref",
+     "verdict": "accept",
+     "stage": "done",
+     "problems": [],
+     "comparator_flags": [
+      "--paranoid",
+      "--inadvisably-no-sandbox"
+     ],
+     "kernels": {
+      "accepted": [
+       "Lean paranoid",
+       "lean4lean",
+       "nanoda",
+       "con-leche",
+       "con-ron",
+       "Lean default"
+      ],
+      "rejected": [],
+      "crashed": []
+     },
+     "seconds": 6.23
+    }
+   ],
+   "seconds": 6.23
+  },
+  "complete": {
+   "command": "check",
+   "kinds": [
+    "complete"
+   ],
+   "verdict": "accept",
+   "accepted_kind": "complete",
+   "results": [
+    {
+     "kind": "complete",
+     "verdict": "accept",
+     "stage": "done",
+     "problems": [],
+     "comparator_flags": [
+      "--paranoid",
+      "--inadvisably-no-sandbox"
+     ],
+     "kernels": {
+      "accepted": [
+       "Lean paranoid",
+       "lean4lean",
+       "nanoda",
+       "con-leche",
+       "con-ron",
+       "Lean default"
+      ],
+      "rejected": [],
+      "crashed": []
+     },
+     "seconds": 6.14
+    }
+   ],
+   "seconds": 6.14
+  },
+  "link": {
+   "command": "link",
+   "verdict": "agree",
+   "function": "harness.pilot_guards.swarm_policy_table",
+   "repo": "~/Projects/hp-work/fix/mn-release-683",
+   "seed": 1,
+   "commit": "19a431f3",
+   "generated": 2000,
+   "illegal_skipped": 0,
+   "cases": 2000,
+   "decode_errors": 0,
+   "differences": 0,
+   "first_difference": null,
+   "mutants": {
+    "requested": 20,
+    "identity_copy_agrees": true,
+    "sites": 18,
+    "made": 18,
+    "killed": 18,
+    "survived": [],
+    "kill_rate": 1.0
+   },
+   "seconds": 0.33
+  },
+  "gap": {
+   "command": "check",
+   "kinds": [
+    "gap"
+   ],
+   "verdict": "accept",
+   "accepted_kind": "gap",
+   "results": [
+    {
+     "kind": "gap",
+     "verdict": "accept",
+     "stage": "done",
+     "problems": [],
+     "comparator_flags": [
+      "--paranoid",
+      "--inadvisably-no-sandbox"
+     ],
+     "kernels": {
+      "accepted": [
+       "Lean paranoid",
+       "lean4lean",
+       "nanoda",
+       "con-leche",
+       "con-ron",
+       "Lean default"
+      ],
+      "rejected": [],
+      "crashed": []
+     },
+     "seconds": 6.15
+    }
+   ],
+   "seconds": 6.15
+  },
+  "question": {
+   "command": "question",
+   "verdict": "accept",
+   "results": [
+    {
+     "kind": "gap",
+     "verdict": "accept",
+     "stage": "done",
+     "problems": []
+    }
+   ],
+   "question": {
+    "kind": "gap",
+    "input": {
+     "encoded": "0100",
+     "shown": "refusal=false launch=true narrow=false broad=false"
+    },
+    "ref": {
+     "encoded": "explicit",
+     "shown": "explicit"
+    },
+    "design_a": {
+     "encoded": "explicit",
+     "shown": "explicit"
+    },
+    "design_b": {
+     "encoded": "solo",
+     "shown": "solo"
+    },
+    "ask": "The two designs pass each law and differ on this input. Which output is right? The output of ref is the shipped behavior."
+   }
+  }
+ }
+}

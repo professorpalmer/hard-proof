@@ -1,0 +1,14 @@
+{
+ "fault": "retro.py made its list of open bugs one time at start. Two processes ran at the same time (the first from 11:52, the second from 14:05 on the last 36 bugs). After the first process completed its own bugs at 17:52, it ran bugs again that the second process had completed, and each second result replaced the first.",
+ "bugs_with_a_replaced_result": [
+  "180b1d51",
+  "eaeb5933",
+  "d9fe4f63",
+  "1e6f34b3",
+  "f44c7375",
+  "1b0b28ad"
+ ],
+ "evidence": "result file times 18:02 to 18:18 for positions 59 to 64 of the data set; the second process completed positions 65 and later from 14:57",
+ "effect": "The stored result of these six bugs is the second run. The first results are lost. The selection does not depend on the outcome. The cost and time totals do not include the six first runs. Four more second runs were stopped before they wrote a result.",
+ "correction": "retro.py one() returns the stored result when the result file exists."
+}

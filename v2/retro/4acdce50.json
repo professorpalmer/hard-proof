@@ -1,0 +1,561 @@
+{
+ "bug": "4acdce50",
+ "title": "model allowlist ignored on a direct adapter run without --auto-route",
+ "repo": "Puppetmaster",
+ "function": "routing_payload_from_args",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-34893663f7",
+   "folder": "~/Projects/hp-work/p/34893663f7",
+   "model": "opus",
+   "flow": "flow_abcbdd6d8d8c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_79d7ffd895b2"
+   ],
+   "seconds": 151,
+   "cost_usd": 1.503,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-6a61865f47",
+   "folder": "~/Projects/hp-work/p/6a61865f47",
+   "model": "sonnet",
+   "flow": "flow_73d35aae28c7",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_82bf8cb3ca39"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.446,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-f29ec7365d",
+   "folder": "~/Projects/hp-work/p/f29ec7365d",
+   "model": "sonnet",
+   "flow": "flow_8a0c00402777",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0e09117dee58"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.415,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-0e03fc2697",
+   "folder": "~/Projects/hp-work/p/0e03fc2697",
+   "model": "sonnet",
+   "flow": "flow_19eb529ff50c",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4031af241712"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.384,
+   "stage": "A1"
+  },
+  {
+   "flow_id": "hp2-9454865d44",
+   "folder": "~/Projects/hp-work/p/9454865d44",
+   "model": "sonnet",
+   "flow": "flow_cdbea1271253",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_455652c50abc"
+   ],
+   "seconds": 23,
+   "cost_usd": 0.4,
+   "stage": "LA1"
+  },
+  {
+   "flow_id": "hp2-d34c0b0346",
+   "folder": "~/Projects/hp-work/p/d34c0b0346",
+   "model": "sonnet",
+   "flow": "flow_0c6ddba0be5e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f74e22380001"
+   ],
+   "seconds": 27,
+   "cost_usd": 0.421,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-fafc67834a",
+   "folder": "~/Projects/hp-work/p/fafc67834a",
+   "model": "sonnet",
+   "flow": "flow_1adfcfdc2edc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_52811b812075"
+   ],
+   "seconds": 42,
+   "cost_usd": 0.468,
+   "stage": "A2"
+  },
+  {
+   "flow_id": "hp2-b441944848",
+   "folder": "~/Projects/hp-work/p/b441944848",
+   "model": "sonnet",
+   "flow": "flow_3b4f59574739",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_0747c87f70ad"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.389,
+   "stage": "LA2"
+  },
+  {
+   "flow_id": "hp2-d56015088d",
+   "folder": "~/Projects/hp-work/p/d56015088d",
+   "model": "sonnet",
+   "flow": "flow_9459113c2284",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_f0f3d33f51b5"
+   ],
+   "seconds": 46,
+   "cost_usd": 0.441,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-138e571902",
+   "folder": "~/Projects/hp-work/p/138e571902",
+   "model": "sonnet",
+   "flow": "flow_996e3d87ca5e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_4870e5183ac9"
+   ],
+   "seconds": 29,
+   "cost_usd": 0.408,
+   "stage": "A3"
+  },
+  {
+   "flow_id": "hp2-897c16aa6f",
+   "folder": "~/Projects/hp-work/p/897c16aa6f",
+   "model": "sonnet",
+   "flow": "flow_5025cc931a17",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6f6375660fae"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.414,
+   "stage": "LA3"
+  },
+  {
+   "flow_id": "hp2-d060d2bdab",
+   "folder": "~/Projects/hp-work/p/d060d2bdab",
+   "model": "sonnet",
+   "flow": "flow_d333ad453155",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_c18f8f5c24e0"
+   ],
+   "seconds": 56,
+   "cost_usd": 0.525,
+   "stage": "R4"
+  },
+  {
+   "flow_id": "hp2-0ed5c181d7",
+   "folder": "~/Projects/hp-work/p/0ed5c181d7",
+   "model": "sonnet",
+   "flow": "flow_1ec87f76649d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_053686f3d490"
+   ],
+   "seconds": 65,
+   "cost_usd": 0.583,
+   "stage": "A4"
+  },
+  {
+   "flow_id": "hp2-b49a9cf71b",
+   "folder": "~/Projects/hp-work/p/b49a9cf71b",
+   "model": "sonnet",
+   "flow": "flow_25b1f0d5e89f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_241cac1c04f8"
+   ],
+   "seconds": 19,
+   "cost_usd": 0.403,
+   "stage": "LA4"
+  },
+  {
+   "flow_id": "hp2-4d8c173342",
+   "folder": "~/Projects/hp-work/p/4d8c173342",
+   "model": "sonnet",
+   "flow": "flow_fde54a71c0d3",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_d7bc0b2a69e9"
+   ],
+   "seconds": 72,
+   "cost_usd": 0.544,
+   "stage": "R5"
+  },
+  {
+   "flow_id": "hp2-b84ce03870",
+   "folder": "~/Projects/hp-work/p/b84ce03870",
+   "model": "sonnet",
+   "flow": "flow_085ff27c4300",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_1acae0a44e61"
+   ],
+   "seconds": 61,
+   "cost_usd": 0.563,
+   "stage": "A5"
+  },
+  {
+   "flow_id": "hp2-f6d7cc21fb",
+   "folder": "~/Projects/hp-work/p/f6d7cc21fb",
+   "model": "sonnet",
+   "flow": "flow_66de59c3bb58",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_cf46397df67b"
+   ],
+   "seconds": 21,
+   "cost_usd": 0.402,
+   "stage": "LA5"
+  },
+  {
+   "flow_id": "hp2-fd43d8bc57",
+   "folder": "~/Projects/hp-work/p/fd43d8bc57",
+   "model": "sonnet",
+   "flow": "flow_177d93f25abd",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6376ac1d5ea7"
+   ],
+   "seconds": 84,
+   "cost_usd": 0.565,
+   "stage": "R6"
+  },
+  {
+   "flow_id": "hp2-ffab484000",
+   "folder": "~/Projects/hp-work/p/ffab484000",
+   "model": "sonnet",
+   "flow": "flow_7585e73ee3b4",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_91e2a56d366a"
+   ],
+   "seconds": 88,
+   "cost_usd": 0.688,
+   "stage": "A6"
+  },
+  {
+   "flow_id": "hp2-ca6582637d",
+   "folder": "~/Projects/hp-work/p/ca6582637d",
+   "model": "sonnet",
+   "flow": "flow_da19107deadc",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_7efe012dacb7"
+   ],
+   "seconds": 18,
+   "cost_usd": 0.401,
+   "stage": "LA6"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "gap",
+   "input": {
+    "encoded": "t a a a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{allowed_adapters=l_}",
+    "shown": "[(\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{allowed_adapters=l_;extra=b1}",
+    "shown": "[(\"allowed_adapters\", HP.Val.strs [[]]), (\"extra\", HP.Val.bool true)]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "gap",
+   "input": {
+    "encoded": "t a a a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;routing_policy=s_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"routing_policy\", HP.Val.str [])]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "t a a a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;zzz_extra=b1}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"zzz_extra\", HP.Val.bool true)]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 4,
+   "kind": "gap",
+   "input": {
+    "encoded": "t a a a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;min_capability=i0}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"min_capability\", HP.Val.int 0)]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 5,
+   "kind": "gap",
+   "input": {
+    "encoded": "t s_97 a a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;routing_policy=s_97}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"routing_policy\", HP.Val.str ['a'])]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;routing_policy=s_97}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"routing_policy\", HP.Val.str ['a'])]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_;routing_policy=s_97}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_;routing_policy=s_97}"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 6,
+   "kind": "gap",
+   "input": {
+    "encoded": "t a i5 a a _",
+    "shown": "{ autoRoute := HP.Flag.bool true,"
+   },
+   "design_a": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]])]"
+   },
+   "design_b": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;max_cost_usd=i5}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"max_cost_usd\", HP.Val.int 5)]"
+   },
+   "ref": {
+    "encoded": "{auto_route=b1;allowed_adapters=l_;max_cost_usd=i5}",
+    "shown": "[(\"auto_route\", HP.Val.bool true), (\"allowed_adapters\", HP.Val.strs [[]]), (\"max_cost_usd\", HP.Val.int 5)]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_;max_cost_usd=i5}"
+   },
+   "post": {
+    "ok": true,
+    "out": "{auto_route=b1;allowed_adapters=l_;max_cost_usd=i5}"
+   },
+   "hits_the_fix": false
+  }
+ ],
+ "outcome": "step limit",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 30,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 8,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 1473,
+   "first_difference": {
+    "input": "n n n i0 s_32.31.97 _99.108.97.117.100.101.45.99.111.100.101",
+    "lean_ref": "{}",
+    "python": "{auto_route=b1;allowed_adapters=l_99.108.97.117.100.101.45.99.111.100.101;min_capability=i0;allowed_model_ids=l_97}"
+   }
+  }
+ },
+ "first_laws": [
+  "EmptyUnlessAutoRoute",
+  "PinsAdapter",
+  "ModelIdsClean"
+ ],
+ "cost_usd": 10.36,
+ "seconds": 917
+}

@@ -1,0 +1,257 @@
+{
+ "bug": "d2e4f000",
+ "title": "Exact registry id pin rejected as ambiguous when a sibling shares the adapter model name",
+ "repo": "Puppetmaster",
+ "function": "resolve_model_pin",
+ "kind": "precedence",
+ "stages": [
+  {
+   "flow_id": "hp2-33190ae660",
+   "folder": "~/Projects/hp-work/p/33190ae660",
+   "model": "opus",
+   "flow": "flow_58ac8b5c306f",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_5c1abf2cea1b"
+   ],
+   "seconds": 204,
+   "cost_usd": 1.814,
+   "stage": "M"
+  },
+  {
+   "flow_id": "hp2-4ece40f778",
+   "folder": "~/Projects/hp-work/p/4ece40f778",
+   "model": "sonnet",
+   "flow": "flow_f38451f7de7d",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9ca718dbff27"
+   ],
+   "seconds": 54,
+   "cost_usd": 0.568,
+   "stage": "L"
+  },
+  {
+   "flow_id": "hp2-38e2585f05",
+   "folder": "~/Projects/hp-work/p/38e2585f05",
+   "model": "sonnet",
+   "flow": "flow_d993a4129bdf",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_621d98cfbb66"
+   ],
+   "seconds": 32,
+   "cost_usd": 0.493,
+   "stage": "R1"
+  },
+  {
+   "flow_id": "hp2-0e258a4377",
+   "folder": "~/Projects/hp-work/p/0e258a4377",
+   "model": "sonnet",
+   "flow": "flow_d3a8e22f2910",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_6c4b5cba9807"
+   ],
+   "seconds": 17,
+   "cost_usd": 0.397,
+   "stage": "LF1"
+  },
+  {
+   "flow_id": "hp2-b9e2d73b36",
+   "folder": "~/Projects/hp-work/p/b9e2d73b36",
+   "model": "sonnet",
+   "flow": "flow_21f6fe617585",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_63ad19f21774"
+   ],
+   "seconds": 22,
+   "cost_usd": 0.412,
+   "stage": "R2"
+  },
+  {
+   "flow_id": "hp2-6f0778be31",
+   "folder": "~/Projects/hp-work/p/6f0778be31",
+   "model": "sonnet",
+   "flow": "flow_2ee9b21a09c5",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_26d34c2728bf"
+   ],
+   "seconds": 14,
+   "cost_usd": 0.382,
+   "stage": "LF2"
+  },
+  {
+   "flow_id": "hp2-1bd8b38ad7",
+   "folder": "~/Projects/hp-work/p/1bd8b38ad7",
+   "model": "sonnet",
+   "flow": "flow_ed5f1fe8654e",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_9aaf2d9298a4"
+   ],
+   "seconds": 63,
+   "cost_usd": 0.569,
+   "stage": "R3"
+  },
+  {
+   "flow_id": "hp2-234b124eae",
+   "folder": "~/Projects/hp-work/p/234b124eae",
+   "model": "sonnet",
+   "flow": "flow_75bb274a5f72",
+   "flow_status": "done",
+   "visits": 1,
+   "verdicts": [
+    "PASS"
+   ],
+   "jobs": [
+    "job_68d03b62e34f"
+   ],
+   "seconds": 91,
+   "cost_usd": 0.649,
+   "stage": "A3"
+  }
+ ],
+ "items": [
+  {
+   "step": 1,
+   "kind": "conflict",
+   "law": "ResolvesUniqueMatch",
+   "input": {
+    "encoded": "|~|,,,1",
+    "shown": "model=\"\" adapter=None registry=[(id \"\", adapter \"\", model \"\", enabled true)]"
+   },
+   "ref": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "none"
+   },
+   "post": {
+    "ok": true,
+    "out": "none"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 2,
+   "kind": "conflict",
+   "law": "AmbiguousWhenManyMatch",
+   "input": {
+    "encoded": "|~|,,,1;,,,1",
+    "shown": "model=\"\" adapter=None registry=[(id \"\", adapter \"\", model \"\", enabled true), (id \"\", adapter \"\", model \"\", enabled true)]"
+   },
+   "ref": {
+    "encoded": "none",
+    "shown": "None"
+   },
+   "pre": {
+    "ok": true,
+    "out": "none"
+   },
+   "post": {
+    "ok": true,
+    "out": "none"
+   },
+   "hits_the_fix": false
+  },
+  {
+   "step": 3,
+   "kind": "gap",
+   "input": {
+    "encoded": "71|~|71,61,71,1;72,61,71,1",
+    "shown": "model=\"q\" adapter=None registry=[(id \"q\", adapter \"a\", model \"q\", enabled true), (id \"r\", adapter \"a\", model \"q\", enabled true)]"
+   },
+   "design_a": {
+    "encoded": "amb|",
+    "shown": "AmbiguousModelPinError ids=[]"
+   },
+   "design_b": {
+    "encoded": "amb|7a",
+    "shown": "AmbiguousModelPinError ids=[\"z\"]"
+   },
+   "ref": {
+    "encoded": "amb|712c2072",
+    "shown": "AmbiguousModelPinError ids=[\"q\", \"r\"]"
+   },
+   "pre": {
+    "ok": true,
+    "out": "amb|712c2072"
+   },
+   "post": {
+    "ok": true,
+    "out": "ok|71|71|61|0"
+   },
+   "hits_the_fix": true
+  }
+ ],
+ "outcome": "detected by a question",
+ "model": {
+  "check": "accept",
+  "link_pre": "agree",
+  "mutants": {
+   "requested": 20,
+   "identity_copy_agrees": true,
+   "sites": 51,
+   "made": 20,
+   "killed": 20,
+   "survived": [],
+   "kill_rate": 1.0
+  },
+  "quotes": {
+   "quotes": 12,
+   "not_found": []
+  },
+  "not_in_model": true,
+  "bug_in_model_scope": true,
+  "link_post": {
+   "verdict": "disagree",
+   "differences": 211,
+   "first_difference": {
+    "input": "5b422e|~|4750542d35,636f646578,5b422e,1;41,7a6130,41,1;637572736f722f612e62,6167656e746963,6770742035,1;5b422e,637572736f72,5b422e,1;636f6465782f67726f6b3435,6167656e746963,67726f6b3435,0",
+    "lean_ref": "amb|4750542d352c205b422e",
+    "python": "ok|5b422e|5b422e|637572736f72|3"
+   }
+  }
+ },
+ "first_laws": [
+  "ResolvesUniqueMatch",
+  "ResolvedIsMatchingEntry",
+  "AmbiguousWhenManyMatch",
+  "AmbiguousOnlyWhenManyMatch"
+ ],
+ "cost_usd": 5.28,
+ "seconds": 497
+}

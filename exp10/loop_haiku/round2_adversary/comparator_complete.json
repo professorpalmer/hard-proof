@@ -1,0 +1,7 @@
+{
+  "challenge_module": "RecoverCompleteChallenge",
+  "solution_module": "RecoverCompleteSolution",
+  "theorem_names": ["RecoverComplete.laws_complete"],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

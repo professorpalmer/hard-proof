@@ -1,0 +1,62 @@
+{
+ "k": 14,
+ "leaves": 128,
+ "seed": 2,
+ "task": "gap",
+ "blind": true,
+ "laws": 127,
+ "removed_leaf": {
+  "index": 105,
+  "path": [
+   [
+    13,
+    false
+   ],
+   [
+    0,
+    true
+   ],
+   [
+    9,
+    true
+   ],
+   [
+    5,
+    true
+   ],
+   [
+    8,
+    true
+   ],
+   [
+    2,
+    true
+   ],
+   [
+    10,
+    true
+   ],
+   [
+    11,
+    false
+   ],
+   [
+    4,
+    false
+   ],
+   [
+    7,
+    true
+   ],
+   [
+    12,
+    false
+   ],
+   [
+    6,
+    true
+   ]
+  ],
+  "cases_open": 4
+ }
+}

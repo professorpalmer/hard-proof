@@ -1,0 +1,108 @@
+{
+ "start": "b_opus",
+ "model": "claude-sonnet-5-5",
+ "first_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled"
+ ],
+ "rounds": [
+  {
+   "round": 1,
+   "adversary": {
+    "flow": "flow_4330324f77a6",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 65,
+    "cost_usd": 0.51
+   },
+   "pilot_gate": "accept",
+   "mode": "gap",
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled"
+   ],
+   "question": [
+    "input: enable_flag=false locked_adapters=[]",
+    "input: starter=[id 1 (adapter 1, model 1, enabled); id 2 (adapter 2, model 2, enabled)]",
+    "input: registry=[]",
+    "design A result: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+    "design B result: [id 2 (adapter 2, model 2, disabled); id 1 (adapter 1, model 1, disabled)]",
+    "shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]"
+   ],
+   "answer": "[id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, disabled)]",
+   "law_author": {
+    "flow": "flow_f6484c72b125",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 30,
+    "cost_usd": 0.44
+   },
+   "law_gate": "accept",
+   "old_laws_unchanged": true,
+   "new_laws": {
+    "NewRowsInStarterOrder": "\u2200 c st r, DistinctIds st \u2192 List.Sublist ((added f c st r).map (fun e => e.id)) (st.map (fun e => e.id))"
+   }
+  },
+  {
+   "round": 2,
+   "adversary": {
+    "flow": "flow_f2b4206bf8e6",
+    "status": "done",
+    "visits": 1,
+    "verdicts": [
+     "PASS"
+    ],
+    "seconds": 89,
+    "cost_usd": 0.61
+   },
+   "pilot_gate": "accept",
+   "mode": "complete",
+   "laws": [
+    "KeepsExistingRows",
+    "NewEntriesAtEnd",
+    "AddsEachAbsent",
+    "AddsOnlyAbsent",
+    "AddsEachOnce",
+    "NoIdentityDuplicate",
+    "NewDisabledByDefault",
+    "EnableKeepsStarterState",
+    "LockedAlwaysDisabled",
+    "NewRowsInStarterOrder"
+   ]
+  }
+ ],
+ "outcome": "complete",
+ "final_laws": [
+  "KeepsExistingRows",
+  "NewEntriesAtEnd",
+  "AddsEachAbsent",
+  "AddsOnlyAbsent",
+  "AddsEachOnce",
+  "NoIdentityDuplicate",
+  "NewDisabledByDefault",
+  "EnableKeepsStarterState",
+  "LockedAlwaysDisabled",
+  "NewRowsInStarterOrder"
+ ],
+ "questions": 1
+}
