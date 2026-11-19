@@ -5,3 +5,5 @@ __pycache__/
 hardproof_runs.jsonl
 hardproof.lock.json
 *_runs.jsonl.tmp
+*.egg-info/
+build/

@@ -1,0 +1,112 @@
+{
+ "audit": "Puppetmaster, the functions that changed in v1.50.0..v1.51.1 (20 targets)",
+ "tool": "hpf gate --ref REF, hardproof 0.2.0",
+ "runs": [
+  {
+   "ref": "v1.51.1",
+   "commit": "a1d6041a",
+   "verdict": "fail",
+   "confirmed_bugs": 7,
+   "closed": 0,
+   "waived": 0,
+   "open": 7,
+   "bugs": [
+    {
+     "function": "_pin_failure_detail",
+     "file": "puppetmaster/routing_authority.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "validate_pinned_dispatch",
+     "file": "puppetmaster/routing_authority.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "unroutable_pin_hint",
+     "file": "puppetmaster/registry_sync.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "_registry_starter_sync_check",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "run_doctor",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "run_doctor",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "open",
+     "reason": "the repro of claim 2 gives the old result on a1d6041a62cf"
+    },
+    {
+     "function": "ensure_codegraph_provisioned",
+     "file": "puppetmaster/codegraph.py",
+     "state": "open",
+     "reason": "the repro of claim 1 gives the old result on a1d6041a62cf"
+    }
+   ]
+  },
+  {
+   "ref": "v1.51.2",
+   "commit": "bef36bb8",
+   "verdict": "pass",
+   "confirmed_bugs": 7,
+   "closed": 7,
+   "waived": 0,
+   "open": 0,
+   "bugs": [
+    {
+     "function": "_pin_failure_detail",
+     "file": "puppetmaster/routing_authority.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "validate_pinned_dispatch",
+     "file": "puppetmaster/routing_authority.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "unroutable_pin_hint",
+     "file": "puppetmaster/registry_sync.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "_registry_starter_sync_check",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "run_doctor",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "run_doctor",
+     "file": "puppetmaster/diagnostics.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    },
+    {
+     "function": "ensure_codegraph_provisioned",
+     "file": "puppetmaster/codegraph.py",
+     "state": "closed",
+     "reason": "each repro gives a new result on bef36bb8389b"
+    }
+   ]
+  }
+ ]
+}

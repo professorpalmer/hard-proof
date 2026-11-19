@@ -7,7 +7,7 @@ records and the tools of the study "Proved is not finished".
 - **Read the study:** https://puppetmaster.gg/labs/hard-proof/ (summary) and
   https://puppetmaster.gg/labs/hard-proof/paper/ (paper). That page is the current version.
 - **Paper as PDF:** [docs/paper.pdf](docs/paper.pdf)
-- **Status:** a draft for review. An AI agent ran the study. The limits are in Section 16 of the paper.
+- **Status:** a draft for review. An AI agent ran the study. The limits are in Section 17 of the paper.
 
 ## The idea in five sentences
 
@@ -37,6 +37,46 @@ Each number is in the paper, with the command that gives it.
 The study also reports what did not work: one of its own "blind" tests was not blind, a fix step with
 a test and a judge let 5 of 45 wrong fixes through, a runner fault ran six bugs of the pipeline test two times, and the runs took the test machine down one time.
 
+## Use it on your code
+
+Our recommendation from the data has three rules. Section 14 of the paper has the reasons and the costs.
+
+1. **For all code: a review with receipts.** No finding counts without a repro that a script runs, and two
+   verifier agents must each name a caller. `hpf` does these steps for the functions that changed in a git range.
+2. **For a rule that the owner states: a proof.** A decision table, a permission rule, a price rule, a lock.
+   `hp` is the proof gate for one Python function.
+3. **Do not use laws that an agent writes from documentation as a bug finder for old code.** It costs more than
+   a review, and most of its conflicts are faults of the law.
+
+Install the two tools (Python 3.9 or later, no dependency):
+
+```bash
+pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+```
+
+Audit the functions that changed since a tag, and gate the release:
+
+```bash
+hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
+hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
+hpf gate  --out ~/audits/next --ref HEAD
+```
+
+- `hpf audit` and `hpf fix` start agent workers. They need the Puppetmaster command line
+  (`pip install puppetmaster-ai`) and Claude Code with a login.
+- `hpf fix` never commits. Review each fix and merge it yourself.
+- `hpf gate` makes no model call. It passes when each confirmed bug gives a new result on the commit that you
+  release, or has a waiver with a reason (`hpf waive`).
+- Measured cost on our products: about 1.40 US dollars for each changed function for the review and the two
+  verifiers, and 36 US dollars for one release range of 20 functions with its 7 fixes (API-equivalent).
+
+For a proof of one function, start with `tool/README.md` (the domain contract and a quick start on
+`tool/examples/clamp`). `v3/swarm_policy` is a real decision table as a complete domain: 5 laws, a proof that
+the code passes them, and a proof that the laws leave no input open.
+
+A pass of the gate does not say that the code has no bug. The tools are a first version: Python functions,
+Claude models, and tests on our own two products only.
+
 ## What is in this repository
 
 | Folder | Content |
@@ -46,7 +86,7 @@ a test and a judge let 5 of 45 wrong fixes through, a runner fault ran six bugs 
 | `v2` | The loop tests, the data set of 95 real bugs, the review arms, the proof pipeline on real bugs, the audit of findings, and the fix records |
 | `v3` | The first proof on a new product function: the swarm policy table of Marionette |
 | `tool/hardproof` | One proof gate for one Python function: model, link test, laws, and four kinds of certificate |
-| `tool/hpflow` | The audit ladder as one command set: targets from a git range, review, script gate, two verifiers, fix |
+| `tool/hpflow` | The audit ladder as one command set: targets from a git range, review, script gate, two verifiers, fix, and the release gate |
 | `site` | The build scripts of the paper and of this PDF |
 | `docs` | The paper as PDF and as a print page |
 
@@ -135,6 +175,7 @@ The output goes to `verify_all.json`.
 | The proof pipeline on the 95 bugs, and the comparison with the review arms | `v2/retro/*.json`, `v2/retro.py` | `python3 retro_compare.py` (reads the stored results, makes no model call) |
 | The audit of the conflict certificates of the pipeline | `v2/conflict_audit.py`, `v2/conflict_groups.json`, `v2/conflict_verdicts.json`, `v2/conflict_triage.json` | the stored records (the two verdicts for each conflict; the text of each verifier is not in this repository) |
 | The audit ladder: findings, verdicts, fixes | `v2/ladder_summary.json`, `v2/confirmed_bugs.json`, `v2/CONFIRMED_BUGS.md`, `v2/fix_runs.json` | the stored records |
+| The release gate on a stored audit: fail on the audited release, pass on the next | `v2/gate_live.json` | `hpf gate --out <audit folder> --ref <tag>` (needs the audit folder and a checkout of Puppetmaster) |
 | The proof of the swarm policy table | `v3/swarm_policy`, `v3/swarm_policy_docstring` | `python3 v3/summarize.py --repo <Marionette checkout>` |
 
 `exp11/meta/` has the removed law of each generated task. The workers did not have this folder.

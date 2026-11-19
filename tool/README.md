@@ -9,6 +9,22 @@ The tool uses Lean 4.36.0 with no Mathlib. `lake comparator` does the
 statement match, the axiom audit and the kernel replay. The tool is Python 3.9+
 with the standard library only. It makes no model call.
 
+## Install
+
+```sh
+pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+```
+
+This gives four commands: `hp` and `hardproof` (the proof gate), `hpf` and
+`hpflow` (the audit ladder). The package has no Python dependency. From a
+checkout, `./hp` and `./hpf` in this folder do the same with no install.
+
+| Command | Needs |
+| --- | --- |
+| `hp` | Lean 4.36.0 through `elan`. No model call. |
+| `hpf audit`, `hpf fix` | The Puppetmaster command line (`pip install puppetmaster-ai`) and Claude Code with a login. These steps make model calls. |
+| `hpf gate`, `hpf waive`, `hpf status` | git and Python only. No model call. |
+
 ## What the gate shows
 
 A domain has a Lean mirror `ref` of the Python function and a set of laws
@@ -214,6 +230,41 @@ evidence ladder. `hardproof` makes no model call. `hpflow` does.
 
 Then read `/tmp/audit/REPORT.md` and the worktrees in `/tmp/audit/fix/`.
 
+### Use it as a gate before a release or a merge
+
+The audit looks only at the functions that changed in a git range, so its cost
+follows the size of the change. The gate is the last step. It makes no model
+call, and its exit code is 0 for a pass and 1 for a fail.
+
+```sh
+hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
+hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
+# Review each worktree in ~/audits/next/fix/, then commit and merge the fixes yourself.
+hpf gate  --out ~/audits/next --ref HEAD
+```
+
+`gate --ref REF` runs the repro of each confirmed bug on the commit `REF`. A
+bug is closed when each of its repros gives a new result there. So the gate
+checks the code that you will release, not the worktree of a fix worker. With
+no `--ref`, a bug is closed when it has a fix with an accepted check and a
+PASS judge.
+
+When the owner decides that a confirmed bug stays as it is, record it:
+
+```sh
+hpf waive --out ~/audits/next --bug ID --reason "why the behavior stays" --by NAME
+```
+
+The gate fails when a review or a verifier run is absent, when a confirmed
+bug is open, or when a repro does not run on `REF`. A range with no changed
+function passes with no worker run.
+
+What we measured on our two products (API-equivalent cost, Claude models):
+about 1.40 US dollars for each changed function for the review and the two
+verifiers (28.53 US dollars for 20 functions), and 36 US dollars for one release range of 20 functions with
+its 7 fixes. On that audit, `gate --ref` failed on the audited release with 7
+open bugs and passed on the next release with 7 closed.
+
 ### Commands
 
 All commands take `--out DIR` (the audit folder), `--redo` and
@@ -266,6 +317,11 @@ runs again. A stored run with an error (launch or wait) runs again.
   options of each. It stops at the first step that fails.
 - `status`: the count of findings at each grade, the cost and time of each
   step, and what is not done.
+- `waive --bug ID --reason TEXT [--by NAME]`: record in `waivers.json` that a
+  confirmed bug stays as it is. A waiver needs a reason.
+- `gate [--ref REF] [--repro-timeout 60]`: pass only when the audit is
+  complete and each confirmed bug is closed or waived. The report lists each
+  bug with its state and the reason. No model call.
 
 Model names: `haiku`, `sonnet` and `opus` map to `claude-haiku-5-5`,
 `claude-sonnet-5-5` and `claude-opus-5-5`. A full model id passes through.
@@ -287,4 +343,12 @@ the cost of one visit is the difference from the visit before it.
   each fix.
 - Grade 1 shows only that the repro runs and gives a result. It does not show
   that the result is wrong.
-- Lean certificates (the `hardproof` gate) are not part of the ladder yet.
+- A pass of the gate says that each confirmed bug is closed or waived. It
+  does not say that the code has no bug: in our study the best review arm
+  found 44 of 95 known bugs.
+- The fix step can make a wrong fix that passes its check and its judge (5 of
+  45 in our study). Review each fix before you merge it.
+- Python only. The reviewer and the verifiers are Claude models through
+  Claude Code. Other adapters are not tested.
+- Lean certificates (the `hardproof` gate) are not part of the ladder. Use
+  `hp` for a small rule that the owner states, for example a decision table.

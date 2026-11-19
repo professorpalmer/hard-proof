@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
                      read_json, run_snippet, sh, write_json)
 from .fixcheck import check as fix_check
 from .runner import Runner, agent_graph
@@ -637,6 +637,15 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
 
 # ---------------------------------------------------------------- status
 
+def accepted_fixes(fix_recs: List[Dict[str, Any]]) -> set:
+    """The bugs that have a fix with an accepted script check and a PASS judge."""
+    fixed: set = set()
+    for r in fix_recs:
+        if (r.get("check") or {}).get("verdict") == "accept" and r.get("judge") == "PASS":
+            fixed.update(r.get("bugs") or [])
+    return fixed
+
+
 def cmd_status(ctx: Context) -> Dict[str, Any]:
     audit = ctx.audit()
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
@@ -660,10 +669,7 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
             grade[f["id"]] = f["grade"]
     for c in (verify or {}).get("claims") or []:
         grade[c["id"]] = max(grade.get(c["id"], 0), c["grade"])
-    fixed = set()
-    for r in fix_recs:
-        if (r.get("check") or {}).get("verdict") == "accept" and r.get("judge") == "PASS":
-            fixed.update(r.get("bugs") or [])
+    fixed = accepted_fixes(fix_recs)
     for b in confirmed or []:
         if b["id"] in fixed:
             for rp in b["repros"]:
@@ -695,3 +701,89 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     return {"command": "status", "ok": True, "repo": audit["repo"], "commit": audit["commit"],
             "targets": len(targets or []), "grades": counts, "confirmed_bugs": len(confirmed or []), "steps": steps,
             "not_done": open_items, "cost_note": COST_NOTE}
+
+
+# ---------------------------------------------------------------- gate
+
+def cmd_waive(ctx: Context, bug: str, reason: str, by: Optional[str]) -> Dict[str, Any]:
+    """Record the decision of the owner that one confirmed bug stays as it is."""
+    confirmed = read_json(ctx.out / "confirmed.json")
+    if confirmed is None:
+        raise UsageError("no confirmed.json: run `verify` first")
+    if bug not in {b["id"] for b in confirmed}:
+        raise UsageError(f"no confirmed bug with the id {bug}")
+    if not reason.strip():
+        raise UsageError("a waiver needs a reason")
+    waivers = read_json(ctx.out / "waivers.json", {})
+    waivers[bug] = {"reason": reason.strip(), "by": by, "time": now()}
+    write_json(ctx.out / "waivers.json", waivers)
+    return {"command": "waive", "ok": True, "bug": bug, "waivers": len(waivers)}
+
+
+def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str, Any]:
+    """Pass only when the audit is complete and each confirmed bug is closed. No model call.
+
+    With `--ref`, a bug is closed when each of its repros gives a new result on that commit.
+    With no `--ref`, a bug is closed when it has a fix with an accepted check and a PASS judge.
+    A waiver closes a bug in the two cases.
+    """
+    audit = ctx.audit()
+    status = cmd_status(ctx)
+    incomplete = [x for x in status["not_done"] if not x.startswith("fix:")]
+    confirmed = read_json(ctx.out / "confirmed.json") or []
+    waivers = read_json(ctx.out / "waivers.json", {})
+    fix = read_json(ctx.out / "fix.json")
+    fixed = accepted_fixes([r for r in (read_json(ctx.record_path(i)) for i in (fix or {}).get("runs") or []) if r])
+    tree: Optional[Path] = None
+    commit: Optional[str] = None
+    if ref:
+        repo = Path(audit["repo"])
+        code, out = git(repo, "rev-parse", "--verify", f"{ref}^{{commit}}")
+        if code != 0:
+            raise UsageError(f"the ref {ref} is not a commit of {repo}")
+        commit = out.strip()
+        tree = ctx.out / "gate" / commit[:12]
+        if not tree.is_dir():
+            tree.mkdir(parents=True)
+            tarball = ctx.out / "gate.tar"
+            paths = [p for p in audit["paths"] if git(repo, "cat-file", "-e", f"{commit}:{p}")[0] == 0]
+            code, detail = git(repo, "archive", "-o", str(tarball), commit, *paths)
+            if code == 0:
+                code, detail = sh(["tar", "-x", "-f", str(tarball), "-C", str(tree)])
+            tarball.unlink(missing_ok=True)
+            if code != 0:
+                shutil.rmtree(tree, ignore_errors=True)
+                raise StepError(f"git archive failed: {detail[-300:]}")
+    rows: List[Dict[str, Any]] = []
+    for b in confirmed:
+        row = {"id": b["id"], "file": b["file"], "function": b["function"], "what_goes_wrong": b.get("what_goes_wrong"),
+               "severity": b.get("severity")}
+        if b["id"] in waivers:
+            row.update(state="waived", reason=waivers[b["id"]]["reason"])
+        elif tree is not None:
+            same, unknown = [], []
+            for rp in b["repros"]:
+                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout)
+                if got.get("ok") and got.get("result") == rp["result_now"]:
+                    same.append(rp["k"])
+                elif not got.get("ok") and (got.get("error") == "timeout" or got.get("error") in MISSING):
+                    unknown.append(f"claim {rp['k']}: {got.get('error')}")
+            if same:
+                row.update(state="open", reason=f"the repro of claim {', '.join(str(k) for k in same)} gives the old result on {commit[:12]}")
+            elif unknown:
+                row.update(state="open", reason="the repro does not run on this commit (" + "; ".join(unknown) + "): fix the repro or record a waiver")
+            else:
+                row.update(state="closed", reason=f"each repro gives a new result on {commit[:12]}")
+        elif b["id"] in fixed:
+            row.update(state="closed", reason="a fix with an accepted check and a PASS judge is in its worktree; it is not merged by hpflow")
+        else:
+            row.update(state="open", reason="no accepted fix and no waiver")
+        rows.append(row)
+    open_rows = [r for r in rows if r["state"] == "open"]
+    ok = not incomplete and not open_rows
+    return {"command": "gate", "ok": ok, "verdict": "pass" if ok else "fail", "audited_commit": audit["commit"],
+            "checked_commit": commit, "targets": status["targets"], "confirmed_bugs": len(confirmed),
+            "closed": sum(1 for r in rows if r["state"] == "closed"), "waived": sum(1 for r in rows if r["state"] == "waived"),
+            "open": open_rows, "incomplete": incomplete, "bugs": rows,
+            "note": "A pass says that each bug that two verifier agents confirmed is closed or waived. It is not a proof that the code has no bug."}
+

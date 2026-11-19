@@ -60,7 +60,7 @@
 </div>
 
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
-<p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 16 lists the limits.</p>
+<p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
 {{REVISION_NOTE}}
 <ol class="toc">
@@ -77,6 +77,7 @@
 <li><a href="#loops">The loop, a review loop, and resumed sessions</a></li>
 <li><a href="#bugs">Real bugs of our own code</a></li>
 <li><a href="#ladder">From findings to fixes: an audit with grades of evidence</a></li>
+<li><a href="#use">What we recommend, and how to use the tools</a></li>
 <li><a href="#human">What the human does</a></li>
 <li><a href="#prior">Prior work</a></li>
 <li><a href="#limits">Limits and disclosures</a></li>
@@ -107,7 +108,7 @@
 <pre>theorem laws_complete :
   ∀ (I J : Design), Passes I → Passes J →
     ∀ input, observe I input = observe J input</pre>
-<p>A gap certificate and a completeness proof exclude each other. For a law set that some design passes, one of the two is true, and a proof of one of them answers the question. This criterion is not ours. Hardware verification uses it for sets of properties (Section 15).</p>
+<p>A gap certificate and a completeness proof exclude each other. For a law set that some design passes, one of the two is true, and a proof of one of them answers the question. This criterion is not ours. Hardware verification uses it for sets of properties (Section 16).</p>
 <h3>The loop</h3>
 <ol>
 <li><strong>Prove.</strong> An agent proves that the design obeys each law. The gate checks.</li>
@@ -150,7 +151,7 @@
 <p>We added one requirement: the lock record must not contain the start token. Lean proves that no lock design can satisfy law 1, law 2 and this requirement together (<code>challenge_is_impossible</code>). A lock with no token cannot tell "the owner died and a new process has its pid" from "that new process took the lock". Law 2 says grant in the first state, and law 1 says refuse in the second.</p>
 <p>Four workers got this challenge. One had a neutral brief. Three had a brief with pressure ("this change must ship today") and write access to each file. Each worker changed no file and reported the conflict with the correct reason. One Haiku 5.5 worker with a shell also wrote and compiled its own proof of the impossibility.</p>
 <h3>The gap</h3>
-<p>The adversary brief did not say where a gap can be. It did say that the task was to find one, and the folder had the proved lock design and a pinned example in which a release takes a process out of the critical section (Section 16). Each accepted certificate has the same content: design B is the proved lock with a release that does nothing. On the trace spawn, acquire, release, the process is out of the critical section for design A and in it for design B. Design B passes law 1, law 2 and law 3.</p>
+<p>The adversary brief did not say where a gap can be. It did say that the task was to find one, and the folder had the proved lock design and a pinned example in which a release takes a process out of the critical section (Section 17). Each accepted certificate has the same content: design B is the proved lock with a release that does nothing. On the trace spawn, acquire, release, the process is out of the critical section for design A and in it for design B. Design B passes law 1, law 2 and law 3.</p>
 <p>The question for the human is one line: after its own release, is the process out, or in? We answered "out". This answer is law 4.</p>
 <h3>Completeness</h3>
 <p>With four laws, each worker decided that no gap is left and proved it. The proof shows that the critical-section set after each event is a function of the operating-system state and the set before the event. The function does not name a design. Laws 1, 2 and 4 are sufficient for this result. Law 3 adds no observable constraint.</p>
@@ -221,7 +222,8 @@
 {{SECTION_LOOPS}}
 {{SECTION_BUGS}}
 {{SECTION_LADDER}}
-<h2 id="human">14. What the human does</h2>
+{{SECTION_USE}}
+<h2 id="human">15. What the human does</h2>
 <p>In this loop the human reads no proof and no Lean statement. The human gets one concrete case for each gap:</p>
 <pre>who = process 1
 event=spawn 1    A_inside=none  B_inside=none
@@ -234,7 +236,7 @@ B_result = [id 1; id 1]</pre>
 <p>These two blocks are gate output from accepted certificates. The answer is a choice between A and B. The cost of the question is small, and the question cannot be a false alarm about the laws: the two designs do pass each law, and they do differ. A question can show a different fault. In Section 7, three questions showed that a definition of the pilot permitted an input that the pilot did not intend.</p>
 <p>The number of questions is the number of gaps. The lock needed one question. The sync command needed two with the pilot's laws, and one to three with laws that agents wrote. After the last answer, a theorem says that no question is left for the chosen observation.</p>
 
-<h2 id="prior">15. Prior work</h2>
+<h2 id="prior">16. Prior work</h2>
 <p>We searched on 17 and 18 November 2026 and opened each page in this table. The parts of the loop exist. The search was short and was not systematic, so we do not claim that no earlier system has this loop.</p>
 <div class="doc-scroll"><table>
 <thead><tr><th>Work</th><th>What it has</th><th>Relation</th></tr></thead>
@@ -270,7 +272,7 @@ B_result = [id 1; id 1]</pre>
 </ul>
 <p>The idea for the study came from the Bend language page, which shows a laws file for the human and a proofs file for the agent.</p>
 
-<h2 id="limits">16. Limits and disclosures</h2>
+<h2 id="limits">17. Limits and disclosures</h2>
 <ul>
 <li><strong>An AI agent ran this study.</strong> A pilot agent (Claude Fable 5.2 in Claude Code) designed and ran the experiments, wrote the laws and the models, and wrote this draft, in one session on 17 and 18 November 2026. The owner asked for the study and was asleep for the second half. No human reviewed the laws before the runs.</li>
 <li><strong>The worker folders had hints.</strong> The gap tasks of domains 1 and 2 asked the worker to find a gap. They did not ask if a gap exists. The decision tasks (gap or completeness) came after a law was added. Each folder had a reference design: the proved lock, or the mirror of the code. The brief of the lock gap task says that design A can be the proved lock. The lock law file has a pinned example in which a release takes a process out of the critical section, which points at the behavior that each gap certificate uses. The law authors of Sections 6 and 7 had the mirror of the code in the model file, because they must prove that it passes their laws. Only the blind set of Section 8 had no reference design. Its brief did not say if a gap existed, but the folder path of each run did (Section 10).</li>
@@ -298,7 +300,7 @@ B_result = [id 1; id 1]</pre>
 <li><strong>Authorship.</strong> We build Puppetmaster. The flows that ran the workers are Puppetmaster flows.</li>
 </ul>
 
-<h2 id="data">17. Data and reproduction</h2>
+<h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
 <li><a href="/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>{{ZIP_SHA}}</code>.</li>

@@ -254,6 +254,68 @@ class LadderTest(FlowCase):
         self.assertEqual(s["grades"], {"0": 2, "1": 1, "2": 0, "3": 2})
         self.assertEqual(s["not_done"], [])
 
+    def bug_id(self) -> str:
+        return json.loads((self.out / "confirmed.json").read_text())[0]["id"]
+
+    def test_gate_fails_before_the_review(self):
+        self.init()
+        self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        code, r = self.hpf("gate")
+        self.assertEqual((code, r["verdict"]), (1, "fail"))
+        self.assertIn("review: not run", r["incomplete"])
+
+    def test_gate_fails_on_an_open_bug_and_passes_after_an_accepted_fix(self):
+        self.through_verify()
+        code, r = self.hpf("gate")
+        self.assertEqual((code, r["verdict"], len(r["open"])), (1, "fail", 1))
+        self.assertEqual(self.hpf("fix")[0], 0)
+        calls = len(self.runner.calls)
+        code, r = self.hpf("gate")
+        self.assertEqual((code, r["verdict"], r["closed"], r["open"]), (0, "pass", 1, []))
+        self.assertEqual(len(self.runner.calls), calls)
+
+    def test_gate_with_a_ref_needs_a_new_repro_result_on_that_commit(self):
+        self.through_verify()
+        self.assertEqual(self.hpf("fix")[0], 0)
+        code, r = self.hpf("gate", "--ref", "HEAD", "--repro-timeout", "5")
+        self.assertEqual((code, r["verdict"]), (1, "fail"), r)
+        self.assertIn("old result", r["open"][0]["reason"])
+        mod = self.repo / "pkg" / "mod.py"
+        mod.write_text(mod.read_text().replace("return a - b", "return a + b", 1))
+        git(self.repo, "commit", "-q", "-am", "fix add")
+        code, r = self.hpf("gate", "--ref", "HEAD", "--repro-timeout", "5")
+        self.assertEqual((code, r["verdict"], r["closed"]), (0, "pass", 1), r)
+        self.assertNotEqual(r["checked_commit"], r["audited_commit"])
+
+    def test_a_repro_that_does_not_run_on_the_ref_keeps_the_bug_open(self):
+        self.through_verify()
+        mod = self.repo / "pkg" / "mod.py"
+        mod.write_text(mod.read_text().replace("def add(", "def plus("))
+        git(self.repo, "commit", "-q", "-am", "rename")
+        code, r = self.hpf("gate", "--ref", "HEAD", "--repro-timeout", "5")
+        self.assertEqual((code, len(r["open"])), (1, 1), r)
+        self.assertIn("does not run", r["open"][0]["reason"])
+
+    def test_a_range_with_no_changed_function_passes_the_gate_with_no_worker(self):
+        self.init()
+        code, r = self.hpf("targets", "--changed", "HEAD..HEAD")
+        self.assertEqual((code, r["targets"]), (0, []), r)
+        self.assertEqual(self.hpf("review")[0], 0)
+        code, r = self.hpf("gate", "--ref", "HEAD")
+        self.assertEqual((code, r["verdict"], r["targets"], r["confirmed_bugs"]), (0, "pass", 0, 0), r)
+        self.assertEqual(self.runner.calls, [])
+
+    def test_waive(self):
+        self.through_verify()
+        bug = self.bug_id()
+        self.assertEqual(self.hpf("waive", "--bug", "nothing", "--reason", "x")[0], 2)
+        self.assertEqual(self.hpf("waive", "--bug", bug, "--reason", "  ")[0], 2)
+        code, r = self.hpf("waive", "--bug", bug, "--reason", "the owner accepts this behavior", "--by", "owner")
+        self.assertEqual(code, 0, r)
+        code, r = self.hpf("gate", "--ref", "HEAD")
+        self.assertEqual((code, r["verdict"], r["waived"]), (0, "pass", 1), r)
+        self.assertEqual(r["bugs"][0]["reason"], "the owner accepts this behavior")
+
     def test_second_call_reuses_and_redo_runs(self):
         self.through_verify()
         self.assertEqual(self.hpf("fix")[0], 0)

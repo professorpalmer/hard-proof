@@ -71,9 +71,9 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 </div>
 
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
-<p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 16 lists the limits.</p>
+<p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
-<p class="small">Revision 5, 18 November 2026. Sections 10 to 13 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, and an audit that takes review findings to fixes. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
+<p class="small">Revision 6, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
 <ol class="toc">
 <li><a href="#problem">The problem</a></li>
 <li><a href="#defs">Definitions</a></li>
@@ -88,6 +88,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <li><a href="#loops">The loop, a review loop, and resumed sessions</a></li>
 <li><a href="#bugs">Real bugs of our own code</a></li>
 <li><a href="#ladder">From findings to fixes: an audit with grades of evidence</a></li>
+<li><a href="#use">What we recommend, and how to use the tools</a></li>
 <li><a href="#human">What the human does</a></li>
 <li><a href="#prior">Prior work</a></li>
 <li><a href="#limits">Limits and disclosures</a></li>
@@ -118,7 +119,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <pre>theorem laws_complete :
   ∀ (I J : Design), Passes I → Passes J →
     ∀ input, observe I input = observe J input</pre>
-<p>A gap certificate and a completeness proof exclude each other. For a law set that some design passes, one of the two is true, and a proof of one of them answers the question. This criterion is not ours. Hardware verification uses it for sets of properties (Section 15).</p>
+<p>A gap certificate and a completeness proof exclude each other. For a law set that some design passes, one of the two is true, and a proof of one of them answers the question. This criterion is not ours. Hardware verification uses it for sets of properties (Section 16).</p>
 <h3>The loop</h3>
 <ol>
 <li><strong>Prove.</strong> An agent proves that the design obeys each law. The gate checks.</li>
@@ -194,7 +195,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <p>We added one requirement: the lock record must not contain the start token. Lean proves that no lock design can satisfy law 1, law 2 and this requirement together (<code>challenge_is_impossible</code>). A lock with no token cannot tell "the owner died and a new process has its pid" from "that new process took the lock". Law 2 says grant in the first state, and law 1 says refuse in the second.</p>
 <p>Four workers got this challenge. One had a neutral brief. Three had a brief with pressure ("this change must ship today") and write access to each file. Each worker changed no file and reported the conflict with the correct reason. One Haiku 5.5 worker with a shell also wrote and compiled its own proof of the impossibility.</p>
 <h3>The gap</h3>
-<p>The adversary brief did not say where a gap can be. It did say that the task was to find one, and the folder had the proved lock design and a pinned example in which a release takes a process out of the critical section (Section 16). Each accepted certificate has the same content: design B is the proved lock with a release that does nothing. On the trace spawn, acquire, release, the process is out of the critical section for design A and in it for design B. Design B passes law 1, law 2 and law 3.</p>
+<p>The adversary brief did not say where a gap can be. It did say that the task was to find one, and the folder had the proved lock design and a pinned example in which a release takes a process out of the critical section (Section 17). Each accepted certificate has the same content: design B is the proved lock with a release that does nothing. On the trace spawn, acquire, release, the process is out of the critical section for design A and in it for design B. Design B passes law 1, law 2 and law 3.</p>
 <p>The question for the human is one line: after its own release, is the process out, or in? We answered "out". This answer is law 4.</p>
 <h3>Completeness</h3>
 <p>With four laws, each worker decided that no gap is left and proved it. The proof shows that the critical-section set after each event is a function of the operating-system state and the set before the event. The function does not name a design. Laws 1, 2 and 4 are sufficient for this result. Law 3 adds no observable constraint.</p>
@@ -741,7 +742,37 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 <h3>What the ladder shows</h3><ul><li><strong>A review finding is not a result.</strong> Of the findings that still hold on the newest code, the two verifiers confirmed about four in ten as real and reachable.</li><li><strong>A fix with a test and a judge is not a proof.</strong> 5 of 45 such fixes were wrong in a way that a second review found. Each wrong fix was in a rule with no precise statement of what it must do.</li><li><strong>This is where a law has value.</strong> A test shows one input. A law says what must hold for each input, and the adversary of this study shows what a law set leaves open. We did this for one of the rules above, and the proof took minutes.</li><li><strong>Limits.</strong> Each grade below a proof is agreement of agents, a script, or CI. The owner decided the open rules and gave the order to merge, but did not read each diff. The functions came from the history of bug fixes, so they are functions that had bugs before. One rule has a proof.</li></ul>
 <h3>A fault that the study caused, and a fix that came out of it</h3>
 <p>The runs of this section started many agent workers at one time on a machine with 48 GB of memory, and the machine had to be restarted. The memory reports of the system show two causes. One extra kernel of the proof checker used 77.2 GB on one proof. And 120 helper processes held 93.1 GB: Puppetmaster started a code search command for each worker with a timeout, the timeout ended only the launcher, and the real process stayed alive with no reader. The first is a limit of our harness: each checker process now has a memory limit, and a stop at the limit is "no verdict". The second was a real fault in the product, and it is corrected in Puppetmaster v1.51.1, pull request 303. A kernel fault of a second kind is the probable cause of the one result in Section 10 that we could not explain: one extra kernel ends with a stack overflow on a deep proof term, and the other five kernels accept the proof.</p>
-<h2 id="human">14. What the human does</h2>
+<h2 id="use">14. What we recommend, and how to use the tools</h2>
+<p>This section is our reading of Sections 10 to 13 for daily work. It is a recommendation, and it is not a new result.</p>
+<h3>Three rules</h3><ol>
+<li><strong>For all code: a review with receipts.</strong> No finding counts without a repro that a script runs. Two verifier agents on different models must each name a caller that reaches the fault. A fix gets a test, a script check, a judge and a second review, and the owner decides each rule that has no precise statement. This ladder gave the 45 confirmed bugs and the 51 fixes of Section 13.</li>
+<li><strong>For a rule that the owner states: a proof.</strong> Good targets are small rules where a missed case costs much: a decision table, a permission rule, a price rule, a lock. Write the laws from the words of the owner, prove that the code passes them, and let an adversary prove a gap or completeness. For the rule of Section 13 this took about ten minutes.</li>
+<li><strong>Do not use laws that an agent writes from documentation as a bug finder for old code.</strong> The pipeline of Section 12 found fewer known bugs than a review for about 8 times the cost, and in 57 of its 73 live conflicts the law was wrong, not the code.</li></ol>
+<h3>What it costs</h3>
+<div class="doc-scroll"><table>
+<thead><tr><th>Step</th><th>Measured cost (API-equivalent)</th></tr></thead>
+<tbody>
+<tr><td>Review and two verifiers for one changed function</td><td>$1.43 ($28.53 for 20 functions)</td></tr>
+<tr><td>One release range: 20 functions, 7 confirmed bugs, 7 fixes</td><td>$36.05</td></tr>
+<tr><td>Two verifiers for one review finding</td><td>$0.44 ($93.09 for 211 findings)</td></tr>
+<tr><td>The full proof pipeline for one function</td><td>$8.34 (mean of 95)</td></tr>
+<tr><td>The proof of one decision table, written by the pilot</td><td>no worker cost</td></tr>
+</tbody></table></div>
+<p class="small">These are costs on two Python products with Claude models. The cost of the audit follows the size of the change, because it looks only at the functions that changed in a git range.</p>
+<h3>The gate</h3>
+<p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>
+<p>We ran the gate on the stored audit of Section 13. On the audited release (v1.51.1) the verdict was "fail" with 7 open bugs. On the next release (v1.51.2), which has the fixes, the verdict was "pass" with 7 closed. The gate is now a step before each release of our two products.</p>
+<pre>pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+
+hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
+hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
+hpf gate  --out ~/audits/next --ref HEAD</pre>
+<p>The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>
+<h3>What a pass does not say</h3><ul>
+<li>A pass says that each bug that two verifier agents confirmed is closed or waived. It does not say that the code has no bug. The best review arm of Section 12 found 44 of 95 known bugs.</li>
+<li>The fix step can make a wrong fix that passes its check and its judge. Section 13 has five. A human must review each fix before the merge, and <code>hpflow</code> does not commit or merge.</li>
+<li>The tools are a first version. They work on Python functions, the workers are Claude models through Claude Code, and we tested them on our own two products only.</li></ul>
+<h2 id="human">15. What the human does</h2>
 <p>In this loop the human reads no proof and no Lean statement. The human gets one concrete case for each gap:</p>
 <pre>who = process 1
 event=spawn 1    A_inside=none  B_inside=none
@@ -754,7 +785,7 @@ B_result = [id 1; id 1]</pre>
 <p>These two blocks are gate output from accepted certificates. The answer is a choice between A and B. The cost of the question is small, and the question cannot be a false alarm about the laws: the two designs do pass each law, and they do differ. A question can show a different fault. In Section 7, three questions showed that a definition of the pilot permitted an input that the pilot did not intend.</p>
 <p>The number of questions is the number of gaps. The lock needed one question. The sync command needed two with the pilot's laws, and one to three with laws that agents wrote. After the last answer, a theorem says that no question is left for the chosen observation.</p>
 
-<h2 id="prior">15. Prior work</h2>
+<h2 id="prior">16. Prior work</h2>
 <p>We searched on 17 and 18 November 2026 and opened each page in this table. The parts of the loop exist. The search was short and was not systematic, so we do not claim that no earlier system has this loop.</p>
 <div class="doc-scroll"><table>
 <thead><tr><th>Work</th><th>What it has</th><th>Relation</th></tr></thead>
@@ -790,7 +821,7 @@ B_result = [id 1; id 1]</pre>
 </ul>
 <p>The idea for the study came from the Bend language page, which shows a laws file for the human and a proofs file for the agent.</p>
 
-<h2 id="limits">16. Limits and disclosures</h2>
+<h2 id="limits">17. Limits and disclosures</h2>
 <ul>
 <li><strong>An AI agent ran this study.</strong> A pilot agent (Claude Fable 5.2 in Claude Code) designed and ran the experiments, wrote the laws and the models, and wrote this draft, in one session on 17 and 18 November 2026. The owner asked for the study and was asleep for the second half. No human reviewed the laws before the runs.</li>
 <li><strong>The worker folders had hints.</strong> The gap tasks of domains 1 and 2 asked the worker to find a gap. They did not ask if a gap exists. The decision tasks (gap or completeness) came after a law was added. Each folder had a reference design: the proved lock, or the mirror of the code. The brief of the lock gap task says that design A can be the proved lock. The lock law file has a pinned example in which a release takes a process out of the critical section, which points at the behavior that each gap certificate uses. The law authors of Sections 6 and 7 had the mirror of the code in the model file, because they must prove that it passes their laws. Only the blind set of Section 8 had no reference design. Its brief did not say if a gap existed, but the folder path of each run did (Section 10).</li>
@@ -818,10 +849,10 @@ B_result = [id 1; id 1]</pre>
 <li><strong>Authorship.</strong> We build Puppetmaster. The flows that ran the workers are Puppetmaster flows.</li>
 </ul>
 
-<h2 id="data">17. Data and reproduction</h2>
+<h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="https://puppetmaster.gg/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
-<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>bc8d5d1f0be7d16cfcee9ea83c6c2cf734e3102e1951686aaed1274515be7438</code>.</li>
+<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>0b4a98ee906ebb4a0b7311ca1527d234a4ef0577e65824126ce2760473e05c19</code>.</li>
 <li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. Our last run made 184 gate runs: 179 accept and 5 reject, and each verdict was the same as the run record. With the build caches present it took about 4 minutes with six parallel jobs. A first run builds each folder and takes longer.</li>
 <li><code>README.md</code> in the archive has a command for each experiment family. The link tests need a checkout of Puppetmaster.</li>
 <li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the tools <code>hardproof</code> and <code>hpflow</code>, the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>

@@ -61,11 +61,23 @@ def add_fix(p: argparse.ArgumentParser) -> None:
     p.add_argument("--rules", help="the rules of the repository for the fix worker and the judge")
 
 
+def add_waive(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--bug", required=True, help="the id of a confirmed bug")
+    p.add_argument("--reason", required=True, help="why the behavior stays as it is")
+    p.add_argument("--by", help="who decided")
+
+
+def add_gate(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--ref", help="the commit to check, for example the release candidate")
+    p.add_argument("--repro-timeout", type=float, default=60)
+
+
 def build_parser() -> Parser:
     parser = Parser(prog="hpflow", description="Take Python functions up the evidence ladder with agent workers.")
     sub = parser.add_subparsers(dest="command", parser_class=Parser)
     for name, adders in (("init", [add_init]), ("targets", [add_targets]), ("review", [add_review]),
                          ("verify", [add_verify]), ("fix", [add_fix]), ("status", []),
+                         ("waive", [add_waive]), ("gate", [add_gate]),
                          ("audit", [add_init, add_targets, add_review, add_verify])):
         p = sub.add_parser(name)
         add_common(p)
@@ -90,6 +102,10 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
         return c.cmd_fix(ctx, args.base, args.only, args.fix_model, args.judge_model, args.rules)
     if cmd == "status":
         return c.cmd_status(ctx)
+    if cmd == "waive":
+        return c.cmd_waive(ctx, args.bug, args.reason, args.by)
+    if cmd == "gate":
+        return c.cmd_gate(ctx, args.ref, args.repro_timeout)
     if cmd == "audit":
         steps: List[Dict[str, Any]] = []
         calls: List[Callable[[], Dict[str, Any]]] = [
@@ -103,14 +119,14 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
             if not r.get("ok"):
                 break
         return {"command": "audit", "ok": all(s.get("ok") for s in steps) and len(steps) == len(calls), "steps": steps}
-    raise UsageError("give a command: init, targets, review, verify, fix, audit or status")
+    raise UsageError("give a command: init, targets, review, verify, fix, audit, status, waive or gate")
 
 
 def main(argv: Optional[List[str]] = None, runner: Optional[Runner] = None) -> int:
     try:
         args = build_parser().parse_args(argv)
         if not args.command:
-            raise UsageError("give a command: init, targets, review, verify, fix, audit or status")
+            raise UsageError("give a command: init, targets, review, verify, fix, audit, status, waive or gate")
         if args.command == "audit" and not (args.changed or args.functions or args.files):
             raise UsageError("audit needs --changed, --function or --file")
         if args.concurrency < 1:

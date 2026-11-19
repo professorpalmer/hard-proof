@@ -78,6 +78,33 @@ def step13(ls: dict, proof: dict) -> str:
 </section>"""
 
 
+def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
+    hp = ls["hpflow_first_live_run"]
+    audit_cost = hp["review_cost_usd"] + hp["verify_cost_usd"]
+    a, b = gate
+    return f"""<section>
+<span class="step">14 · Use it</span>
+<h2>A review with receipts for all code. A proof for the rules that matter.</h2>
+<p>That is our reading of the data, and it is how we work now. The audit ladder of step 13 is cheap enough for each release. The proof step is for a small rule that the owner states, where a missed case costs much: a decision table, a permission rule, a price rule, a lock.</p>
+<div class="scroll"><table>
+<thead><tr><th>Step</th><th>Measured cost</th></tr></thead>
+<tbody>
+<tr><td>Review and two verifiers for one changed function</td><td>${audit_cost / hp['targets']:.2f}</td></tr>
+<tr><td>One release range: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes</td><td>${audit_cost + hp['fix_cost_usd']:.2f}</td></tr>
+<tr><td>The full proof pipeline for one function</td><td>${pc['cost_mean_usd']:.2f}</td></tr>
+<tr><td>The proof of one decision table</td><td>about ten minutes, no worker</td></tr>
+</tbody></table></div>
+<p>The two tools are in the repository. <code>hpf</code> audits the functions that changed in a git range, and its last step is a gate with no model call: each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. On our stored audit, the gate failed on Puppetmaster {a['ref'].lstrip('v')} with {a['open']} open bugs and passed on {b['ref'].lstrip('v')} with {b['closed']} closed. <code>hp</code> is the proof gate for one Python function.</p>
+<pre class="hp-theorem">pip install "git+{REPO_URL}.git#subdirectory=tool"
+
+hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
+hpf fix   --out ~/audits/next
+hpf gate  --out ~/audits/next --ref HEAD</pre>
+<p class="note">The audit and the fix step need the Puppetmaster command line and Claude Code. The fix step never commits: a human reviews each fix. A pass of the gate does not say that the code has no bug. The tools are a first version, for Python, with tests on our own two products only.</p>
+<div class="hp-links"><a class="button" href="{REPO_URL}#use-it-on-your-code">Get the tools</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
+</section>"""
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--site", type=Path, required=True)
@@ -98,6 +125,17 @@ def main() -> int:
 
     swap("12 · Real bugs", step12(pc, pc["review_cost_usd"]))
     swap("13 · From findings to fixes", step13(ls, proof))
+    use = step_use(ls, pc, json.loads((ROOT / "v2" / "conflict_triage.json").read_text()),
+                   json.loads((ROOT / "v2" / "gate_live.json").read_text())["runs"])
+    if "14 · Use it" in page:
+        swap("14 · Use it", use)
+    else:
+        found = re.search(r'<section>\s*<span class="step">14 · Results', page)
+        if not found:
+            raise SystemExit("the results section was not found")
+        page = page[:found.start()] + use + "\n\n" + page[found.start():]
+        page = page.replace('<span class="step">14 · Results', '<span class="step">15 · Results')
+        page = page.replace('<span class="step">15 · What is ours and what is not', '<span class="step">16 · What is ours and what is not')
     if not args.no_repo_link and REPO_URL not in page:
         old = '<a class="button ghost" href="/labs/data/hard-proof.json">Data</a>'
         if old not in page:

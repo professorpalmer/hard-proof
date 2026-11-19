@@ -630,6 +630,48 @@ def sec_table_proof() -> str:
         "So the code was correct and its documentation did not state the rule. The full order is in the docstring now. This is the same kind of result as in Section 5, on a function that is one day old.</p>"])
 
 
+def sec_use(ls: dict) -> str:
+    """Section 14: the recommendation for daily work and how to use the tools."""
+    v2 = ROOT / "v2"
+    pc = json.loads((v2 / "retro_compare.json").read_text())
+    tri = json.loads((v2 / "conflict_triage.json").read_text())
+    hp = ls["hpflow_first_live_run"]
+    gate = json.loads((v2 / "gate_live.json").read_text())["runs"] if (v2 / "gate_live.json").exists() else []
+    best = max(pc["arms"], key=lambda k: pc["arms"][k]["detected"])
+    times = pc["cost_usd"] / pc["review_cost_usd"][best + "/pre"]
+    n = tri["collect"]["candidates"]
+    audit_cost = hp["review_cost_usd"] + hp["verify_cost_usd"]
+    h = ['<h2 id="use">14. What we recommend, and how to use the tools</h2>',
+         "<p>This section is our reading of Sections 10 to 13 for daily work. It is a recommendation, and it is not a new result.</p>",
+         "<h3>Three rules</h3><ol>",
+         f"<li><strong>For all code: a review with receipts.</strong> No finding counts without a repro that a script runs. Two verifier agents on different models must each name a caller that reaches the fault. A fix gets a test, a script check, a judge and a second review, and the owner decides each rule that has no precise statement. This ladder gave the {ls['distinct_confirmed_bugs']} confirmed bugs and the {ls['owner_step']['fixes_shipped']} fixes of Section 13.</li>",
+         "<li><strong>For a rule that the owner states: a proof.</strong> Good targets are small rules where a missed case costs much: a decision table, a permission rule, a price rule, a lock. Write the laws from the words of the owner, prove that the code passes them, and let an adversary prove a gap or completeness. For the rule of Section 13 this took about ten minutes.</li>",
+         f"<li><strong>Do not use laws that an agent writes from documentation as a bug finder for old code.</strong> The pipeline of Section 12 found fewer known bugs than a review for about {times:.0f} times the cost, and in {tri['verdicts']['agreed'].get('misread', 0)} of its {n} live conflicts the law was wrong, not the code.</li></ol>",
+         "<h3>What it costs</h3>",
+         table(["Step", "Measured cost (API-equivalent)"],
+               [["Review and two verifiers for one changed function", f"{money(audit_cost / hp['targets'])} ({money(audit_cost)} for {hp['targets']} functions)"],
+                [f"One release range: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes", money(audit_cost + hp["fix_cost_usd"])],
+                ["Two verifiers for one review finding", f"{money(ls['verifier_cost_usd'] / ls['findings_live_on_newest_dev'])} ({money(ls['verifier_cost_usd'])} for {ls['findings_live_on_newest_dev']} findings)"],
+                ["The full proof pipeline for one function", f"{money(pc['cost_mean_usd'])} (mean of {pc['bugs']})"],
+                ["The proof of one decision table, written by the pilot", "no worker cost"]]),
+         "<p class=\"small\">These are costs on two Python products with Claude models. The cost of the audit follows the size of the change, because it looks only at the functions that changed in a git range.</p>",
+         "<h3>The gate</h3>",
+         "<p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>"]
+    if len(gate) == 2:
+        a, b = gate
+        h.append(f"<p>We ran the gate on the stored audit of Section 13. On the audited release ({a['ref']}) the verdict was \"{a['verdict']}\" with {a['open']} open bugs. On the next release ({b['ref']}), which has the fixes, the verdict was \"{b['verdict']}\" with {b['closed']} closed. The gate is now a step before each release of our two products.</p>")
+    h += ["<pre>pip install \"git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool\"\n\n"
+          "hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next\n"
+          "hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs\n"
+          "hpf gate  --out ~/audits/next --ref HEAD</pre>",
+          "<p>The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>",
+          "<h3>What a pass does not say</h3><ul>",
+          "<li>A pass says that each bug that two verifier agents confirmed is closed or waived. It does not say that the code has no bug. The best review arm of Section 12 found 44 of 95 known bugs.</li>",
+          "<li>The fix step can make a wrong fix that passes its check and its judge. Section 13 has five. A human must review each fix before the merge, and <code>hpflow</code> does not commit or merge.</li>",
+          "<li>The tools are a first version. They work on Python functions, the workers are Claude models through Claude Code, and we tested them on our own two products only.</li></ul>"]
+    return "\n".join(h)
+
+
 def money(v) -> str:
     return "not reported" if v is None else f"${v:.2f}"
 
@@ -956,7 +998,7 @@ def main() -> int:
     paper = paper.replace("{{SECTION_SYNC2}}", (HERE / "sec_sync2.html").read_text(encoding="utf-8"))
     paper = paper.replace("{{SECTION_SCALE}}", (HERE / "sec_scale.html").read_text(encoding="utf-8"))
     paper = paper.replace("{{SECTION_BASELINE}}", (HERE / "sec_baseline.html").read_text(encoding="utf-8"))
-    paper = paper.replace("{{SECTION_LOOPS}}", section_loops).replace("{{SECTION_BUGS}}", section_bugs).replace("{{SECTION_LADDER}}", section_ladder)
+    paper = paper.replace("{{SECTION_LOOPS}}", section_loops).replace("{{SECTION_BUGS}}", section_bugs).replace("{{SECTION_LADDER}}", section_ladder).replace("{{SECTION_USE}}", sec_use(ls) if ls and ls.get("owner_step") else "")
     texts = json.loads((HERE / "texts.json").read_text(encoding="utf-8")) if (HERE / "texts.json").exists() else {}
     subs = {
         "TABLE_EXP12": loop_table_of(e12), "EXP12_QUESTIONS": questions_of(e12, True),

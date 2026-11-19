@@ -26,6 +26,8 @@ table { width: 100%; border-collapse: collapse; margin: 6px 0 18px; font: 14px/1
 th, td { border: 1px solid #bbb; padding: 7px 9px; text-align: left; vertical-align: top; }
 th { background: #f0f0f0; }
 .note { font: 14px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif; color: #444; }
+pre { margin: 0 0 14px; padding: 12px 14px; border: 1px solid #bbb; background: #f6f6f6; overflow-x: auto; }
+pre code { font-size: 13px; }
 code { font: 14px "SF Mono", Menlo, Consolas, monospace; }
 </style>
 </head>
@@ -38,6 +40,7 @@ code { font: 14px "SF Mono", Menlo, Consolas, monospace; }
 <a class="primary" href="paper.pdf">Paper (PDF)</a>
 <a href="https://puppetmaster.gg/labs/hard-proof/">Read the study online</a>
 <a href="https://github.com/professorpalmer/hard-proof">Code and data</a>
+<a href="https://github.com/professorpalmer/hard-proof#use-it-on-your-code">Use the tools</a>
 <a href="paper.html">Print page</a>
 </div>
 
@@ -63,6 +66,15 @@ code { font: 14px "SF Mono", Menlo, Consolas, monospace; }
 </tbody>
 </table>
 <p class="note">This is a draft for review. An AI agent ran the study. The paper lists the limits, the faults of the run, and each number with its command. The current version is the page at <a href="https://puppetmaster.gg/labs/hard-proof/">puppetmaster.gg/labs/hard-proof</a>.</p>
+
+<h2>Use the tools</h2>
+<p class="note">Our recommendation from the data: a review with receipts for all code, and a proof for a small rule that the owner states. Section 14 of the paper has the reasons and the costs.</p>
+<pre><code>pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+
+hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
+hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
+hpf gate  --out ~/audits/next --ref HEAD</code></pre>
+<p class="note"><code>hpf</code> audits the Python functions that changed in a git range: a reviewer agent with a repro for each finding, a script that runs each repro, two verifier agents, and a fix step that never commits. Its gate makes no model call. <code>hp</code> is the proof gate for one Python function, with Lean 4.36.0. The audit needs the Puppetmaster command line and Claude Code. A pass of the gate does not say that the code has no bug. See the <a href="https://github.com/professorpalmer/hard-proof#use-it-on-your-code">README</a>.</p>
 
 <h2>Reproduce</h2>
 <p class="note">Clone the repository, install Lean 4.36.0, and run <code>python3 verify_all.py</code>. It runs each gate again on each stored result and makes no model call.</p>
