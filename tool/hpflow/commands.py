@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ast
+import posixpath
 import re
 import shlex
 import shutil
@@ -146,6 +147,17 @@ def adapter_report(ctx: Context, adapter: str) -> Dict[str, Any]:
 
 # ---------------------------------------------------------------- init
 
+def repo_path(text: str, option: str) -> str:
+    """One form for a path of the repository: forward slashes, no `./`, no `..`, no slash at the end. "" is the root.
+
+    git gives each name in this form, so a path of the user in another form (`./pkg`, `pkg/`, `a/../pkg`) would
+    match no file."""
+    norm = posixpath.normpath(text.replace("\\", "/"))
+    if norm.startswith("/") or norm == ".." or norm.startswith("../") or re.match(r"^[A-Za-z]:", norm):
+        raise UsageError(f"{option} takes a path inside the repository, not {text}")
+    return "" if norm == "." else norm
+
+
 def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], python: Optional[str],
              test_cmd: Optional[str], import_root: Optional[str] = None) -> Dict[str, Any]:
     root = Path(repo).expanduser().resolve()
@@ -161,16 +173,16 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
     def present(p: str) -> bool:
         return git(root, "cat-file", "-e", f"{commit}:{p}")[0] == 0
 
-    import_root = (import_root or "").strip("/")
-    if import_root in (".", ""):
-        import_root = ""
-    elif not present(import_root):
+    import_root = repo_path(import_root or ".", "--import-root")
+    if import_root and not present(import_root):
         raise UsageError(f"the import root {import_root} is not in {commit[:12]}")
     if paths:
-        missing = [p for p in paths if not present(p.rstrip("/"))]
+        paths = [repo_path(p, "--paths") for p in paths]
+        if "" in paths:
+            raise UsageError("--paths takes folders and files of the repository, not the repository root")
+        missing = [p for p in paths if not present(p)]
         if missing:
             raise UsageError(f"these paths are not in {commit[:12]}: {', '.join(missing)}")
-        paths = [p.rstrip("/") for p in paths]
     else:
         base = f"{import_root}/" if import_root else ""
         # With -z git does not quote a name with non-ASCII characters, and a name can hold a space.
@@ -243,38 +255,54 @@ def functions_of(source: str) -> List[Dict[str, Any]]:
     return out
 
 
-def parse_diff(text: str) -> List[Dict[str, Any]]:
-    """Files of a `git diff -U0`, each with the old and new path and the line ranges of its hunks."""
-    files: List[Dict[str, Any]] = []
-    cur: Optional[Dict[str, Any]] = None
-    in_hunk = False
-    hunk = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
-    for line in text.splitlines():
-        if line.startswith("diff --git "):
-            cur = {"old": None, "new": None, "old_ranges": [], "new_ranges": [], "deleted_ranges": []}
-            files.append(cur)
-            in_hunk = False
-        elif cur is None:
+HUNK = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
+
+
+def hunk_ranges(diff: str) -> Dict[str, List[Tuple[int, int]]]:
+    """The line ranges of the hunks of a `git diff -U0` of one file.
+
+    Only a hunk header starts with "@@ ": each content line of a diff starts with "+", "-" or a backslash. The
+    file headers are not read here, so the text of a changed line cannot be taken for one."""
+    out: Dict[str, List[Tuple[int, int]]] = {"old_ranges": [], "new_ranges": [], "deleted_ranges": []}
+    for line in diff.splitlines():
+        m = HUNK.match(line)
+        if not m:
             continue
-        # After the first hunk a line '--- x' is a removed line '-- x', not the header of the old file.
-        elif line.startswith("--- ") and not in_hunk:
-            cur["old"] = None if line[4:] == "/dev/null" else line[4:][2:]
-        elif line.startswith("+++ ") and not in_hunk:
-            cur["new"] = None if line[4:] == "/dev/null" else line[4:][2:]
+        old_start, old_count = int(m.group(1)), 1 if m.group(2) is None else int(m.group(2))
+        new_start, new_count = int(m.group(3)), 1 if m.group(4) is None else int(m.group(4))
+        out["old_ranges"].append((old_start, old_start + old_count - 1) if old_count else (old_start, old_start + 1))
+        if new_count:
+            out["new_ranges"].append((new_start, new_start + new_count - 1))
         else:
-            m = hunk.match(line)
-            if m:
-                in_hunk = True
-                for (s, c), key in (((m.group(1), m.group(2)), "old_ranges"), ((m.group(3), m.group(4)), "new_ranges")):
-                    start, count = int(s), 1 if c is None else int(c)
-                    if count:
-                        cur[key].append((start, start + count - 1))
-                    elif key == "old_ranges":
-                        cur[key].append((start, start + 1))
-                    else:
-                        # A pure deletion has no new line. The old lines it removed show which functions it changed.
-                        old_start, old_count = int(m.group(1)), 1 if m.group(2) is None else int(m.group(2))
-                        cur["deleted_ranges"].append((old_start, old_start + old_count - 1))
+            # A pure deletion has no new line. The old lines that it removed show which functions it changed.
+            out["deleted_ranges"].append((old_start, old_start + old_count - 1))
+    return out
+
+
+def changed_files(repo: Path, a: str, b: str, paths: List[str]) -> List[Dict[str, Any]]:
+    """Each file that differs between two commits: its old and new path and the line ranges of its hunks.
+
+    The names come from `git diff --name-status -z`: a list with NUL between the fields, which git does not
+    quote. So a name with a space, a tab, a quote or a non-ASCII character is the real name."""
+    code, out = git(repo, "diff", "--name-status", "-z", "--no-ext-diff", "-M", a, b, "--", *paths)
+    if code != 0:
+        raise StepError(f"git diff failed: {out[-300:]}")
+    fields = out.split("\0")
+    files: List[Dict[str, Any]] = []
+    i = 0
+    while i < len(fields) and fields[i]:
+        status = fields[i]
+        if status[0] in "RC":
+            old, new = fields[i + 1], fields[i + 2]
+            i += 3
+        else:
+            old = None if status[0] == "A" else fields[i + 1]
+            new = None if status[0] == "D" else fields[i + 1]
+            i += 2
+        code, diff = git(repo, "diff", "-U0", "--no-color", "--no-ext-diff", "-M", a, b, "--", *[p for p in (old, new) if p])
+        if code != 0:
+            raise StepError(f"git diff failed: {diff[-300:]}")
+        files.append(dict({"old": old, "new": new}, **hunk_ranges(diff)))
     return files
 
 
@@ -329,10 +357,7 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
         for ref in (a, b):
             if git(repo, "rev-parse", "--verify", f"{ref}^{{commit}}")[0] != 0:
                 raise UsageError(f"the ref {ref} is not a commit of {repo}")
-        code, diff = git(repo, "diff", "-U0", "--no-color", "--no-ext-diff", a, b, "--", *audit["paths"])
-        if code != 0:
-            raise StepError(f"git diff failed: {diff[-300:]}")
-        for f in parse_diff(diff):
+        for f in changed_files(repo, a, b, audit["paths"]):
             path = f["new"] or f["old"]
             if not path or not path.endswith(".py") or not in_paths(path, audit["paths"]):
                 continue
@@ -761,8 +786,9 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
     judge_payload = adapters.payload(adapter, judge=True, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort,
                                      agent_cmd=template)
     files = fix_scope(ctx, audit)
+    # The bugs are a part of the id: two runs for one file with other bugs (`--only`) must not share a graph file.
     fid = digest("fixflow", g["slug"], base, *adapter_key(adapter, template, ctx.effort),
-                 *fix_key(adapter, model, judge_model, rules))
+                 *fix_key(adapter, model, judge_model, rules), *sorted(b["id"] for b in g["bugs"]))
     return {"id": f"hpf-{fid}", "entry": "build",
             "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria"},
             "nodes": [

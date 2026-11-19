@@ -357,17 +357,9 @@ class InitNameTest(unittest.TestCase):
 class DiffContentLineTest(unittest.TestCase):
     """A content line '-- x' or '++ x' of a hunk is shown as '--- x' or '+++ x' and is not a file header."""
 
-    def files(self, text: str) -> list:
-        return [(f["old"], f["new"], f["old_ranges"], f["new_ranges"]) for f in commands.parse_diff(text)]
-
-    def test_content_lines_in_a_hunk_keep_the_paths(self):
-        d = "diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n"
-        self.assertEqual(self.files(d), [("a.py", "a.py", [(3, 3)], [(3, 3)])])
-
-    def test_the_headers_of_the_next_file_are_read(self):
-        d = ("diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n"
-             "diff --git a/b.py b/b.py\nnew file mode 100644\n--- /dev/null\n+++ b/b.py\n@@ -0,0 +1 @@\n+x = 1\n")
-        self.assertEqual(self.files(d), [("a.py", "a.py", [(3, 3)], [(3, 3)]), (None, "b.py", [(0, 1)], [(1, 1)])])
+    def test_a_content_line_that_looks_like_a_header_is_not_read(self):
+        d = "diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n-@@ -9 +9 @@\n"
+        self.assertEqual(commands.hunk_ranges(d), {"old_ranges": [(3, 3)], "new_ranges": [(3, 3)], "deleted_ranges": []})
 
     def test_targets_finds_a_function_changed_only_by_a_deleted_dash_line(self):
         old = 'def f():\n    q = """\n-- keep\n-- drop\nselect 1\n"""\n    return q\n\n\ndef g():\n    return 2\n'

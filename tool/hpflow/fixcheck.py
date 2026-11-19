@@ -9,8 +9,8 @@
 """
 from __future__ import annotations
 
+import ast
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -59,6 +59,26 @@ def out_of_scope(tree: Path, scope: List[str]) -> List[str]:
     return sorted(p for p in changed_files(tree) if not in_scope(p, scope))
 
 
+def imports_module(source: str, stem: str) -> bool:
+    """True when a test file imports the module `stem` in any form: `import mod`, `import pkg.mod`,
+    `from pkg.mod import f`, `from mod import f`, `from pkg import a, mod`, with or without `as`.
+
+    The Python parser reads the imports, so the form of the line does not matter. A file that does not parse
+    has no import that Python can run, so it is not related."""
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, ValueError):
+        return False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            if any(stem in alias.name.split(".") for alias in node.names):
+                return True
+        elif isinstance(node, ast.ImportFrom):
+            if stem in (node.module or "").split(".") or any(alias.name == stem for alias in node.names):
+                return True
+    return False
+
+
 def test_command(spec: Dict[str, Any], tests: List[str]) -> str:
     return spec["test_cmd"].format(python=shell_quote(spec["python"]), tests=" ".join(shell_quote(t) for t in tests))
 
@@ -98,13 +118,7 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
             for t in sorted(set(tests_dir.rglob("test_*.py")) | set(tests_dir.rglob("*_test.py"))):
                 if t == test_file:
                     continue
-                text = t.read_text(errors="replace")[:20000]
-                # A dotted import such as `import pkg.mod` can end the line right after the module name.
-                # A name list such as `from pkg import a, mod` can name the module after another name.
-                if (stem in t.name or f"import {stem}" in text or f".{stem} " in text
-                        or re.search(rf"^\s*import\s+[\w.]+\.{re.escape(stem)}\b", text, re.M)
-                        or re.search(rf"^\s*from\s+[\w.]+\s+import\s+(\([^)]*|[^\n]*)\b{re.escape(stem)}\b",
-                                     text, re.M)):
+                if stem in t.name or imports_module(t.read_text(encoding="utf-8", errors="replace"), stem):
                     if t.stat().st_size > MAX_RELATED_BYTES:
                         # A very large test file can run for a long time. The CI of the repository runs it.
                         skipped.append(t.relative_to(tree).as_posix())

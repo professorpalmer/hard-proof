@@ -19,7 +19,7 @@ import shutil
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import IO, Iterator, Optional
+from typing import IO, Iterator, Optional, Tuple
 
 from .common import run_group
 
@@ -41,43 +41,67 @@ def worker_home() -> Path:
     return Path(explicit).expanduser() if explicit else Path.home() / ".hpflow" / "codex-worker-home"
 
 
+def toml_scan(line: str, depth: int, quote: Optional[str]) -> Tuple[int, Optional[str]]:
+    """The state after one line of TOML: the depth of open arrays and inline tables, and the delimiter of an open
+    multi-line string (or None).
+
+    Brackets in a string or a comment do not count. A statement ends where the depth is 0 and no string is open,
+    so a line that starts with "[" is a table header only at such a point."""
+    i, n = 0, len(line)
+    while i < n:
+        if quote:
+            end = line.find(quote, i)
+            # In a basic multi-line string a backslash escapes the next character.
+            while quote == '"""' and end > 0 and (len(line[:end]) - len(line[:end].rstrip("\\"))) % 2 == 1:
+                end = line.find(quote, end + 1)
+            if end == -1:
+                return depth, quote
+            i, quote = end + 3, None
+            continue
+        ch = line[i]
+        if ch == "#":
+            break
+        if line.startswith('"""', i) or line.startswith("'''", i):
+            quote = line[i:i + 3]
+            i += 3
+            continue
+        if ch == '"':
+            i += 1
+            while i < n and line[i] != '"':
+                i += 2 if line[i] == "\\" else 1
+        elif ch == "'":
+            end = line.find("'", i + 1)
+            i = n if end == -1 else end
+        elif ch in "[{":
+            depth += 1
+        elif ch in "]}":
+            depth = max(depth - 1, 0)
+        i += 1
+    return depth, quote
+
+
 def lean_config(text: str) -> str:
     """The config.toml of the user without the tables and keys a worker must not inherit."""
     out = []
-    dropping = False
-    skip_depth = 0
-    # A kept multi-line array can have lines that start with "[", which are not table headers either.
-    kept_depth = 0
-    in_table = False
+    depth, quote = 0, None
+    in_table = dropped_table = dropped_key = False
     for line in text.splitlines():
-        stripped = line.strip()
-        if skip_depth:
-            skip_depth += stripped.count("[") - stripped.count("]")
-            continue
-        if kept_depth and not DROPPED_TABLE.match(stripped):
-            # A dropped table ends the value, so a miscounted bracket never lets that table through.
-            kept_depth += stripped.count("[") - stripped.count("]")
+        if depth and quote is None and DROPPED_TABLE.match(line.strip()):
+            # No value of an array or an inline table has this form, so the file has an open bracket that never
+            # closes. The header of a dropped table ends that value: a damaged file must not keep the table.
+            depth = 0
+        if depth == 0 and quote is None:
+            # A new statement: a table header, a key, a comment or an empty line.
+            stripped = line.strip()
+            dropped_key = False
+            if stripped.startswith("["):
+                in_table = True
+                dropped_table = bool(DROPPED_TABLE.match(stripped))
+            elif not in_table and "=" in stripped:
+                dropped_key = stripped.split("=", 1)[0].strip() in DROPPED_TOP_KEYS
+        depth, quote = toml_scan(line, depth, quote)
+        if not (dropped_table or dropped_key):
             out.append(line)
-            continue
-        kept_depth = 0
-        if stripped.startswith("["):
-            in_table = True
-            dropping = bool(DROPPED_TABLE.match(stripped))
-            if dropping:
-                continue
-        if dropping:
-            # A multi-line value can have lines that start with "[", which are not table headers.
-            depth = stripped.count("[") - stripped.count("]")
-            skip_depth = depth if depth > 0 else 0
-            continue
-        key = stripped.split("=", 1)[0].strip() if "=" in stripped else ""
-        if key in DROPPED_TOP_KEYS and not in_table:
-            depth = stripped.count("[") - stripped.count("]")
-            skip_depth = depth if depth > 0 else 0
-            continue
-        out.append(line)
-        if key and not stripped.startswith("[") and stripped.split("=", 1)[1].strip().startswith("["):
-            kept_depth = max(stripped.count("[") - stripped.count("]"), 0)
     return "\n".join(out) + "\n"
 
 
