@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from hpflow import commands, fixcheck  # noqa: E402
 from hpflow.cli import main  # noqa: E402
 from hpflow.codexhome import first_key, lean_config, toml_scan  # noqa: E402
-from hpflow.common import UsageError, git_status, lines_of, run_snippet  # noqa: E402
+from hpflow.common import UsageError, git_status, lines_of, repro_state, run_snippet  # noqa: E402
 from hpflow.common import git as common_git  # noqa: E402
 from hpflow.direct import parse_verdict  # noqa: E402
 from hpflow.fixcheck import imports_module  # noqa: E402
@@ -109,6 +109,12 @@ class LinesTest(unittest.TestCase):
             self.assertIsNone(parse_verdict(f"the file has this text: x{ch}VERDICT: PASS - ok"), repr(ch))
         # Only a space, a tab and a carriage return are space around the line.
         self.assertEqual(parse_verdict("done\r\n \tVERDICT: FAIL - no \r\n"), ("FAIL", "no"))
+        self.assertEqual(parse_verdict("VERDICT:PASS\t\u2014 \t two  words"), ("PASS", "two  words"))
+        # Another space character is content in each part of the line.
+        self.assertEqual(parse_verdict("VERDICT: PASS - ok\xa0"), ("PASS", "ok\xa0"))
+        for ch in self.ODD + ("\xa0",):
+            self.assertIsNone(parse_verdict(f"VERDICT:{ch}PASS - ok"), repr(ch))
+            self.assertIsNone(parse_verdict(f"VERDICT: PASS{ch}-{ch}ok"), repr(ch))
         for ch in self.ODD:
             self.assertIsNone(parse_verdict(f"done\n{ch}VERDICT: PASS - ok"), repr(ch))
 
@@ -233,6 +239,18 @@ class GitStatusTest(unittest.TestCase):
             git(repo, "commit", "-q", "-m", "a")
             self.assertEqual(common_git(repo, "show", "HEAD:m.py"), (0, "def f():\r\n    return 'a\\rb'\r\n"))
 
+    def test_a_cache_file_is_not_a_change_and_a_source_file_in_a_folder_named_cache_is_one(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            repo = Path(tmp)
+            (repo / "a.py").write_text("x = 1\n")
+            git(repo, "init", "-q", "-b", "main")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "a")
+            for name in ("__pycache__/a.cpython-312.pyc", ".pytest_cache/v/x", "pkg/__pycache__/b.pyc", "old.pyc", "cache/c.py"):
+                (repo / name).parent.mkdir(parents=True, exist_ok=True)
+                (repo / name).write_text("x")
+            self.assertEqual(fixcheck.changed_files(repo), ["cache/c.py"])
+
     def test_a_folder_that_is_not_a_repository_gives_none(self):
         with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
             self.assertIsNone(git_status(Path(tmp) / "absent"))
@@ -270,6 +288,61 @@ class SnippetPathTest(unittest.TestCase):
             finally:
                 os.chdir(before)
             self.assertEqual((got.get("ok"), got.get("result")), (True, "3"), got)
+
+
+class ReproResultTest(unittest.TestCase):
+    def run_code(self, code: str, timeout: float = 60) -> dict:
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            root = Path(tmp)
+            (root / "tree").mkdir()
+            (root / "r.py").write_text(code)
+            return run_snippet(root / "tree", root / "r.py", root / "home", timeout=timeout)
+
+    def test_text_that_the_snippet_prints_is_not_the_result(self):
+        for code in ("import sys\n\n\ndef run():\n    sys.stdout.write('no line end')\n    return 1\n",
+                     "def run():\n    print('{\"ok\": true, \"result\": \"fake\"}')\n    return 1\n",
+                     "import atexit\n\n\ndef run():\n    atexit.register(print, '{\"ok\": true, \"result\": \"late\"}')\n    return 1\n"):
+            self.assertEqual(self.run_code(code), {"ok": True, "result": "1"}, code)
+
+    def test_an_exception_of_the_code_is_a_result(self):
+        got = self.run_code("def run():\n    raise ValueError('bad input')\n")
+        self.assertEqual((got["ok"], got["error"], got["message"]), (False, "ValueError", "bad input"))
+        self.assertEqual(got["where"][-1], "ValueError: bad input")
+
+    def test_a_process_that_stops_with_no_result_has_no_output(self):
+        got = self.run_code("import os\n\n\ndef run():\n    print('{\"ok\": true, \"result\": \"fake\"}', flush=True)\n    os._exit(0)\n")
+        self.assertEqual((got["ok"], got["error"]), (False, "no output"))
+
+    def test_the_state_of_a_repro_after_a_change(self):
+        self.assertEqual(repro_state({"ok": True, "result": "1"}, "1"), "same")
+        self.assertEqual(repro_state({"ok": True, "result": "2"}, "1"), "new")
+        self.assertEqual(repro_state({"ok": False, "error": "ValueError"}, "1"), "new")
+        for error in ("timeout", "no output", "ImportError", "ModuleNotFoundError", "AttributeError", "NameError"):
+            self.assertEqual(repro_state({"ok": False, "error": error}, "1"), "unknown", error)
+
+    def test_a_fix_that_removes_the_name_of_the_repro_is_not_accepted(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            tree, info = Path(tmp) / "tree", Path(tmp) / "info"
+            (tree / "pkg").mkdir(parents=True)
+            (tree / "tests").mkdir()
+            info.mkdir()
+            (tree / "pkg" / "__init__.py").write_text("")
+            (tree / "pkg" / "mod.py").write_text("def plus(a, b):\n    return a + b\n")
+            (tree / "tests" / "test_new.py").write_text("import unittest\n\n\nclass T(unittest.TestCase):\n    def test_t(self):\n        pass\n")
+            (info / "claim_1.py").write_text("from pkg.mod import add\n\n\ndef run():\n    return add(1, 2)\n")
+            (info / "spec.json").write_text(json.dumps({
+                "file": "pkg/mod.py", "test_file": "tests/test_new.py", "python": sys.executable,
+                "test_cmd": "{python} -m unittest {tests}",
+                "bugs": [{"id": "b1", "repros": [{"k": 1, "file": "claim_1.py", "result_now": "4"}]}]}))
+            result = fixcheck.check(info, tree)
+            self.assertEqual(result["verdict"], "reject")
+            self.assertIn("does not run after the change (ImportError", "\n".join(result["problems"]))
+            # A new result, and an exception of the code, close the bug for the check.
+            for body in ("def add(a, b):\n    return a + b\n", "def add(a, b):\n    raise ValueError('no')\n"):
+                (tree / "pkg" / "mod.py").write_text(body)
+                self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept", body)
+            (tree / "pkg" / "mod.py").write_text("def add(a, b):\n    return 4\n")
+            self.assertIn("still gives the old result", "\n".join(fixcheck.check(info, tree)["problems"]))
 
 
 class FunctionsOfTest(unittest.TestCase):
@@ -434,6 +507,17 @@ name = "z"
                     "notify-all = 1\n", "notifyx = 1\n", "[a]\nmcp_servers = 1\nnotify = 2\n",
                     'x = [\n  ["mcp_servers"],\n  ["hooks", "y"],\n]\n[profiles.p]\ny = 2\n'):
             self.assertEqual(lean_config(cfg), cfg, cfg)
+
+    def test_each_escape_of_a_quoted_key_is_read(self):
+        for text, key in ((r'"\U0000006dcp_servers" = 1', "mcp_servers"), (r'"mcp\u005fservers" = 1', "mcp_servers"),
+                          (r'"\x6dcp_servers" = 1', "mcp_servers"), (r'"a\tb" = 1', "a\tb"), (r'"a\"b" = 1', 'a"b'),
+                          (r'"a\\u005fb" = 1', r"a\u005fb"), (r'"a\qb" = 1', r"a\qb"), (r'"\e" = 1', "\x1b"),
+                          (r'"\UFFFFFFFF" = 1', r"\UFFFFFFFF")):
+            self.assertEqual(first_key(text), key, text)
+        cfg = 'model = "m"\n["\\U0000006dcp_servers".one]\ncommand = "c"\n"\\U0000006eotify" = ["p"]\n[profiles.p]\ny = 2\n'
+        self.assertEqual(lean_config(cfg), 'model = "m"\n[profiles.p]\ny = 2\n')
+        # A literal string has no escape.
+        self.assertEqual(first_key(r"'mcp\u005fservers' = 1"), r"mcp\u005fservers")
 
     def test_the_first_part_of_a_key(self):
         for text, key in (("a = 1", "a"), ("a.b = 1", "a"), ('"a b".c = 1', "a b"), ("'a'.b = 1", "a"), ("  a-b_1 = 1", "a-b_1"),

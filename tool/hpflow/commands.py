@@ -15,7 +15,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import adapters, briefs
 from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, git_status,
-                     is_test_file, lines_of, read_json, run_snippet, sh, shell_python, shell_quote, write_json)
+                     is_test_file, lines_of, read_json, repro_state, run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
 from .direct import check_template
 from .runner import Runner, agent_graph
@@ -553,7 +553,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
                     row.update(grade=1, result=got["result"])
                 elif got.get("error") == "timeout":
                     row.update(grade=0, reason=f"the repro timed out ({repro_timeout} seconds)")
-                elif got.get("error") in ("ImportError", "ModuleNotFoundError", "AttributeError", "NameError"):
+                elif got.get("error") in MISSING:
                     row.update(grade=0, reason=f"the repro cannot import the function: {got.get('error')}: {got.get('message')}")
                 else:
                     row.update(grade=0, reason=f"run() raised {got.get('error')}: {got.get('message')}")
@@ -1071,9 +1071,10 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
             same, unknown = [], []
             for rp in b["repros"]:
                 got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout, import_root=audit.get("import_root") or "")
-                if got.get("ok") and got.get("result") == rp["result_now"]:
+                state = repro_state(got, rp["result_now"])
+                if state == "same":
                     same.append(rp["k"])
-                elif not got.get("ok") and (got.get("error") == "timeout" or got.get("error") in MISSING):
+                elif state == "unknown":
                     unknown.append(f"claim {rp['k']}: {got.get('error')}")
             if same:
                 row.update(state="open", reason=f"the repro of claim {', '.join(str(k) for k in same)} gives the old result on {commit[:12]}")

@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from .common import git_status, run_group, run_snippet, shell_quote
+from .common import git_status, repro_state, run_group, run_snippet, shell_quote
 
 MAX_RELATED_BYTES = 400_000
 # The number of related test files in one test command.
@@ -27,7 +27,10 @@ CACHE_PARTS = ("__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache")
 
 def changed_files(tree: Path) -> Optional[List[str]]:
     """Each path that differs from the commit of the worktree: changed, added, deleted, renamed or new.
-    None when git cannot read the status of the worktree."""
+    None when git cannot read the status of the worktree.
+
+    The list has no bytecode file and no file of a cache folder (`CACHE_PARTS`), tracked or not: a test run
+    writes them, so they are not a change of the worker."""
     entries = git_status(tree)
     if entries is None:
         return None
@@ -105,8 +108,13 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
     for b in spec["bugs"]:
         for r in b["repros"]:
             got = run_snippet(tree, info / r["file"], info / "home", import_root=spec.get("import_root") or "")
-            if got.get("ok") and got.get("result") == r["result_now"]:
+            state = repro_state(got, r["result_now"])
+            if state == "same":
                 problems.append(f"bug {b['id']}: the repro {r['file']} still gives the old result {r['result_now']!r}")
+            elif state == "unknown":
+                # The release gate does not close a bug on such a repro, so the check does not accept the fix.
+                problems.append(f"bug {b['id']}: the repro {r['file']} does not run after the change "
+                                f"({got.get('error')}: {str(got.get('message'))[:200]}). Keep the names that the repro uses")
     test_file = tree / spec["test_file"]
     if not test_file.exists():
         problems.append(f"the test file {spec['test_file']} does not exist")

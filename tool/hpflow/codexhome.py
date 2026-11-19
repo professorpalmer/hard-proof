@@ -13,7 +13,6 @@ token of the user. A refreshed auth.json goes back only when the file of the use
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import re
 import shutil
@@ -90,6 +89,21 @@ def toml_scan(line: str, depth: int, quote: Optional[str]) -> Tuple[int, Optiona
     return depth, quote
 
 
+# The escapes of a basic TOML string (TOML 1.0, and `\e` and `\xHH` of TOML 1.1).
+TOML_ESCAPE = re.compile(r"\\(u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8}|x[0-9A-Fa-f]{2}|.)")
+TOML_SIMPLE = {"b": "\b", "t": "\t", "n": "\n", "f": "\f", "r": "\r", "e": "\x1b", '"': '"', "\\": "\\"}
+
+
+def toml_unescape(m: "re.Match[str]") -> str:
+    """The character of one escape. An escape that TOML does not have stays as it is."""
+    code = m.group(1)
+    if code in TOML_SIMPLE:
+        return TOML_SIMPLE[code]
+    if len(code) > 1 and int(code[1:], 16) <= 0x10FFFF:
+        return chr(int(code[1:], 16))
+    return m.group(0)
+
+
 def first_key(text: str) -> Optional[str]:
     """The first part of the TOML key at the start of `text`: `a` for `a = 1`, `a.b = 1`, `"a".b = 1` and `'a' = 1`.
     None when the text does not start with a key."""
@@ -100,12 +114,7 @@ def first_key(text: str) -> Optional[str]:
             i += 2 if text[i] == "\\" else 1
         if i >= len(text):
             return None
-        try:
-            # A basic TOML string has the escapes of a JSON string.
-            value = json.loads(text[:i + 1])
-        except ValueError:
-            value = text[1:i]
-        return value if isinstance(value, str) else None
+        return TOML_ESCAPE.sub(toml_unescape, text[1:i])
     if text.startswith("'"):
         end = text.find("'", 1)
         return None if end == -1 else text[1:end]

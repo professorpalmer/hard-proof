@@ -62,7 +62,8 @@ REVIEW_CONTRACT = (
     "none, say so plainly.",
     "End your reply with exactly one line: `VERDICT: PASS - <summary>` or `VERDICT: FAIL - <the most important "
     "problem>` or `VERDICT: PARTIAL - <what you could not verify>`. Do not return findings JSON.")
-VERDICT_LINE = re.compile(r"^VERDICT:\s*(PASS|FAIL|PARTIAL)\s+[-–—]\s+(.+?)\s*$")
+# The space of a verdict line is a space or a tab. Each other character is content (see `common.lines_of`).
+VERDICT_LINE = re.compile(r"VERDICT:[ \t]*(PASS|FAIL|PARTIAL)[ \t]+[-–—][ \t]+(.*[^ \t])")
 LEFT_OPEN = re.compile(r"\{\{[^{}]*\}\}")
 SUCCESS_WHEN = ("always", "ok", "PASS")
 # Claude Code: a judge runs as `--permission-mode dontAsk` and has no write tool (puppetmaster/adapters/claude_code.py,

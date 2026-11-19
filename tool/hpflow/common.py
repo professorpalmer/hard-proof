@@ -9,6 +9,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import tempfile
 import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -247,36 +248,60 @@ def copy_tree(src: Path, dest: Path) -> None:
 
 RUNNER = r'''
 import sys, json, traceback
-sys.path.insert(0, sys.argv[1])
+root, path, result_file = sys.argv[1:4]
+sys.path.insert(0, root)
 sys.dont_write_bytecode = True
 ns = {}
 try:
-    exec(compile(open(sys.argv[2], encoding="utf-8").read(), sys.argv[2], "exec"), ns)
+    exec(compile(open(path, encoding="utf-8").read(), path, "exec"), ns)
     out = ns["run"]()
-    print(json.dumps({"ok": True, "result": out if isinstance(out, str) else repr(out)}))
+    result = {"ok": True, "result": out if isinstance(out, str) else repr(out)}
 except BaseException as e:
-    print(json.dumps({"ok": False, "error": type(e).__name__, "message": str(e)[:300],
-                      "where": traceback.format_exc().splitlines()[-3:]}))
+    result = {"ok": False, "error": type(e).__name__, "message": str(e)[:300],
+              "where": traceback.format_exc().split("\n")[-4:-1]}
+with open(result_file, "w", encoding="utf-8") as handle:
+    json.dump(result, handle)
 '''
 
 MISSING = ("ImportError", "AttributeError", "ModuleNotFoundError", "NameError")
+# A repro with one of these results did not run to an answer, so it says nothing about the code.
+NO_ANSWER = ("timeout", "no output") + MISSING
 
 
 def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, import_root: str = "") -> Dict[str, Any]:
     """Run `run()` of a snippet file with `tree` first on the import path. A separate process, no bytecode.
 
-    `import_root`: the folder inside `tree` that holds the top-level package, for example `src`."""
+    `import_root`: the folder inside `tree` that holds the top-level package, for example `src`.
+    The child writes its result to a file of its own. So text that the snippet or the code under test prints
+    is not read as the result."""
     home.mkdir(parents=True, exist_ok=True)
-    # The child runs in `tree`, so each path that it gets is absolute.
-    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str((tree / import_root).resolve()),
-                                str(snippet.resolve())], tree, timeout, env=snippet_env(home))
-    if code is None:
-        return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
-    line = [x for x in lines_of(out) if x.startswith("{")]
-    try:
-        return json.loads(line[-1]) if line else {"ok": False, "error": "no output", "message": err[-300:]}
-    except ValueError:
-        return {"ok": False, "error": "no output", "message": line[-1][:300]}
+    with tempfile.TemporaryDirectory(prefix="hpflow-repro-") as tmp:
+        result_file = Path(tmp) / "result.json"
+        # The child runs in `tree`, so each path that it gets is absolute.
+        code, _, err = run_group([sys.executable, "-I", "-c", RUNNER, str((tree / import_root).resolve()),
+                                  str(snippet.resolve()), str(result_file)], tree, timeout, env=snippet_env(home))
+        if code is None:
+            return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
+        try:
+            result = json.loads(result_file.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            result = None
+    if not isinstance(result, dict) or not isinstance(result.get("ok"), bool):
+        # The process ended before it wrote a result: the snippet or the code under test stopped the interpreter.
+        return {"ok": False, "error": "no output", "message": err[-300:]}
+    return result
+
+
+def repro_state(got: Dict[str, Any], result_before: str) -> str:
+    """What a repro says about the code after a change. `got` is the result of `run_snippet` on the new code, and
+    `result_before` is what `run()` gave on the code under audit.
+
+    "same": the old result, so the bug is there. "new": another result, or an exception of the code under test.
+    "unknown": the repro did not run to an answer (a timeout, a name that the new code does not have, or no
+    result), so it does not show that the bug is closed."""
+    if got.get("ok"):
+        return "same" if got.get("result") == result_before else "new"
+    return "unknown" if got.get("error") in NO_ANSWER else "new"
 
 
 def apply_cost_rule(steps: List[Dict[str, Any]]) -> Optional[Dict[str, float]]:
