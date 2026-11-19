@@ -190,9 +190,64 @@ def score() -> int:
     return 0
 
 
+def other() -> int:
+    """The second score: the findings that do not detect the known bug, and whose repro gives another result on
+    the newest release than on the code under review. Such a finding points at code that changed later.
+
+    Each arm has the score of all its runs, and in `first` the score of its first sample (the file with no `.rest`)."""
+    bugs = {b["id"]: b for b in json.loads((HERE / "bugs.json").read_text())}
+
+    def part(rows: list) -> dict:
+        s = {"runs": len(rows), "findings": 0, "with_repro_ok": 0, "hits": 0, "detected": 0, "other": 0, "other_changed_later": 0,
+             "cost_usd": round(sum(r.get("cost_usd") or 0 for r in rows), 2)}
+        for r in rows:
+            b = bugs[r["bug"]]
+            folder = RUNS / r["run"]
+            try:
+                findings = json.loads((folder / "findings.json").read_text())
+            except Exception:
+                findings = []
+            s["findings"] += len(findings)
+            hit = False
+            for f in findings:
+                snippet = folder / f"finding_{f.get('n')}.py"
+                if not snippet.exists():
+                    s["other"] += 1
+                    continue
+                pre, post = run_snippet(SRC / b["id"] / "pre", snippet), run_snippet(SRC / b["id"] / "post", snippet)
+                s["with_repro_ok"] += 1 if pre.get("ok") else 0
+                if not same(pre, post):
+                    s["hits"] += 1
+                    hit = True
+                    continue
+                s["other"] += 1
+                head = run_snippet(review.head_tree(b["repo"]), snippet)
+                s["other_changed_later"] += 1 if pre.get("ok") and head.get("ok") and pre["result"] != head["result"] else 0
+            s["detected"] += 1 if hit else 0
+        return s
+
+    def total(parts: list) -> dict:
+        s = {k: round(sum(x[k] for x in parts), 2) if k == "cost_usd" else sum(x[k] for x in parts) for k in parts[0]}
+        s["real_signal_per_100_runs"] = round(100 * (s["detected"] + s["other_changed_later"]) / max(1, s["runs"]), 1)
+        return s
+
+    table = {}
+    for path in sorted(OUT.glob("*.json")):
+        if path.name.startswith("score") or ".rest" in path.name:
+            continue
+        name = path.name.split(".")[0]
+        first = part(json.loads(path.read_text()))
+        rest = OUT / f"{name}.rest.json"
+        parts = [first] + ([part(json.loads(rest.read_text()))] if rest.exists() else [])
+        table[name] = dict(total(parts), first=total([first]))
+        print(name, json.dumps(table[name]), flush=True)
+    (OUT / "score_other.json").write_text(json.dumps(table, indent=1) + "\n", encoding="utf-8")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("cmd", choices=["run", "score"])
+    parser.add_argument("cmd", choices=["run", "score", "other"])
     parser.add_argument("arm", nargs="?", choices=sorted(ARMS))
     parser.add_argument("--n", type=int, default=24)
     parser.add_argument("--concurrency", type=int, default=4)
@@ -200,6 +255,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.cmd == "score":
         return score()
+    if args.cmd == "other":
+        return other()
     if not args.arm:
         parser.error("run needs an arm")
     return run(args.arm, args.n, args.concurrency, args.rest)

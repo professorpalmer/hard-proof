@@ -1,0 +1,166 @@
+{
+ "mode": "changed",
+ "changed": "72f53d4..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "16098036485118813338",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "toml_unescape",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    97,
+    104
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "07956237055123625726",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "first_key",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    107,
+    122
+   ],
+   "length": 16,
+   "source": "changed"
+  },
+  {
+   "id": "17600983525471700825",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_review",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    464,
+    576
+   ],
+   "length": 113,
+   "source": "changed"
+  },
+  {
+   "id": "09101078912975528771",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_gate",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    1030,
+    1096
+   ],
+   "length": 67,
+   "source": "changed"
+  },
+  {
+   "id": "03871173862184367309",
+   "file": "tool/hpflow/common.py",
+   "function": "run_snippet",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    271,
+    292
+   ],
+   "length": 22,
+   "source": "changed"
+  },
+  {
+   "id": "07287413171770640367",
+   "file": "tool/hpflow/common.py",
+   "function": "repro_state",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    295,
+    304
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "05032228860951233912",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "changed_files",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    28,
+    40
+   ],
+   "length": 13,
+   "source": "changed"
+  },
+  {
+   "id": "14278923741692573217",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "check",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    97,
+    145
+   ],
+   "length": 49,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LinesTest.test_a_verdict_is_a_line_of_its_own",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "GitStatusTest.test_a_cache_file_is_not_a_change_and_a_source_file_in_a_folder_named_cache_is_one",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.run_code",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.test_text_that_the_snippet_prints_is_not_the_result",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.test_an_exception_of_the_code_is_a_result",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.test_a_process_that_stops_with_no_result_has_no_output",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.test_the_state_of_a_repro_after_a_change",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ReproResultTest.test_a_fix_that_removes_the_name_of_the_repro_is_not_accepted",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_each_escape_of_a_quoted_key_is_read",
+   "reason": "test file"
+  }
+ ]
+}

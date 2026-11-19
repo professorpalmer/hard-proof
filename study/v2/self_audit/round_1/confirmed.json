@@ -1,0 +1,531 @@
+[
+ {
+  "id": "13588929894506790282",
+  "target": "02155893361307263068",
+  "file": "tool/hpflow/cli.py",
+  "function": "add_review",
+  "claim": "add_review accepts --passes 0 (or negative) without validation. The review command rejects it in run_command, but the audit command reuses add_review and does not, so audit runs zero review jobs.",
+  "claims": [
+   1
+  ],
+  "result_now": "0",
+  "what_goes_wrong": "`hpflow audit --passes 0` is not checked (only the review branch checks it), so the audit runs zero review jobs and goes on to verify with no reviews, with no error.",
+  "caller": "project/tool/hpflow/cli.py:173",
+  "severity": "medium",
+  "fix_idea": "Validate passes >= 1 in the audit branch too (or in cmd_review, or with a positive-int argparse type in add_review).",
+  "repros": [
+   {
+    "finding": "18015251002581807416-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/18015251002581807416/finding_1.py",
+    "result_now": "0"
+   }
+  ]
+ },
+ {
+  "id": "16132181360137583235",
+  "target": "02155893361307263068",
+  "file": "tool/hpflow/cli.py",
+  "function": "add_review",
+  "claim": "add_review accepts --group-size 0 or a negative value. With --group file, review_groups then calls range with step 0, which raises ValueError.",
+  "claims": [
+   2
+  ],
+  "result_now": "0",
+  "what_goes_wrong": "`--group file --group-size 0` (in review or audit) crashes review_groups with a ValueError from range step 0, and a negative size silently yields no groups so nothing is reviewed.",
+  "caller": "project/tool/hpflow/cli.py:145",
+  "severity": "low",
+  "fix_idea": "Use a positive-int argparse type for --group-size, or check group_size >= 1 in run_command for both review and audit.",
+  "repros": [
+   {
+    "finding": "18015251002581807416-2",
+    "k": 2,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/18015251002581807416/finding_2.py",
+    "result_now": "0"
+   }
+  ]
+ },
+ {
+  "id": "15606668522534522981",
+  "target": "05762297998326274335",
+  "file": "tool/hpflow/cli.py",
+  "function": "add_init",
+  "claim": "cmd_init (behind add_init) never raises its 'no package folder found: give --paths' error when the repository has a README.md, docs, tests or pyproject.toml, because those extra paths are appended before the 'if not paths' check. A repo with no package gets an audit of only README.md.",
+  "claims": [
+   1
+  ],
+  "result_now": "['README.md']",
+  "what_goes_wrong": "On a repo with no package folder but with a README.md, docs, tests or pyproject.toml, `hpflow init`/`audit` without --paths silently audits only those extra files instead of failing with the 'no package folder ... give --paths' error.",
+  "caller": "project/tool/hpflow/cli.py:116",
+  "severity": "medium",
+  "fix_idea": "Check for an empty package list before appending EXTRA_PATHS and raise the UsageError then.",
+  "repros": [
+   {
+    "finding": "09930905310343029902-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/09930905310343029902/finding_1.py",
+    "result_now": "['README.md']"
+   }
+  ]
+ },
+ {
+  "id": "08721224723353075832",
+  "target": "07510137286282714691",
+  "file": "tool/hpflow/cli.py",
+  "function": "run_command",
+  "claim": "The audit branch of run_command does not check that --passes is 1 or more, unlike the review branch, so audit with --passes 0 runs the review with zero passes (no reviewer jobs) and goes on.",
+  "claims": [
+   1
+  ],
+  "result_now": "(True, {'passes': 0})",
+  "what_goes_wrong": "`hpflow audit --passes 0` skips the `--passes must be 1 or more` check, so the review step runs with zero passes and creates no reviewer jobs, and audit then verifies and reports on an empty review instead of failing with a usage error.",
+  "caller": "project/tool/hpflow/cli.py:173 (main calls run_command(args, ctx); the audit branch passes args.passes to c.cmd_review)",
+  "severity": "medium",
+  "fix_idea": "Move the `passes < 1` check to the top of run_command, or into the audit pre-checks before init runs, so it covers both review and audit.",
+  "repros": [
+   {
+    "finding": "08562235304473369252-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/08562235304473369252/finding_1.py",
+    "result_now": "(True, {'passes': 0})"
+   }
+  ]
+ },
+ {
+  "id": "14492454759435710788",
+  "target": "13230866170839619463",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "prepare",
+  "claim": "prepare copies the user AGENTS.md into the lean home but never removes it when the user AGENTS.md is later deleted, so the worker keeps stale global instructions.",
+  "claims": [
+   1
+  ],
+  "result_now": "True",
+  "what_goes_wrong": "After the user deletes their global AGENTS.md, prepare() never removes the copy in the lean home, so Codex workers keep receiving the stale global instructions.",
+  "caller": "project/tool/hpflow/direct.py:370",
+  "severity": "low",
+  "fix_idea": "In prepare(), add an else branch that unlinks home/AGENTS.md (missing_ok) when the user's AGENTS.md does not exist.",
+  "repros": [
+   {
+    "finding": "10858276251671740677-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/10858276251671740677/finding_1.py",
+    "result_now": "True"
+   }
+  ]
+ },
+ {
+  "id": "16810337232921426784",
+  "target": "14443072037502298895",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "lean_config",
+  "claim": "Inside a dropped table, a continuation line of a multi-line array that starts with '[' (a nested array) is taken for a table header, so dropping stops and the rest of the mcp_servers table leaks into the lean config.",
+  "claims": [
+   1
+  ],
+  "result_now": "'[\"a\"],\\n]\\nk=1\\n[t]\\na=1\\n'",
+  "what_goes_wrong": "A continuation line starting with '[' (nested array) inside a dropped multi-line value is treated as a table header, so dropping stops and the rest of the mcp_servers table leaks into the worker's lean config.toml, defeating the lean home and possibly producing invalid TOML.",
+  "caller": "project/tool/hpflow/direct.py:370",
+  "severity": "low",
+  "fix_idea": "While dropping, track bracket depth of multi-line values as the notify branch does, and only treat a line as a header when depth is zero.",
+  "repros": [
+   {
+    "finding": "02920954910121159690-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/02920954910121159690/finding_1.py",
+    "result_now": "'[\"a\"],\\n]\\nk=1\\n[t]\\na=1\\n'"
+   }
+  ]
+ },
+ {
+  "id": "06239315480398102936",
+  "target": "00360003531955294043",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_fix",
+  "claim": "cmd_fix groups confirmed bugs by slug_of(file), which is lossy: pkg/a_b.py, pkg/a-b.py and pkg/a/b.py all give the same slug. Their bugs land in one group with the first file, so one worktree, branch hpfix/<slug> and test file are shared and the bugs of the other files are fixed against the wrong file.",
+  "claims": [
+   1
+  ],
+  "result_now": "('pkg-a-b', 'pkg-a-b', 'pkg-a-b')",
+  "what_goes_wrong": "When confirmed bugs sit in two files whose paths slug the same (e.g. pkg/a_b.py and pkg/a/b.py), cmd_fix merges them into one group keyed by the first file, so one worktree, branch and test file is shared and the second file's bugs are fixed against the wrong file.",
+  "caller": "project/tool/hpflow/cli.py:150",
+  "severity": "medium",
+  "fix_idea": "Group by the file path itself, and make the slug unique by appending a short digest of the path (or deduplicating collisions) for the worktree, branch and test file names.",
+  "repros": [
+   {
+    "finding": "05424015053938666786-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/05424015053938666786/finding_1.py",
+    "result_now": "('pkg-a-b', 'pkg-a-b', 'pkg-a-b')"
+   }
+  ]
+ },
+ {
+  "id": "09247955514158841285",
+  "target": "01839987994575891253",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_targets",
+  "claim": "For a pure-deletion hunk (new count 0), parse_diff widens the new-side range to (start, start+1), so the unchanged function that starts on the line right after the deletion is reported as a changed target. Here only a blank line between f and g was deleted, yet g is listed.",
+  "claims": [
+   1
+  ],
+  "result_now": "['pkg/m.py:g']",
+  "what_goes_wrong": "A pure-deletion hunk (new count 0) is widened to (start, start+1), so an unchanged function starting right after the deletion is listed as a changed target and audited needlessly.",
+  "caller": "project/tool/hpflow/cli.py:141",
+  "severity": "low",
+  "fix_idea": "For count 0 on the new side use (start, start), the line before the deletion, instead of (start, start+1). The project has no tests or docs covering the widening, so it is undocumented.",
+  "repros": [
+   {
+    "finding": "08085658009177513163-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/08085658009177513163/finding_1.py",
+    "result_now": "['pkg/m.py:g']"
+   }
+  ]
+ },
+ {
+  "id": "16956095391239508622",
+  "target": "03178102624379231897",
+  "file": "tool/hpflow/commands.py",
+  "function": "adapter_key",
+  "claim": "For the command adapter the effort is never passed to the tool (payload() sets no effort for it, and --effort only applies to claude-code and codex workers), but adapter_key still adds 'effort=high' to the record id, so changing --effort changes the ids and discards valid stored records.",
+  "claims": [
+   1
+  ],
+  "result_now": "(['command', 'mytool run', 'effort=high'], ['command', 'mytool run'])",
+  "what_goes_wrong": "With --adapter command, changing --effort (which the command adapter ignores) changes the record id, so valid stored records are not reused and the worker runs again.",
+  "caller": "project/tool/hpflow/commands.py:390",
+  "severity": "low",
+  "fix_idea": "In adapter_key, add the effort part only when adapter != adapters.COMMAND.",
+  "repros": [
+   {
+    "finding": "07664950029411656566-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/07664950029411656566/finding_1.py",
+    "result_now": "(['command', 'mytool run', 'effort=high'], ['command', 'mytool run'])"
+   }
+  ]
+ },
+ {
+  "id": "07392216187638439518",
+  "target": "03224574987867754209",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_verify",
+  "claim": "In cmd_verify the worker key from adapter_key() is overwritten by the loop variable `key` (the group key), so the record id of a verify run no longer depends on the adapter, command template or effort; it unpacks the group key string into characters instead.",
+  "claims": [
+   1
+  ],
+  "result_now": "True",
+  "what_goes_wrong": "The loop at line 523 reuses the name `key`, so `*key` in the run id splats the characters of the last group key instead of the adapter/template/effort list; running verify with a different --effort, adapter or agent command reuses stored results from the other worker setup.",
+  "caller": "project/tool/hpflow/cli.py:148",
+  "severity": "medium",
+  "fix_idea": "Rename the loop variable (e.g. gkey) so the worker key from adapter_key stays intact for the record ids in one().",
+  "repros": [
+   {
+    "finding": "08811655634389097402-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/08811655634389097402/finding_1.py",
+    "result_now": "True"
+   }
+  ]
+ },
+ {
+  "id": "06133170322763586013",
+  "target": "03544337131901868586",
+  "file": "tool/hpflow/commands.py",
+  "function": "make_target",
+  "claim": "The target id is a digest of only file and function name, so two distinct functions with the same qualified name in one file (e.g. a property getter and its setter) get the same id; cmd_targets then drops the later one as a duplicate and never reviews it.",
+  "claims": [
+   1
+  ],
+  "result_now": "(True, [3, 5], [7, 9])",
+  "what_goes_wrong": "Two functions with the same qualified name in one file (property getter and setter, or a redefined function) get the same id, so cmd_targets drops the later one as a duplicate and it is never reviewed or listed as skipped.",
+  "caller": "project/tool/hpflow/commands.py:335",
+  "severity": "medium",
+  "fix_idea": "Include the start line in the digest, or add an index for repeated names. Alternatively, record the dropped duplicate in skipped.",
+  "repros": [
+   {
+    "finding": "03267688095341470040-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/03267688095341470040/finding_1.py",
+    "result_now": "(True, [3, 5], [7, 9])"
+   }
+  ]
+ },
+ {
+  "id": "00572485564892820360",
+  "target": "03871534363342841817",
+  "file": "tool/hpflow/commands.py",
+  "function": "fixcheck_command",
+  "claim": "On Windows the boot code puts TOOL_DIR in a raw string r'...' without escaping, so a folder name with an apostrophe (e.g. C:\\Users\\O'Brien\\hpflow) gives a Python syntax error and the fix check cannot start.",
+  "claims": [
+   1
+  ],
+  "result_now": "'SyntaxError'",
+  "what_goes_wrong": "On Windows, if hpflow is installed in a folder whose name contains an apostrophe (e.g. C:\\Users\\O'Brien\\hpflow), the boot code r'...' is a Python syntax error, so the fix check shell node fails and every fix flow cannot be verified.",
+  "caller": "project/tool/hpflow/commands.py:686",
+  "severity": "medium",
+  "fix_idea": "Build the path literal with repr(str(TOOL_DIR)) (and escape for cmd.exe double quotes), or pass the folder as an argument instead of embedding it in the code.",
+  "repros": [
+   {
+    "finding": "10503347006714223878-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/10503347006714223878/finding_1.py",
+    "result_now": "'SyntaxError'"
+   }
+  ]
+ },
+ {
+  "id": "02837674182724830378",
+  "target": "07705665422700961594",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_init",
+  "claim": "When no package folder is found (here the package is under src/ and no import_root is given), the 'no package folder found' check never fires because EXTRA_PATHS (tests, README.md) are appended to paths before the emptiness test. init succeeds with an audit of only tests and README.md.",
+  "claims": [
+   1
+  ],
+  "result_now": "['tests', 'README.md']",
+  "what_goes_wrong": "For a src/ layout without --import-root, init succeeds and snapshots only tests and README.md instead of raising the 'no package folder' UsageError, so the audit silently covers no product code.",
+  "caller": "tool/hpflow/cli.py:139",
+  "severity": "medium",
+  "fix_idea": "Run the emptiness check on the package folders before appending EXTRA_PATHS (build the package list first, raise if empty, then add the extras).",
+  "repros": [
+   {
+    "finding": "07143951385461438899-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/07143951385461438899/finding_1.py",
+    "result_now": "['tests', 'README.md']"
+   }
+  ]
+ },
+ {
+  "id": "06106593118328086805",
+  "target": "17600983525471700825",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_review",
+  "claim": "The run id (cache key) of a review worker does not include short_prompt, although short_prompt changes the system prompt and the brief. A review with short_prompt=True reuses the stored record of an earlier run without it, and no worker runs.",
+  "claims": [
+   1
+  ],
+  "result_now": "(0, 1, 1)",
+  "what_goes_wrong": "Running `review` again with --short-prompt on the same commit, model and passes reuses the stored default-prompt records, so no worker runs and the user gets results from the wrong prompt without being told.",
+  "caller": "project/tool/hpflow/cli.py:145",
+  "severity": "medium",
+  "fix_idea": "Add a short-prompt marker to the digest inputs of rid when short_prompt is true, leaving the id unchanged when false so old records stay valid.",
+  "repros": [
+   {
+    "finding": "07253149336671163105-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/07253149336671163105/finding_1.py",
+    "result_now": "(0, 1, 1)"
+   }
+  ]
+ },
+ {
+  "id": "00298281069382387532",
+  "target": "01806753751857746099",
+  "file": "tool/hpflow/common.py",
+  "function": "shell_quote",
+  "claim": "On Windows shell_quote uses subprocess.list2cmdline, which only quotes whitespace and quotes, so an argument with cmd.exe metacharacters (& | < > ^ %) and no space is left bare. cmd.exe (used by the shell=True callers) then treats the metacharacter as an operator.",
+  "claims": [
+   1
+  ],
+  "result_now": "'a&calc'",
+  "what_goes_wrong": "On Windows a path containing & (or | < > ^) but no space, e.g. an output folder like C:\\R&D\\out, is passed bare to cmd.exe via shell=True, so cmd splits the command at the metacharacter and the fix script check fails or runs a stray command.",
+  "caller": "project/tool/hpflow/commands.py:671",
+  "severity": "medium",
+  "fix_idea": "On Windows, wrap the list2cmdline result in double quotes when it contains cmd metacharacters (& | < > ^ %) and is not already quoted, or escape them with ^.",
+  "repros": [
+   {
+    "finding": "12661550910444211178-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/12661550910444211178/finding_1.py",
+    "result_now": "'a&calc'"
+   }
+  ]
+ },
+ {
+  "id": "00373513103594473632",
+  "target": "10348745006136304571",
+  "file": "tool/hpflow/common.py",
+  "function": "run_group",
+  "claim": "When the command exits at once but leaves a background child that keeps the stdout/stderr pipes open, communicate() waits for the pipe EOF until the timeout, so run_group reports a timeout (exit code None) for a command that finished with exit code 0. The group is only killed after communicate returns, so the comment about a child that outlives its leader is not honoured in time.",
+  "claims": [
+   1
+  ],
+  "result_now": "(None, 'done\\n', '')",
+  "what_goes_wrong": "A shell node whose command exits 0 but leaves a background child holding the stdout/stderr pipes (e.g. `server &`) blocks in communicate() until the timeout (default 600 s), then is reported as timed out (code None) instead of success.",
+  "caller": "project/tool/hpflow/direct.py:345",
+  "severity": "medium",
+  "fix_idea": "After the leader exits (poll p.wait), kill the group first, then drain the pipes with a short timeout; or read the pipes in threads and stop waiting on EOF once the leader is gone.",
+  "repros": [
+   {
+    "finding": "13445005061146518357-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/13445005061146518357/finding_1.py",
+    "result_now": "(None, 'done\\n', '')"
+   }
+  ]
+ },
+ {
+  "id": "02607405414175906755",
+  "target": "03266018222155344742",
+  "file": "tool/hpflow/direct.py",
+  "function": "DirectRunner._next",
+  "claim": "When a matching edge has reached its max count, _next returns \"stuck\" at once instead of skipping that edge and trying later matching edges. The flows in runner.py and commands.py rely on a fallback edge (e.g. check fail -> failed, review PARTIAL -> done) after the capped retry edge.",
+  "claims": [
+   1
+  ],
+  "result_now": "'stuck'",
+  "what_goes_wrong": "Once a capped retry edge is used up, _next returns 'stuck' instead of falling through to the next matching edge, so a second review PARTIAL never reaches 'done' and a second failed check ends as 'stuck' rather than 'failed' (the fallback edges are dead code).",
+  "caller": "project/tool/hpflow/direct.py:311",
+  "severity": "medium",
+  "fix_idea": "In the loop, replace the early return with `continue` when an edge's max is reached, so later matching edges are tried; only return 'stuck' if none remain.",
+  "repros": [
+   {
+    "finding": "14137462156215580229-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/14137462156215580229/finding_1.py",
+    "result_now": "'stuck'"
+   }
+  ]
+ },
+ {
+  "id": "04330528351087470433",
+  "target": "06042924785074913848",
+  "file": "tool/hpflow/direct.py",
+  "function": "DirectRunner.run",
+  "claim": "In DirectRunner._next, when a matching edge has used up its `max`, the function returns \"stuck\" at once instead of skipping that edge and trying the next matching edge (for example the fail -> failed edge, or PARTIAL -> done after the PARTIAL -> build max 1 edge).",
+  "claims": [
+   1
+  ],
+  "result_now": "'stuck'",
+  "what_goes_wrong": "When a repair edge (or the review PARTIAL -> build edge) has used up its max, _next returns 'stuck' instead of falling through to the next matching edge, so a graph whose check keeps failing ends as 'stuck' instead of 'failed', and a PARTIAL review never reaches the 'done' edge.",
+  "caller": "project/tool/hpflow/runner.py:33",
+  "severity": "medium",
+  "fix_idea": "In _next, use `continue` instead of `return \"stuck\"` when an edge's max is used up, so the next matching edge is tried; keep the final fallback.",
+  "repros": [
+   {
+    "finding": "16017742532082021082-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/16017742532082021082/finding_1.py",
+    "result_now": "'stuck'"
+   }
+  ]
+ },
+ {
+  "id": "05763802103927367882",
+  "target": "10917467683983653822",
+  "file": "tool/hpflow/direct.py",
+  "function": "edge_matches",
+  "claim": "A verdict edge (PASS/FAIL/PARTIAL) matches a node that did not run ok (ok=False, e.g. timeout or non-zero exit) when its output still holds a VERDICT line, so a failed judge or shell step can follow a PASS edge to done.",
+  "claims": [
+   1
+  ],
+  "result_now": "True",
+  "what_goes_wrong": "A judge run that ended with ok=False (non-zero exit, or is_error result) but whose message still ends in a VERDICT: PASS line follows the PASS edge to done, so a failed review passes the fix.",
+  "caller": "project/tool/hpflow/direct.py:333",
+  "severity": "medium",
+  "fix_idea": "In edge_matches return `ok and verdict == when` for verdict edges (or clear the verdict in _agent/_shell when ok is False).",
+  "repros": [
+   {
+    "finding": "04039098128121226550-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/04039098128121226550/finding_1.py",
+    "result_now": "True"
+   }
+  ]
+ },
+ {
+  "id": "16342350100335199472",
+  "target": "14137428619574306323",
+  "file": "tool/hpflow/direct.py",
+  "function": "json_lines",
+  "claim": "json_lines uses str.splitlines(), which also splits on U+2028, U+2029, U+0085, \\x0b, \\x0c and \\x1c-\\x1e. A JSON event line whose string value holds such a raw character (valid JSON, as json.dumps ensure_ascii=False emits it) is cut in pieces, fails to parse, and the event is silently dropped.",
+  "claims": [
+   1
+  ],
+  "result_now": "[]",
+  "what_goes_wrong": "When an agent's final message (or any event string) contains a raw U+2028/U+2029/U+0085/\\x0b/\\x0c/\\x1c-\\x1e character, which JSON emitters like Node's JSON.stringify leave unescaped, the event line is split, fails to parse and is dropped, so the run is judged not done (no result event) or loses its message, session and cost.",
+  "caller": "project/tool/hpflow/direct.py:387",
+  "severity": "medium",
+  "fix_idea": "Split only on newline, e.g. text.split(\"\\n\") (strip handles \\r), so JSON strings with those characters stay intact.",
+  "repros": [
+   {
+    "finding": "14780611360214347110-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/14780611360214347110/finding_1.py",
+    "result_now": "[]"
+   }
+  ]
+ },
+ {
+  "id": "05654050857033536188",
+  "target": "14693988984668623332",
+  "file": "tool/hpflow/direct.py",
+  "function": "DirectRunner._run",
+  "claim": "When an edge with `max` is used up, `_next` returns \"stuck\" at once instead of skipping it and taking the next matching edge (e.g. check->failed on fail, or review->done on PARTIAL). Graphs from agent_graph/fix_graph rely on that fallback edge, so a check that keeps failing ends as 'stuck' instead of 'failed'.",
+  "claims": [
+   1
+  ],
+  "result_now": "('stuck', ['work', 'check', 'work', 'check'])",
+  "what_goes_wrong": "When a max-limited repair edge is used up, _next returns 'stuck' instead of falling through to the next matching edge (check->failed, review->done on PARTIAL), so a check that keeps failing ends 'stuck' and a PARTIAL review never reaches done.",
+  "caller": "project/tool/hpflow/commands.py:415",
+  "severity": "high",
+  "fix_idea": "In _next, use 'continue' instead of returning 'stuck' when an edge's max is used up, so later matching edges (the fallback to failed/done) are tried; return stuck only if none matches.",
+  "repros": [
+   {
+    "finding": "17423924498250050932-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/17423924498250050932/finding_1.py",
+    "result_now": "('stuck', ['work', 'check', 'work', 'check'])"
+   }
+  ]
+ },
+ {
+  "id": "08095460053448430720",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "The related-test search only matches 'import mod', '.mod ' or the stem in the file name. A test that uses plain `import pkg.mod` (line ends right after the module name) is not found, so its failure is not reported although step 4 says tests that name the changed module must pass.",
+  "claims": [
+   1
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "A repository test that does `import pkg.mod` (line ends right after the module name) is not selected as related, so a fix that breaks it is accepted although step 4 requires such tests to pass.",
+  "caller": "project/tool/hpflow/commands.py:786",
+  "severity": "medium",
+  "fix_idea": "Match the module with a regex such as a word-boundary match on the stem in import lines (or the dotted module path from spec['file']), so line-end and `from pkg import mod` forms are found.",
+  "repros": [
+   {
+    "finding": "11079101717032543917-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/11079101717032543917/finding_1.py",
+    "result_now": "'accept'"
+   }
+  ]
+ },
+ {
+  "id": "13111693055194730273",
+  "target": "09415493161010385906",
+  "file": "tool/hpflow/runner.py",
+  "function": "agent_graph",
+  "claim": "The check node's fail edge back to the work node has max=repairs and comes before the fail edge to \"failed\". Once the repairs are used up (or with repairs=0), DirectRunner._next returns \"stuck\" at that first matching edge, so the fallback edge to \"failed\" is never reached. A failing check ends as stuck, not failed.",
+  "claims": [
+   1
+  ],
+  "result_now": "['work', 'stuck']",
+  "what_goes_wrong": "When the check still fails after the repair is used up, the run ends with status 'stuck' instead of 'failed', because the fail edge with max comes first and _next returns 'stuck' on exhaustion, so the fallback edge to 'failed' is dead code.",
+  "caller": "project/tool/hpflow/commands.py:415",
+  "severity": "low",
+  "fix_idea": "Put the unconditional fail edge to 'failed' so it is reached when the max edge is exhausted, or have _next skip an exhausted edge and try the next matching edge instead of returning 'stuck'.",
+  "repros": [
+   {
+    "finding": "14313980585201396780-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-full/runs/14313980585201396780/finding_1.py",
+    "result_now": "['work', 'stuck']"
+   }
+  ]
+ }
+]

@@ -565,17 +565,27 @@ the visit before it.
   bugs, 17 and 33 for 7.24 US dollars; the defaults of 0.5 on the same 48, 18
   and 34 for 5.25; the defaults of 0.5 on all 95, 36 and 66. The runner of 0.5
   against Puppetmaster with one set of arguments on all 95: 36 and 60 against
-  34 and 58. `--short-prompt` on all 95: 35 and 56, and 29 and 51
+  34 and 59 (58 in one of three score runs: one repro has no stable result). `--short-prompt` on all 95: 35 and 56, and 29 and 51
   in a second run. Haiku as the reviewer found 4 of 48, and a lower effort
   found 15 of 48 against 19, so neither is a default.
 - One pass finds about a third of the known bugs, and each pass finds other
-  ones: two passes together found 42 of 95. `--passes 2` costs twice the
+  ones: two passes with one set of arguments found 34 and 36, and 45 of 95
+  together. `--passes 2` costs twice the
   review.
 - Live runs of 0.5 with no Puppetmaster: `audit`, `fix` and `gate` on Claude
   Code (20 functions, 5 confirmed bugs, 5 accepted fixes, gate pass); `review`
   and `verify` on Codex; `review` and `verify` through `--adapter command`
   with opencode on OpenRouter (3 confirmed bugs on two functions). `fix` has
   no live run on Codex or on the `command` adapter.
+- The audit of 0.5 on its own release (`hpf` on `hpflow-v0.4.2..HEAD`, then on
+  each set of fixes): 7 rounds, 55 confirmed bugs, 52 closed by their repro
+  and 3 with a waiver, 34.54 US dollars. The last round confirmed nothing.
+  Confirmed bugs for each round: 23, 10, 7, 5, 6, 4, 0. A reviewer reads the
+  whole function each time a line of it changes, so a round on fixes also
+  finds older gaps. Three findings of the last round have no caller that
+  reaches them and are open: an escape for a surrogate in a quoted key of the
+  Codex configuration becomes a character, and a relative home folder of a
+  repro is relative to the source tree.
 - Windows: the tests of the ladder run there in CI. No live agent run was made
   on Windows. A child process that outlives its parent is not ended there.
 - Lean certificates (the proof gate `hp`) are not part of the ladder. Use

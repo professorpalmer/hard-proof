@@ -85,6 +85,12 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
     lean = json.loads((ROOT / "v2" / "cost_cut.json").read_text())["runs"][-1]
     first = json.loads((ROOT / "v2" / "cost_cut.json").read_text())["runs"][0]
     rr = json.loads((ROOT / "v2" / "gate_live.json").read_text())["release_runs"]
+    rel = json.loads((ROOT / "v2" / "release_050.json").read_text())
+    now = rel["same_range"][1:]
+    now_cost = sum(r["cost_usd"] for r in now) / len(now)
+    now_wall = sum(r["wall_seconds"] for r in now) / len(now)
+    known = {k["arm"]: k for k in rel["known_bugs"]}
+    final, old_arm, sa = known["direct_final"], known["lean"], rel["self_audit"]
     return f"""<section>
 <span class="step">14 · Use it</span>
 <h2>A review with receipts for all code. A proof for the rules that matter.</h2>
@@ -92,12 +98,13 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
 <div class="scroll"><table>
 <thead><tr><th>Step</th><th>Measured cost</th></tr></thead>
 <tbody>
-<tr><td>Review and verifiers for one changed function</td><td>${lean['cost_usd'] / lean['targets']:.2f}</td></tr>
-<tr><td>One release range: {lean['targets']} functions, {lean['confirmed_bugs']} confirmed bugs</td><td>${lean['cost_usd']:.2f}</td></tr>
+<tr><td>Review and verifiers for one changed function</td><td>${now_cost / now[0]['targets']:.2f}</td></tr>
+<tr><td>One release range of {now[0]['targets']} functions (mean of {len(now)} runs)</td><td>${now_cost:.2f}</td></tr>
 <tr><td>The full proof pipeline for one function</td><td>${pc['cost_mean_usd']:.2f}</td></tr>
 <tr><td>The proof of one decision table</td><td>about ten minutes, no worker</td></tr>
 </tbody></table></div>
-<p>The first form of the audit cost ${first['cost_usd']:.2f} for that range. Most of it was the start text of each worker session: about 83,000 tokens of user settings, rules and tool lists before any work. A lean worker without that text, and a second verifier that runs only where the first says "real", brought it to ${lean['cost_usd']:.2f} with {lean['confirmed_bugs']} confirmed bugs against {first['confirmed_bugs']}.</p>
+<p>The first form of the audit cost ${first['cost_usd']:.2f} for that range. Most of it was the start text of each worker session: about 83,000 tokens of user settings, rules and tool lists before any work. A lean worker without that text, and a second verifier that runs only where the first says "real", brought it to ${lean['cost_usd']:.2f} with {lean['confirmed_bugs']} confirmed bugs against {first['confirmed_bugs']}. Version 0.5 gives a worker six tools and medium effort: three runs of that range cost ${now_cost:.2f} in the mean and took {now_wall / 60:.0f} minutes. On {final['first_48']['runs']} known bugs the cheaper worker detected {final['first_48']['detected']}, against {old_arm['first_48']['detected']} for the worker before it.</p>
+<p>Version 0.5 needs no orchestrator. It starts its workers with Claude Code, with Codex, or with any agent tool through a command template. Before its release we ran the tool on its own release range and then on each set of fixes: {len(sa['rounds'])} rounds, {sa['confirmed_bugs']} confirmed bugs, ${sa['cost_usd']:.2f}. The last round confirmed nothing, and the gate passes at the release commit.</p>
 <p>The two tools are one package, <code>hpflow</code>, on PyPI and in the repository. <code>hpf</code> audits the functions that changed in a git range, and its last step is a gate with no model call: each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. On our stored audit, the gate failed on Puppetmaster {a['ref'].lstrip('v')} with {a['open']} open bugs and passed on {b['ref'].lstrip('v')} with {b['closed']} closed. <code>hp</code> is the proof gate for one Python function.</p>
 <p>The gate now runs before each release of our two products. In its first {len(rr)} release runs it looked at {sum(r['targets'] for r in rr)} changed functions for ${sum(r['review_cost_usd'] + r['verify_cost_usd'] for r in rr):.2f}. One time it stopped a release: the range had our own fixes, and the audit confirmed {max(r['confirmed_bugs'] for r in rr)} bugs in them. We corrected the {max(r['confirmed_bugs'] for r in rr)}, and the gate passed.</p>
 <pre class="hp-theorem">pip install hpflow
@@ -105,7 +112,7 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
 hpf fix   --out ~/audits/next
 hpf gate  --out ~/audits/next --ref HEAD</pre>
-<p class="note">The audit and the fix step need the Puppetmaster command line and Claude Code. The fix step never commits: a human reviews each fix. A pass of the gate does not say that the code has no bug. The tools are a first version, for Python, with tests on our own two products only.</p>
+<p class="note">The audit and the fix step need one agent tool with a login, and no other package. The fix step never commits: a human reviews each fix. A pass of the gate does not say that the code has no bug. The tools are a first version, for Python, with tests on our own products only.</p>
 <div class="hp-links"><a class="button" href="https://pypi.org/project/hpflow/">hpflow on PyPI</a><a class="button ghost" href="{REPO_URL}/blob/main/docs/USE.md">Guide in the repository</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
 </section>"""
 

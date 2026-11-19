@@ -1,0 +1,280 @@
+{
+ "mode": "changed",
+ "changed": "82c9d81..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "07956237055123625726",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "first_key",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    93,
+    113
+   ],
+   "length": 21,
+   "source": "changed"
+  },
+  {
+   "id": "14443072037502298895",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "lean_config",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    116,
+    143
+   ],
+   "length": 28,
+   "source": "changed"
+  },
+  {
+   "id": "11316349058364697973",
+   "file": "tool/hpflow/commands.py",
+   "function": "functions_of",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    228,
+    268
+   ],
+   "length": 41,
+   "source": "changed"
+  },
+  {
+   "id": "17338322090925464872",
+   "file": "tool/hpflow/commands.py",
+   "function": "slug_of",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    743,
+    752
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "10348745006136304571",
+   "file": "tool/hpflow/common.py",
+   "function": "run_group",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    108,
+    148
+   ],
+   "length": 41,
+   "source": "changed"
+  },
+  {
+   "id": "03010762893332851426",
+   "file": "tool/hpflow/common.py",
+   "function": "decode",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    175,
+    179
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "08960885625160912820",
+   "file": "tool/hpflow/common.py",
+   "function": "git",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    201,
+    209
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "06297670989933492001",
+   "file": "tool/hpflow/common.py",
+   "function": "git_status",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    212,
+    235
+   ],
+   "length": 24,
+   "source": "changed"
+  },
+  {
+   "id": "03871173862184367309",
+   "file": "tool/hpflow/common.py",
+   "function": "run_snippet",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    265,
+    279
+   ],
+   "length": 15,
+   "source": "changed"
+  },
+  {
+   "id": "15122288464095360235",
+   "file": "tool/hpflow/direct.py",
+   "function": "parse_verdict",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    77,
+    85
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "05032228860951233912",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "changed_files",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    28,
+    37
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "10753565015846777128",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "out_of_scope",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    50,
+    53
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "03294827256221757034",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "module_name",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    56,
+    60
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "14278923741692573217",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "check",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    94,
+    137
+   ],
+   "length": 44,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LinesTest.test_a_verdict_is_a_line_of_its_own",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "GitStatusTest.test_a_rename_in_the_work_tree_column_has_its_source",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "GitStatusTest.test_a_name_with_a_carriage_return_is_the_real_name",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "GitStatusTest.test_a_file_from_git_keeps_its_carriage_returns",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ScopeCheckTest.test_no_git_status_is_not_a_pass_of_the_scope_check",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "SnippetPathTest.test_a_relative_tree_and_a_relative_snippet_run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "FunctionsOfTest.test_a_definition_in_a_block_statement_is_a_function_of_the_module",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "FunctionsOfTest.test_a_definition_in_a_case_of_a_match_statement",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "SlugTest.test_a_slug_is_never_empty",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ModuleNameTest.test_the_module_of_an_init_file_is_its_package",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ModuleNameTest.test_a_test_that_imports_the_package_is_related_to_its_init_file",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "RelatedTestsTest.test_each_related_test_file_runs",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_a_dropped_table_goes_in_each_form",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_another_table_or_key_with_a_name_that_starts_the_same_stays",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_the_first_part_of_a_key",
+   "reason": "test file"
+  }
+ ]
+}

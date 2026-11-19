@@ -1,0 +1,209 @@
+{
+ "mode": "changed",
+ "changed": "bc1f34a..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "10753518477892660378",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "toml_scan",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    44,
+    80
+   ],
+   "length": 37,
+   "source": "changed"
+  },
+  {
+   "id": "14443072037502298895",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "lean_config",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    83,
+    105
+   ],
+   "length": 23,
+   "source": "changed"
+  },
+  {
+   "id": "08314160811586169040",
+   "file": "tool/hpflow/commands.py",
+   "function": "repo_path",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    150,
+    158
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "07705665422700961594",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_init",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    161,
+    223
+   ],
+   "length": 63,
+   "source": "changed"
+  },
+  {
+   "id": "16157054446530292974",
+   "file": "tool/hpflow/commands.py",
+   "function": "hunk_ranges",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    261,
+    279
+   ],
+   "length": 19,
+   "source": "changed"
+  },
+  {
+   "id": "02475893164349943637",
+   "file": "tool/hpflow/commands.py",
+   "function": "changed_files",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    282,
+    306
+   ],
+   "length": 25,
+   "source": "changed"
+  },
+  {
+   "id": "01839987994575891253",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_targets",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    345,
+    416
+   ],
+   "length": 72,
+   "source": "changed"
+  },
+  {
+   "id": "07143527077318763139",
+   "file": "tool/hpflow/commands.py",
+   "function": "fix_graph",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    775,
+    810
+   ],
+   "length": 36,
+   "source": "changed"
+  },
+  {
+   "id": "08754198737064083431",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "imports_module",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    62,
+    79
+   ],
+   "length": 18,
+   "source": "changed"
+  },
+  {
+   "id": "14278923741692573217",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "check",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    93,
+    132
+   ],
+   "length": 40,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/hpflow/commands.py",
+   "function": "parse_diff",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.test_a_content_line_that_looks_like_a_header_is_not_read",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "git",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ChangedFilesTest.test_names_with_a_space_and_a_non_ascii_letter_and_a_rename",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "RepoPathTest.test_each_form_of_one_path_is_one_path",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "RepoPathTest.test_a_path_outside_the_repository_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_brackets_in_strings_and_comments_are_not_structure",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_a_table_header_inside_a_multi_line_string_is_text",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_a_multi_line_value_of_a_dropped_top_key_is_dropped_whole",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "LeanConfigTest.test_the_scanner_reads_escapes",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ImportsModuleTest.test_each_import_form_names_the_module",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_robust_parsers.py",
+   "function": "ImportsModuleTest.test_another_module_is_not_the_module",
+   "reason": "test file"
+  }
+ ]
+}

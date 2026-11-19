@@ -28,23 +28,27 @@ hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
 hpf gate  --out ~/audits/next --ref HEAD
 ```
 
-- `hpf audit` and `hpf fix` start agent workers. They need the Puppetmaster command line
-  (`pip install puppetmaster-ai`) and Claude Code with a login.
+- `hpf audit` and `hpf fix` start agent workers. They need one agent tool with a login, and no other
+  package: Claude Code (the default), Codex (`--adapter codex`), or another tool through a command template
+  (`--adapter command --agent-cmd`). [`tool/README.md`](../tool/README.md) has an example for each.
 - `hpf fix` never commits. Review each fix and merge it yourself.
 - `hpf gate` makes no model call. It passes when each confirmed bug gives a new result on the commit that you
   release, or has a waiver with a reason (`hpf waive`).
-- Measured cost on our products: about 0.47 US dollars for each changed function for the review and the
-  verifiers (9.44 US dollars for a release range of 20 functions, API-equivalent). The first form of the
-  tool cost 28.53 US dollars for the same range.
-- A worker is lean by default: it does not load the Claude Code settings, rules, MCP servers and skills of the
-  user. `--user-settings` gives each worker the full profile.
+- Measured cost on our products with version 0.5: about 0.27 US dollars for each changed function for the
+  review and the verifiers (5.38 US dollars for a release range of 20 functions, the mean of three runs,
+  API-equivalent), in about 7 minutes. Version 0.4 cost 9.44 US dollars for the same range, and the first
+  form of the tool cost 28.53.
+- A worker is lean by default: it has six tools, and it does not load the Claude Code settings, rules, MCP
+  servers and skills of the user. `--user-settings` gives each worker the full profile.
+- To run the audit for a pull request in CI, see `.github/workflows/hpf-audit.yml` of this repository: it runs
+  when the pull request has the label `hpf-audit`, and it fails when the gate fails.
 
 For a proof of one function, start with [`tool/README.md`](../tool/README.md) (the domain contract and a quick start on
 `tool/examples/clamp`). `study/v3/swarm_policy` is a real decision table as a complete domain: 5 laws, a proof that
 the code passes them, and a proof that the laws leave no input open.
 
 A pass of the gate does not say that the code has no bug. The tools are a first version: Python functions,
-Claude models, and tests on our own two products only.
+most runs on Claude models, and tests on our own products only.
 
 ## Try the proof gate and run the tests
 
@@ -66,8 +70,8 @@ Run the tests of the two tools.
 cd tool && python3 -m unittest discover tests
 ```
 
-`tool/README.md` has the domain contract and each command. `hpflow` needs the Puppetmaster command
-line (`pip install puppetmaster-ai`) and an agent adapter. Its tests need neither.
+`tool/README.md` has the domain contract and each command. `hpflow` needs one agent tool with a login.
+Its tests need none.
 
 ## What the audit ladder is, and what it is not
 

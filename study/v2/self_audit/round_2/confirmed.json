@@ -1,0 +1,232 @@
+[
+ {
+  "id": "08007943514319147404",
+  "target": "13230866170839619463",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "prepare",
+  "claim": "lean_config only drops the top-level key `notify` if no earlier kept line starts with \"[\"; a continuation line of a multi-line top-level array of arrays is mistaken for a table header, so `notify` stays in the lean config that prepare writes.",
+  "claims": [
+   1
+  ],
+  "result_now": "'x = [\\n  [1],\\n  [2],\\n]\\nnotify = [\"a\"]\\nmodel = \"m\"\\n'",
+  "what_goes_wrong": "A user config.toml with a multi-line top-level array of arrays before `notify` keeps `notify` in the lean config, so workers inherit the user's notify command that the module promises to drop.",
+  "caller": "project/tool/hpflow/direct.py:377",
+  "severity": "low",
+  "fix_idea": "Track whether a real table header was seen (set a flag where a line starting with '[' is processed outside a multi-line value) instead of scanning kept lines for a leading '['.",
+  "repros": [
+   {
+    "finding": "13030159627137907474-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/13030159627137907474/finding_1.py",
+    "result_now": "'x = [\\n  [1],\\n  [2],\\n]\\nnotify = [\"a\"]\\nmodel = \"m\"\\n'"
+   }
+  ]
+ },
+ {
+  "id": "17197320754730050738",
+  "target": "14443072037502298895",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "lean_config",
+  "claim": "A top-level `notify` key is kept when an earlier multi-line top-level array has a continuation line that starts with '[' (the 'not any(line startswith [)' check mistakes it for a table header), so notify is not dropped.",
+  "claims": [
+   1
+  ],
+  "result_now": "'a = [\\n  [1,2],\\n]\\nnotify = [\"x\"]\\nmodel = \"m\"\\n'",
+  "what_goes_wrong": "A top-level multi-line array whose continuation line starts with '[' makes the 'not any(startswith [)' check think a table began, so a later top-level notify is kept and the worker home still runs the user's notify program, against the stated contract.",
+  "caller": "project/tool/hpflow/codexhome.py:138",
+  "severity": "low",
+  "fix_idea": "Track whether a real table header has been seen (a boolean set where line 54 matches outside a multi-line value) instead of scanning output lines for a leading '['.",
+  "repros": [
+   {
+    "finding": "11447643818624513770-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/11447643818624513770/finding_1.py",
+    "result_now": "'a = [\\n  [1,2],\\n]\\nnotify = [\"x\"]\\nmodel = \"m\"\\n'"
+   }
+  ]
+ },
+ {
+  "id": "07468310834185013560",
+  "target": "00360003531955294043",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_fix",
+  "claim": "The id of a fix run (rid) does not include the model, the judge model or the rules, so a second `fix` with another --model/--judge-model/--rules reuses the stored result and never starts a worker. Review and verify do put the model in their run ids.",
+  "claims": [
+   1
+  ],
+  "result_now": "('worker runs', 1)",
+  "what_goes_wrong": "Running `fix` again with a different --fix-model, --judge-model or --rules silently reuses the stored fix (and its worktree) instead of starting a worker, and the report counts it as reused while the record still names the old model.",
+  "caller": "project/tool/hpflow/cli.py:161",
+  "severity": "medium",
+  "fix_idea": "Add model, judge_model and a digest of the rules to the digest() arguments for rid in cmd_fix (and the fixflow id), as review and verify do with the model.",
+  "repros": [
+   {
+    "finding": "12016840028018239382-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/12016840028018239382/finding_1.py",
+    "result_now": "('worker runs', 1)"
+   }
+  ]
+ },
+ {
+  "id": "02846927711185797961",
+  "target": "01839987994575891253",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_targets",
+  "claim": "parse_diff treats a removed line whose text starts with '-- ' (a diff line '--- ...', e.g. an SQL comment inside a string) as a file header and overwrites the old path. The old file is then not found, so a function changed only by deleting such a line is missing from the targets of --changed.",
+  "claims": [
+   1
+  ],
+  "result_now": "[]",
+  "what_goes_wrong": "A deleted line starting with '-- ' appears in the diff as '--- ...', so parse_diff takes it for the old-file header, the old source is not found, and a function changed only by that deletion is dropped from the --changed targets and never audited.",
+  "caller": "project/tool/hpflow/cli.py:152",
+  "severity": "medium",
+  "fix_idea": "Read '---'/'+++' as headers only before the first '@@' hunk of each file (reset a flag on 'diff --git'), or take paths from `git diff --name-status -z`.",
+  "repros": [
+   {
+    "finding": "03167525353600862323-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/03167525353600862323/finding_1.py",
+    "result_now": "[]"
+   }
+  ]
+ },
+ {
+  "id": "12853327462054269161",
+  "target": "07143527077318763139",
+  "file": "tool/hpflow/commands.py",
+  "function": "fix_graph",
+  "claim": "fix_graph formats audit test_cmd with the raw python path, without shell_quote, so the test command in the worker and judge briefs breaks for a python path with spaces. fixcheck.test_command quotes it.",
+  "claims": [
+   1
+  ],
+  "result_now": "False",
+  "what_goes_wrong": "The worker and judge briefs show a test command with an unquoted python path, so a path with spaces (for example C:\\Program Files\\Python or a venv under a folder with spaces) splits into wrong arguments and the agents cannot run the tests as the brief says.",
+  "caller": "project/tool/hpflow/commands.py:824",
+  "severity": "medium",
+  "fix_idea": "Format test_run with python=shell_quote(py) and tests=shell_quote(g['test_file']), as fixcheck.test_command does; keep the raw py in the commands allow-list.",
+  "repros": [
+   {
+    "finding": "06391237435865263612-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/06391237435865263612/finding_1.py",
+    "result_now": "False"
+   }
+  ]
+ },
+ {
+  "id": "11554081736540133509",
+  "target": "07705665422700961594",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_init",
+  "claim": "Package folders are found with `git ls-tree --name-only` output split on whitespace; git quotes non-ASCII names (core.quotepath), so a package such as `pkg_\u00e9` is never matched and init fails with 'no package folder found' (or skips it).",
+  "claims": [
+   1
+  ],
+  "result_now": "UsageError",
+  "what_goes_wrong": "With no --paths, a package folder with a non-ASCII name (a valid Python identifier) is listed by git as a quoted octal string, so present() fails and init aborts with 'no package folder found' (or silently drops that package when others exist).",
+  "caller": "project/tool/hpflow/cli.py:150",
+  "severity": "low",
+  "fix_idea": "Use `git ls-tree -z --name-only -d` and split on NUL (or pass `-c core.quotepath=off`), so names are returned unquoted and may contain spaces.",
+  "repros": [
+   {
+    "finding": "10370600707839794916-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/10370600707839794916/finding_1.py",
+    "result_now": "UsageError"
+   }
+  ]
+ },
+ {
+  "id": "17785559813243573811",
+  "target": "08765864503575113115",
+  "file": "tool/hpflow/commands.py",
+  "function": "parse_diff",
+  "claim": "Content lines inside a hunk that begin with '-- ' or '++ ' (diff lines starting '--- ' or '+++ ') are parsed as file headers and overwrite the file's old/new path.",
+  "claims": [
+   1
+  ],
+  "result_now": "[('d', 'w', [(3, 3)], [(3, 3)])]",
+  "what_goes_wrong": "A removed or added content line starting with '-- ' or '++ ' (e.g. inside a docstring or multi-line string in a changed .py file) is read as a ---/+++ header, so the file's old/new path is overwritten with garbage and its functions are mis-targeted or dropped from 'targets --changed'.",
+  "caller": "project/tool/hpflow/commands.py:306",
+  "severity": "low",
+  "fix_idea": "Track whether a hunk is open (set after a '@@' line, ended by the next 'diff --git') and only treat ---/+++ as headers before the first hunk of a file.",
+  "repros": [
+   {
+    "finding": "08492602128012505535-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/08492602128012505535/finding_1.py",
+    "result_now": "[('d', 'w', [(3, 3)], [(3, 3)])]"
+   }
+  ]
+ },
+ {
+  "id": "04499737123708126401",
+  "target": "17600983525471700825",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_review",
+  "claim": "With group='file', a chunk that holds only one function (for example the last chunk of a file) is handled as a single-function run: findings that name a different function are not dropped but are credited to that function, and the per-function limit of 4 is replaced by 5.",
+  "claims": [
+   1
+  ],
+  "result_now": "[('f7', 1), ('f7', 2), ('f7', 3), ('f7', 4), ('f7', 5)]",
+  "what_goes_wrong": "With --group file, a chunk holding one function (the last chunk of a file, or a one-function file) takes the single-function path in gate because len(mine)==1, so findings that name other functions are credited to that function and the per-function cap is 5 instead of PER_FUNCTION.",
+  "caller": "project/tool/hpflow/cli.py:156",
+  "severity": "medium",
+  "fix_idea": "Decide single versus file mode in gate from the run's group (store it in the record or pass it in), not from len(mine).",
+  "repros": [
+   {
+    "finding": "00067220961414251071-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/00067220961414251071/finding_1.py",
+    "result_now": "[('f7', 1), ('f7', 2), ('f7', 3), ('f7', 4), ('f7', 5)]"
+   }
+  ]
+ },
+ {
+  "id": "08979162801678541472",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "check finds related tests only by `import <stem>`, `.<stem> ` or `import a.<stem>`; a test with `from pkg import a, mod` names the module but is not run, so a fix that breaks it is accepted.",
+  "claims": [
+   1
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "A related test that names the changed module only via `from pkg import a, mod` is never run, so a fix that breaks it is accepted.",
+  "caller": "project/tool/hpflow/commands.py:827",
+  "severity": "medium",
+  "fix_idea": "Match the stem as a word in import lines (a regex for `from X import ...stem...`), or parse the imports with ast.",
+  "repros": [
+   {
+    "finding": "02331505979494570289-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/02331505979494570289/finding_1.py",
+    "result_now": "'accept'"
+   }
+  ]
+ },
+ {
+  "id": "17796146262724182589",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "Related tests are collected only with rglob test_*.py, so tests named *_test.py (a test file by is_test_file) are never run after the fix.",
+  "claims": [
+   2
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "Test files named *_test.py (accepted by is_test_file) are never collected, so a fix that breaks them is accepted.",
+  "caller": "project/tool/hpflow/commands.py:827",
+  "severity": "medium",
+  "fix_idea": "Also collect *_test.py (rglob both patterns, deduplicated).",
+  "repros": [
+   {
+    "finding": "02331505979494570289-2",
+    "k": 2,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta/runs/02331505979494570289/finding_2.py",
+    "result_now": "'accept'"
+   }
+  ]
+ }
+]

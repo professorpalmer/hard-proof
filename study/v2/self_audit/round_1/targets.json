@@ -1,0 +1,1281 @@
+{
+ "mode": "changed",
+ "changed": "hpflow-v0.4.2..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "01845901213361215547",
+   "file": "tool/hpflow/adapters.py",
+   "function": "lean_args",
+   "top": "hpflow",
+   "lines": [
+    63,
+    72
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "04957738996595448606",
+   "file": "tool/hpflow/adapters.py",
+   "function": "review_hint",
+   "top": "hpflow",
+   "lines": [
+    75,
+    77
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "14658911530177299422",
+   "file": "tool/hpflow/adapters.py",
+   "function": "claude_settings_file",
+   "top": "hpflow",
+   "lines": [
+    80,
+    91
+   ],
+   "length": 12,
+   "source": "changed"
+  },
+  {
+   "id": "06963365207325849126",
+   "file": "tool/hpflow/adapters.py",
+   "function": "claude_code",
+   "top": "hpflow",
+   "lines": [
+    94,
+    101
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "15418735640984303618",
+   "file": "tool/hpflow/adapters.py",
+   "function": "codex",
+   "top": "hpflow",
+   "lines": [
+    104,
+    110
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "09924845516984121151",
+   "file": "tool/hpflow/adapters.py",
+   "function": "command",
+   "top": "hpflow",
+   "lines": [
+    113,
+    117
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "09642050915629558275",
+   "file": "tool/hpflow/adapters.py",
+   "function": "check",
+   "top": "hpflow",
+   "lines": [
+    132,
+    137
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "04292951889949125282",
+   "file": "tool/hpflow/adapters.py",
+   "function": "payload",
+   "top": "hpflow",
+   "lines": [
+    140,
+    149
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "17380670166037235492",
+   "file": "tool/hpflow/adapters.py",
+   "function": "notes",
+   "top": "hpflow",
+   "lines": [
+    152,
+    160
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "15727833719754443655",
+   "file": "tool/hpflow/adapters.py",
+   "function": "model_id",
+   "top": "hpflow",
+   "lines": [
+    163,
+    172
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "16480577862743993187",
+   "file": "tool/hpflow/adapters.py",
+   "function": "model_or_default",
+   "top": "hpflow",
+   "lines": [
+    175,
+    185
+   ],
+   "length": 11,
+   "source": "changed"
+  },
+  {
+   "id": "01355658079301638492",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_common",
+   "top": "hpflow",
+   "lines": [
+    22,
+    29
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "12860433136743439900",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_adapter",
+   "top": "hpflow",
+   "lines": [
+    36,
+    45
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "05762297998326274335",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_init",
+   "top": "hpflow",
+   "lines": [
+    48,
+    55
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "02155893361307263068",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_review",
+   "top": "hpflow",
+   "lines": [
+    67,
+    80
+   ],
+   "length": 14,
+   "source": "changed"
+  },
+  {
+   "id": "01039115310866878036",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_verify",
+   "top": "hpflow",
+   "lines": [
+    87,
+    91
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "17772857810049937811",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_fix",
+   "top": "hpflow",
+   "lines": [
+    94,
+    99
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "13592540538335005912",
+   "file": "tool/hpflow/cli.py",
+   "function": "build_parser",
+   "top": "hpflow",
+   "lines": [
+    113,
+    125
+   ],
+   "length": 13,
+   "source": "changed"
+  },
+  {
+   "id": "07510137286282714691",
+   "file": "tool/hpflow/cli.py",
+   "function": "run_command",
+   "top": "hpflow",
+   "lines": [
+    136,
+    182
+   ],
+   "length": 47,
+   "source": "changed"
+  },
+  {
+   "id": "12803824691138107717",
+   "file": "tool/hpflow/cli.py",
+   "function": "main",
+   "top": "hpflow",
+   "lines": [
+    185,
+    206
+   ],
+   "length": 22,
+   "source": "changed"
+  },
+  {
+   "id": "12094925695539605878",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "user_home",
+   "top": "hpflow",
+   "lines": [
+    34,
+    36
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "16461646140055043903",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "worker_home",
+   "top": "hpflow",
+   "lines": [
+    39,
+    41
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "14443072037502298895",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "lean_config",
+   "top": "hpflow",
+   "lines": [
+    44,
+    66
+   ],
+   "length": 23,
+   "source": "changed"
+  },
+  {
+   "id": "16125359843879929164",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "strip_pm_block",
+   "top": "hpflow",
+   "lines": [
+    69,
+    74
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "06432970333944921867",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "digest",
+   "top": "hpflow",
+   "lines": [
+    77,
+    81
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "15089180422434069617",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "write_atomic",
+   "top": "hpflow",
+   "lines": [
+    84,
+    89
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "17207606257541002671",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "locked",
+   "top": "hpflow",
+   "lines": [
+    92,
+    101
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "12028636215476714784",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "lock_file",
+   "top": "hpflow",
+   "lines": [
+    104,
+    121
+   ],
+   "length": 18,
+   "source": "changed"
+  },
+  {
+   "id": "13230866170839619463",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "prepare",
+   "top": "hpflow",
+   "lines": [
+    124,
+    153
+   ],
+   "length": 30,
+   "source": "changed"
+  },
+  {
+   "id": "09087380291150811022",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "sync_back",
+   "top": "hpflow",
+   "lines": [
+    156,
+    167
+   ],
+   "length": 12,
+   "source": "changed"
+  },
+  {
+   "id": "04044694998634180976",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "seed_system_skills",
+   "top": "hpflow",
+   "lines": [
+    170,
+    190
+   ],
+   "length": 21,
+   "source": "changed"
+  },
+  {
+   "id": "14001151985883929251",
+   "file": "tool/hpflow/commands.py",
+   "function": "Context.__init__",
+   "top": "hpflow",
+   "lines": [
+    29,
+    40
+   ],
+   "length": 12,
+   "source": "changed"
+  },
+  {
+   "id": "01255805813444436581",
+   "file": "tool/hpflow/commands.py",
+   "function": "Context.adapter",
+   "top": "hpflow",
+   "lines": [
+    56,
+    62
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "14813845663754785076",
+   "file": "tool/hpflow/commands.py",
+   "function": "Context.agent_cmd",
+   "top": "hpflow",
+   "lines": [
+    64,
+    66
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "03609351792853905543",
+   "file": "tool/hpflow/commands.py",
+   "function": "Context.check_adapter",
+   "top": "hpflow",
+   "lines": [
+    68,
+    74
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "06935340168019919593",
+   "file": "tool/hpflow/commands.py",
+   "function": "Context.keep_adapter",
+   "top": "hpflow",
+   "lines": [
+    76,
+    85
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "03178102624379231897",
+   "file": "tool/hpflow/commands.py",
+   "function": "adapter_key",
+   "top": "hpflow",
+   "lines": [
+    104,
+    114
+   ],
+   "length": 11,
+   "source": "changed"
+  },
+  {
+   "id": "08374933014143561851",
+   "file": "tool/hpflow/commands.py",
+   "function": "costs",
+   "top": "hpflow",
+   "lines": [
+    128,
+    136
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "12208786914003034158",
+   "file": "tool/hpflow/commands.py",
+   "function": "adapter_report",
+   "top": "hpflow",
+   "lines": [
+    139,
+    143
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "07705665422700961594",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_init",
+   "top": "hpflow",
+   "lines": [
+    148,
+    208
+   ],
+   "length": 61,
+   "source": "changed"
+  },
+  {
+   "id": "13790514613915698380",
+   "file": "tool/hpflow/commands.py",
+   "function": "top_of",
+   "top": "hpflow",
+   "lines": [
+    261,
+    266
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "03544337131901868586",
+   "file": "tool/hpflow/commands.py",
+   "function": "make_target",
+   "top": "hpflow",
+   "lines": [
+    269,
+    272
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "01839987994575891253",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_targets",
+   "top": "hpflow",
+   "lines": [
+    279,
+    352
+   ],
+   "length": 74,
+   "source": "changed"
+  },
+  {
+   "id": "17600983525471700825",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_review",
+   "top": "hpflow",
+   "lines": [
+    378,
+    483
+   ],
+   "length": 106,
+   "source": "changed"
+  },
+  {
+   "id": "03224574987867754209",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_verify",
+   "top": "hpflow",
+   "lines": [
+    507,
+    615
+   ],
+   "length": 109,
+   "source": "changed"
+  },
+  {
+   "id": "03871534363342841817",
+   "file": "tool/hpflow/commands.py",
+   "function": "fixcheck_command",
+   "top": "hpflow",
+   "lines": [
+    665,
+    672
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "03528012071531176681",
+   "file": "tool/hpflow/commands.py",
+   "function": "fix_scope",
+   "top": "hpflow",
+   "lines": [
+    675,
+    680
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "07143527077318763139",
+   "file": "tool/hpflow/commands.py",
+   "function": "fix_graph",
+   "top": "hpflow",
+   "lines": [
+    683,
+    713
+   ],
+   "length": 31,
+   "source": "changed"
+  },
+  {
+   "id": "00360003531955294043",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_fix",
+   "top": "hpflow",
+   "lines": [
+    716,
+    810
+   ],
+   "length": 95,
+   "source": "changed"
+  },
+  {
+   "id": "14698163682894641078",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_status",
+   "top": "hpflow",
+   "lines": [
+    824,
+    880
+   ],
+   "length": 57,
+   "source": "changed"
+  },
+  {
+   "id": "09101078912975528771",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_gate",
+   "top": "hpflow",
+   "lines": [
+    900,
+    965
+   ],
+   "length": 66,
+   "source": "changed"
+  },
+  {
+   "id": "01806753751857746099",
+   "file": "tool/hpflow/common.py",
+   "function": "shell_quote",
+   "top": "hpflow",
+   "lines": [
+    25,
+    28
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "08266862034440256556",
+   "file": "tool/hpflow/common.py",
+   "function": "shell_python",
+   "top": "hpflow",
+   "lines": [
+    31,
+    37
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "10601635607468225744",
+   "file": "tool/hpflow/common.py",
+   "function": "snippet_env",
+   "top": "hpflow",
+   "lines": [
+    40,
+    50
+   ],
+   "length": 11,
+   "source": "changed"
+  },
+  {
+   "id": "03352883419567503017",
+   "file": "tool/hpflow/common.py",
+   "function": "digest",
+   "top": "hpflow",
+   "lines": [
+    61,
+    64
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "04520397263761001427",
+   "file": "tool/hpflow/common.py",
+   "function": "kill_group",
+   "top": "hpflow",
+   "lines": [
+    81,
+    96
+   ],
+   "length": 16,
+   "source": "changed"
+  },
+  {
+   "id": "10348745006136304571",
+   "file": "tool/hpflow/common.py",
+   "function": "run_group",
+   "top": "hpflow",
+   "lines": [
+    99,
+    129
+   ],
+   "length": 31,
+   "source": "changed"
+  },
+  {
+   "id": "03010762893332851426",
+   "file": "tool/hpflow/common.py",
+   "function": "decode",
+   "top": "hpflow",
+   "lines": [
+    132,
+    134
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "03871173862184367309",
+   "file": "tool/hpflow/common.py",
+   "function": "run_snippet",
+   "top": "hpflow",
+   "lines": [
+    178,
+    191
+   ],
+   "length": 14,
+   "source": "changed"
+  },
+  {
+   "id": "12931031146440579226",
+   "file": "tool/hpflow/common.py",
+   "function": "apply_cost_rule",
+   "top": "hpflow",
+   "lines": [
+    194,
+    215
+   ],
+   "length": 22,
+   "source": "changed"
+  },
+  {
+   "id": "15122288464095360235",
+   "file": "tool/hpflow/direct.py",
+   "function": "parse_verdict",
+   "top": "hpflow",
+   "lines": [
+    77,
+    84
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "10917467683983653822",
+   "file": "tool/hpflow/direct.py",
+   "function": "edge_matches",
+   "top": "hpflow",
+   "lines": [
+    87,
+    94
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "17709213115960454962",
+   "file": "tool/hpflow/direct.py",
+   "function": "gate_preview",
+   "top": "hpflow",
+   "lines": [
+    97,
+    119
+   ],
+   "length": 23,
+   "source": "changed"
+  },
+  {
+   "id": "16411178009559907594",
+   "file": "tool/hpflow/direct.py",
+   "function": "first_prompt",
+   "top": "hpflow",
+   "lines": [
+    122,
+    139
+   ],
+   "length": 18,
+   "source": "changed"
+  },
+  {
+   "id": "04921265857838725762",
+   "file": "tool/hpflow/direct.py",
+   "function": "resume_prompt",
+   "top": "hpflow",
+   "lines": [
+    142,
+    149
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "05851029953971615186",
+   "file": "tool/hpflow/direct.py",
+   "function": "claude_command",
+   "top": "hpflow",
+   "lines": [
+    152,
+    173
+   ],
+   "length": 22,
+   "source": "changed"
+  },
+  {
+   "id": "01438635290861098718",
+   "file": "tool/hpflow/direct.py",
+   "function": "codex_command",
+   "top": "hpflow",
+   "lines": [
+    176,
+    192
+   ],
+   "length": 17,
+   "source": "changed"
+  },
+  {
+   "id": "07370854584124277105",
+   "file": "tool/hpflow/direct.py",
+   "function": "template_command",
+   "top": "hpflow",
+   "lines": [
+    195,
+    203
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "11266785386255404713",
+   "file": "tool/hpflow/direct.py",
+   "function": "check_template",
+   "top": "hpflow",
+   "lines": [
+    206,
+    212
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "14137428619574306323",
+   "file": "tool/hpflow/direct.py",
+   "function": "json_lines",
+   "top": "hpflow",
+   "lines": [
+    215,
+    226
+   ],
+   "length": 12,
+   "source": "changed"
+  },
+  {
+   "id": "04523689920988019198",
+   "file": "tool/hpflow/direct.py",
+   "function": "read_claude",
+   "top": "hpflow",
+   "lines": [
+    229,
+    236
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "17124294931406162794",
+   "file": "tool/hpflow/direct.py",
+   "function": "read_command",
+   "top": "hpflow",
+   "lines": [
+    239,
+    241
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "00162489284069679850",
+   "file": "tool/hpflow/direct.py",
+   "function": "read_codex",
+   "top": "hpflow",
+   "lines": [
+    244,
+    252
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "07282684209222939521",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner.__init__",
+   "top": "hpflow",
+   "lines": [
+    260,
+    264
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "06042924785074913848",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner.run",
+   "top": "hpflow",
+   "lines": [
+    266,
+    268
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "03676267467517542763",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner.executable",
+   "top": "hpflow",
+   "lines": [
+    270,
+    276
+   ],
+   "length": 7,
+   "source": "changed"
+  },
+  {
+   "id": "14693988984668623332",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner._run",
+   "top": "hpflow",
+   "lines": [
+    278,
+    321
+   ],
+   "length": 44,
+   "source": "changed"
+  },
+  {
+   "id": "03266018222155344742",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner._next",
+   "top": "hpflow",
+   "lines": [
+    323,
+    339
+   ],
+   "length": 17,
+   "source": "changed"
+  },
+  {
+   "id": "03457602474685198256",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner._shell",
+   "top": "hpflow",
+   "lines": [
+    341,
+    350
+   ],
+   "length": 10,
+   "source": "changed"
+  },
+  {
+   "id": "15530418001186611056",
+   "file": "tool/hpflow/direct.py",
+   "function": "DirectRunner._agent",
+   "top": "hpflow",
+   "lines": [
+    352,
+    404
+   ],
+   "length": 53,
+   "source": "changed"
+  },
+  {
+   "id": "05032228860951233912",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "changed_files",
+   "top": "hpflow",
+   "lines": [
+    25,
+    44
+   ],
+   "length": 20,
+   "source": "changed"
+  },
+  {
+   "id": "15002293971720444001",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "in_scope",
+   "top": "hpflow",
+   "lines": [
+    47,
+    54
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "10753565015846777128",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "out_of_scope",
+   "top": "hpflow",
+   "lines": [
+    57,
+    58
+   ],
+   "length": 2,
+   "source": "changed"
+  },
+  {
+   "id": "00954485554701210329",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "test_command",
+   "top": "hpflow",
+   "lines": [
+    61,
+    62
+   ],
+   "length": 2,
+   "source": "changed"
+  },
+  {
+   "id": "14278923741692573217",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "check",
+   "top": "hpflow",
+   "lines": [
+    72,
+    110
+   ],
+   "length": 39,
+   "source": "changed"
+  },
+  {
+   "id": "09415493161010385906",
+   "file": "tool/hpflow/runner.py",
+   "function": "agent_graph",
+   "top": "hpflow",
+   "lines": [
+    22,
+    39
+   ],
+   "length": 18,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/hpflow/common.py",
+   "function": "model_id",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "parse_json",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "graph_timeout",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "PuppetmasterRunner.__init__",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "PuppetmasterRunner.job_record",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "PuppetmasterRunner.run",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/hpflow/runner.py",
+   "function": "PuppetmasterRunner._run",
+   "reason": "removed"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "fake_tool",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.setUp",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.tearDown",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.direct",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.calls",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.ready",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectCase.record",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_review_and_verify_on_claude_code",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_a_failed_check_resumes_the_session_once",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_codex_review_with_a_repair_in_the_lean_home",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_codex_with_user_settings_runs_in_the_home_of_the_user",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_a_command_tool_and_a_repair_that_starts_it_again",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_a_timeout_ends_the_process_group",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_direct.py",
+   "function": "DirectRunnerTest.test_a_missing_agent_command_is_an_error_record",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "FakeRunner.__init__",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "FakeRunner.run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "FixCheckTest.test_a_change_outside_the_write_scope_rejects_the_fix",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ImportRootTest.setUp",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ImportRootTest.test_a_package_below_src_is_found_imported_and_graded",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ImportRootTest.test_an_import_root_that_is_absent_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "LadderTest.test_one_session_for_each_function_and_each_verifier_on_request",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "LadderTest.test_the_short_prompt_of_a_reviewer_is_an_option",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "LadderTest.test_a_verifier_keeps_the_default_system_prompt",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.review_ready",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_the_graph_has_the_adapter_and_model_of_the_options_and_no_claude_arguments",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_a_later_command_uses_the_adapter_of_the_audit_folder",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_stored_results_of_two_adapters_do_not_mix",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_a_short_claude_name_on_another_adapter_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_codex_has_no_plain_arm",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_the_command_adapter_needs_a_template_and_stores_it",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_an_unknown_adapter_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_a_lean_claude_worker_gets_the_settings_file_of_the_user",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "AdapterTest.test_an_unknown_cost_is_null_not_zero",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "CostTest.test_an_unknown_cost_makes_the_total_unknown",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "alive",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "gone",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ProcessGroupTest.test_timeout_ends_the_whole_group",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ProcessGroupTest.test_a_child_left_after_a_normal_exit_ends",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ProcessGroupTest.test_repro_timeout_ends_its_children",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ConcurrencyTest.test_default_is_five",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpflow.py",
+   "function": "ConcurrencyTest.test_runner_limits_parallel_flows",
+   "reason": "test file"
+  }
+ ]
+}

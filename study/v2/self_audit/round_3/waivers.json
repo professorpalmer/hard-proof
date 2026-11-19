@@ -1,0 +1,12 @@
+{
+ "17627950655761053126": {
+  "reason": "The function parse_diff is removed. changed_files reads the file names from `git diff --name-status -z` and only hunk headers from the diff of one file, so no file header is parsed. The tests ChangedFilesTest (tests/test_robust_parsers.py) and DiffContentLineTest (tests/test_hpfix_tool_hpflow_commands.py) cover the fault.",
+  "by": "the owner, who delegated this decision on 2026-11-19 (\"do what u recommend\")",
+  "time": "2026-11-19T19:14:29+00:00"
+ },
+ "12325202032198276168": {
+  "reason": "The function parse_diff is removed. changed_files reads the file names from `git diff --name-status -z` and only hunk headers from the diff of one file, so no file header is parsed. The tests ChangedFilesTest (tests/test_robust_parsers.py) and DiffContentLineTest (tests/test_hpfix_tool_hpflow_commands.py) cover the fault.",
+  "by": "the owner, who delegated this decision on 2026-11-19 (\"do what u recommend\")",
+  "time": "2026-11-19T19:14:29+00:00"
+ }
+}
