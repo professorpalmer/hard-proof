@@ -12,10 +12,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from . import briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, LEAN_ARGS, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
+from . import adapters, briefs
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file,
                      read_json, run_snippet, sh, write_json)
 from .fixcheck import check as fix_check
+from .direct import check_template
 from .runner import Runner, agent_graph
 
 DEFAULT_TEST_CMD = "{python} -m pytest -q -p no:cacheprovider {tests}"
@@ -26,8 +27,12 @@ class Context:
     """The audit folder, the runner and the shared options of one call."""
 
     def __init__(self, out: Path, runner: Runner, redo: bool = False, concurrency: int = DEFAULT_CONCURRENCY,
-                 lean: bool = True):
+                 lean: bool = True, adapter: Optional[str] = None, agent_cmd: Optional[str] = None,
+                 effort: str = adapters.DEFAULT_EFFORT):
         self.lean = lean
+        self.given_adapter = adapter
+        self.given_agent_cmd = agent_cmd
+        self.effort = effort
         self.out = out.resolve()
         self.runner = runner
         self.redo = redo
@@ -48,6 +53,37 @@ class Context:
             raise UsageError(f"no audit in {self.out}: run `init` first")
         return a
 
+    def adapter(self) -> str:
+        """The adapter of the workers of this call.
+
+        The rule: an `--adapter` option wins and becomes the adapter of the audit folder (the key `adapter` of
+        audit.json). With no option, a command uses the adapter of the audit folder, else `claude-code`. So a later
+        `verify`, `fix` or `status` uses the adapter of the last command that named one."""
+        return self.given_adapter or self.audit().get("adapter") or adapters.DEFAULT_ADAPTER
+
+    def agent_cmd(self) -> Optional[str]:
+        """The command template of `--adapter command`, with the same rule as the adapter (the key `agent_cmd`)."""
+        return self.given_agent_cmd or self.audit().get("agent_cmd")
+
+    def check_adapter(self) -> Tuple[str, Optional[str]]:
+        """The adapter and the command template of this call. A usage error when they cannot start a worker."""
+        adapter, template = self.adapter(), self.agent_cmd()
+        adapters.check(adapter, template)
+        if adapter == adapters.COMMAND:
+            check_template(str(template))
+        return adapter, template if adapter == adapters.COMMAND else None
+
+    def keep_adapter(self) -> None:
+        """Store `--adapter` and `--agent-cmd` in audit.json. A command calls it after its options are valid."""
+        audit = self.audit()
+        new = dict(audit)
+        if self.given_adapter:
+            new["adapter"] = self.given_adapter
+        if self.given_agent_cmd:
+            new["agent_cmd"] = self.given_agent_cmd
+        if new != audit:
+            write_json(self.out / "audit.json", new)
+
     def record_path(self, rid: str) -> Path:
         return self.out / "records" / f"{rid}.json"
 
@@ -65,6 +101,19 @@ class Context:
             write_json(self.record_path(rid), record)
 
 
+def adapter_key(adapter: str, agent_cmd: Optional[str] = None, effort: str = adapters.DEFAULT_EFFORT) -> List[str]:
+    """The worker part of a record id: the adapter, the command template and the effort.
+
+    The default adapter and the default effort add nothing, so the ids of hpflow 0.4 stay valid (its workers
+    ran on Claude Code, and Puppetmaster gave them `--effort medium`)."""
+    key = [] if adapter == adapters.DEFAULT_ADAPTER else [adapter]
+    if agent_cmd:
+        key.append(agent_cmd)
+    if effort != adapters.DEFAULT_EFFORT:
+        key.append(f"effort={effort}")
+    return key
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -77,8 +126,21 @@ def pool_map(ctx: Context, fn: Callable[[Any], Any], items: List[Any]) -> List[A
 
 
 def costs(records: List[Dict[str, Any]]) -> Dict[str, Any]:
-    return {"cost_usd_api_equivalent": round(sum(r.get("cost_usd") or 0 for r in records), 4),
-            "seconds": round(sum(r.get("seconds") or 0 for r in records)), "cost_note": COST_NOTE}
+    """The cost and the time of worker records. One run with an unknown cost makes the total unknown (None)."""
+    known = round(sum(r.get("cost_usd") or 0 for r in records), 4)
+    unknown = sum(1 for r in records if "cost_usd" in r and r["cost_usd"] is None)
+    out: Dict[str, Any] = {"cost_usd_api_equivalent": None if unknown else known,
+                           "seconds": round(sum(r.get("seconds") or 0 for r in records)), "cost_note": COST_NOTE}
+    if unknown:
+        out.update(cost_unknown_runs=unknown, cost_usd_of_the_other_runs=known)
+    return out
+
+
+def adapter_report(ctx: Context, adapter: str) -> Dict[str, Any]:
+    out = {"adapter": adapter, "adapter_notes": adapters.notes(adapter, ctx.lean)}
+    if adapter != adapters.COMMAND:
+        out["effort"] = ctx.effort
+    return out
 
 
 # ---------------------------------------------------------------- init
@@ -117,6 +179,9 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         raise UsageError(f"{ctx.out} holds an audit of {old.get('commit', '')[:12]}: use a new --out or --redo")
     audit = {"repo": str(root), "ref": ref, "commit": commit, "paths": paths, "python": python,
              "test_cmd": test_cmd or DEFAULT_TEST_CMD, "created": (old or {}).get("created") or now()}
+    for key in ("adapter", "agent_cmd"):
+        if (old or {}).get(key):
+            audit[key] = old[key]
     snapshot = "kept"
     if ctx.redo or not old or old.get("paths") != paths or not ctx.src.is_dir():
         if ctx.src.exists():
@@ -296,39 +361,45 @@ def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) ->
     return out
 
 
-def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout: float, group: str = "function",
-               group_size: int = 6) -> Dict[str, Any]:
+def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, repro_timeout: float, group: str = "function",
+               group_size: int = 6, short_prompt: bool = False) -> Dict[str, Any]:
     audit = ctx.audit()
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     if targets is None:
         raise UsageError("no targets.json: run `targets` first")
+    adapter, template = ctx.check_adapter()
+    mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
+    payload = adapters.payload(adapter, shell=shell, lean=ctx.lean, effort=ctx.effort, agent_cmd=template, reviewer=short_prompt)
+    key = adapter_key(adapter, template, ctx.effort)
+    ctx.keep_adapter()
     arm = "shell" if shell else "plain"
+    arm_text = briefs.REVIEW_ARM[arm] + (adapters.review_hint(adapter) if ctx.lean and short_prompt else "")
     jobs = [(ts, p) for ts in review_groups(targets, group, group_size) for p in range(1, passes + 1)]
 
     def one(job: Tuple[List[Dict[str, Any]], int]) -> Tuple[Dict[str, Any], bool]:
         ts, p = job
         t = ts[0]
         single = group == "function"
-        rid = (digest("review", audit["commit"], t["id"], p, model_id(model), arm) if single
-               else digest("review", audit["commit"], "file", *[x["id"] for x in ts], p, model_id(model), arm))
+        rid = (digest("review", audit["commit"], t["id"], p, *key, mid, arm) if single
+               else digest("review", audit["commit"], "file", *[x["id"] for x in ts], p, *key, mid, arm))
         r = ctx.stored(rid)
         if r:
             return r, False
         folder = ctx.out / "runs" / rid
         prepare_folder(ctx, folder)
         if single:
-            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=briefs.REVIEW_ARM[arm])
+            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=arm_text)
             check = briefs.REVIEW_CHECK
         else:
             write_json(folder / "functions.json", [x["function"] for x in ts])
             task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"],
-                                             per_function=briefs.PER_FUNCTION, arm_text=briefs.REVIEW_ARM[arm])
+                                             per_function=briefs.PER_FUNCTION, arm_text=arm_text)
             check = briefs.REVIEW_FILE_CHECK
-        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], model, shell=shell, check=check, timeout=2400,
-                            lean=ctx.lean)
+        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check,
+                            timeout=2400)
         r = ctx.runner.run(graph, folder)
         r.update(kind="review", run=rid, folder=str(folder), target=t["id"], targets=[x["id"] for x in ts], pass_n=p,
-                 model=model_id(model), arm=arm, finished=now())
+                 adapter=adapter, model=mid, arm=arm, finished=now())
         ctx.save(rid, r)
         return r, True
 
@@ -381,7 +452,7 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
 
     for rows in pool_map(ctx, gate, records):
         findings.extend(rows)
-    write_json(ctx.out / "review.json", {"model": model_id(model), "arm": arm, "passes": passes, "group": group,
+    write_json(ctx.out / "review.json", {"adapter": adapter, "model": mid, "arm": arm, "passes": passes, "group": group,
                                          "runs": [r["run"] for r in records], "findings": findings})
     failed = [{"run": r["run"], "target": r["target"], "error": r.get("error") or r.get("note") or r.get("status")}
               for r in records if r.get("error") or r.get("note")]
@@ -390,6 +461,7 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
               "grade_1": sum(1 for f in findings if f["grade"] == 1),
               "grade_0": [{"id": f["id"], "reason": f["reason"]} for f in findings if f["grade"] == 0],
               "failed_runs": failed}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -415,13 +487,20 @@ def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = 
     return "mixed"
 
 
-def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged: bool = True) -> Dict[str, Any]:
+def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function", staged: bool = True) -> Dict[str, Any]:
     audit = ctx.audit()
     review = read_json(ctx.out / "review.json")
     if review is None:
         raise UsageError("no review.json: run `review` first")
-    if len(models) < 2:
+    adapter, template = ctx.check_adapter()
+    mids = [adapters.model_id(adapter, m) for m in adapters.model_or_default(adapter, models, ["sonnet", "opus"], "--models")]
+    if len(mids) < 2:
         raise UsageError("verify needs two models or more")
+    if len(set(mids)) < len(mids):
+        raise UsageError("give each verifier model once: the verdicts of one model are stored under its id")
+    payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
+    key = adapter_key(adapter, template, ctx.effort)
+    ctx.keep_adapter()
     groups: Dict[str, Dict[str, Any]] = {}
     for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
         key = f["target"] if group == "function" else digest("file", f["file"])
@@ -430,8 +509,8 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
 
     def one(job: Tuple[Dict[str, Any], str]) -> Tuple[Dict[str, Any], bool]:
         g, m = job
-        rid = (digest("verify", audit["commit"], g["target"], model_id(m), *[c["id"] for c in g["claims"]]) if group == "function"
-               else digest("verify", audit["commit"], "file", g["key"], model_id(m), *[c["id"] for c in g["claims"]]))
+        rid = (digest("verify", audit["commit"], g["target"], *key, m, *[c["id"] for c in g["claims"]]) if group == "function"
+               else digest("verify", audit["commit"], "file", g["key"], *key, m, *[c["id"] for c in g["claims"]]))
         r = ctx.stored(rid)
         if r:
             return r, False
@@ -447,11 +526,10 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
         head = (briefs.VERIFY_ONE_HEAD.format(n=len(claims), function=g["function"], file=g["file"]) if group == "function"
                 else briefs.VERIFY_FILE_HEAD.format(n=len(claims), file=g["file"]))
         task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head)
-        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], m, shell=True, check=briefs.VERIFY_CHECK, timeout=3000,
-                            lean=ctx.lean)
+        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=briefs.VERIFY_CHECK, timeout=3000)
         r = ctx.runner.run(graph, folder)
         v = read_json(folder / "verdicts.json")
-        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], model=model_id(m),
+        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], adapter=adapter, model=m,
                  verdicts=v if isinstance(v, list) else None, finished=now())
         ctx.save(rid, r)
         return r, True
@@ -459,14 +537,13 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
     if staged:
         # A claim is confirmed only when each verifier says `real`. So the later verifiers run only for a
         # group in which the first verifier said `real` for one claim or more.
-        results = pool_map(ctx, one, [(g, models[0]) for g in groups.values()])
+        results = pool_map(ctx, one, [(g, mids[0]) for g in groups.values()])
         first_real = {r["group"] for r, _ in results
                       if any(isinstance(v, dict) and v.get("verdict") == "real" for v in (r.get("verdicts") or []))}
-        results += pool_map(ctx, one, [(g, m) for g in groups.values() if g["key"] in first_real for m in models[1:]])
+        results += pool_map(ctx, one, [(g, m) for g in groups.values() if g["key"] in first_real for m in mids[1:]])
     else:
-        results = pool_map(ctx, one, [(g, m) for g in groups.values() for m in models])
+        results = pool_map(ctx, one, [(g, m) for g in groups.values() for m in mids])
     records = [r for r, _ in results]
-    mids = [model_id(m) for m in models]
     claims_out: List[Dict[str, Any]] = []
     bugs: List[Dict[str, Any]] = []
     for g in groups.values():
@@ -502,7 +579,8 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
                          "severity": info.get("severity"), "fix_idea": info.get("fix_idea"),
                          "repros": [{"finding": x["id"], "k": x["k"], "path": x["repro"], "result_now": x["result_now"]}
                                     for x in members]})
-    write_json(ctx.out / "verify.json", {"models": mids, "group": group, "staged": staged, "runs": [r["run"] for r in records],
+    write_json(ctx.out / "verify.json", {"adapter": adapter, "models": mids, "group": group, "staged": staged,
+                                         "runs": [r["run"] for r in records],
                                          "claims": claims_out})
     write_json(ctx.out / "confirmed.json", bugs)
     (ctx.out / "REPORT.md").write_text(report_md(audit, mids, claims_out, bugs), encoding="utf-8")
@@ -515,6 +593,7 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
               "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
               "classes": by_class, "confirmed_bugs": len(bugs), "failed_runs": failed,
               "report": str(ctx.out / "REPORT.md")}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -566,31 +645,35 @@ def bug_text(bugs: List[Dict[str, Any]]) -> str:
     return "\n".join(rows)
 
 
-def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str, info: Path, model: str,
-              judge_model: str, rules: str) -> Dict[str, Any]:
+def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
+    """The paths that a fix worker can change: the audit paths and the tests."""
+    files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
+    if "tests/**" not in files:
+        files.append("tests/**")
+    return files
+
+
+def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str, info: Path, adapter: str,
+              template: Optional[str], model: str, judge_model: str, rules: str) -> Dict[str, Any]:
     py = audit["python"]
     check = (f"PYTHONPATH={shlex.quote(str(TOOL_DIR))} {shlex.quote(sys.executable)} -m hpflow.fixcheck "
              f"{shlex.quote(str(info))}")
     test_run = audit["test_cmd"].format(python=py, tests=g["test_file"])
     fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
                info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
-    tools = ["Read", "Glob", "Grep", "Write", "Edit"] + [f"Bash({c}:*)" for c in (
-        "cd", "ls", "pwd", "cat", "git diff", "git status", "git log", "git show", "git grep", "git blame", "grep", "rg",
-        "wc", "head", "tail", "sed", "find", "python3", py, "sort", "uniq", "diff", "echo", "test", "mkdir", "timeout")]
-    payload = {"allowed_tools": tools, "disallowed_tools": ["WebFetch", "WebSearch", "Task", "Agent", "NotebookEdit"]}
-    if ctx.lean:
-        payload["extra_args"] = list(LEAN_ARGS)
-    files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
-    if "tests/**" not in files:
-        files.append("tests/**")
-    return {"id": f"hpf-{digest('fixflow', g['slug'], base)}", "entry": "build",
-            "defaults": {"adapter": "claude-code", "model": model_id(model), "timeout_seconds": 5400, "finish": "criteria"},
+    commands = (*adapters.FIX_COMMANDS, py)
+    payload = adapters.payload(adapter, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort, agent_cmd=template)
+    judge_payload = adapters.payload(adapter, judge=True, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort,
+                                     agent_cmd=template)
+    files = fix_scope(ctx, audit)
+    return {"id": f"hpf-{digest('fixflow', g['slug'], base, *adapter_key(adapter, template, ctx.effort))}", "entry": "build",
+            "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria"},
             "nodes": [
                 {"id": "build", "kind": "agent", "role": "code", "files": files, "task": briefs.BUILD.format(**fmt),
                  "payload": payload},
                 {"id": "check", "kind": "shell", "command": check, "timeoutMs": 2700000},
-                {"id": "review", "kind": "judge", "model": model_id(judge_model), "task": briefs.JUDGE.format(**fmt),
-                 "payload": payload},
+                {"id": "review", "kind": "judge", "model": judge_model, "task": briefs.JUDGE.format(**fmt),
+                 "payload": judge_payload},
                 {"id": "done", "kind": "end", "status": "pass"},
                 {"id": "failed", "kind": "end", "status": "fail"}],
             "edges": [{"from": "build", "to": "check", "when": "ok"},
@@ -604,9 +687,13 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
                       {"from": "review", "to": "failed"}]}
 
 
-def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model: str, judge_model: str,
+def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model: Optional[str], judge_model: Optional[str],
             rules: Optional[str]) -> Dict[str, Any]:
     audit = ctx.audit()
+    adapter, template = ctx.check_adapter()
+    model = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "opus", "--model"))
+    judge_model = adapters.model_id(adapter, adapters.model_or_default(adapter, judge_model, "sonnet", "--judge-model"))
+    ctx.keep_adapter()
     repo = Path(audit["repo"])
     bugs = read_json(ctx.out / "confirmed.json")
     if bugs is None:
@@ -629,7 +716,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         g["bugs"].append(b)
 
     def one(g: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
-        rid = digest("fix", audit["commit"], base_commit, g["slug"], *sorted(b["id"] for b in g["bugs"]))
+        rid = digest("fix", audit["commit"], base_commit, g["slug"], *adapter_key(adapter, template, ctx.effort),
+                     *sorted(b["id"] for b in g["bugs"]))
         tree = ctx.out / "fix" / g["slug"]
         branch = f"hpfix/{g['slug']}"
         r = ctx.stored(rid)
@@ -644,7 +732,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
             git(repo, "branch", "-D", branch)
             tree.parent.mkdir(parents=True, exist_ok=True)
             code, out = git(repo, "worktree", "add", "-q", "-b", branch, str(tree), base_commit)
-        result: Dict[str, Any] = {"kind": "fix", "run": rid, "slug": g["slug"], "file": g["file"], "branch": branch,
+        result: Dict[str, Any] = {"kind": "fix", "run": rid, "adapter": adapter, "model": model, "judge_model": judge_model,
+                                  "slug": g["slug"], "file": g["file"], "branch": branch,
                                   "tree": str(tree), "base": base_commit, "bugs": [b["id"] for b in g["bugs"]],
                                   "test_file": g["test_file"]}
         if code != 0:
@@ -663,8 +752,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
                 repros.append({"k": rp["k"], "file": name, "result_now": rp["result_now"]})
             spec_bugs.append({"id": b["id"], "repros": repros})
         write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": audit["python"],
-                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs})
-        graph = fix_graph(ctx, audit, g, base_commit, info, model, judge_model, rules or briefs.DEFAULT_RULES)
+                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit)})
+        graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules or briefs.DEFAULT_RULES)
         r = ctx.runner.run(graph, tree)
         result.update(r)
         result["check"] = fix_check(info, tree)
@@ -680,7 +769,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
 
     results = pool_map(ctx, one, list(groups.values()))
     records = [r for r, _ in results]
-    write_json(ctx.out / "fix.json", {"base": base_commit, "runs": [r["run"] for r in records]})
+    write_json(ctx.out / "fix.json", {"adapter": adapter, "base": base_commit, "runs": [r["run"] for r in records]})
     rows = [{"slug": r["slug"], "worktree": r["tree"], "branch": r["branch"], "bugs": r["bugs"],
              "flow_status": r.get("status"), "diffstat": r.get("diffstat"), "new_files": r.get("new_files"),
              "check": (r.get("check") or {}).get("verdict"), "check_problems": (r.get("check") or {}).get("problems"),
@@ -689,6 +778,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
     report = {"command": "fix", "ok": ok, "base": base_commit, "worktrees": rows,
               "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
               "note": "hpflow does not commit, push or merge. Review each worktree and commit it yourself."}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -720,7 +810,8 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     verify_recs = recs((verify or {}).get("runs") or [])
     fix_recs = recs((fix or {}).get("runs") or [])
     for name, rs in (("review", review_recs), ("verify", verify_recs), ("fix", fix_recs)):
-        steps[name] = dict(runs=len(rs), **costs(rs))
+        # A record of hpflow 0.4 has no `adapter` key: those workers ran on Claude Code.
+        steps[name] = dict(runs=len(rs), adapters=sorted({r.get("adapter") or adapters.DEFAULT_ADAPTER for r in rs}), **costs(rs))
     grade: Dict[str, int] = {}
     if review:
         for f in review["findings"]:
@@ -757,6 +848,7 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
         if unfixed:
             open_items.append(f"fix: {len(unfixed)} confirmed bugs have no accepted fix with a PASS judge")
     return {"command": "status", "ok": True, "repo": audit["repo"], "commit": audit["commit"],
+            "adapter": audit.get("adapter") or adapters.DEFAULT_ADAPTER,
             "targets": len(targets or []), "grades": counts, "confirmed_bugs": len(confirmed or []), "steps": steps,
             "not_done": open_items, "cost_note": COST_NOTE}
 

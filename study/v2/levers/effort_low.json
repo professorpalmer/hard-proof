@@ -1,0 +1,914 @@
+[
+ {
+  "flow_id": "hp2l-6024426818",
+  "folder": "~/Projects/hp-work/lev/6024426818",
+  "model": "sonnet",
+  "flow": "flow_228a039b2882",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_a3e7f2ef1e69"
+  ],
+  "seconds": 32,
+  "cost_usd": 0.06,
+  "run": "6024426818",
+  "bug": "0684a733",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-b70edd1d42",
+  "folder": "~/Projects/hp-work/lev/b70edd1d42",
+  "model": "sonnet",
+  "flow": "flow_058931b5eeb7",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_10bd682e8252"
+  ],
+  "seconds": 43,
+  "cost_usd": 0.093,
+  "run": "b70edd1d42",
+  "bug": "0d214ea1",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-2289b81852",
+  "folder": "~/Projects/hp-work/lev/2289b81852",
+  "model": "sonnet",
+  "flow": "flow_6b05f9e284d0",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_1f8a063ea9c5"
+  ],
+  "seconds": 33,
+  "cost_usd": 0.066,
+  "run": "2289b81852",
+  "bug": "14de48f8",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-7e18954862",
+  "folder": "~/Projects/hp-work/lev/7e18954862",
+  "model": "sonnet",
+  "flow": "flow_5a442247dce6",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_72c089c934af"
+  ],
+  "seconds": 42,
+  "cost_usd": 0.088,
+  "run": "7e18954862",
+  "bug": "15174914",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-6e28a14310",
+  "folder": "~/Projects/hp-work/lev/6e28a14310",
+  "model": "sonnet",
+  "flow": "flow_29012762e4b2",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_0cd09a778c7e"
+  ],
+  "seconds": 34,
+  "cost_usd": 0.06,
+  "run": "6e28a14310",
+  "bug": "1f3119d9",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-920b737d85",
+  "folder": "~/Projects/hp-work/lev/920b737d85",
+  "model": "sonnet",
+  "flow": "flow_5d242fa2e74c",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_4605a5e4af48"
+  ],
+  "seconds": 79,
+  "cost_usd": 0.193,
+  "run": "920b737d85",
+  "bug": "2c235959",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-62c70892be",
+  "folder": "~/Projects/hp-work/lev/62c70892be",
+  "model": "sonnet",
+  "flow": "flow_eeb1ceaf7eba",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_113ac7ff93da"
+  ],
+  "seconds": 48,
+  "cost_usd": 0.098,
+  "run": "62c70892be",
+  "bug": "33d0fef8",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-e3150a2d01",
+  "folder": "~/Projects/hp-work/lev/e3150a2d01",
+  "model": "sonnet",
+  "flow": "flow_3cecf70df77a",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_33913637ef9b"
+  ],
+  "seconds": 39,
+  "cost_usd": 0.091,
+  "run": "e3150a2d01",
+  "bug": "392b718e",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-17b119f525",
+  "folder": "~/Projects/hp-work/lev/17b119f525",
+  "model": "sonnet",
+  "flow": "flow_d57518a053f0",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_8ea9efbe737f"
+  ],
+  "seconds": 20,
+  "cost_usd": 0.061,
+  "run": "17b119f525",
+  "bug": "39b812c2",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-661c602681",
+  "folder": "~/Projects/hp-work/lev/661c602681",
+  "model": "sonnet",
+  "flow": "flow_82ddbe32eca6",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_7751d1251a92"
+  ],
+  "seconds": 37,
+  "cost_usd": 0.087,
+  "run": "661c602681",
+  "bug": "3cb29955",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-097bce69e3",
+  "folder": "~/Projects/hp-work/lev/097bce69e3",
+  "model": "sonnet",
+  "flow": "flow_e8b253e3ca99",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_2c89ce1c0ae5"
+  ],
+  "seconds": 26,
+  "cost_usd": 0.058,
+  "run": "097bce69e3",
+  "bug": "3f4f643d",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-488905431b",
+  "folder": "~/Projects/hp-work/lev/488905431b",
+  "model": "sonnet",
+  "flow": "flow_8a215f39c0b9",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_64209b865885"
+  ],
+  "seconds": 37,
+  "cost_usd": 0.08,
+  "run": "488905431b",
+  "bug": "453b6524",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-4438b8d5e1",
+  "folder": "~/Projects/hp-work/lev/4438b8d5e1",
+  "model": "sonnet",
+  "flow": "flow_26ba94f6bb70",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_b9c703cfce33"
+  ],
+  "seconds": 31,
+  "cost_usd": 0.088,
+  "run": "4438b8d5e1",
+  "bug": "4acdce50",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-b7e873e168",
+  "folder": "~/Projects/hp-work/lev/b7e873e168",
+  "model": "sonnet",
+  "flow": "flow_5b37646356cb",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_4a29877f51de"
+  ],
+  "seconds": 20,
+  "cost_usd": 0.04,
+  "run": "b7e873e168",
+  "bug": "4d71662b",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-90e1e6fb1f",
+  "folder": "~/Projects/hp-work/lev/90e1e6fb1f",
+  "model": "sonnet",
+  "flow": "flow_9560538477e8",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_af4bc07fe00f"
+  ],
+  "seconds": 36,
+  "cost_usd": 0.068,
+  "run": "90e1e6fb1f",
+  "bug": "4e16c220",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-87b48ba416",
+  "folder": "~/Projects/hp-work/lev/87b48ba416",
+  "model": "sonnet",
+  "flow": "flow_8b1837ee3e83",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_90d3699c52ad"
+  ],
+  "seconds": 45,
+  "cost_usd": 0.081,
+  "run": "87b48ba416",
+  "bug": "56f1a567",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-151ba58ead",
+  "folder": "~/Projects/hp-work/lev/151ba58ead",
+  "model": "sonnet",
+  "flow": "flow_ac39918a52db",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_70246b885070"
+  ],
+  "seconds": 42,
+  "cost_usd": 0.107,
+  "run": "151ba58ead",
+  "bug": "5ea489a3",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-27341e517c",
+  "folder": "~/Projects/hp-work/lev/27341e517c",
+  "model": "sonnet",
+  "flow": "flow_840cba4e4234",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_7f9347175bb5"
+  ],
+  "seconds": 45,
+  "cost_usd": 0.07,
+  "run": "27341e517c",
+  "bug": "5f77c05c",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-bcf9e2ca55",
+  "folder": "~/Projects/hp-work/lev/bcf9e2ca55",
+  "model": "sonnet",
+  "flow": "flow_173c990d4a4f",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_cab6d79ff346"
+  ],
+  "seconds": 40,
+  "cost_usd": 0.069,
+  "run": "bcf9e2ca55",
+  "bug": "64fdef40",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-591992fb1a",
+  "folder": "~/Projects/hp-work/lev/591992fb1a",
+  "model": "sonnet",
+  "flow": "flow_eeb8aa8c2fdc",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_d5924d3b9bc9"
+  ],
+  "seconds": 32,
+  "cost_usd": 0.07,
+  "run": "591992fb1a",
+  "bug": "66e39e5c",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-9f2c0fdc82",
+  "folder": "~/Projects/hp-work/lev/9f2c0fdc82",
+  "model": "sonnet",
+  "flow": "flow_a9170d3925ad",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_9330935948fc"
+  ],
+  "seconds": 32,
+  "cost_usd": 0.07,
+  "run": "9f2c0fdc82",
+  "bug": "722ca0a0",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-f9d7720e4e",
+  "folder": "~/Projects/hp-work/lev/f9d7720e4e",
+  "model": "sonnet",
+  "flow": "flow_cf0abd9cc188",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_40924e59c566"
+  ],
+  "seconds": 28,
+  "cost_usd": 0.08,
+  "run": "f9d7720e4e",
+  "bug": "736097e0",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-5500c12258",
+  "folder": "~/Projects/hp-work/lev/5500c12258",
+  "model": "sonnet",
+  "flow": "flow_057e401d082a",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_3dd6e96df70c"
+  ],
+  "seconds": 40,
+  "cost_usd": 0.079,
+  "run": "5500c12258",
+  "bug": "8428f8d6",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-f042967866",
+  "folder": "~/Projects/hp-work/lev/f042967866",
+  "model": "sonnet",
+  "flow": "flow_d11903f4bb97",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_796bd61789c6"
+  ],
+  "seconds": 43,
+  "cost_usd": 0.077,
+  "run": "f042967866",
+  "bug": "842bbbdd",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-93634c4da5",
+  "folder": "~/Projects/hp-work/lev/93634c4da5",
+  "model": "sonnet",
+  "flow": "flow_a6d02e5c47fb",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_e1d315f08b1c"
+  ],
+  "seconds": 39,
+  "cost_usd": 0.092,
+  "run": "93634c4da5",
+  "bug": "a089ec4c",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-825934408f",
+  "folder": "~/Projects/hp-work/lev/825934408f",
+  "model": "sonnet",
+  "flow": "flow_ce78f5529bb3",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_72e87cbda496"
+  ],
+  "seconds": 41,
+  "cost_usd": 0.097,
+  "run": "825934408f",
+  "bug": "a1db3869",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-d3e7dabf5c",
+  "folder": "~/Projects/hp-work/lev/d3e7dabf5c",
+  "model": "sonnet",
+  "flow": "flow_399670ac8b7e",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_ba5eec5a1235"
+  ],
+  "seconds": 35,
+  "cost_usd": 0.066,
+  "run": "d3e7dabf5c",
+  "bug": "a4186f1c",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-3280d835c7",
+  "folder": "~/Projects/hp-work/lev/3280d835c7",
+  "model": "sonnet",
+  "flow": "flow_db8856421910",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_b3bf33a81b6f"
+  ],
+  "seconds": 39,
+  "cost_usd": 0.105,
+  "run": "3280d835c7",
+  "bug": "a53b15e7",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-2de7503e7a",
+  "folder": "~/Projects/hp-work/lev/2de7503e7a",
+  "model": "sonnet",
+  "flow": "flow_b94e97f9dcf5",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_00787d4db534"
+  ],
+  "seconds": 40,
+  "cost_usd": 0.075,
+  "run": "2de7503e7a",
+  "bug": "a7fbfac5",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-9dd4d2bd60",
+  "folder": "~/Projects/hp-work/lev/9dd4d2bd60",
+  "model": "sonnet",
+  "flow": "flow_04021e0ed004",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_f400b641d262"
+  ],
+  "seconds": 39,
+  "cost_usd": 0.104,
+  "run": "9dd4d2bd60",
+  "bug": "aaeae23f",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-1da1c31d7f",
+  "folder": "~/Projects/hp-work/lev/1da1c31d7f",
+  "model": "sonnet",
+  "flow": "flow_71cb5e33488e",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_206d5472766b"
+  ],
+  "seconds": 31,
+  "cost_usd": 0.077,
+  "run": "1da1c31d7f",
+  "bug": "afadbb63",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-f079f5a9a1",
+  "folder": "~/Projects/hp-work/lev/f079f5a9a1",
+  "model": "sonnet",
+  "flow": "flow_971ec4622aa2",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_13488634bdfc"
+  ],
+  "seconds": 32,
+  "cost_usd": 0.07,
+  "run": "f079f5a9a1",
+  "bug": "b6774cde",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-7f909eecbd",
+  "folder": "~/Projects/hp-work/lev/7f909eecbd",
+  "model": "sonnet",
+  "flow": "flow_653cf47dc5be",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_57d50fc8d760"
+  ],
+  "seconds": 84,
+  "cost_usd": 0.219,
+  "run": "7f909eecbd",
+  "bug": "b79ed344",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-d7964315ba",
+  "folder": "~/Projects/hp-work/lev/d7964315ba",
+  "model": "sonnet",
+  "flow": "flow_6be14bbbbb62",
+  "flow_status": "failed",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_3b6971794c2c"
+  ],
+  "seconds": 33,
+  "cost_usd": 0.098,
+  "run": "d7964315ba",
+  "bug": "b7e0a8d5",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-c6da0e325c",
+  "folder": "~/Projects/hp-work/lev/c6da0e325c",
+  "model": "sonnet",
+  "flow": "flow_2cf774f4c6bb",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_971d4cbdc51d"
+  ],
+  "seconds": 35,
+  "cost_usd": 0.07,
+  "run": "c6da0e325c",
+  "bug": "b97a501b",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-8c7cfb5e5b",
+  "folder": "~/Projects/hp-work/lev/8c7cfb5e5b",
+  "model": "sonnet",
+  "flow": "flow_36ae774fbc62",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_c1b71ecfdefa"
+  ],
+  "seconds": 32,
+  "cost_usd": 0.073,
+  "run": "8c7cfb5e5b",
+  "bug": "c1d8cb3d",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-19fae61223",
+  "folder": "~/Projects/hp-work/lev/19fae61223",
+  "model": "sonnet",
+  "flow": "flow_a3cc5f0422fd",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_04396c93bc0a"
+  ],
+  "seconds": 51,
+  "cost_usd": 0.122,
+  "run": "19fae61223",
+  "bug": "caf64aa5",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-56ba48bed5",
+  "folder": "~/Projects/hp-work/lev/56ba48bed5",
+  "model": "sonnet",
+  "flow": "flow_cac728957a2c",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_29a8294f56c8"
+  ],
+  "seconds": 27,
+  "cost_usd": 0.089,
+  "run": "56ba48bed5",
+  "bug": "cfc3b5af",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-a9d450bef1",
+  "folder": "~/Projects/hp-work/lev/a9d450bef1",
+  "model": "sonnet",
+  "flow": "flow_0c77b3bb7a70",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_70ccdf8449ff"
+  ],
+  "seconds": 44,
+  "cost_usd": 0.077,
+  "run": "a9d450bef1",
+  "bug": "d2e22309",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-687cd03611",
+  "folder": "~/Projects/hp-work/lev/687cd03611",
+  "model": "sonnet",
+  "flow": "flow_29d2a23f0278",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_c30861ad6044"
+  ],
+  "seconds": 36,
+  "cost_usd": 0.068,
+  "run": "687cd03611",
+  "bug": "d486f0f2",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-db86f4fad9",
+  "folder": "~/Projects/hp-work/lev/db86f4fad9",
+  "model": "sonnet",
+  "flow": "flow_2ee940b0d026",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_ac898cfcc64f"
+  ],
+  "seconds": 47,
+  "cost_usd": 0.1,
+  "run": "db86f4fad9",
+  "bug": "d7e7ed59",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-3ddd89bd02",
+  "folder": "~/Projects/hp-work/lev/3ddd89bd02",
+  "model": "sonnet",
+  "flow": "flow_011f955ce336",
+  "flow_status": "failed",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_dc24656e71f3"
+  ],
+  "seconds": 36,
+  "cost_usd": 0.09,
+  "run": "3ddd89bd02",
+  "bug": "d9fe4f63",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-a628464167",
+  "folder": "~/Projects/hp-work/lev/a628464167",
+  "model": "sonnet",
+  "flow": "flow_38d6a789f5d4",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PARTIAL"
+  ],
+  "jobs": [
+   "job_5aa30dee04f2"
+  ],
+  "seconds": 63,
+  "cost_usd": 0.095,
+  "run": "a628464167",
+  "bug": "da5edac4",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-29fbf5cdda",
+  "folder": "~/Projects/hp-work/lev/29fbf5cdda",
+  "model": "sonnet",
+  "flow": "flow_04976ea25deb",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_851db07dfe5a"
+  ],
+  "seconds": 58,
+  "cost_usd": 0.099,
+  "run": "29fbf5cdda",
+  "bug": "dc42a802",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-be53ca1fad",
+  "folder": "~/Projects/hp-work/lev/be53ca1fad",
+  "model": "sonnet",
+  "flow": "flow_40a96cb4c9cf",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_46c20d563758"
+  ],
+  "seconds": 26,
+  "cost_usd": 0.047,
+  "run": "be53ca1fad",
+  "bug": "de50015f",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-3fc10301b9",
+  "folder": "~/Projects/hp-work/lev/3fc10301b9",
+  "model": "sonnet",
+  "flow": "flow_b5770765d3e3",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_0fb50e59fb72"
+  ],
+  "seconds": 52,
+  "cost_usd": 0.144,
+  "run": "3fc10301b9",
+  "bug": "df459b30",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-2a64633403",
+  "folder": "~/Projects/hp-work/lev/2a64633403",
+  "model": "sonnet",
+  "flow": "flow_c3c8e82be998",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_dfda0c0eccc6"
+  ],
+  "seconds": 31,
+  "cost_usd": 0.083,
+  "run": "2a64633403",
+  "bug": "dfb56171",
+  "arm": "effort_low"
+ },
+ {
+  "flow_id": "hp2l-692f3c81ff",
+  "folder": "~/Projects/hp-work/lev/692f3c81ff",
+  "model": "sonnet",
+  "flow": "flow_7c11699cf136",
+  "flow_status": "done",
+  "visits": 1,
+  "verdicts": [
+   "PASS"
+  ],
+  "jobs": [
+   "job_cae610f3eeb0"
+  ],
+  "seconds": 35,
+  "cost_usd": 0.082,
+  "run": "692f3c81ff",
+  "bug": "e8af8068",
+  "arm": "effort_low"
+ }
+]

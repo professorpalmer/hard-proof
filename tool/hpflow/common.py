@@ -11,16 +11,14 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-MODELS = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5"}
-ADAPTER = "claude-code"
 DEFAULT_CONCURRENCY = 5
-# A lean worker does not load the Claude Code rules, MCP servers and personal skills of the user. On a
-# machine with large user rules, this start text was most of the cost of a worker run. The list does not
-# have `--disable-slash-commands`: with it, the first request of each session was about 6,300 tokens larger.
-LEAN_ARGS = ["--setting-sources", "", "--strict-mcp-config"]
 COST_NOTE = ("Cost is API-equivalent, as the provider tool reports it. "
-             "Plan billing can apply, so the real charge can be lower.")
+             "Plan billing can apply, so the real charge can be lower. "
+             "A cost of null is unknown: hpflow reads `total_cost_usd`, and only the Claude Code CLI reports it.")
 TOOL_DIR = Path(__file__).resolve().parent.parent
+
+
+WINDOWS = os.name == "nt"
 
 
 class UsageError(Exception):
@@ -29,11 +27,6 @@ class UsageError(Exception):
 
 class StepError(Exception):
     """A step that failed. Exit code 1."""
-
-
-def model_id(name: str) -> str:
-    """Map a short model name to its id. A full model id passes through."""
-    return MODELS.get(name, name)
 
 
 def digest(*parts: Any) -> str:
@@ -58,6 +51,16 @@ def write_json(path: Path, data: Any) -> None:
 
 def kill_group(p: subprocess.Popen) -> None:
     """End the whole process group of `p`. A child that a command starts must not live on after a timeout."""
+    if WINDOWS:
+        # Windows has no process group signal. `taskkill /T` ends the process and each child that it started.
+        # It cannot find the children of a leader that is gone, so a child that outlives its leader stays.
+        try:
+            subprocess.run(["taskkill", "/T", "/F", "/PID", str(p.pid)], capture_output=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+        if p.poll() is None:
+            p.kill()
+        return
     try:
         os.killpg(p.pid, signal.SIGKILL)
     except (ProcessLookupError, PermissionError):
@@ -65,18 +68,24 @@ def kill_group(p: subprocess.Popen) -> None:
 
 
 def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: float = 600, shell: bool = False,
-              env: Optional[Dict[str, str]] = None) -> Tuple[Optional[int], str, str]:
+              env: Optional[Dict[str, str]] = None, stdin: Optional[str] = None) -> Tuple[Optional[int], str, str]:
     """Run a command in its own process group. At the timeout the whole group ends.
 
+    `stdin` is the text on the standard input; with None the input is empty.
     Returns (exit code, stdout, stderr). The exit code is None after a timeout.
     """
     try:
-        p = subprocess.Popen(cmd, cwd=str(cwd) if cwd else None, shell=shell, env=env, stdin=subprocess.DEVNULL,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+        group: Dict[str, Any] = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if WINDOWS  # type: ignore[attr-defined]
+                                 else {"start_new_session": True})
+        # UTF-8 on each system: the default text encoding of Windows is not UTF-8, and agent output is.
+        p = subprocess.Popen(cmd, cwd=str(cwd) if cwd else None, shell=shell, env=env,
+                             stdin=subprocess.DEVNULL if stdin is None else subprocess.PIPE,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
+                             errors="replace", **group)
     except OSError as e:
         return 127, "", str(e)
     try:
-        out, err = p.communicate(timeout=timeout)
+        out, err = p.communicate(input=stdin, timeout=timeout)
     except subprocess.TimeoutExpired:
         kill_group(p)
         out, err = p.communicate()
@@ -145,22 +154,28 @@ def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60) -> D
         return {"ok": False, "error": "no output", "message": line[-1][:300]}
 
 
-def apply_cost_rule(steps: List[Dict[str, Any]]) -> Dict[str, float]:
-    """Set `cost_usd` of each visit and return the cost of each node.
+def apply_cost_rule(steps: List[Dict[str, Any]]) -> Optional[Dict[str, float]]:
+    """Set `cost_usd` of each visit and return the cost of each node, or None when a cost is unknown.
 
     The provider tool reports the cost of a resumed session as the total of the session so far.
     So the cost of a node is the largest value of its visits, and the cost of one visit is the
-    difference from the visit before it.
+    difference from the visit before it. A visit that ran a job and has no reported cost makes the
+    total unknown: 0 would be a false number.
     """
     node_cost: Dict[str, float] = {}
+    unknown = False
     for s in steps:
-        reported = s.get("reported_usd")
+        if "reported_usd" not in s:
+            continue
+        reported = s["reported_usd"]
         if reported is None:
+            s["cost_usd"] = None
+            unknown = True
             continue
         before = node_cost.get(s["node"], 0.0)
         s["cost_usd"] = round(max(0.0, reported - before), 6)
         node_cost[s["node"]] = max(before, reported)
-    return {k: round(v, 6) for k, v in node_cost.items()}
+    return None if unknown else {k: round(v, 6) for k, v in node_cost.items()}
 
 
 def is_test_file(path: str) -> bool:
