@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>hpf share card</title>
+<style>
+:root{--bg:#0F0F0E;--panel:#181817;--line:#2C2C2A;--text:#F1EFE8;--mute:#A3A199;--dim:#6E6D67;--gray:#888780;--amber:#EF9F27;--red:#E24B4A;--green:#97C459}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:900px;background:var(--bg);color:var(--text);font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;overflow:hidden}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+.page{width:1600px;height:900px;padding:52px 64px 44px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;color:var(--mute)}
+.top b{color:var(--text);font-weight:600;font-size:26px;letter-spacing:-0.5px}
+h1{font-family:Charter,"Iowan Old Style",Georgia,serif;font-weight:700;font-size:72px;line-height:1.08;letter-spacing:-1.5px;margin-top:26px}
+h1 i{font-style:normal;color:var(--amber)}
+.sub{font-size:24px;line-height:1.45;color:var(--mute);margin-top:18px;max-width:1300px}
+.grid{display:grid;grid-template-columns:860px 1fr;gap:36px;margin-top:34px;flex:1;min-height:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 32px}
+.ptitle{font-size:17px;color:var(--dim);letter-spacing:0.2px;margin-bottom:14px}
+.ptitle span{color:var(--mute)}
+.row{display:grid;grid-template-columns:84px 1fr;align-items:center;padding:12px 0}
+.row + .row{border-top:1px solid var(--line)}
+.n{font-size:54px;font-weight:600;letter-spacing:-2px;line-height:1}
+.dots{display:flex;gap:9px;height:26px}
+.dots u{display:block;width:26px;height:26px;border-radius:50%}
+.lab{font-size:19px;color:var(--mute);margin-top:9px}
+.lab b{color:var(--text);font-weight:600}
+.meta{margin-top:12px;padding-top:14px;border-top:1px solid var(--line);font-size:18px;color:var(--mute);display:flex;gap:28px}
+.meta b{color:var(--text);font-weight:600}
+.tiles{display:flex;flex-direction:column;gap:16px}
+.tile{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 28px;display:grid;grid-template-columns:176px 1fr;align-items:center;column-gap:8px}
+.big{font-size:64px;font-weight:600;letter-spacing:-3px;line-height:1}
+.big small{font-size:30px;letter-spacing:-1px;color:var(--mute);font-weight:500}
+.tl{font-size:20px;line-height:1.35;color:var(--mute)}
+.tl b{color:var(--text);font-weight:600;display:block;font-size:22px;margin-bottom:2px}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:26px}
+.pill{font-size:24px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 20px;color:var(--text)}
+.pill em{font-style:normal;color:var(--dim)}
+.src{font-size:18px;color:var(--mute);text-align:right;line-height:1.5}
+.src span{color:var(--dim);font-size:15px}
+html.og,html.og body{height:800px}
+html.og .page{height:800px;padding:44px 64px 34px}
+html.og .sub{display:none}
+html.og .grid{margin-top:30px}
+</style>
+<script>if(location.search.indexOf('og')>=0)document.documentElement.classList.add('og');</script>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <div><b class="mono">hpf</b>&nbsp;&nbsp;the audit ladder from Hard Proof</div>
+    <div>for code that AI agents write</div>
+  </div>
+  <h1>No repro, no bug. <i>No fix, no release.</i></h1>
+  <p class="sub">It audits only the functions that changed since the last tag. A claim counts only with a repro that fails on the newest code. Two verifier agents must agree. An open bug blocks the tag.</p>
+  <div class="grid">
+    <div class="panel">
+      <div class="ptitle">One real audit <span>&nbsp;Puppetmaster v1.50.0 to v1.51.1</span></div>
+      <div class="row"><div class="n mono" style="color:var(--gray)">20</div><div><div class="dots" id="d0"></div><div class="lab"><b>functions changed</b> since the last tag</div></div></div>
+      <div class="row"><div class="n mono" style="color:var(--amber)">15</div><div><div class="dots" id="d1"></div><div class="lab"><b>claims</b> with a repro that runs</div></div></div>
+      <div class="row"><div class="n mono" style="color:var(--red)">8</div><div><div class="dots" id="d2"></div><div class="lab"><b>confirmed bugs</b> after two verifier agents</div></div></div>
+      <div class="row"><div class="n mono" style="color:var(--green)">8</div><div><div class="dots" id="d3"></div><div class="lab"><b>closed in the release.</b> Gate verdict: pass</div></div></div>
+      <div class="meta"><span><b class="mono">$9.44</b> total</span><span><b class="mono">29 min</b></span><span><b class="mono">40</b> agent sessions</span><span>severity: <b>1</b> high, <b>1</b> medium, <b>6</b> low</span></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="big mono" style="color:var(--green)">51</div><div class="tl"><b>bugs fixed, each with a test</b>across two shipped products</div></div>
+      <div class="tile"><div class="big mono" style="color:var(--red)">2<small> of 6</small></div><div class="tl"><b>releases stopped at the gate</b>until the fix was in</div></div>
+      <div class="tile"><div class="big mono" style="color:var(--amber)">-67%</div><div class="tl"><b>audit cost with lean workers</b>$28.53 to $9.44, and one more bug found</div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="pill mono"><em>$</em> pip install hpflow</div>
+    <div class="src">github.com/professorpalmer/hard-proof &nbsp;·&nbsp; MIT<br><span>A pass is not a proof that the code has no bug. Costs are API-equivalent.</span></div>
+  </div>
+</div>
+<script>
+[[20,'--gray'],[15,'--amber'],[8,'--red'],[8,'--green']].forEach(function(r,i){
+  var el=document.getElementById('d'+i);
+  for(var k=0;k<r[0];k++){var u=document.createElement('u');u.style.background='var('+r[1]+')';el.appendChild(u);}
+});
+</script>
+</body>
+</html>
