@@ -721,7 +721,58 @@ def release_050_text(rel: dict) -> list:
            f"<p class=\"small\">The three tools together found {h['union_distinct_bugs']} distinct bugs. Each of the two other tools found one bug that <code>hpf</code> missed. "
            "Limits: one range, one run for each tool, one owner, and the models are not the same. The <code>hpf</code> run was a stored run of version 0.4, and its findings got new verdicts in this blind step. "
            f"<code>hpf</code> cost about {runs['hpf']['cost_usd_api_equivalent'] / runs['claude']['cost_usd_api_equivalent']:.0f} times the Claude Code review, so it is the more thorough tool here and not the cheaper one. The Codex run was on a subscription and reports no cost.</p>"]
-    return out
+    return out + import_text()
+
+
+def import_text() -> list:
+    """Version 0.6 of the tool: the findings of another reviewer as input (v2/import_live.py)."""
+    path = ROOT / "v2" / "import_live.json"
+    if not path.exists():
+        return []
+    live = json.loads(path.read_text())
+    blind, runs = live["blind_judge"], live["runs"]
+    last = runs[-1]
+    return ["<h3>Findings of another reviewer</h3>",
+            "<p>Version 0.6 takes the findings of another review tool as input (<code>hpf audit --findings FILE</code>, a JSON list or a SARIF file). "
+            "Such a finding has no repro, so it enters the ladder as a claim. A worker must show each claim with a repro, or give a reason why it cannot. "
+            "A claim with a repro that runs then goes to the two verifiers and the gate, like a finding of the review step. "
+            f"We gave this step the {blind['findings']} findings of the two other tools of the comparison above. "
+            f"The blind judge of that comparison confirmed {blind['confirmed_claims']} of them, which are {blind['confirmed_distinct_bugs']} distinct bugs.</p>",
+            table(["Run", "Claims", "Shown by a repro", "Not shown, with a reason", "Confirmed claims", "Confirmed distinct bugs",
+                   f"Of the {blind['confirmed_distinct_bugs']} bugs of the blind judge", "Cost", "Time on the clock"],
+                  [[r["brief"].capitalize(), str(r["claims"]), str(r["shown_by_a_repro"]), str(r["not_shown"]), str(r["confirmed_claims"]),
+                    str(r["confirmed_distinct_bugs"]), str(sum(1 for v in r["bugs_of_the_blind_judge_found"].values() if v)),
+                    money(r["cost_usd"]), f"{r['wall_seconds']} s"] for r in runs]),
+            f"<p class=\"small\">One of the {last['entries']} findings was about a test file, and the step skipped it with that reason. "
+            "The first brief let the worker judge only the named function. One real fault shows only in a caller of that function, and the worker said that the function gives no wrong result. "
+            "The brief of the release tells the worker to show such a claim through the caller. This is the limit of the step: a claim that the worker does not show does not reach a verifier, "
+            "so the report lists each such claim with its reason. One run for each brief, on one range.</p>",
+            *self_text(live.get("self_audit_of_the_change"))]
+
+
+def self_text(sa: dict | None) -> list:
+    """The audit of the import change with the tool itself."""
+    if not sa:
+        return []
+    rounds = sa["rounds"]
+    counts = ", ".join(str(r["confirmed_bugs"]) for r in rounds)
+    worst = {k for r in rounds for k in r["confirmed_by_severity"]}
+    return [f"<p class=\"small\">The change itself went through the gate before its release, with the stop rule of version 0.5: {len(rounds)} rounds, "
+            f"{sa['confirmed_bugs']} confirmed bugs ({counts}), {money(sa['cost_usd'])}. "
+            + ("Each one had low severity. " if worst <= {"low"} else "")
+            + f"The gate passes at the release commit with {sa['closed_by_repro']} bugs closed by their repro.</p>",
+            *ci_text(sa.get("ci_job"))]
+
+
+def ci_text(ci: dict | None) -> list:
+    """What the audit job in CI found in the change, after the local rounds."""
+    if not ci:
+        return []
+    return [f"<p class=\"small\">After the third local round, the audit job in CI made a review of its own of the change. It confirmed {ci['confirmed_bugs']} more bugs, of {' and '.join(ci['severities'])} severity: "
+            "a file address in a SARIF file that the address parser refuses stopped the full import, and an audit with one verifier model failed only after the review ran. "
+            "The gate of the job failed, and that stopped the merge. After the fixes, the fourth local round and a second run of the job confirmed "
+            + ("nothing" if not ci["second_run_confirmed_bugs"] else str(ci["second_run_confirmed_bugs"]) + " bugs")
+            + ". Each run of a review is a new sample, so a second reviewer with no memory of the first finds other bugs.</p>"]
 
 
 def sec_use(ls: dict) -> str:

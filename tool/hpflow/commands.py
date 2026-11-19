@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from . import adapters, briefs
+from . import adapters, briefs, outside
 from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, git_status,
                      is_test_file, lines_of, read_json, repro_state, run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
@@ -461,6 +461,23 @@ def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) ->
     return out
 
 
+def repro_grade(ctx: Context, snippet: Path, repro_timeout: float, import_root: str) -> Dict[str, Any]:
+    """The script gate of one finding: grade 1 and the result when the repro runs on the source under audit,
+    else grade 0 and the reason. No model call."""
+    if not snippet.exists():
+        return {"grade": 0, "reason": "no repro file"}
+    got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout, import_root=import_root)
+    if got.get("ok"):
+        return {"run_result": got, "grade": 1, "result": got["result"]}
+    if got.get("error") == "timeout":
+        reason = f"the repro timed out ({repro_timeout} seconds)"
+    elif got.get("error") in MISSING:
+        reason = f"the repro cannot import the function: {got.get('error')}: {got.get('message')}"
+    else:
+        reason = f"run() raised {got.get('error')}: {got.get('message')}"
+    return {"run_result": got, "grade": 0, "reason": reason}
+
+
 def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, repro_timeout: float, group: str = "function",
                group_size: int = 6, short_prompt: bool = False) -> Dict[str, Any]:
     audit = ctx.audit()
@@ -543,20 +560,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
                    "function": t["function"], "model": r["model"], "claim": str(f.get("claim"))[:600],
                    "expected": str(f.get("expected"))[:300], "confidence": f.get("confidence"),
                    "repro": str(folder / f"finding_{n}.py")}
-            snippet = folder / f"finding_{n}.py"
-            if not snippet.exists():
-                row.update(grade=0, reason="no repro file")
-            else:
-                got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout, import_root=import_root)
-                row["run_result"] = got
-                if got.get("ok"):
-                    row.update(grade=1, result=got["result"])
-                elif got.get("error") == "timeout":
-                    row.update(grade=0, reason=f"the repro timed out ({repro_timeout} seconds)")
-                elif got.get("error") in MISSING:
-                    row.update(grade=0, reason=f"the repro cannot import the function: {got.get('error')}: {got.get('message')}")
-                else:
-                    row.update(grade=0, reason=f"run() raised {got.get('error')}: {got.get('message')}")
+            row.update(repro_grade(ctx, folder / f"finding_{n}.py", repro_timeout, import_root))
             out.append(row)
         return out
 
@@ -576,9 +580,163 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
     return report
 
 
+# ---------------------------------------------------------------- import
+
+NO_ANSWER_REASON = "the worker gave no answer for this claim"
+
+
+def place_claim(ctx: Context, audit: Dict[str, Any], e: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    """The function of the snapshot that an outside claim is about: the claim with its target, or the reason why
+    the ladder cannot take it. The ladder works on one Python function of the audited paths."""
+    file = e["file"].replace("\\", "/")
+    try:
+        if Path(file).is_absolute():
+            # Some tools give the full path of the file on the machine of the run.
+            file = Path(file).resolve().relative_to(Path(audit["repo"]).resolve()).as_posix()
+        file = repo_path(file, "file")
+    except (UsageError, ValueError, OSError):
+        return None, "the path is not inside the repository"
+    if not file.endswith(".py"):
+        return None, "not a Python file"
+    if is_test_file(file):
+        return None, "a test file"
+    path = ctx.src / file
+    if not in_paths(file, audit["paths"]) or not path.is_file():
+        return None, "the file is not in the snapshot of the audit (paths: " + ", ".join(audit["paths"]) + ")"
+    fns = functions_of(path.read_text(encoding="utf-8", errors="replace"))
+    name, line = e["function"], e["line"]
+    # A tool can give a method with no class name, so a name fits its exact match and each method with that name.
+    named = [fn for fn in fns if fn["function"] == name or fn["function"].endswith("." + name)] if name else []
+    inside = [fn for fn in named or fns if line is not None and fn["start"] <= line <= fn["end"]]
+    if inside:
+        # The line is the exact place: among the functions with the name, or in the file when no function has it.
+        found = inside
+    elif not named:
+        return None, f"line {line} is in no function" if line is not None else f"no function {name} in the file"
+    else:
+        # No line, or a line outside each function with the name: the name decides, and the exact name comes first.
+        found = [fn for fn in named if fn["function"] == name] or named
+        if len(found) > 1:
+            return None, f"{len(found)} functions have the name {name}: give " + ("the line" if line is None else "a line inside one of them")
+    target = make_target(file, found[0], "import", audit.get("import_root") or "")
+    return {"id": digest("outside", file, target["function"], target["nth"], e["claim"]), "file": file,
+            "function": target["function"], "target": target, "claim": e["claim"], "source": e["source"]}, None
+
+
+def cmd_import(ctx: Context, files: List[str], source: Optional[str], model: Optional[str], repro_timeout: float) -> Dict[str, Any]:
+    """Take the findings of another reviewer into the ladder. A worker must show each claim with a repro. A claim
+    with a repro that runs is a finding of grade 1, and `verify` judges it like a finding of `review`."""
+    audit = ctx.audit()
+    import_root = audit.get("import_root") or ""
+    root = "project/" + (f"{import_root}/" if import_root else "")
+    adapter, template = ctx.check_adapter()
+    mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
+    payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
+    key = adapter_key(adapter, template, ctx.effort)
+    claims: Dict[str, Dict[str, Any]] = {}
+    skipped: List[Dict[str, Any]] = []
+    for name in files:
+        entries, bad = outside.read(Path(name).expanduser(), source)
+        skipped += bad
+        for e in entries:
+            claim, why = place_claim(ctx, audit, e)
+            if claim is None:
+                skipped.append({"file": name, "index": e["index"], "reason": why, "place": e["file"]})
+            else:
+                # Two tools, or one tool two times, can give the same text for one function.
+                claims.setdefault(claim["id"], claim)
+    ctx.keep_adapter()
+    by_target: Dict[str, List[Dict[str, Any]]] = {}
+    for c in claims.values():
+        by_target.setdefault(c["target"]["id"], []).append(c)
+    jobs = [cs[i:i + briefs.IMPORT_PART] for cs in by_target.values() for i in range(0, len(cs), briefs.IMPORT_PART)]
+
+    def one(cs: List[Dict[str, Any]]) -> Tuple[Dict[str, Any], bool]:
+        t = cs[0]["target"]
+        rid = digest("import", audit["commit"], t["id"], *key, mid, *[c["id"] for c in cs])
+        r = ctx.stored(rid)
+        if r:
+            return r, False
+        folder = ctx.out / "runs" / rid
+        prepare_folder(ctx, folder)
+        write_json(folder / "outside_claims.json", [{"n": n, "claim": c["claim"], "from": c["source"]} for n, c in enumerate(cs, 1)])
+        task = briefs.IMPORT.format(n=len(cs), function=target_label(t), file=t["file"], top=t["top"], root=root,
+                                    arm_text=briefs.REVIEW_ARM["shell"])
+        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py", "not_shown.json"], adapter, mid, payload,
+                            check=shell_python(briefs.IMPORT_CHECK), timeout=2400)
+        r = ctx.runner.run(graph, folder)
+        r.update(kind="import", run=rid, folder=str(folder), target=t["id"], claims=[c["id"] for c in cs], adapter=adapter,
+                 model=mid, finished=now())
+        ctx.save(rid, r)
+        return r, True
+
+    results = pool_map(ctx, one, jobs)
+    records = [r for r, _ in results]
+
+    def gate(r: Dict[str, Any]) -> List[Dict[str, Any]]:
+        folder = Path(r["folder"])
+        shown, not_shown = read_json(folder / "findings.json"), read_json(folder / "not_shown.json")
+        if not isinstance(shown, list) or not isinstance(not_shown, list):
+            shown, not_shown = [], []
+            r["note"] = "no valid findings.json and not_shown.json"
+        by_n = {f.get("n"): f for f in shown if isinstance(f, dict)}
+        no_n = {f.get("n"): f for f in not_shown if isinstance(f, dict)}
+        out = []
+        for n, cid in enumerate(r["claims"], 1):
+            c = claims[cid]
+            t = c["target"]
+            row = {"id": f"{r['run']}-{n}", "run": r["run"], "n": n, "target": t["id"], "file": t["file"], "function": t["function"],
+                   "model": r["model"], "source": c["source"], "outside": cid, "outside_claim": c["claim"],
+                   "repro": str(folder / f"finding_{n}.py")}
+            if n in by_n:
+                f = by_n[n]
+                row.update(claim=str(f.get("claim"))[:600], expected=str(f.get("expected"))[:300], confidence=f.get("confidence"))
+                row.update(repro_grade(ctx, folder / f"finding_{n}.py", repro_timeout, import_root))
+            elif n in no_n:
+                row.update(claim=c["claim"][:600], grade=0, not_shown=True,
+                           reason="not shown by a repro: " + str(no_n[n].get("reason"))[:400])
+            else:
+                # A claim with no answer is not a claim that is false. The run counts as failed.
+                row.update(claim=c["claim"][:600], grade=0, reason=NO_ANSWER_REASON)
+                r["note"] = r.get("note") or f"no answer for claim {n}"
+            out.append(row)
+        if r.get("note"):
+            ctx.save(r["run"], r)
+        return out
+
+    findings: List[Dict[str, Any]] = []
+    for rows in pool_map(ctx, gate, records):
+        findings.extend(rows)
+    write_json(ctx.out / "imports.json", {"adapter": adapter, "model": mid, "files": [str(f) for f in files],
+                                          "claims": [{k: c[k] for k in ("id", "file", "function", "claim", "source")}
+                                                     for c in claims.values()],
+                                          "skipped": skipped, "runs": [r["run"] for r in records], "findings": findings})
+    failed = [{"run": r["run"], "target": r["target"], "error": r.get("error") or r.get("note") or r.get("status")}
+              for r in records if r.get("error") or r.get("note")]
+    report = {"command": "import", "ok": not failed, "claims": len(claims), "skipped": skipped,
+              "runs": len(records), "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
+              "grade_1": sum(1 for f in findings if f["grade"] == 1),
+              "not_shown": [{"id": f["id"], "reason": f["reason"]} for f in findings if f.get("not_shown")],
+              "grade_0": [{"id": f["id"], "reason": f["reason"]} for f in findings if f["grade"] == 0 and not f.get("not_shown")],
+              "failed_runs": failed}
+    report.update(adapter_report(ctx, adapter))
+    report.update(costs(records))
+    return report
+
+
+def all_findings(ctx: Context) -> Optional[List[Dict[str, Any]]]:
+    """The findings of the audit folder: those of `review` and those of `import`. None when neither step ran."""
+    review, imports = read_json(ctx.out / "review.json"), read_json(ctx.out / "imports.json")
+    if review is None and imports is None:
+        return None
+    return ((review or {}).get("findings") or []) + ((imports or {}).get("findings") or [])
+
+
 # ---------------------------------------------------------------- verify
 
 SINGLE_CLASS = {"real_unreachable": "real_unreachable", "intended": "by_design"}
+# The source of a finding that the review step of hpflow made. A finding of `import` has the name of its tool.
+REVIEW_SOURCE = "hpf review"
 
 
 def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = False) -> str:
@@ -597,22 +755,29 @@ def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = 
     return "mixed"
 
 
-def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function", staged: bool = True) -> Dict[str, Any]:
-    audit = ctx.audit()
-    review = read_json(ctx.out / "review.json")
-    if review is None:
-        raise UsageError("no review.json: run `review` first")
-    adapter, template = ctx.check_adapter()
+def verifier_models(adapter: str, models: Optional[List[str]]) -> List[str]:
+    """The model ids of the verifiers, or a usage error. `verify` and the check before an `audit` use this, so
+    an audit with a bad `--models` stops before a reviewer runs."""
     mids = [adapters.model_id(adapter, m) for m in adapters.model_or_default(adapter, models, ["sonnet", "opus"], "--models")]
     if len(mids) < 2:
         raise UsageError("verify needs two models or more")
     if len(set(mids)) < len(mids):
         raise UsageError("give each verifier model once: the verdicts of one model are stored under its id")
+    return mids
+
+
+def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function", staged: bool = True) -> Dict[str, Any]:
+    audit = ctx.audit()
+    findings = all_findings(ctx)
+    if findings is None:
+        raise UsageError("no review.json and no imports.json: run `review` or `import` first")
+    adapter, template = ctx.check_adapter()
+    mids = verifier_models(adapter, models)
     payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
     key = adapter_key(adapter, template, ctx.effort)
     ctx.keep_adapter()
     groups: Dict[str, Dict[str, Any]] = {}
-    for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
+    for f in sorted((f for f in findings if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
         gkey = f["target"] if group == "function" else digest("file", f["file"])
         g = groups.setdefault(gkey, {"key": gkey, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
         g["claims"].append(dict(f, k=len(g["claims"]) + 1))
@@ -670,7 +835,8 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
             verdicts = {m: (v or {}).get("verdict") for m, v in details.items()}
             cls = verdict_class(verdicts, len(mids), staged)
             row = {"id": c["id"], "k": c["k"], "target": c["target"], "file": c["file"], "function": c["function"],
-                   "claim": c["claim"], "result_now": c["result"], "repro": c["repro"], "verdicts": verdicts,
+                   "claim": c["claim"], "source": c.get("source") or REVIEW_SOURCE, "result_now": c["result"],
+                   "repro": c["repro"], "verdicts": verdicts,
                    "class": cls, "grade": 2 if cls == "confirmed" else 1, "duplicate_of": root[c["k"]] if root[c["k"]] != c["k"] else None,
                    "details": details}
             rows.append(row)
@@ -684,6 +850,7 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
             info = lead["details"].get(mids[0]) or {}
             bugs.append({"id": digest("bug", lead["target"], *[x["id"] for x in members]), "target": lead["target"],
                          "file": lead["file"], "function": lead["function"], "claim": lead["claim"],
+                         "sources": sorted({x["source"] for x in members}),
                          "claims": [x["k"] for x in members], "result_now": lead["result_now"],
                          "what_goes_wrong": info.get("what_goes_wrong"), "caller": info.get("caller"),
                          "severity": info.get("severity"), "fix_idea": info.get("fix_idea"),
@@ -709,7 +876,13 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
 
 
 def cell(x: Any) -> str:
-    return str("" if x is None else x).replace("|", "\\|").replace("\n", " ")[:300]
+    """The text of one cell of a Markdown table, on one line.
+
+    Each run of space characters (a line feed, a carriage return, a tab and the others) becomes one space. The
+    cut to 300 characters comes before the escapes, so it cannot cut an escape in two. A backslash is doubled
+    before a bar gets its escape, so a backslash of the text cannot take the escape of the bar."""
+    text = re.sub(r"\s+", " ", str("" if x is None else x))[:300]
+    return text.replace("\\", "\\\\").replace("|", "\\|")
 
 
 def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, Any]], bugs: List[Dict[str, Any]]) -> str:
@@ -726,12 +899,12 @@ def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, A
         if not rows:
             lines += ["None.", ""]
             continue
-        lines += ["| Function | Claim | Same as | Verdicts | Result now | What goes wrong | Caller |",
-                  "| --- | --- | --- | --- | --- | --- | --- |"]
+        lines += ["| Function | Found by | Claim | Same as | Verdicts | Result now | What goes wrong | Caller |",
+                  "| --- | --- | --- | --- | --- | --- | --- | --- |"]
         for c in rows:
             info = c["details"].get(models[0]) or {}
             verdicts = ", ".join(f"{m}: {v}" for m, v in c["verdicts"].items())
-            lines.append(f"| `{cell(c['file'])}:{cell(c['function'])}` k={c['k']} | {cell(c['claim'])} | "
+            lines.append(f"| `{cell(c['file'])}:{cell(c['function'])}` k={c['k']} | {cell(c.get('source') or REVIEW_SOURCE)} | {cell(c['claim'])} | "
                          f"{cell(c['duplicate_of'])} | {cell(verdicts)} | `{cell(c['result_now'])}` | "
                          f"{cell(info.get('what_goes_wrong'))} | {cell(info.get('caller'))} |")
         lines.append("")
@@ -954,6 +1127,8 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     audit = ctx.audit()
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     review = read_json(ctx.out / "review.json")
+    imports = read_json(ctx.out / "imports.json")
+    findings = all_findings(ctx) or []
     verify = read_json(ctx.out / "verify.json")
     confirmed = read_json(ctx.out / "confirmed.json")
     fix = read_json(ctx.out / "fix.json")
@@ -963,15 +1138,13 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
 
     steps: Dict[str, Any] = {}
     review_recs = recs((review or {}).get("runs") or [])
+    import_recs = recs((imports or {}).get("runs") or [])
     verify_recs = recs((verify or {}).get("runs") or [])
     fix_recs = recs((fix or {}).get("runs") or [])
-    for name, rs in (("review", review_recs), ("verify", verify_recs), ("fix", fix_recs)):
+    for name, rs in (("review", review_recs), ("import", import_recs), ("verify", verify_recs), ("fix", fix_recs)):
         # A record of hpflow 0.4 has no `adapter` key: those workers ran on Claude Code.
         steps[name] = dict(runs=len(rs), adapters=sorted({r.get("adapter") or adapters.DEFAULT_ADAPTER for r in rs}), **costs(rs))
-    grade: Dict[str, int] = {}
-    if review:
-        for f in review["findings"]:
-            grade[f["id"]] = f["grade"]
+    grade: Dict[str, int] = {f["id"]: f["grade"] for f in findings}
     for c in (verify or {}).get("claims") or []:
         grade[c["id"]] = max(grade.get(c["id"], 0), c["grade"])
     fixed = accepted_fixes(fix_recs)
@@ -981,10 +1154,12 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
                 grade[rp["finding"]] = 3
     counts = {str(n): sum(1 for v in grade.values() if v == n) for n in range(4)}
     open_items: List[str] = []
-    if targets is None:
+    # An audit needs one source of findings: a review of targets, or an import. An import needs no targets.
+    if targets is None and imports is None:
         open_items.append("targets: not run")
     if review is None:
-        open_items.append("review: not run")
+        if targets is not None or imports is None:
+            open_items.append("review: not run")
     else:
         # A run with an error (the worker did not start) or a note (it wrote no valid report) reviewed nothing.
         done = {i for r in review_recs if not (r.get("error") or r.get("note")) for i in (r.get("targets") or [r["target"]])}
@@ -994,20 +1169,35 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
         bad = [r["run"] for r in review_recs if r.get("error") or r.get("note")]
         if bad:
             open_items.append(f"review: {len(bad)} runs failed")
-    if review is not None and any(f["grade"] >= 1 for f in review["findings"]) and verify is None:
+    if imports is not None:
+        # A run with an error or a note left a claim with no answer. That claim is not shown to be false.
+        bad = [r["run"] for r in import_recs if r.get("error") or r.get("note")]
+        if bad:
+            open_items.append(f"import: {len(bad)} runs failed")
+    need = [f["id"] for f in findings if f["grade"] >= 1]
+    if need and verify is None:
         open_items.append("verify: not run")
     if verify is not None:
         bad = [r["run"] for r in verify_recs if r.get("error") or r.get("verdicts") is None]
         if bad:
             open_items.append(f"verify: {len(bad)} runs have no verdicts")
+        # A review or an import after the last verify can add a finding that no verifier read.
+        judged = {c["id"] for c in verify.get("claims") or []}
+        late = [i for i in need if i not in judged]
+        if late:
+            open_items.append(f"verify: {len(late)} findings have no verdict (run `verify` again)")
     if confirmed:
         unfixed = [b["id"] for b in confirmed if b["id"] not in fixed]
         if unfixed:
             open_items.append(f"fix: {len(unfixed)} confirmed bugs have no accepted fix with a PASS judge")
-    return {"command": "status", "ok": True, "repo": audit["repo"], "commit": audit["commit"],
-            "adapter": audit.get("adapter") or adapters.DEFAULT_ADAPTER,
-            "targets": len(targets or []), "grades": counts, "confirmed_bugs": len(confirmed or []), "steps": steps,
-            "not_done": open_items, "cost_note": COST_NOTE}
+    report = {"command": "status", "ok": True, "repo": audit["repo"], "commit": audit["commit"],
+              "adapter": audit.get("adapter") or adapters.DEFAULT_ADAPTER,
+              "targets": len(targets or []), "grades": counts, "confirmed_bugs": len(confirmed or []), "steps": steps,
+              "not_done": open_items, "cost_note": COST_NOTE}
+    if imports is not None:
+        # The ladder did not judge a skipped claim. A reader of a pass must see how many there are.
+        report["outside_claims"] = {"taken": len(imports.get("claims") or []), "skipped": len(imports.get("skipped") or [])}
+    return report
 
 
 # ---------------------------------------------------------------- gate
@@ -1089,9 +1279,12 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
         rows.append(row)
     open_rows = [r for r in rows if r["state"] == "open"]
     ok = not incomplete and not open_rows
-    return {"command": "gate", "ok": ok, "verdict": "pass" if ok else "fail", "audited_commit": audit["commit"],
-            "checked_commit": commit, "targets": status["targets"], "confirmed_bugs": len(confirmed),
-            "closed": sum(1 for r in rows if r["state"] == "closed"), "waived": sum(1 for r in rows if r["state"] == "waived"),
-            "open": open_rows, "incomplete": incomplete, "bugs": rows,
-            "note": "A pass says that each bug that two verifier agents confirmed is closed or waived. It is not a proof that the code has no bug."}
+    report = {"command": "gate", "ok": ok, "verdict": "pass" if ok else "fail", "audited_commit": audit["commit"],
+              "checked_commit": commit, "targets": status["targets"], "confirmed_bugs": len(confirmed),
+              "closed": sum(1 for r in rows if r["state"] == "closed"), "waived": sum(1 for r in rows if r["state"] == "waived"),
+              "open": open_rows, "incomplete": incomplete, "bugs": rows,
+              "note": "A pass says that each bug that two verifier agents confirmed is closed or waived. It is not a proof that the code has no bug."}
+    if "outside_claims" in status:
+        report["outside_claims"] = status["outside_claims"]
+    return report
 

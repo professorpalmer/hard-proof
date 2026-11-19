@@ -1,0 +1,80 @@
+[
+ {
+  "id": "08660249926364920296",
+  "target": "12690499272655355783",
+  "file": "tool/hpflow/commands.py",
+  "function": "cell",
+  "claim": "cell replaces only \\n, so a carriage return (or \\r\\n) in the text stays in the table cell. Markdown treats a lone CR as a line end, so it splits the table row.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "'a\\rb'",
+  "what_goes_wrong": "A carriage return in a claim, what_goes_wrong, caller or file name (taken from model JSON or git paths) stays in the cell, so REPORT.md splits the table row in viewers that treat a lone CR as a line end.",
+  "caller": "project/tool/hpflow/commands.py:896",
+  "severity": "low",
+  "fix_idea": "Replace \\r\\n, \\r and \\n in cell with a space, for example with re.sub on [\\r\\n]+.",
+  "repros": [
+   {
+    "finding": "13633585979651187233-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060-delta/runs/13633585979651187233/finding_1.py",
+    "result_now": "'a\\rb'"
+   }
+  ]
+ },
+ {
+  "id": "13751207939868511618",
+  "target": "09577958454581747208",
+  "file": "tool/hpflow/outside.py",
+  "function": "file_of_uri",
+  "claim": "The host `localhost` is matched case-sensitively, so `file://LOCALHOST/repo/a.py` is treated as another host and gives `//LOCALHOST/repo/a.py` instead of the local path.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "'//LOCALHOST/repo/a.py'",
+  "what_goes_wrong": "A SARIF artifact URI with host `LOCALHOST` (hosts are case-insensitive per RFC 3986/8089) is turned into the fake network path `//LOCALHOST/repo/a.py`, so the finding's file does not match the repository file.",
+  "caller": "project/tool/hpflow/outside.py:105",
+  "severity": "low",
+  "fix_idea": "Compare with parts.netloc.lower() != \"localhost\".",
+  "repros": [
+   {
+    "finding": "09779466845881644186-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060-delta/runs/09779466845881644186/finding_1.py",
+    "result_now": "'//LOCALHOST/repo/a.py'"
+   }
+  ]
+ },
+ {
+  "id": "17746759798228799686",
+  "target": "12019573596323080696",
+  "file": "tool/hpflow/outside.py",
+  "function": "sarif_entries",
+  "claim": "file_of_uri compares the host with 'localhost' case-sensitively, but host names are case-insensitive, so 'file://LOCALHOST/a.py' is treated as a file on another host and gives '//LOCALHOST/a.py'.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "'//LOCALHOST/a.py'",
+  "what_goes_wrong": "A SARIF result whose uri is file://LOCALHOST/a.py gets the file '//LOCALHOST/a.py' instead of '/a.py', so the finding does not match the repository file and is treated as another host's file.",
+  "caller": "project/tool/hpflow/outside.py:121",
+  "severity": "low",
+  "fix_idea": "Compare parts.netloc.lower() with 'localhost' (and treat an empty host the same way).",
+  "repros": [
+   {
+    "finding": "06243337004791253619-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060-delta/runs/06243337004791253619/finding_1.py",
+    "result_now": "'//LOCALHOST/a.py'"
+   }
+  ]
+ }
+]

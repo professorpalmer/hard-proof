@@ -71,4 +71,5 @@ jobs:
           path: |
             ${{ runner.temp }}/audit/REPORT.md
             ${{ runner.temp }}/audit/*.json
+            ${{ runner.temp }}/audit/runs/*/finding_*.py
             ${{ runner.temp }}/audit.json

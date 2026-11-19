@@ -1,0 +1,85 @@
+{
+ "mode": "changed",
+ "changed": "98f4a1c..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "06472191850690077456",
+   "file": "tool/hpflow/commands.py",
+   "function": "place_claim",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    588,
+    623
+   ],
+   "length": 36,
+   "source": "changed"
+  },
+  {
+   "id": "12690499272655355783",
+   "file": "tool/hpflow/commands.py",
+   "function": "cell",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    871,
+    874
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "09577958454581747208",
+   "file": "tool/hpflow/outside.py",
+   "function": "file_of_uri",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    58,
+    72
+   ],
+   "length": 15,
+   "source": "changed"
+  },
+  {
+   "id": "12019573596323080696",
+   "file": "tool/hpflow/outside.py",
+   "function": "sarif_entries",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    75,
+    107
+   ],
+   "length": 33,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_the_line_decides_between_functions_with_one_name",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_the_tool_name_of_a_sarif_file_comes_before_the_source_option",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_the_path_of_a_sarif_address",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_a_bar_in_a_cell_stays_text",
+   "reason": "test file"
+  }
+ ]
+}

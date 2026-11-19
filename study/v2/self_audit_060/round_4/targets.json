@@ -1,0 +1,113 @@
+{
+ "mode": "changed",
+ "changed": "b5f0cbb..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "07510137286282714691",
+   "file": "tool/hpflow/cli.py",
+   "function": "run_command",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    166,
+    223
+   ],
+   "length": 58,
+   "source": "changed"
+  },
+  {
+   "id": "04096676611584503665",
+   "file": "tool/hpflow/commands.py",
+   "function": "verifier_models",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    758,
+    766
+   ],
+   "length": 9,
+   "source": "changed"
+  },
+  {
+   "id": "03224574987867754209",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_verify",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    769,
+    875
+   ],
+   "length": 107,
+   "source": "changed"
+  },
+  {
+   "id": "04115461640520763764",
+   "file": "tool/hpflow/outside.py",
+   "function": "sarif_result",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    76,
+    101
+   ],
+   "length": 26,
+   "source": "changed"
+  },
+  {
+   "id": "12019573596323080696",
+   "file": "tool/hpflow/outside.py",
+   "function": "sarif_entries",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    104,
+    115
+   ],
+   "length": 12,
+   "source": "changed"
+  },
+  {
+   "id": "11814478281189362642",
+   "file": "tool/hpflow/outside.py",
+   "function": "read",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    118,
+    138
+   ],
+   "length": 21,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.test_bad_verifier_models_stop_the_audit_before_a_worker_runs",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_no_sarif_result_stops_the_read",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_no_entry_of_the_list_form_stops_the_read",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_a_file_that_json_cannot_load_is_a_usage_error",
+   "reason": "test file"
+  }
+ ]
+}
