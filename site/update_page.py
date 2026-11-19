@@ -16,6 +16,7 @@ REPO_URL = "https://github.com/professorpalmer/hard-proof"
 
 
 def step12(pc: dict, review: dict) -> str:
+    tri = json.loads((ROOT / "v2" / "conflict_triage.json").read_text())
     n = pc["bugs"]
     arms = pc["arms"]
     label = {"shell/opus": "Review: Opus 5.5, with a shell", "shell/sonnet": "Review: Sonnet 5.5, with a shell", "plain/sonnet": "Review: Sonnet 5.5, read only"}
@@ -39,8 +40,9 @@ def step12(pc: dict, review: dict) -> str:
 <tr><td>Any review arm or the proof pipeline</td><td>{pc['union_all']} of {n}</td><td></td></tr>
 </tbody></table></div>
 <p>The proof pipeline does not replace a review. It found fewer bugs, for about {pc['cost_usd'] / review[max(arms, key=lambda k: arms[k]['detected']) + '/pre']:.0f} times the cost of the best review arm. But the two methods miss different bugs. The three review arms together missed {missed} bugs, and the pipeline found {only} of those.</p>
-<p>An agent wrote a correct mirror for {pc['model']['link_agrees_before_the_fix']} of {n} functions: each agrees with the real function on 5,000 random cases. When the pipeline found the bug, it was early: {first_two} of {pc['proof_detected']} detections came in the first two steps. A mirror of the code cannot show what the code does not have. The pipeline found {pc['proof_detected_in_scope']} of the {pc['in_scope']} bugs that the mirror can express, and none of the others.</p>
-<p class="note">The pipeline also showed {pc['items_not_the_bug']} conflicts and gap questions that are not the known bug. In real use the owner answers each one, so the number of questions is a cost. The paper has the outcome of each bug, the limits, and a fault of our harness in this run.</p>
+<p>An agent wrote a mirror that passes the link test for {pc['model']['link_agrees_before_the_fix']} of {n} functions: each agrees with the real function on 5,000 random cases. When the pipeline found the bug, it was early: {first_two} of {pc['proof_detected']} detections came in the first two steps. A mirror of the code cannot show what the code does not have. The pipeline found {pc['proof_detected_in_scope']} of the {pc['in_scope']} bugs that the mirror can express, and none of the others.</p>
+<p>The pipeline also showed {pc['items_not_the_bug']} conflicts and gap questions that are not the known bug. In real use the owner answers each one, so the number of questions is a cost. We audited the conflicts: {tri['collect']['candidates']} still hold on the newest releases, and two verifier agents judged each one. No conflict is a bug that the product can hit today. In {tri['verdicts']['agreed'].get('misread', 0)} of {tri['collect']['candidates']}, the law said more than its documentation sentence says. The agreed finds are {sum(1 for f in tri['agreed_faults'] if f['kind'] == 'latent fault')} latent faults and {sum(1 for f in tri['agreed_faults'] if f['kind'] == 'documentation')} wrong sentences. A proof makes a law exact. It does not make the law correct, so the owner must own the laws.</p>
+<p class="note">The paper has the outcome of each bug, the audit of the conflicts, the limits, and a fault of our harness in this run.</p>
 </section>"""
 
 

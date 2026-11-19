@@ -1,0 +1,38 @@
+{
+ "claims": 73,
+ "runs": 66,
+ "agreed": {
+  "misread": 57,
+  "real_unreachable": 4,
+  "the two do not agree": 9,
+  "doc_wrong": 3
+ },
+ "pairs": [
+  [
+   "opus:misread / sonnet:misread",
+   57
+  ],
+  [
+   "opus:real_unreachable / sonnet:real_unreachable",
+   4
+  ],
+  [
+   "opus:misread / sonnet:real_unreachable",
+   3
+  ],
+  [
+   "opus:doc_wrong / sonnet:doc_wrong",
+   3
+  ],
+  [
+   "opus:doc_wrong / sonnet:misread",
+   3
+  ],
+  [
+   "opus:misread / sonnet:doc_wrong",
+   3
+  ]
+ ],
+ "cost_usd": 50.27,
+ "seconds": 2528
+}

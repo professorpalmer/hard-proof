@@ -1,0 +1,18 @@
+{
+ "conflicts_not_the_known_bug": 123,
+ "candidates": 73,
+ "functions": 33,
+ "dropped": {
+  "result changed on the newest source": 38,
+  "stage folder absent or changed": 3,
+  "function absent on the newest source": 9
+ },
+ "by_repo": {
+  "Puppetmaster": 40,
+  "marionette": 33
+ },
+ "tags": {
+  "Puppetmaster": "v1.51.2",
+  "marionette": "v0.9.685"
+ }
+}

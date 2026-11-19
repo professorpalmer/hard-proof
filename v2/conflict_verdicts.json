@@ -1,0 +1,1243 @@
+[
+ {
+  "group": "f4ae8249",
+  "k": 1,
+  "bug": "0684a733",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "law": "FromRegistryOrZeros",
+  "input": "model_id=\"a\" registry=[{id=\"a\", adapter_model_name=None, in=1.0, out=-1.0}]",
+  "result": "(1.0, 0.0)",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f4ae8249",
+  "k": 2,
+  "bug": "0684a733",
+  "step": 5,
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "law": "ExactIdRowPriced",
+  "input": "model_id=\" \" registry=[{id=\" \", adapter_model_name=None, in=5.0, out=5.0}]",
+  "result": "(0.0, 0.0)",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f4ae8249",
+  "k": 3,
+  "bug": "8184b3a0",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "law": "FromRegistryOrZeros",
+  "input": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-4/4)])",
+  "result": "(4/4, 0/4)",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f4ae8249",
+  "k": 4,
+  "bug": "8184b3a0",
+  "step": 2,
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "law": "NonzeroIsPositivePair",
+  "input": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-1/4)])",
+  "result": "(4/4, 0/4)",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f4ae8249",
+  "k": 5,
+  "bug": "8184b3a0",
+  "step": 6,
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "law": "NonzeroFromMatchingRow",
+  "input": "_registry_rates(\"-\", [(id=\".\", adapter_model_name=None, in=4/4, out=4/4)])",
+  "result": "(4/4, 4/4)",
+  "verdicts": {
+   "sonnet": "real_unreachable",
+   "opus": "real_unreachable"
+  },
+  "agreed": "real_unreachable"
+ },
+ {
+  "group": "0c27adf1",
+  "k": 1,
+  "bug": "14de48f8",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+  "function": "_write_candidate",
+  "law": "CandidateHasFields",
+  "input": "{ year := 2000, month := 1, day := 1, slug := \"\", skillMd := \"\", metaPairs := [], base := HP.Base.absent }",
+  "result": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{}\\n\" }",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "0c27adf1",
+  "k": 2,
+  "bug": "14de48f8",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+  "function": "_write_candidate",
+  "law": "CandidateHasFields",
+  "input": "{ year := 2000,",
+  "result": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\": null\\n}\\n\" }",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "0c27adf1",
+  "k": 3,
+  "bug": "14de48f8",
+  "step": 3,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+  "function": "_write_candidate",
+  "law": "CandidateHasFields",
+  "input": "{ year := 2000,",
+  "result": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\\t\\\": null\\n}\\n\" }",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "38803feb",
+  "k": 1,
+  "bug": "1e6f34b3",
+  "step": 5,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/store.py",
+  "function": "SwarmStore.retrieve_memory",
+  "law": "LimitBoundsOutput",
+  "input": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None memories=[]",
+  "result": "positions []",
+  "verdicts": {
+   "sonnet": "real_unreachable",
+   "opus": "misread"
+  },
+  "agreed": null
+ },
+ {
+  "group": "4b60efdc",
+  "k": 1,
+  "bug": "2726eed8",
+  "step": 1,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "NonCumulativeKept",
+  "input": "accumulated=\"a\", incoming=\" a\", min_chunk=1",
+  "result": "\"\"",
+  "verdicts": {
+   "sonnet": "doc_wrong",
+   "opus": "doc_wrong"
+  },
+  "agreed": "doc_wrong"
+ },
+ {
+  "group": "4b60efdc",
+  "k": 2,
+  "bug": "2726eed8",
+  "step": 2,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "NonCumulativeKept",
+  "input": "accumulated=\" aaaaaaaaaaaa\", incoming=\"aaaaaaaaaaaa\", min_chunk=(default)",
+  "result": "\"\"",
+  "verdicts": {
+   "sonnet": "doc_wrong",
+   "opus": "doc_wrong"
+  },
+  "agreed": "doc_wrong"
+ },
+ {
+  "group": "4b60efdc",
+  "k": 3,
+  "bug": "2726eed8",
+  "step": 3,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "SnapshotSuffix",
+  "input": "accumulated=\"a\", incoming=\"aa\", min_chunk=1",
+  "result": "\"\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "4b60efdc",
+  "k": 4,
+  "bug": "2726eed8",
+  "step": 4,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "ShortAccKept",
+  "input": "accumulated=\"a\", incoming=\"ab\", min_chunk=(default)",
+  "result": "\"b\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "doc_wrong"
+  },
+  "agreed": null
+ },
+ {
+  "group": "4b60efdc",
+  "k": 5,
+  "bug": "2726eed8",
+  "step": 5,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "SnapshotSuffix",
+  "input": "accumulated=\"ab\", incoming=\"abab\", min_chunk=1",
+  "result": "\"\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "4b60efdc",
+  "k": 6,
+  "bug": "2726eed8",
+  "step": 6,
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "law": "SnapshotSuffix",
+  "input": "accumulated=\"abcdefghijkl\", incoming=\"abcdefghijkl abcdefghijkl\", min_chunk=(default)",
+  "result": "\"\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 1,
+  "bug": "39b812c2",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "HermesNoProviderAuth",
+  "input": "adapter=hermes output=\"no inference provider is configured. hermes: no such file or directory\"",
+  "result": "missing_cli",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 2,
+  "bug": "39b812c2",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "HermesNoApiKeyAuth",
+  "input": "adapter=hermes output=\"no api key found for provider; no such file or directory: hermes\"",
+  "result": "missing_cli",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 3,
+  "bug": "39b812c2",
+  "step": 3,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "ModelNotFoundUnavailable",
+  "input": "adapter=codex output=\"spend cap model_not_found\"",
+  "result": "billing_or_quota",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 4,
+  "bug": "39b812c2",
+  "step": 4,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "ModelNotFoundUnavailable",
+  "input": "adapter=openai output=\"command not found model_not_found\"",
+  "result": "missing_cli",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 5,
+  "bug": "39b812c2",
+  "step": 5,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "ModelNotFoundUnavailable",
+  "input": "adapter=codex output=\"model_not_found unauthorized\"",
+  "result": "not_authenticated",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 6,
+  "bug": "39b812c2",
+  "step": 6,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "ModelNotFoundUnavailable",
+  "input": "adapter=openai output=\"model_not_found rate limit\"",
+  "result": "rate_limit",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 7,
+  "bug": "afadbb63",
+  "step": 3,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "NoCueUnknown",
+  "input": "classify_adapter_failure(\"x\", \"dns\")",
+  "result": "network_error",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "99395a2a",
+  "k": 8,
+  "bug": "afadbb63",
+  "step": 4,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "law": "NoCueUnknown",
+  "input": "classify_adapter_failure(\"x\", \"missing bearer\")",
+  "result": "not_authenticated",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "b4e5708e",
+  "k": 1,
+  "bug": "3acb0892",
+  "step": 3,
+  "repo": "marionette",
+  "file": "harness/swarm_run_facts.py",
+  "function": "_verified_criterion_loci",
+  "law": "SettledRowYieldsItsOwnLocus",
+  "input": "{ criteria := some [HP.Item.dict",
+  "result": "{ entries := [] }",
+  "verdicts": {
+   "sonnet": "real_unreachable",
+   "opus": "misread"
+  },
+  "agreed": null
+ },
+ {
+  "group": "ae86d31b",
+  "k": 1,
+  "bug": "3f4f643d",
+  "step": 3,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+  "law": "CapHardSuppresses",
+  "input": "HARNESS_LOOP_GUARD=- epoch=0 mutations=0 state=[computer_use:0:=status:3:-:-] call=computer_use:0:=status",
+  "result": "epoch=0 suppress=false reason=- replay=false message=",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "doc_wrong"
+  },
+  "agreed": null
+ },
+ {
+  "group": "ae86d31b",
+  "k": 2,
+  "bug": "3f4f643d",
+  "step": 4,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+  "law": "CapHardSuppresses",
+  "input": "HARNESS_LOOP_GUARD=- epoch=0 mutations=0 state=[run_swarm:0:-:3:-:=] call=run_swarm:0:-",
+  "result": "epoch=0 suppress=true reason=loop_replay replay=true message=[cached repeat of identical call]\\n",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "ae86d31b",
+  "k": 3,
+  "bug": "3f4f643d",
+  "step": 5,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+  "law": "ReplayMessageIsCached",
+  "input": "HARNESS_LOOP_GUARD== epoch=0 mutations=0 state=[run_swarm:0:-:1:-:=] call=run_swarm:0:-",
+  "result": "epoch=0 suppress=true reason=loop_replay replay=true message=[cached repeat of identical call]\\n",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "doc_wrong"
+  },
+  "agreed": null
+ },
+ {
+  "group": "1e60dd35",
+  "k": 1,
+  "bug": "41d520dd",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "select_usage_records",
+  "law": "NoEligibleRaises",
+  "input": "[]",
+  "result": "[]",
+  "verdicts": {
+   "opus": "doc_wrong",
+   "sonnet": "misread"
+  },
+  "agreed": null
+ },
+ {
+  "group": "1e60dd35",
+  "k": 2,
+  "bug": "41d520dd",
+  "step": 3,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "select_usage_records",
+  "law": "NoEligibleRaises",
+  "input": "[{ taskId := \"t\",",
+  "result": "[]",
+  "verdicts": {
+   "opus": "doc_wrong",
+   "sonnet": "misread"
+  },
+  "agreed": null
+ },
+ {
+  "group": "1e60dd35",
+  "k": 3,
+  "bug": "41d520dd",
+  "step": 6,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "select_usage_records",
+  "law": "NeverRaises",
+  "input": "[{ taskId := \"t\",",
+  "result": "raises ValueError",
+  "verdicts": {
+   "opus": "real_unreachable",
+   "sonnet": "real_unreachable"
+  },
+  "agreed": "real_unreachable"
+ },
+ {
+  "group": "d349963d",
+  "k": 1,
+  "bug": "4e16c220",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "function": "maybe_refresh_codegraph",
+  "law": "ForceBypassesDebounce",
+  "input": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"idle\" is_stale=false thread_start_raises=false deps_bound=true reason=none",
+  "result": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "d349963d",
+  "k": 2,
+  "bug": "4e16c220",
+  "step": 2,
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "function": "maybe_refresh_codegraph",
+  "law": "ForceBypassesDebounce",
+  "input": "repo_path=\"a\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=false thread_start_raises=true deps_bound=true reason=none",
+  "result": "outcome=HP.Outcome.ok stale_check_at={\"a\": 0/4} is_stale_called=false reindex_called=false reason=none diag_called=true",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "d349963d",
+  "k": 3,
+  "bug": "4e16c220",
+  "step": 3,
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "function": "maybe_refresh_codegraph",
+  "law": "ForceBypassesBackoff",
+  "input": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=true thread_start_raises=false deps_bound=true reason=none",
+  "result": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "7ca3faca",
+  "k": 1,
+  "bug": "5739f09b",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "law": "ResolvedNeedsLocalStore",
+  "input": "{ store := none,",
+  "result": "HP.Output.resolved \"codex\" \"5\" none none",
+  "verdicts": {
+   "opus": "real_unreachable",
+   "sonnet": "real_unreachable"
+  },
+  "agreed": "real_unreachable"
+ },
+ {
+  "group": "7ca3faca",
+  "k": 2,
+  "bug": "5739f09b",
+  "step": 3,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "law": "ResolvedNeedsLocalStore",
+  "input": "{ store := some { jobs := [\"j\"],",
+  "result": "HP.Output.resolved \"codex\" \"7\" (some \"j\") (some \"t\")",
+  "verdicts": {
+   "opus": "real_unreachable",
+   "sonnet": "real_unreachable"
+  },
+  "agreed": "real_unreachable"
+ },
+ {
+  "group": "7ca3faca",
+  "k": 3,
+  "bug": "5739f09b",
+  "step": 5,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "law": "ExplicitSessionResolves",
+  "input": "{ store := none,",
+  "result": "HP.Output.unavailable",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "7ca3faca",
+  "k": 4,
+  "bug": "5739f09b",
+  "step": 6,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "law": "ExplicitSessionResolves",
+  "input": "{ store := some { jobs := [], tasks := [], arts := [] },",
+  "result": "HP.Output.unavailable",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "1af9b7d4",
+  "k": 1,
+  "bug": "5ea489a3",
+  "step": 2,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "is_explicit_swarm_user_message",
+  "law": "NoSwarmWordNotSwarm",
+  "input": "is_explicit_swarm_user_message(\"fanout\")",
+  "result": "True",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "1af9b7d4",
+  "k": 2,
+  "bug": "5ea489a3",
+  "step": 3,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "is_explicit_swarm_user_message",
+  "law": "NoSwarmWordNotSwarm",
+  "input": "is_explicit_swarm_user_message(\"fan-out\")",
+  "result": "True",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "1af9b7d4",
+  "k": 3,
+  "bug": "5ea489a3",
+  "step": 4,
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "is_explicit_swarm_user_message",
+  "law": "NoSwarmWordNotSwarm",
+  "input": "is_explicit_swarm_user_message(\"puppetmaster agentic\")",
+  "result": "True",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "8c8070c4",
+  "k": 1,
+  "bug": "613af730",
+  "step": 4,
+  "repo": "marionette",
+  "file": "harness/worker.py",
+  "function": "_detect_escaped_writes",
+  "law": "SourcedFromCommand",
+  "input": "wt=\"/w\" events=[HP.Event.dict",
+  "result": "[\"/a b\"]",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "58509810",
+  "k": 1,
+  "bug": "7221304e",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/workers.py",
+  "function": "spec_edits_files",
+  "law": "OnlyEditCapable",
+  "input": "adapter='', payload={'implement': True}",
+  "result": "True",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "58509810",
+  "k": 2,
+  "bug": "7221304e",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/workers.py",
+  "function": "spec_edits_files",
+  "law": "OnlyEditCapable",
+  "input": "adapter='x', payload={'mode': 'implement'}",
+  "result": "True",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "67cd0a74",
+  "k": 1,
+  "bug": "722ca0a0",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/providers.py",
+  "function": "build_pilot",
+  "law": "ExplicitProviderModel",
+  "input": "spec=\"a:b\" max_tokens=none providers=[{name=\"a\" env_vars=[] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[]",
+  "result": "ProviderError(\"no provider key available for pilot 'a:b'. Set one of: \")",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "5394ff1c",
+  "k": 1,
+  "bug": "736097e0",
+  "step": 4,
+  "repo": "marionette",
+  "file": "harness/hash_edit.py",
+  "function": "apply_hash_edits",
+  "law": "InsertAtTopSucceeds",
+  "input": "{ original := [],",
+  "result": "new_text=\"\" ok=false message=\"op[0]: stale anchor for insert after line 0: expected x, found e3b0c44298fc\" applied_ops=0 stale_anchors=[x]",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "8d28fd94",
+  "k": 1,
+  "bug": "842bbbdd",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "cursor_artifact_from_item",
+  "law": "WrappedNeedsStrictKey",
+  "input": "job_id='j' task_id='t' worker_id='w' adapter='a' item={'finding': {'finding': 'x'}}",
+  "result": "Artifact(type=finding, job_id='j', task_id='t', created_by='w', confidence=0.75, evidence=['adapter:a'], payload={'finding': 'x', 'claim': 'x'})",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "fc980cda",
+  "k": 1,
+  "bug": "88ec6e86",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/local_jobs.py",
+  "function": "LocalJobsMixin._sync_command_batch_from_children",
+  "law": "ChildrenOwnTruth",
+  "input": "S N N S L0 N N N N N L0 F 0",
+  "result": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "67ffe9e8",
+  "k": 1,
+  "bug": "8c2f0164",
+  "step": 1,
+  "repo": "marionette",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "function": "_tool_hint_payload",
+  "law": "ToolCallKinds",
+  "input": "_tool_hint_payload(name=some \"readToolCall\", args=none, call_id=\"\", status=\"\")",
+  "result": "{ name := \"read_file\", goal := none, id := none, status := none }",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "67ffe9e8",
+  "k": 2,
+  "bug": "8c2f0164",
+  "step": 5,
+  "repo": "marionette",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "function": "_tool_hint_payload",
+  "law": "MissingNameDefault",
+  "input": "_tool_hint_payload(name=none, args=some [(\"name\", HP.Val.str \"foo\")], call_id=\"\", status=\"\")",
+  "result": "{ name := \"foo\", goal := none, id := none, status := none }",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "5da772a5",
+  "k": 1,
+  "bug": "a1db3869",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_provider_failure",
+  "law": "LegacyReasonRetry",
+  "input": "reason=\"openai_server_error\" http_status=some 401 body=\"\"",
+  "result": "\"not_authenticated\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "5da772a5",
+  "k": 2,
+  "bug": "a1db3869",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_provider_failure",
+  "law": "LegacyReasonRetry",
+  "input": "reason=\"openai_server_error\" http_status=some 403 body=\"\"",
+  "result": "\"forbidden\"",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "b9b2bd25",
+  "k": 1,
+  "bug": "a53b15e7",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/metr_seams.py",
+  "function": "is_coordination_protocol_payload",
+  "law": "ProtocolKeyDetected",
+  "input": "V D2 S7061796c6f6164 N S72656372756974 T",
+  "result": "false",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "real_unreachable"
+  },
+  "agreed": null
+ },
+ {
+  "group": "68948693",
+  "k": 1,
+  "bug": "b6774cde",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "usage_from_sdk",
+  "law": "CacheReadKept",
+  "input": "sdk_usage={cacheReadTokens: 5}",
+  "result": "None",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "68948693",
+  "k": 2,
+  "bug": "b6774cde",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "usage_from_sdk",
+  "law": "CacheWriteKept",
+  "input": "sdk_usage={cacheWriteTokens: 5}",
+  "result": "None",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "a54e332a",
+  "k": 1,
+  "bug": "b79ed344",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/cli/commands_jobs.py",
+  "function": "await_summary_body",
+  "law": "NoneIsStateOnly",
+  "input": "{ jobId := \"j\",",
+  "result": "HP.Output.body [(\"terminal\", HP.OVal.v (HP.Val.bool true)), (\"summary_mode\", HP.OVal.v (HP.Val.str \"none\"))]",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "ca7ee1b0",
+  "k": 1,
+  "bug": "b7e0a8d5",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/api_discovery.py",
+  "function": "catalog_to_specs",
+  "law": "BillingIsCallers",
+  "input": "adapter=\"a\" billing=\"api\" catalog=[{id=\"m\" displayName=absent}] existing=[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[] notes=\"\" enabled=true}]",
+  "result": "[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[discovered] notes=\"\" enabled=true}]",
+  "verdicts": {
+   "sonnet": "doc_wrong",
+   "opus": "doc_wrong"
+  },
+  "agreed": "doc_wrong"
+ },
+ {
+  "group": "09775d44",
+  "k": 1,
+  "bug": "b7eb3415",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/router.py",
+  "function": "signals_from_worker_spec",
+  "law": "DisabledExcluded",
+  "input": "{ override := HP.V.none,",
+  "result": "HP.Output.ok",
+  "verdicts": {
+   "sonnet": "doc_wrong",
+   "opus": "misread"
+  },
+  "agreed": null
+ },
+ {
+  "group": "18d4efe1",
+  "k": 1,
+  "bug": "caf64aa5",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "function": "adapter_may_write",
+  "law": "CodexReadOnly",
+  "input": "adapter='codex' payload={mode: (missing), implement: (missing), read_only: True, sandbox: (missing), permission_mode: (missing), dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None",
+  "result": "True (may write)",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "18d4efe1",
+  "k": 2,
+  "bug": "caf64aa5",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "function": "adapter_may_write",
+  "law": "AntigravityPlan",
+  "input": "adapter='antigravity' payload={mode: (missing), implement: (missing), read_only: (missing), sandbox: (missing), permission_mode: 'plan', dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None",
+  "result": "True (may write)",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "18d4efe1",
+  "k": 3,
+  "bug": "caf64aa5",
+  "step": 6,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "function": "adapter_may_write",
+  "law": "UnknownAdapterWrites",
+  "input": "adapter='local' payload=None swarm_mode=None",
+  "result": "False (read-only)",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "3c97096f",
+  "k": 1,
+  "bug": "d486f0f2",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/antigravity.py",
+  "function": "resolve_antigravity_model",
+  "law": "DefaultEffortWhenRequired",
+  "input": "resolve_antigravity_model({\"effort\": 0, +0 other keys})",
+  "result": "(\"gemini-3.7-flash\", \"0\")",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "9ab7fef4",
+  "k": 1,
+  "bug": "d9fe4f63",
+  "step": 4,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/dashboard.py",
+  "function": "cost_rollup",
+  "law": "UnnamedEstimateCounted",
+  "input": "L k6 D A A b1 k6 N",
+  "result": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "9ab7fef4",
+  "k": 2,
+  "bug": "d9fe4f63",
+  "step": 5,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/dashboard.py",
+  "function": "cost_rollup",
+  "law": "UnnamedEstimateCounted",
+  "input": "L k6 D A A i1 k6 D s109 A A",
+  "result": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "fd9aa32e",
+  "k": 1,
+  "bug": "de9336c9",
+  "step": 2,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "function": "parse_rate_limit_headers",
+  "law": "RetryAfterIsClockPlusSeconds",
+  "input": "1|429|retry-after=1000000000",
+  "result": "S -|-|1000000000/1",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "fd9aa32e",
+  "k": 2,
+  "bug": "de9336c9",
+  "step": 4,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "function": "parse_rate_limit_headers",
+  "law": "RequestWindowKindAndLimit",
+  "input": "0|n|x-ratelimit-limit-requests=9007199254740993",
+  "result": "S requests,9007199254740992,-,-|-|-",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "c09906ba",
+  "k": 1,
+  "bug": "df459b30",
+  "step": 5,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/setup_verification.py",
+  "function": "_validate",
+  "law": "BadDeliveryMessage",
+  "input": "{ jobCount := 1,",
+  "result": "Persisted model identity differs from the exact requested pin; check the model registry.",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "146de2cf",
+  "k": 1,
+  "bug": "dfb56171",
+  "step": 5,
+  "repo": "marionette",
+  "file": "harness/runaway_guard.py",
+  "function": "observe_step",
+  "law": "NoPolicyKindNoFamilySignals",
+  "input": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"ERROR\", isError := none, afterEnv := none }",
+  "result": "{ raised := false,",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "146de2cf",
+  "k": 2,
+  "bug": "dfb56171",
+  "step": 6,
+  "repo": "marionette",
+  "file": "harness/runaway_guard.py",
+  "function": "observe_step",
+  "law": "NoPolicyKindNoFamilySignals",
+  "input": "{ state := none,",
+  "result": "{ raised := false,",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "6f200f99",
+  "k": 1,
+  "bug": "eaeb5933",
+  "step": 1,
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/sqlite_store.py",
+  "function": "SQLiteSwarmStore.retrieve_memory",
+  "law": "SortedByConfidence",
+  "input": "query=\"role abc\" limit=10 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]",
+  "result": "[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]",
+  "verdicts": {
+   "opus": "misread",
+   "sonnet": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f01f91b5",
+  "k": 1,
+  "bug": "f44c7375",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/usage_ledger/rates.py",
+  "function": "TokenClasses.split",
+  "law": "PromptIsTokensIn",
+  "input": "TokenClasses.split(tokens_in=0, tokens_out=0, cache_read=5, cache_write=0)",
+  "result": "TokenClasses(input_uncached=0, cache_read=5, cache_write_5m=0, cache_write_1h=0, output=0)",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f75dc534",
+  "k": 1,
+  "bug": "f4652eca",
+  "step": 1,
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "function": "SkillStore.propose_update",
+  "law": "SavedInPending",
+  "input": "store=[pending/a.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"\" new_description=\"\" source=\"\"",
+  "result": "Skill(name=\"untitled\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, pending/a.md]",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f75dc534",
+  "k": 2,
+  "bug": "f4652eca",
+  "step": 3,
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "function": "SkillStore.propose_update",
+  "law": "ExactlyOneStateDir",
+  "input": "store=[active/a.md = \"\", active/b.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"b\" new_description=\"\" source=\"\"",
+  "result": "Skill(name=\"b\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, active/a.md, active/b.md]",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ },
+ {
+  "group": "f75dc534",
+  "k": 3,
+  "bug": "f4652eca",
+  "step": 5,
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "function": "SkillStore.propose_update",
+  "law": "LookupSanitized",
+  "input": "store=[pending/a.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"\" new_description=\"\" source=\"\"",
+  "result": "Skill(name=\"untitled\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, pending/a.md]",
+  "verdicts": {
+   "sonnet": "misread",
+   "opus": "misread"
+  },
+  "agreed": "misread"
+ }
+]

@@ -1,0 +1,110 @@
+{
+ "collect": {
+  "conflicts_not_the_known_bug": 123,
+  "candidates": 73,
+  "functions": 33,
+  "dropped": {
+   "result changed on the newest source": 38,
+   "stage folder absent or changed": 3,
+   "function absent on the newest source": 9
+  },
+  "by_repo": {
+   "Puppetmaster": 40,
+   "marionette": 33
+  },
+  "tags": {
+   "Puppetmaster": "v1.51.2",
+   "marionette": "v0.9.685"
+  }
+ },
+ "verdicts": {
+  "claims": 73,
+  "runs": 66,
+  "agreed": {
+   "misread": 57,
+   "real_unreachable": 4,
+   "the two do not agree": 9,
+   "doc_wrong": 3
+  },
+  "pairs": [
+   [
+    "opus:misread / sonnet:misread",
+    57
+   ],
+   [
+    "opus:real_unreachable / sonnet:real_unreachable",
+    4
+   ],
+   [
+    "opus:misread / sonnet:real_unreachable",
+    3
+   ],
+   [
+    "opus:doc_wrong / sonnet:doc_wrong",
+    3
+   ],
+   [
+    "opus:doc_wrong / sonnet:misread",
+    3
+   ],
+   [
+    "opus:misread / sonnet:doc_wrong",
+    3
+   ]
+  ],
+  "cost_usd": 50.27,
+  "seconds": 2528
+ },
+ "agreed_faults": [
+  {
+   "kind": "latent fault",
+   "repo": "marionette",
+   "function": "harness/api/routing_savings.py _ids_match_for_price",
+   "claims": 1,
+   "text": "Two model ids of only punctuation have the same empty slug, so a registry row with the id \".\" gave its price to the model id \"-\".",
+   "fix": "An empty slug is no match."
+  },
+  {
+   "kind": "latent fault",
+   "repo": "Puppetmaster",
+   "function": "puppetmaster/usage.py select_usage_records",
+   "claims": 1,
+   "text": "A token field with text that is not a number raised ValueError and stopped the cost selection for the job.",
+   "fix": "Such a field counts as 0 and is reported as unknown."
+  },
+  {
+   "kind": "latent fault",
+   "repo": "Puppetmaster",
+   "function": "puppetmaster/codex_home.py home_for_session",
+   "claims": 2,
+   "text": "The lookup of a Codex session file accepted an id that is only the end of a different session id.",
+   "fix": "The lookup accepts the file of exactly one id."
+  },
+  {
+   "kind": "documentation",
+   "repo": "marionette",
+   "function": "pmharness/stream_snapshot.py absorb_stream_snapshot",
+   "claims": 2,
+   "text": "The module text said that only a text that starts with the accumulated text is absorbed. The code also absorbs a text equal to it apart from whitespace at the two ends.",
+   "fix": "The sentence names the second case."
+  },
+  {
+   "kind": "documentation",
+   "repo": "Puppetmaster",
+   "function": "puppetmaster/api_discovery.py catalog_to_specs",
+   "claims": 1,
+   "text": "The docstring said that billing is the posture of the caller. An existing entry with a known billing keeps its own.",
+   "fix": "The docstring states the rule."
+  }
+ ],
+ "changed_result": {
+  "by_earlier_history": 29,
+  "between_the_development_branch_before_the_fixes_and_the_releases": 9
+ },
+ "pull_requests": {
+  "Puppetmaster": 308,
+  "marionette": 704
+ },
+ "disagreements_with_one_misread": 9,
+ "any_verdict_real": 0
+}

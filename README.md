@@ -31,6 +31,7 @@ Each number is in the paper, with the command that gives it.
 | A pointed agent review misses more than half of real bugs | The best of three review arms found 44 of 95 real bugs of two products |
 | A full proof pipeline does not replace a review, and it finds different bugs | 31 of 95 for about 8 times the cost of the best review arm; 6 of the 40 bugs that three review arms missed |
 | An audit ladder turns review findings into fixes | 211 findings gave 45 confirmed bugs; 51 fixes shipped in Puppetmaster 1.51.2 and Marionette 0.9.685 |
+| A conflict between code and a law is most often a fault of the law | 73 live conflicts from the pipeline: 0 reachable bugs, 3 latent faults, 2 wrong documentation sentences, 57 laws that say more than the sentence |
 | A small decision rule gets a completeness proof in minutes | The swarm policy table of Marionette: 5 laws, 16 input cases, accepted by 6 kernels; its docstring alone left one input open |
 
 The study also reports what did not work: one of its own "blind" tests was not blind, a fix step with
@@ -132,6 +133,7 @@ The output goes to `verify_all.json`.
 | The data set of 95 real bugs | `v2/bugs.json`, `v2/bugs.py` | `python3 bugs.py trees` then `python3 bugs.py verify` runs each repro on the source before and after the fix (needs checkouts of the two products) |
 | Detections of the three review arms | `v2/review_detected.json` | ids only; the text of each finding is not in this repository |
 | The proof pipeline on the 95 bugs, and the comparison with the review arms | `v2/retro/*.json`, `v2/retro.py` | `python3 retro_compare.py` (reads the stored results, makes no model call) |
+| The audit of the conflict certificates of the pipeline | `v2/conflict_audit.py`, `v2/conflict_groups.json`, `v2/conflict_verdicts.json`, `v2/conflict_triage.json` | the stored records (the two verdicts for each conflict; the text of each verifier is not in this repository) |
 | The audit ladder: findings, verdicts, fixes | `v2/ladder_summary.json`, `v2/confirmed_bugs.json`, `v2/CONFIRMED_BUGS.md`, `v2/fix_runs.json` | the stored records |
 | The proof of the swarm policy table | `v3/swarm_policy`, `v3/swarm_policy_docstring` | `python3 v3/summarize.py --repo <Marionette checkout>` |
 

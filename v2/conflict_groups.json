@@ -1,0 +1,1361 @@
+[
+ {
+  "group": "f4ae8249",
+  "repo": "marionette",
+  "file": "harness/api/routing_savings.py",
+  "function": "_registry_rates",
+  "claims": [
+   {
+    "bug": "0684a733",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/api/routing_savings.py",
+    "function": "_registry_rates",
+    "law": "FromRegistryOrZeros",
+    "law_text": "/-- \"Return ``(price_in, price_out)`` from the Puppetmaster registry, or zeros.\"\nThe output is zeros, or the two prices of one registry row. -/\ndef FromRegistryOrZeros (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    f x = zeros \u2228\n      \u2203 s \u2208 x.registry,\n        priceValue s.inputPerMtok = some (priceIn (f x)) \u2227\n        priceValue s.outputPerMtok = some (priceOut (f x))",
+    "input": "model_id=\"a\" registry=[{id=\"a\", adapter_model_name=None, in=1.0, out=-1.0}]",
+    "line": "s97 s97 n i1 i-1",
+    "result_shown": "(1.0, 0.0)",
+    "result_encoded": "1 0",
+    "folder": "~/Projects/hp-work/p/a9a27ea7b7",
+    "k": 1
+   },
+   {
+    "bug": "0684a733",
+    "step": 5,
+    "repo": "marionette",
+    "file": "harness/api/routing_savings.py",
+    "function": "_registry_rates",
+    "law": "ExactIdRowPriced",
+    "law_text": "/-- \"Return ``(price_in, price_out)`` from the Puppetmaster registry, or zeros.\"\nIf the registry has one row, and its id is exactly the non-empty `model_id`,\nand both of its prices are positive integers, the row prices the model.\nThe output is the two prices of the row (the owner accepted `5 5` for a row\nwith id `a` and prices 5 and 5, even if it has no adapter model name). -/\ndef ExactIdRowPriced (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 s : Spec, x.registry = [s] \u2192\n    x.modelId \u2260 [] \u2192 s.id = some x.modelId \u2192\n    \u2200 a b : Int, 0 < a \u2192 0 < b \u2192\n      s.inputPerMtok = .num a \u2192 s.outputPerMtok = .num b \u2192\n      f x = (a, b)",
+    "input": "model_id=\" \" registry=[{id=\" \", adapter_model_name=None, in=5.0, out=5.0}]",
+    "line": "s32 s32 n i5 i5",
+    "result_shown": "(0.0, 0.0)",
+    "result_encoded": "0 0",
+    "folder": "~/Projects/hp-work/p/29bfb004c4",
+    "k": 2
+   },
+   {
+    "bug": "8184b3a0",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/api/routing_savings.py",
+    "function": "_registry_rates",
+    "law": "FromRegistryOrZeros",
+    "law_text": "/-- \"Return ``(price_in, price_out)`` from the Puppetmaster registry, or zeros.\"\nThe output is the zero pair, or the rate pair of one registry row. -/\ndef FromRegistryOrZeros (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    f x = zeroRates \u2228\n      \u2203 s \u2208 x.registry,\n        priceValue s.inputPrice = some (f x).priceIn \u2227\n        priceValue s.outputPrice = some (f x).priceOut",
+    "input": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-4/4)])",
+    "line": "s61 s61 n i4 i-4",
+    "result_shown": "(4/4, 0/4)",
+    "result_encoded": "4 0",
+    "folder": "~/Projects/hp-work/p/b5af402db4",
+    "k": 3
+   },
+   {
+    "bug": "8184b3a0",
+    "step": 2,
+    "repo": "marionette",
+    "file": "harness/api/routing_savings.py",
+    "function": "_registry_rates",
+    "law": "NonzeroIsPositivePair",
+    "law_text": "/-- \"Return the shared positive rate pair, or ``(0, 0)`` when rates conflict.\"\nA non-zero output is the rate pair of a registry row with a positive input rate. -/\ndef NonzeroIsPositivePair (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 f x \u2260 zeroRates \u2192\n    \u2203 s \u2208 x.registry,\n      positiveInput s = true \u2227\n      priceValue s.inputPrice = some (f x).priceIn \u2227\n      priceValue s.outputPrice = some (f x).priceOut",
+    "input": "_registry_rates(\"a\", [(id=\"a\", adapter_model_name=None, in=4/4, out=-1/4)])",
+    "line": "s61 s61 n i4 i-1",
+    "result_shown": "(4/4, 0/4)",
+    "result_encoded": "4 0",
+    "folder": "~/Projects/hp-work/p/74ef09fd29",
+    "k": 4
+   },
+   {
+    "bug": "8184b3a0",
+    "step": 6,
+    "repo": "marionette",
+    "file": "harness/api/routing_savings.py",
+    "function": "_registry_rates",
+    "law": "NonzeroFromMatchingRow",
+    "law_text": "/-- A row is priced only when it matches the model id. A non-zero output comes\nfrom a row with an id that relates to `model_id`. A row whose ids have nothing\nin common with `model_id` gives no rate. -/\ndef NonzeroFromMatchingRow (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 f x \u2260 zeroRates \u2192\n    \u2203 s \u2208 x.registry,\n      (\u2203 i \u2208 rowIds s, idRelated x.modelId i) \u2227\n      priceValue s.inputPrice = some (f x).priceIn \u2227\n      (priceValue s.outputPrice = some (f x).priceOut \u2228 (f x).priceOut = 0)",
+    "input": "_registry_rates(\"-\", [(id=\".\", adapter_model_name=None, in=4/4, out=4/4)])",
+    "line": "s2d s2e n i4 i4",
+    "result_shown": "(4/4, 4/4)",
+    "result_encoded": "4 4",
+    "folder": "~/Projects/hp-work/p/502eb19308",
+    "k": 5
+   }
+  ]
+ },
+ {
+  "group": "0c27adf1",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+  "function": "_write_candidate",
+  "claims": [
+   {
+    "bug": "14de48f8",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+    "function": "_write_candidate",
+    "law": "CandidateHasFields",
+    "law_text": "/-- \"candidate.json   # job_id, goal, cwd, created_iso, source\" -/\ndef CandidateHasFields (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 w : Written, f x = some w \u2192\n    (w.candidate.splitOn \"job_id\").length > 1 \u2227\n    (w.candidate.splitOn \"goal\").length > 1 \u2227\n    (w.candidate.splitOn \"cwd\").length > 1 \u2227\n    (w.candidate.splitOn \"created_iso\").length > 1 \u2227\n    (w.candidate.splitOn \"source\").length > 1",
+    "input": "{ year := 2000, month := 1, day := 1, slug := \"\", skillMd := \"\", metaPairs := [], base := HP.Base.absent }",
+    "line": "2000 1 1 - - 0 A",
+    "result_shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{}\\n\" }",
+    "result_encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,125,10",
+    "folder": "~/Projects/hp-work/p/bc4eda07c0",
+    "k": 1
+   },
+   {
+    "bug": "14de48f8",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+    "function": "_write_candidate",
+    "law": "CandidateHasFields",
+    "law_text": "/-- \"candidate.json   # job_id, goal, cwd, created_iso, source\" -/\ndef CandidateHasFields (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 w : Written, f x = some w \u2192\n    \u2200 p \u2208 x.metaPairs, (w.candidate.splitOn p.1).length > 1",
+    "input": "{ year := 2000,",
+    "line": "2000 1 1 - - 1 - n A",
+    "result_shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\": null\\n}\\n\" }",
+    "result_encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,34,58,32,110,117,108,108,10,125,10",
+    "folder": "~/Projects/hp-work/p/3dee12e1e9",
+    "k": 2
+   },
+   {
+    "bug": "14de48f8",
+    "step": 3,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/hermes_plugin/puppetmaster-learn/__init__.py",
+    "function": "_write_candidate",
+    "law": "CandidateHasFields",
+    "law_text": "/-- \"candidate.json   # job_id, goal, cwd, created_iso, source\" -/\ndef CandidateHasFields (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 w : Written, f x = some w \u2192\n    \u2200 p \u2208 x.metaPairs, p.1 \u2260 \"\" \u2192 (w.candidate.splitOn p.1).length > 1",
+    "input": "{ year := 2000,",
+    "line": "2000 1 1 - - 1 9 n A",
+    "result_shown": "some { path := \"skills-candidates/20000101-\", skill := \"\", candidate := \"{\\n  \\\"\\\\t\\\": null\\n}\\n\" }",
+    "result_encoded": "some 115,107,105,108,108,115,45,99,97,110,100,105,100,97,116,101,115,47,50,48,48,48,48,49,48,49,45 - 123,10,32,32,34,92,116,34,58,32,110,117,108,108,10,125,10",
+    "folder": "~/Projects/hp-work/p/b094c68c4f",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "38803feb",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/store.py",
+  "function": "SwarmStore.retrieve_memory",
+  "claims": [
+   {
+    "bug": "1e6f34b3",
+    "step": 5,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/store.py",
+    "function": "SwarmStore.retrieve_memory",
+    "law": "LimitBoundsOutput",
+    "law_text": "/-- A given limit bounds the output. When the caller gives a limit, the\nfunction does not return more positions than that limit. A limit of zero (or\nless) returns no position. -/\ndef LimitBoundsOutput (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 n : Int, x.limit = some n \u2192\n    ((f x).length : Int) \u2264 n",
+    "input": "query=\"\" limit=-1 scope=None adapter=None role=None topic=None memories=[]",
+    "line": "s|-1|-|-|-|-|",
+    "result_shown": "positions []",
+    "result_encoded": "",
+    "folder": "~/Projects/hp-work/p/0855f64037",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "4b60efdc",
+  "repo": "marionette",
+  "file": "pmharness/stream_snapshot.py",
+  "function": "absorb_stream_snapshot",
+  "claims": [
+   {
+    "bug": "2726eed8",
+    "step": 1,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "NonCumulativeKept",
+    "law_text": "/-- \"Only a cumulative snapshot is absorbed: ``incoming`` starts with the whole\n``accumulated`` text.\" A call whose ``incoming`` does not start with\n``accumulated`` returns the whole ``incoming`` text: nothing is dropped. -/\ndef NonCumulativeKept (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 cumulative x = false \u2192 f x = incText x",
+    "input": "accumulated=\"a\", incoming=\" a\", min_chunk=1",
+    "line": "s97 s32.97 1",
+    "result_shown": "\"\"",
+    "result_encoded": "s",
+    "folder": "~/Projects/hp-work/p/c36534b800",
+    "k": 1
+   },
+   {
+    "bug": "2726eed8",
+    "step": 2,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "NonCumulativeKept",
+    "law_text": "/-- \"Only a cumulative snapshot is absorbed: ``incoming`` starts with the whole\n``accumulated`` text.\" A call whose ``incoming`` does not start with\n``accumulated`` returns the whole ``incoming`` text, unless ``incoming`` after\nits leading whitespace starts with ``accumulated``. Then the law says nothing. -/\ndef NonCumulativeKept (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 cumulative x = false \u2192\n    (accText x).isPrefixOf ((incText x).dropWhile isPyWs) = false \u2192 f x = incText x",
+    "input": "accumulated=\" aaaaaaaaaaaa\", incoming=\"aaaaaaaaaaaa\", min_chunk=(default)",
+    "line": "s32.97.97.97.97.97.97.97.97.97.97.97.97 s97.97.97.97.97.97.97.97.97.97.97.97 none",
+    "result_shown": "\"\"",
+    "result_encoded": "s",
+    "folder": "~/Projects/hp-work/p/4ecb3b5469",
+    "k": 2
+   },
+   {
+    "bug": "2726eed8",
+    "step": 3,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "SnapshotSuffix",
+    "law_text": "/-- \"Return the new suffix to append\". When ``incoming`` starts with ``accumulated``,\n``accumulated`` has at least the floor length, and the new part has a non-whitespace\ncharacter, the call returns the part of ``incoming`` after ``accumulated``. -/\ndef SnapshotSuffix (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 cumulative x = true \u2192 longAcc x = true \u2192\n    blank (rest x) = false \u2192 f x = rest x",
+    "input": "accumulated=\"a\", incoming=\"aa\", min_chunk=1",
+    "line": "s97 s97.97 1",
+    "result_shown": "\"\"",
+    "result_encoded": "s",
+    "folder": "~/Projects/hp-work/p/809ea5d67f",
+    "k": 3
+   },
+   {
+    "bug": "2726eed8",
+    "step": 4,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "ShortAccKept",
+    "law_text": "/-- \"Snapshot floor: a \\\"snapshot\\\" of fewer chars than this is just a short delta.\"\nWhen ``accumulated`` is shorter than the floor, the call returns the whole\n``incoming`` text. -/\ndef ShortAccKept (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 longAcc x = false \u2192 f x = incText x",
+    "input": "accumulated=\"a\", incoming=\"ab\", min_chunk=(default)",
+    "line": "s97 s97.98 none",
+    "result_shown": "\"b\"",
+    "result_encoded": "s98",
+    "folder": "~/Projects/hp-work/p/edb05f9ce1",
+    "k": 4
+   },
+   {
+    "bug": "2726eed8",
+    "step": 5,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "SnapshotSuffix",
+    "law_text": "/-- \"Return the new suffix to append\". When ``incoming`` starts with ``accumulated``,\n``accumulated`` has at least the floor length, ``accumulated`` is not one repeated\ncharacter, and the new part has a non-whitespace character, the call returns the part of\n``incoming`` after ``accumulated``. A repeated character is not a snapshot (sentence 9),\nand the owner accepts the empty output for ``a`` then ``aa``. -/\ndef SnapshotSuffix (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 cumulative x = true \u2192 longAcc x = true \u2192\n    (\u2200 c \u2208 accText x, c = (accText x).headD ' ') = false \u2192\n    blank (rest x) = false \u2192 f x = rest x",
+    "input": "accumulated=\"ab\", incoming=\"abab\", min_chunk=1",
+    "line": "s97.98 s97.98.97.98 1",
+    "result_shown": "\"\"",
+    "result_encoded": "s",
+    "folder": "~/Projects/hp-work/p/0722cd5cf8",
+    "k": 5
+   },
+   {
+    "bug": "2726eed8",
+    "step": 6,
+    "repo": "marionette",
+    "file": "pmharness/stream_snapshot.py",
+    "function": "absorb_stream_snapshot",
+    "law": "SnapshotSuffix",
+    "law_text": "/-- \"Return the new suffix to append\". When ``incoming`` starts with ``accumulated``,\n``accumulated`` has at least the floor length, ``accumulated`` is not one repeated\ncharacter, the new part has a non-whitespace character, and the new part is not a copy\nof ``accumulated``, the call returns the part of ``incoming`` after ``accumulated``.\nA repeated character is not a snapshot (sentence 9), and the owner accepts the empty\noutput for ``a`` then ``aa``. A new part equal to ``accumulated`` is message+message\n(sentence 2), and the owner accepts the empty output for ``ab`` then ``abab``. -/\ndef SnapshotSuffix (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 cumulative x = true \u2192 longAcc x = true \u2192\n    (\u2200 c \u2208 accText x, c = (accText x).headD ' ') = false \u2192\n    blank (rest x) = false \u2192 rest x \u2260 accText x \u2192 f x = rest x",
+    "input": "accumulated=\"abcdefghijkl\", incoming=\"abcdefghijkl abcdefghijkl\", min_chunk=(default)",
+    "line": "s97.98.99.100.101.102.103.104.105.106.107.108 s97.98.99.100.101.102.103.104.105.106.107.108.32.97.98.99.100.101.102.103.104.105.106.107.108 none",
+    "result_shown": "\"\"",
+    "result_encoded": "s",
+    "folder": "~/Projects/hp-work/p/caeb7fa3ac",
+    "k": 6
+   }
+  ]
+ },
+ {
+  "group": "99395a2a",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+  "claims": [
+   {
+    "bug": "39b812c2",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "HermesNoProviderAuth",
+    "law_text": "/-- \"The real Hermes messages \"No inference provider is configured\" and \"No API key found for provider\" are now `not_authenticated`.\" -/\ndef HermesNoProviderAuth (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.adapter = Adapter.hermes \u2192\n    mentions x \"no inference provider is configured\" = true \u2192\n    f x = Output.notAuthenticated",
+    "input": "adapter=hermes output=\"no inference provider is configured. hermes: no such file or directory\"",
+    "line": "hermes:6e6f20696e666572656e63652070726f766964657220697320636f6e666967757265642e206865726d65733a206e6f20737563682066696c65206f72206469726563746f7279",
+    "result_shown": "missing_cli",
+    "result_encoded": "missing_cli",
+    "folder": "~/Projects/hp-work/p/9debe94f8a",
+    "k": 1
+   },
+   {
+    "bug": "39b812c2",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "HermesNoApiKeyAuth",
+    "law_text": "/-- \"The real Hermes messages \"No inference provider is configured\" and \"No API key found for provider\" are now `not_authenticated`.\" -/\ndef HermesNoApiKeyAuth (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.adapter = Adapter.hermes \u2192\n    mentions x \"no api key found for provider\" = true \u2192\n    f x = Output.notAuthenticated",
+    "input": "adapter=hermes output=\"no api key found for provider; no such file or directory: hermes\"",
+    "line": "hermes:6e6f20617069206b657920666f756e6420666f722070726f76696465723b206e6f20737563682066696c65206f72206469726563746f72793a206865726d6573",
+    "result_shown": "missing_cli",
+    "result_encoded": "missing_cli",
+    "folder": "~/Projects/hp-work/p/1ce95105ca",
+    "k": 2
+   },
+   {
+    "bug": "39b812c2",
+    "step": 3,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "ModelNotFoundUnavailable",
+    "law_text": "/-- \"Adapters classify provider-shaped \"model not on this account\" responses (... OpenAI/Codex `model_not_found`) into `model_unavailable`\" -/\ndef ModelNotFoundUnavailable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (x.adapter = Adapter.codex \u2228 x.adapter = Adapter.openai) \u2192\n    mentions x \"model_not_found\" = true \u2192\n    f x = Output.modelUnavailable",
+    "input": "adapter=codex output=\"spend cap model_not_found\"",
+    "line": "codex:7370656e6420636170206d6f64656c5f6e6f745f666f756e64",
+    "result_shown": "billing_or_quota",
+    "result_encoded": "billing_or_quota",
+    "folder": "~/Projects/hp-work/p/a82249f098",
+    "k": 3
+   },
+   {
+    "bug": "39b812c2",
+    "step": 4,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "ModelNotFoundUnavailable",
+    "law_text": "/-- \"Adapters classify provider-shaped \"model not on this account\" responses (... OpenAI/Codex `model_not_found`) into `model_unavailable`\" -/\ndef ModelNotFoundUnavailable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (x.adapter = Adapter.codex \u2228 x.adapter = Adapter.openai) \u2192\n    mentions x \"model_not_found\" = true \u2192\n    mentions x \"spend cap\" = false \u2192\n    f x = Output.modelUnavailable",
+    "input": "adapter=openai output=\"command not found model_not_found\"",
+    "line": "openai:636f6d6d616e64206e6f7420666f756e64206d6f64656c5f6e6f745f666f756e64",
+    "result_shown": "missing_cli",
+    "result_encoded": "missing_cli",
+    "folder": "~/Projects/hp-work/p/58bcd78055",
+    "k": 4
+   },
+   {
+    "bug": "39b812c2",
+    "step": 5,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "ModelNotFoundUnavailable",
+    "law_text": "/-- \"Adapters classify provider-shaped \"model not on this account\" responses (... OpenAI/Codex `model_not_found`) into `model_unavailable`\" -/\ndef ModelNotFoundUnavailable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (x.adapter = Adapter.codex \u2228 x.adapter = Adapter.openai) \u2192\n    mentions x \"model_not_found\" = true \u2192\n    mentions x \"spend cap\" = false \u2192\n    mentions x \"command not found\" = false \u2192\n    f x = Output.modelUnavailable",
+    "input": "adapter=codex output=\"model_not_found unauthorized\"",
+    "line": "codex:6d6f64656c5f6e6f745f666f756e6420756e617574686f72697a6564",
+    "result_shown": "not_authenticated",
+    "result_encoded": "not_authenticated",
+    "folder": "~/Projects/hp-work/p/5b05c9cfbf",
+    "k": 5
+   },
+   {
+    "bug": "39b812c2",
+    "step": 6,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "ModelNotFoundUnavailable",
+    "law_text": "/-- \"Adapters classify provider-shaped \"model not on this account\" responses (... OpenAI/Codex `model_not_found`) into `model_unavailable`\" -/\ndef ModelNotFoundUnavailable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (x.adapter = Adapter.codex \u2228 x.adapter = Adapter.openai) \u2192\n    mentions x \"model_not_found\" = true \u2192\n    mentions x \"spend cap\" = false \u2192\n    mentions x \"command not found\" = false \u2192\n    mentions x \"unauthorized\" = false \u2192\n    mentions x \"not logged in\" = false \u2192\n    mentions x \"401\" = false \u2192\n    f x = Output.modelUnavailable",
+    "input": "adapter=openai output=\"model_not_found rate limit\"",
+    "line": "openai:6d6f64656c5f6e6f745f666f756e642072617465206c696d6974",
+    "result_shown": "rate_limit",
+    "result_encoded": "rate_limit",
+    "folder": "~/Projects/hp-work/p/a3b7469bb9",
+    "k": 6
+   },
+   {
+    "bug": "afadbb63",
+    "step": 3,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "NoCueUnknown",
+    "law_text": "/-- Owner answer: with an adapter that has no extra rules, output that holds no cue word of any category gives `unknown`. A bare word such as `abc` gives `unknown`, not a category. The cue words are a short list; a category needs a cue in the output. -/\ndef NoCueUnknown (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 plainAdapter x = true \u2192\n    mentions x \"auth\" = false \u2192 mentions x \"login\" = false \u2192\n    mentions x \"401\" = false \u2192 mentions x \"token\" = false \u2192\n    mentions x \"key\" = false \u2192 mentions x \"time\" = false \u2192\n    mentions x \"rate\" = false \u2192 mentions x \"limit\" = false \u2192\n    mentions x \"quota\" = false \u2192 mentions x \"billing\" = false \u2192\n    mentions x \"network\" = false \u2192 mentions x \"connect\" = false \u2192\n    mentions x \"denied\" = false \u2192 mentions x \"permission\" = false \u2192\n    mentions x \"sandbox\" = false \u2192 mentions x \"approv\" = false \u2192\n    mentions x \"model\" = false \u2192 mentions x \"context\" = false \u2192\n    mentions x \"not found\" = false \u2192 mentions x \"sdk\" = false \u2192\n    mentions x \"status\" = false \u2192\n    f x = Output.unknown",
+    "input": "classify_adapter_failure(\"x\", \"dns\")",
+    "line": "120|100,110,115",
+    "result_shown": "network_error",
+    "result_encoded": "network_error",
+    "folder": "~/Projects/hp-work/p/c4f350fa2a",
+    "k": 7
+   },
+   {
+    "bug": "afadbb63",
+    "step": 4,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_adapter_failure (via _classify over _BASE_RULES, lines 102-130)",
+    "law": "NoCueUnknown",
+    "law_text": "/-- Owner answer: with an adapter that has no extra rules, output that holds no cue word of any category gives `unknown`. A bare word such as `abc` gives `unknown`, not a category. The cue words are a short list (`dns` is a cue of `network_error`); a category needs a cue in the output. -/\ndef NoCueUnknown (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 plainAdapter x = true \u2192\n    mentions x \"auth\" = false \u2192 mentions x \"login\" = false \u2192\n    mentions x \"401\" = false \u2192 mentions x \"token\" = false \u2192\n    mentions x \"key\" = false \u2192 mentions x \"time\" = false \u2192\n    mentions x \"rate\" = false \u2192 mentions x \"limit\" = false \u2192\n    mentions x \"quota\" = false \u2192 mentions x \"billing\" = false \u2192\n    mentions x \"network\" = false \u2192 mentions x \"connect\" = false \u2192\n    mentions x \"denied\" = false \u2192 mentions x \"permission\" = false \u2192\n    mentions x \"sandbox\" = false \u2192 mentions x \"approv\" = false \u2192\n    mentions x \"model\" = false \u2192 mentions x \"context\" = false \u2192\n    mentions x \"not found\" = false \u2192 mentions x \"sdk\" = false \u2192\n    mentions x \"status\" = false \u2192 mentions x \"dns\" = false \u2192\n    f x = Output.unknown",
+    "input": "classify_adapter_failure(\"x\", \"missing bearer\")",
+    "line": "120|109,105,115,115,105,110,103,32,98,101,97,114,101,114",
+    "result_shown": "not_authenticated",
+    "result_encoded": "not_authenticated",
+    "folder": "~/Projects/hp-work/p/01fd353466",
+    "k": 8
+   }
+  ]
+ },
+ {
+  "group": "b4e5708e",
+  "repo": "marionette",
+  "file": "harness/swarm_run_facts.py",
+  "function": "_verified_criterion_loci",
+  "claims": [
+   {
+    "bug": "3acb0892",
+    "step": 3,
+    "repo": "marionette",
+    "file": "harness/swarm_run_facts.py",
+    "function": "_verified_criterion_loci",
+    "law": "SettledRowYieldsItsOwnLocus",
+    "law_text": "/-- \"Concrete path:line from a structured status row's own evidence only.\"\nA lone settled row whose evidence is any plain `dir/name.ext:line` settles its normalized key at\nthat evidence, not only `src/a.py:12`. -/\ndef SettledRowYieldsItsOwnLocus (f : Impl) : Prop :=\n  \u2200 x, Legal x \u2192 \u2200 r : Fields,\n    x.criteria = some [Item.dict r] \u2192\n    criterionKey r \u2260 \"\" \u2192\n    isVerifyStatus r = true \u2192\n    SimpleLocus (evidenceText r) \u2192\n    (f x).lookup (criterionKey r) = some (evidenceText r)",
+    "input": "{ criteria := some [HP.Item.dict",
+    "line": "L D x63 - x706173736564 x7372632f612e616263646566673a3132",
+    "result_shown": "{ entries := [] }",
+    "result_encoded": "R",
+    "folder": "~/Projects/hp-work/p/9167d47b46",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "ae86d31b",
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+  "claims": [
+   {
+    "bug": "3f4f643d",
+    "step": 3,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+    "law": "CapHardSuppresses",
+    "law_text": "/-- \"The (CAP+1)th identical call hard-suppresses with the existing error\".\nA call that already ran the cap number of times is hard suppressed (a wait and\na command with a changed context are not repeats of this kind). A live browser\nobservation is not a repeat of this kind: the owner confirmed that the guard\ndoes not suppress it at the cap. -/\ndef CapHardSuppresses (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 guardEnabled x = true \u2192 x.query.kind \u2260 \"wait\" \u2192\n    isBrowserObservation x.query = false \u2192\n    staleCommand x = false \u2192 loopRepeatCap \u2264 priorCount x \u2192\n    (f x).suppress = true \u2227 (f x).reason = Reason.loop \u2227 (f x).replay = false",
+    "input": "HARNESS_LOOP_GUARD=- epoch=0 mutations=0 state=[computer_use:0:=status:3:-:-] call=computer_use:0:=status",
+    "line": "-;0;0;computer_use:0:=status:3:-:-;computer_use:0:=status",
+    "result_shown": "epoch=0 suppress=false reason=- replay=false message=",
+    "result_encoded": "0|0|-|0|",
+    "folder": "~/Projects/hp-work/p/c7981f5c03",
+    "k": 1
+   },
+   {
+    "bug": "3f4f643d",
+    "step": 4,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+    "law": "CapHardSuppresses",
+    "law_text": "/-- \"The (CAP+1)th identical call hard-suppresses with the existing error\".\nA call that already ran the cap number of times is hard suppressed (a wait and\na command with a changed context are not repeats of this kind). A live browser\nobservation is not a repeat of this kind: the owner confirmed that the guard\ndoes not suppress it at the cap. The same holds for a computer_use observation\n(status, apps, snapshot): the owner confirmed the guard lets it run. -/\ndef CapHardSuppresses (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 guardEnabled x = true \u2192 x.query.kind \u2260 \"wait\" \u2192\n    isBrowserObservation x.query = false \u2192 isComputerObservation x.query = false \u2192\n    staleCommand x = false \u2192 loopRepeatCap \u2264 priorCount x \u2192\n    (f x).suppress = true \u2227 (f x).reason = Reason.loop \u2227 (f x).replay = false",
+    "input": "HARNESS_LOOP_GUARD=- epoch=0 mutations=0 state=[run_swarm:0:-:3:-:=] call=run_swarm:0:-",
+    "line": "-;0;0;run_swarm:0:-:3:-:=;run_swarm:0:-",
+    "result_shown": "epoch=0 suppress=true reason=loop_replay replay=true message=[cached repeat of identical call]\\n",
+    "result_encoded": "0|1|loop_replay|1|[cached repeat of identical call]\\n",
+    "folder": "~/Projects/hp-work/p/af7ea48a88",
+    "k": 2
+   },
+   {
+    "bug": "3f4f643d",
+    "step": 5,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "record_native_workspace_mutation (unit with check_loop_guard, lines 2052-2127)",
+    "law": "ReplayMessageIsCached",
+    "law_text": "/-- \"When True, ``message`` is a cached prior result to return as a successful\naction_result (loop-guard replay) rather than an error.\" A replay carries the\ncached prior result as its message. -/\ndef ReplayMessageIsCached (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (f x).replay = true \u2192 priorCached x = some (f x).message",
+    "input": "HARNESS_LOOP_GUARD== epoch=0 mutations=0 state=[run_swarm:0:-:1:-:=] call=run_swarm:0:-",
+    "line": "=;0;0;run_swarm:0:-:1:-:=;run_swarm:0:-",
+    "result_shown": "epoch=0 suppress=true reason=loop_replay replay=true message=[cached repeat of identical call]\\n",
+    "result_encoded": "0|1|loop_replay|1|[cached repeat of identical call]\\n",
+    "folder": "~/Projects/hp-work/p/3d53b33a57",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "1e60dd35",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "select_usage_records",
+  "claims": [
+   {
+    "bug": "41d520dd",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/usage.py",
+    "function": "select_usage_records",
+    "law": "NoEligibleRaises",
+    "law_text": "/-- Owner answer: an input with no artifact that can be chosen (usage-bearing and not excluded) raises. -/\ndef NoEligibleRaises (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (\u2200 a \u2208 x, eligible a = false) \u2192 f x = none",
+    "input": "[]",
+    "line": "L",
+    "result_shown": "[]",
+    "result_encoded": "R",
+    "folder": "~/Projects/hp-work/p/dc5b8ae105",
+    "k": 1
+   },
+   {
+    "bug": "41d520dd",
+    "step": 3,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/usage.py",
+    "function": "select_usage_records",
+    "law": "NoEligibleRaises",
+    "law_text": "/-- Owner answer: an input with no artifact that can be chosen (usage-bearing and not excluded) raises, when the input has at least one artifact. The empty input gives an empty result. -/\ndef NoEligibleRaises (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x \u2260 [] \u2192 (\u2200 a \u2208 x, eligible a = false) \u2192 f x = none",
+    "input": "[{ taskId := \"t\",",
+    "line": "Ltt,-,-,-,-,-,-,-,-,-,-,-",
+    "result_shown": "[]",
+    "result_encoded": "R",
+    "folder": "~/Projects/hp-work/p/6a801ea4dc",
+    "k": 2
+   },
+   {
+    "bug": "41d520dd",
+    "step": 6,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/usage.py",
+    "function": "select_usage_records",
+    "law": "NeverRaises",
+    "law_text": "/-- Owner answer: on a legal input the function does not raise. A payload text that `int` cannot parse (for example in a token field) does not stop the run; the function still gives a result. -/\ndef NeverRaises (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2203 rows, f x = some rows",
+    "input": "[{ taskId := \"t\",",
+    "line": "Ltt,-,sa,-,-,-,-,-,-,-,-,-",
+    "result_shown": "raises ValueError",
+    "result_encoded": "E",
+    "folder": "~/Projects/hp-work/p/c97d3b5b5e",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "d349963d",
+  "repo": "marionette",
+  "file": "harness/api/codegraph_index.py",
+  "function": "maybe_refresh_codegraph",
+  "claims": [
+   {
+    "bug": "4e16c220",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/api/codegraph_index.py",
+    "function": "maybe_refresh_codegraph",
+    "law": "ForceBypassesDebounce",
+    "law_text": "/-- \"force=True bypasses the debounce and fail-until backoff.\" With force, with\ndeps bound and no indexing status, the staleness check runs, also inside the\ndebounce window. -/\ndef ForceBypassesDebounce (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.force = true \u2192 x.depsBound = true \u2192\n    x.status \u2260 indexingStatus \u2192 (f x).staleQueried = true",
+    "input": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"idle\" is_stale=false thread_start_raises=false deps_bound=true reason=none",
+    "line": "s 1 0 0 L L s105.100.108.101 0 0 1 n",
+    "result_shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false",
+    "result_encoded": "ok L 0 0 n 0",
+    "folder": "~/Projects/hp-work/p/9e5a91e582",
+    "k": 1
+   },
+   {
+    "bug": "4e16c220",
+    "step": 2,
+    "repo": "marionette",
+    "file": "harness/api/codegraph_index.py",
+    "function": "maybe_refresh_codegraph",
+    "law": "ForceBypassesDebounce",
+    "law_text": "/-- \"force=True bypasses the debounce and fail-until backoff.\" With force, with\ndeps bound, no indexing status, and a repo path that is not empty, the\nstaleness check runs, also inside the debounce window. The empty path is\noutside the sentence: the owner confirmed that the call then does nothing. -/\ndef ForceBypassesDebounce (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.force = true \u2192 x.depsBound = true \u2192\n    x.status \u2260 indexingStatus \u2192 x.repo \u2260 \"\" \u2192 (f x).staleQueried = true",
+    "input": "repo_path=\"a\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=false thread_start_raises=true deps_bound=true reason=none",
+    "line": "s97 1 0 0 L L s 0 1 1 n",
+    "result_shown": "outcome=HP.Outcome.ok stale_check_at={\"a\": 0/4} is_stale_called=false reindex_called=false reason=none diag_called=true",
+    "result_encoded": "ok Ls97/v0 0 0 n 1",
+    "folder": "~/Projects/hp-work/p/7e50477f2c",
+    "k": 2
+   },
+   {
+    "bug": "4e16c220",
+    "step": 3,
+    "repo": "marionette",
+    "file": "harness/api/codegraph_index.py",
+    "function": "maybe_refresh_codegraph",
+    "law": "ForceBypassesBackoff",
+    "law_text": "/-- \"force=True bypasses the debounce and fail-until backoff.\" With force, a\nstale repo is reindexed also inside the failure backoff. -/\ndef ForceBypassesBackoff (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.force = true \u2192 x.depsBound = true \u2192\n    x.status \u2260 indexingStatus \u2192 x.stale = true \u2192 x.threadFails = false \u2192\n    (f x).reindexed = true",
+    "input": "repo_path=\"\" force=true monotonic=[0/4, 0/4] stale_check_at={} fail_until={} status=\"\" is_stale=true thread_start_raises=false deps_bound=true reason=none",
+    "line": "s 1 0 0 L L s 1 0 1 n",
+    "result_shown": "outcome=HP.Outcome.ok stale_check_at={} is_stale_called=false reindex_called=false reason=none diag_called=false",
+    "result_encoded": "ok L 0 0 n 0",
+    "folder": "~/Projects/hp-work/p/acd07e2e49",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "7ca3faca",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/worker_resume.py",
+  "function": "_resolve",
+  "claims": [
+   {
+    "bug": "5739f09b",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/worker_resume.py",
+    "function": "_resolve",
+    "law": "ResolvedNeedsLocalStore",
+    "law_text": "/-- \"a session missing from the CLI's local store\": when the local store folder of\nthe adapter exists, a resolved record names a session that has a file in it. An\nabsent folder does not block a resolved record. -/\ndef ResolvedNeedsLocalStore (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 isResolved (f x) = true \u2192\n    (\u2200 ids s, resolvedAdapter (f x) = some \"codex\" \u2192 x.codexDisk = some ids \u2192\n      resolvedSession (f x) = some s \u2192 s \u2208 ids) \u2227\n    (\u2200 ids s, resolvedAdapter (f x) = some \"claude-code\" \u2192 x.claudeDisk = some ids \u2192\n      resolvedSession (f x) = some s \u2192 s \u2208 ids)",
+    "input": "{ store := none,",
+    "line": "n s53 n R0 s99.111.100.101.120 L1 s49.45.53 n",
+    "result_shown": "HP.Output.resolved \"codex\" \"5\" none none",
+    "result_encoded": "V s99.111.100.101.120 s53 n n",
+    "folder": "~/Projects/hp-work/p/ed5a342f1f",
+    "k": 1
+   },
+   {
+    "bug": "5739f09b",
+    "step": 3,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/worker_resume.py",
+    "function": "_resolve",
+    "law": "ResolvedNeedsLocalStore",
+    "law_text": "/-- \"a session missing from the CLI's local store\": when the local store folder of\nthe adapter exists, a resolved record names a session that has a file in it. An\nabsent folder does not block a resolved record. An id that the caller gave itself\n(`resume_session_id`) is not checked against the folder: the law covers a session that\ncomes from a `resume_from` receipt only. -/\ndef ResolvedNeedsLocalStore (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.resumeFrom \u2260 ResumeFrom.none \u2192 explicitSession x = \"\" \u2192\n    isResolved (f x) = true \u2192\n    (\u2200 ids s, resolvedAdapter (f x) = some \"codex\" \u2192 x.codexDisk = some ids \u2192\n      resolvedSession (f x) = some s \u2192 s \u2208 ids) \u2227\n    (\u2200 ids s, resolvedAdapter (f x) = some \"claude-code\" \u2192 x.claudeDisk = some ids \u2192\n      resolvedSession (f x) = some s \u2192 s \u2208 ids)",
+    "input": "{ store := some { jobs := [\"j\"],",
+    "line": "S L1 s106 L1 s106 s116 s114 s99.111.100.101.120 s s L1 s106 s116 t s99.111.100.101.120 e2 s55 n s n n R2 s106 n n s99.111.100.101.120 L1 s53.45.55 n",
+    "result_shown": "HP.Output.resolved \"codex\" \"7\" (some \"j\") (some \"t\")",
+    "result_encoded": "V s99.111.100.101.120 s55 s106 s116",
+    "folder": "~/Projects/hp-work/p/becf478fe2",
+    "k": 2
+   },
+   {
+    "bug": "5739f09b",
+    "step": 5,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/worker_resume.py",
+    "function": "_resolve",
+    "law": "ExplicitSessionResolves",
+    "law_text": "/-- \"`resume_session_id` (an id the caller kept itself)\" and \"continue a prior codex or\nclaude-code worker's provider session\": with no `resume_from`, a valid explicit session id,\na resumable task adapter and no `resume_adapter`, the request resolves. The record names the\ntask adapter and the given id, and it has no source job or task. It needs no store. -/\ndef ExplicitSessionResolves (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.resumeFrom = ResumeFrom.none \u2192 validSessionId (explicitSession x) = true \u2192\n    resumable x.adapter = true \u2192 x.resumeAdapter = none \u2192\n    f x = Output.resolved x.adapter (explicitSession x) none none",
+    "input": "{ store := none,",
+    "line": "n s97 n R0 s99.111.100.101.120 L0 n",
+    "result_shown": "HP.Output.unavailable",
+    "result_encoded": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.97.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s97 n",
+    "folder": "~/Projects/hp-work/p/ba90118797",
+    "k": 3
+   },
+   {
+    "bug": "5739f09b",
+    "step": 6,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/worker_resume.py",
+    "function": "_resolve",
+    "law": "ExplicitSessionResolves",
+    "law_text": "/-- \"`resume_session_id` (an id the caller kept itself)\" and \"continue a prior codex or\nclaude-code worker's provider session\": with no `resume_from`, a valid explicit session id,\na resumable task adapter, no `resume_adapter` and a store, the request resolves. The record names the\ntask adapter and the given id, and it has no source job or task. With no store (`store = none`)\nthe shipped code answers unavailable, so the law does not cover that case. -/\ndef ExplicitSessionResolves (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.resumeFrom = ResumeFrom.none \u2192 validSessionId (explicitSession x) = true \u2192\n    resumable x.adapter = true \u2192 x.resumeAdapter = none \u2192 x.store \u2260 none \u2192\n    f x = Output.resolved x.adapter (explicitSession x) none none",
+    "input": "{ store := some { jobs := [], tasks := [], arts := [] },",
+    "line": "S L0 L0 L0 s49 n R0 s99.111.100.101.120 L0 n",
+    "result_shown": "HP.Output.unavailable",
+    "result_encoded": "U s99.111.100.101.120.32.115.101.115.115.105.111.110.32.49.32.105.115.32.110.111.116.32.105.110.32.116.104.101.32.108.111.99.97.108.32.115.101.115.115.105.111.110.32.115.116.111.114.101.59.32.105.116.32.109.97.121.32.104.97.118.101.32.98.101.101.110.32.112.114.117.110.101.100 R0 s49 n",
+    "folder": "~/Projects/hp-work/p/1be1eb49c1",
+    "k": 4
+   }
+  ]
+ },
+ {
+  "group": "1af9b7d4",
+  "repo": "marionette",
+  "file": "harness/pilot_guards.py",
+  "function": "is_explicit_swarm_user_message",
+  "claims": [
+   {
+    "bug": "5ea489a3",
+    "step": 2,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "law": "NoSwarmWordNotSwarm",
+    "law_text": "/-- \"True when the user asked to launch a swarm, not merely mentioned one.\"\nA message that has neither the word `swarm` nor the word `worker` (in any\nletter case) asks for no swarm, so it is not an explicit swarm message. -/\ndef NoSwarmWordNotSwarm (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    \u00ac (\"swarm\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"worker\".toList <:+: lowerWord x.message) \u2192 f x = false",
+    "input": "is_explicit_swarm_user_message(\"fanout\")",
+    "line": "102,97,110,111,117,116",
+    "result_shown": "True",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/c69b2c0c1e",
+    "k": 1
+   },
+   {
+    "bug": "5ea489a3",
+    "step": 3,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "law": "NoSwarmWordNotSwarm",
+    "law_text": "/-- \"True when the user asked to launch a swarm, not merely mentioned one.\"\nA message that has neither the word `swarm` nor the word `worker` (in any\nletter case) and not the word `fanout` asks for no swarm, so it is not an\nexplicit swarm message. The message `fanout` is an explicit swarm message. -/\ndef NoSwarmWordNotSwarm (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    \u00ac (\"swarm\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"worker\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"fanout\".toList <:+: lowerWord x.message) \u2192 f x = false",
+    "input": "is_explicit_swarm_user_message(\"fan-out\")",
+    "line": "102,97,110,45,111,117,116",
+    "result_shown": "True",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/4cf1684b0f",
+    "k": 2
+   },
+   {
+    "bug": "5ea489a3",
+    "step": 4,
+    "repo": "marionette",
+    "file": "harness/pilot_guards.py",
+    "function": "is_explicit_swarm_user_message",
+    "law": "NoSwarmWordNotSwarm",
+    "law_text": "/-- \"True when the user asked to launch a swarm, not merely mentioned one.\"\nA message that has neither the word `swarm` nor the word `worker` (in any\nletter case) and not the word `fanout` or `fan-out` asks for no swarm, so it is\nnot an explicit swarm message. -/\ndef NoSwarmWordNotSwarm (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    \u00ac (\"swarm\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"worker\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"fanout\".toList <:+: lowerWord x.message) \u2192\n    \u00ac (\"fan-out\".toList <:+: lowerWord x.message) \u2192 f x = false",
+    "input": "is_explicit_swarm_user_message(\"puppetmaster agentic\")",
+    "line": "112,117,112,112,101,116,109,97,115,116,101,114,32,97,103,101,110,116,105,99",
+    "result_shown": "True",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/59e0f18347",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "8c8070c4",
+  "repo": "marionette",
+  "file": "harness/worker.py",
+  "function": "_detect_escaped_writes",
+  "claims": [
+   {
+    "bug": "613af730",
+    "step": 4,
+    "repo": "marionette",
+    "file": "harness/worker.py",
+    "function": "_detect_escaped_writes",
+    "law": "SourcedFromCommand",
+    "law_text": "/-- \"Scan run_command events ...\" Only the text that `eventCommand` returns is\nscanned. Every reported destination is the normal form of a path token (a run\nof characters with no path stop character, after a `/`) in the command of some\nevent. A text in the event that is not its command gives no destination. -/\ndef SourcedFromCommand (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 p \u2208 f x,\n    \u2203 (e : Event) (c pre s post : List Char),\n      e \u2208 x.events \u2227 eventCommand e = some c \u2227\n      c = pre ++ '/' :: s ++ post \u2227 (\u2200 ch \u2208 s, isPathStop ch = false) \u2227\n      p = candidateNorm ('/' :: s)",
+    "input": "wt=\"/w\" events=[HP.Event.dict",
+    "line": "2 47 119 1 1 1 0 12 97 99 116 105 111 110 95 115 116 97 114 116 2 1 0 11 114 117 110 95 99 111 109 109 97 110 100 0 1 0 28 112 121 116 104 111 110 32 45 99 32 34 111 112 101 110 40 39 47 97 32 98 39 44 39 119 39 41 34",
+    "result_shown": "[\"/a b\"]",
+    "result_encoded": "1 4 47 97 32 98",
+    "folder": "~/Projects/hp-work/p/ed5826ff99",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "58509810",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/workers.py",
+  "function": "spec_edits_files",
+  "claims": [
+   {
+    "bug": "7221304e",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/workers.py",
+    "function": "spec_edits_files",
+    "law": "OnlyEditCapable",
+    "law_text": "/-- \"Adapters that can actually modify the working tree.\" /\n\"_EDIT_CAPABLE_ADAPTERS = frozenset({\"agentic\", \"claude-code\", \"codex\"})\":\nonly an edit-capable adapter can leave file changes behind. -/\ndef OnlyEditCapable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 f x = true \u2192 isEditCapable x.adapter = true",
+    "input": "adapter='', payload={'implement': True}",
+    "line": "a D - - - - T",
+    "result_shown": "True",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/dd764d4213",
+    "k": 1
+   },
+   {
+    "bug": "7221304e",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/workers.py",
+    "function": "spec_edits_files",
+    "law": "OnlyEditCapable",
+    "law_text": "/-- \"Adapters that can actually modify the working tree.\" /\n\"_EDIT_CAPABLE_ADAPTERS = frozenset({\"agentic\", \"claude-code\", \"codex\"})\":\nonly an edit-capable adapter can leave file changes behind. The owner\nconfirmed one exception: an empty adapter with an implement request\n(`mode=implement` or truthy `implement`) can give true. -/\ndef OnlyEditCapable (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 f x = true \u2192\n    isEditCapable x.adapter = true \u2228 (x.adapter = [] \u2227 asksImplement (payloadOf x) = true)",
+    "input": "adapter='x', payload={'mode': 'implement'}",
+    "line": "a120 D - - - s105.109.112.108.101.109.101.110.116 -",
+    "result_shown": "True",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/beb157a8c4",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "67cd0a74",
+  "repo": "marionette",
+  "file": "harness/providers.py",
+  "function": "build_pilot",
+  "claims": [
+   {
+    "bug": "722ca0a0",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/providers.py",
+    "function": "build_pilot",
+    "law": "ExplicitProviderModel",
+    "law_text": "/-- \"'provider:model'  -> explicit provider + model (e.g. 'anthropic:claude-opus-4-8')\"\nA spec with a colon whose provider part names a provider in the table gives a\ndriver for that provider, with the part after the colon as the model.\nAlso: \"candidate API-key env vars, first match wins\" (the key variable). -/\ndef ExplicitProviderModel (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 hasColon x.spec = true \u2192\n    \u2200 p : Prov, getProvider x.providers (specProvider x.spec) = some p \u2192\n      \u2203 d : Driver, f x = Output.driver d \u2227 d.name = p.name \u2227\n        d.model = specModel x.spec \u2227 d.apiKeyEnv = provKeyEnv x.env p",
+    "input": "spec=\"a:b\" max_tokens=none providers=[{name=\"a\" env_vars=[] base_url=\"\" anthropic_messages=false aliases=[] pilot_models=[]}] environ=[]",
+    "line": "s97.58.98 n 1 s97 0 s 0 0 0 0",
+    "result_shown": "ProviderError(\"no provider key available for pilot 'a:b'. Set one of: \")",
+    "result_encoded": "E s110.111.32.112.114.111.118.105.100.101.114.32.107.101.121.32.97.118.97.105.108.97.98.108.101.32.102.111.114.32.112.105.108.111.116.32.39.97.58.98.39.46.32.83.101.116.32.111.110.101.32.111.102.58.32",
+    "folder": "~/Projects/hp-work/p/3e68661a9a",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "5394ff1c",
+  "repo": "marionette",
+  "file": "harness/hash_edit.py",
+  "function": "apply_hash_edits",
+  "claims": [
+   {
+    "bug": "736097e0",
+    "step": 4,
+    "repo": "marionette",
+    "file": "harness/hash_edit.py",
+    "function": "apply_hash_edits",
+    "law": "InsertAtTopSucceeds",
+    "law_text": "/-- An insert after line 0 needs no anchor and always has a valid position,\nalso in an empty original. A list of one such op succeeds, applies one op,\nreports \"applied 1 op(s)\", and lists no stale anchor. -/\ndef InsertAtTopSucceeds (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 op : Op, x.ops = [op] \u2192\n    op.kind = OpKind.insert \u2192 op.afterLine = 0 \u2192\n      (f x).ok = true \u2227 (f x).appliedOps = 1 \u2227 (f x).staleAnchors = [] \u2227\n        (f x).message = \"applied 1 op(s)\".toList",
+    "input": "{ original := [],",
+    "line": "s|i:s120:0:0:0:s",
+    "result_shown": "new_text=\"\" ok=false message=\"op[0]: stale anchor for insert after line 0: expected x, found e3b0c44298fc\" applied_ops=0 stale_anchors=[x]",
+    "result_encoded": "s|0|s111,112,91,48,93,58,32,115,116,97,108,101,32,97,110,99,104,111,114,32,102,111,114,32,105,110,115,101,114,116,32,97,102,116,101,114,32,108,105,110,101,32,48,58,32,101,120,112,101,99,116,101,100,32,120,44,32,102,111,117,110,100,32,101,51,98,48,99,52,52,50,57,56,102,99|0|s120",
+    "folder": "~/Projects/hp-work/p/672cf4a528",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "8d28fd94",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/cursor.py",
+  "function": "cursor_artifact_from_item",
+  "claims": [
+   {
+    "bug": "842bbbdd",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/cursor.py",
+    "function": "cursor_artifact_from_item",
+    "law": "WrappedNeedsStrictKey",
+    "law_text": "/-- \"Wrapped or inferred items keep the strict keys, so malformed ones are still rejected.\"\n(also: \"an untyped (wrapped or inferred) item must carry a strict primary key, else it is\nmalformed\"). An untyped `finding` wrapper with no strict headline gives no artifact. -/\ndef WrappedNeedsStrictKey (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 inner : Dict, x.item = .dict [(\"finding\", .dict inner)] \u2192\n    hasKey inner \"type\" = false \u2192 \u00ac hasStrictHeadline inner \u2192 f x = Output.none",
+    "input": "job_id='j' task_id='t' worker_id='w' adapter='a' item={'finding': {'finding': 'x'}}",
+    "line": "S:6a S:74 S:77 S:61 M:1 S:66696e64696e67 M:1 S:66696e64696e67 S:78",
+    "result_shown": "Artifact(type=finding, job_id='j', task_id='t', created_by='w', confidence=0.75, evidence=['adapter:a'], payload={'finding': 'x', 'claim': 'x'})",
+    "result_encoded": "A K:finding S:6a S:74 S:77 D:75:-2 L:1 S:616461707465723a61 M:2 S:66696e64696e67 S:78 S:636c61696d S:78",
+    "folder": "~/Projects/hp-work/p/f8a272ccbb",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "fc980cda",
+  "repo": "marionette",
+  "file": "harness/local_jobs.py",
+  "function": "LocalJobsMixin._sync_command_batch_from_children",
+  "claims": [
+   {
+    "bug": "88ec6e86",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/local_jobs.py",
+    "function": "LocalJobsMixin._sync_command_batch_from_children",
+    "law": "ChildrenOwnTruth",
+    "law_text": "/-- \"Refresh aggregate status from durable child rows (children own truth).\"\nThe status of the batch row after the call does not depend on the child\nsummaries (`children`) or the task list (`tasks`) that the batch row holds.\nOnly the durable child rows decide it. -/\ndef ChildrenOwnTruth (f : Impl) : Prop :=\n  \u2200 (x y : Input) (j j' : Job),\n    Legal x \u2192 Legal y \u2192\n    x.job = some j \u2192 y.job = some j' \u2192\n    y.store = x.store \u2192 y.parentCancelled = x.parentCancelled \u2192 y.now = x.now \u2192\n    j'.status = j.status \u2192 j'.childJobIds = j.childJobIds \u2192\n    j'.receipt = j.receipt \u2192 j'.artifacts = j.artifacts \u2192\n    j'.updatedAt = j.updatedAt \u2192 j'.mixedTerminal = j.mixedTerminal \u2192\n    (f x).map (\u00b7.status) = (f y).map (\u00b7.status)",
+    "input": "S N N S L0 N N N N N L0 F 0",
+    "line": "S N N S L0 N N N N N L0 F 0",
+    "result_shown": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+    "result_encoded": "{\"children\":[],\"mixed_terminal\":false,\"status\":\"failed\",\"updated_at\":0}",
+    "folder": "~/Projects/hp-work/p/833e97e356",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "67ffe9e8",
+  "repo": "marionette",
+  "file": "pmharness/drivers/cursor_cli.py",
+  "function": "_tool_hint_payload",
+  "claims": [
+   {
+    "bug": "8c2f0164",
+    "step": 1,
+    "repo": "marionette",
+    "file": "pmharness/drivers/cursor_cli.py",
+    "function": "_tool_hint_payload",
+    "law": "ToolCallKinds",
+    "law_text": "/-- \"``readToolCall`` / ``ShellToolCall`` \u2192 ``read`` / ``shell``;\" -/\ndef ToolCallKinds (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    (x.name = some \"readToolCall\" \u2192 (f x).name = \"read\") \u2227\n    (x.name = some \"ShellToolCall\" \u2192 (f x).name = \"shell\")",
+    "input": "_tool_hint_payload(name=some \"readToolCall\", args=none, call_id=\"\", status=\"\")",
+    "line": "S72656164546f6f6c43616c6c N S S",
+    "result_shown": "{ name := \"read_file\", goal := none, id := none, status := none }",
+    "result_encoded": "S726561645f66696c65 N N N",
+    "folder": "~/Projects/hp-work/p/72d07fab87",
+    "k": 1
+   },
+   {
+    "bug": "8c2f0164",
+    "step": 5,
+    "repo": "marionette",
+    "file": "pmharness/drivers/cursor_cli.py",
+    "function": "_tool_hint_payload",
+    "law": "MissingNameDefault",
+    "law_text": "/-- A call with no tool name (`name = None`) gets the generic name\n\"tool_call\". The owner answer for name none has `Output.name` \"tool_call\". -/\ndef MissingNameDefault (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.name = none \u2192 (f x).name = \"tool_call\"",
+    "input": "_tool_hint_payload(name=none, args=some [(\"name\", HP.Val.str \"foo\")], call_id=\"\", status=\"\")",
+    "line": "N D6e616d65=S666f6f S S",
+    "result_shown": "{ name := \"foo\", goal := none, id := none, status := none }",
+    "result_encoded": "S666f6f N N N",
+    "folder": "~/Projects/hp-work/p/80efc94d2e",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "5da772a5",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/failure.py",
+  "function": "classify_provider_failure",
+  "claims": [
+   {
+    "bug": "a1db3869",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_provider_failure",
+    "law": "LegacyReasonRetry",
+    "law_text": "/-- \"Legacy artifact / dashboard literal still maps to canonical retry.\"\nwith \"Canonical retry / provider policy uses :data:`SERVER_ERROR`.\" -/\ndef LegacyReasonRetry (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.reason = openaiServerErrorReason \u2192\n    f x = serverError",
+    "input": "reason=\"openai_server_error\" http_status=some 401 body=\"\"",
+    "line": "111,112,101,110,97,105,95,115,101,114,118,101,114,95,101,114,114,111,114|401|",
+    "result_shown": "\"not_authenticated\"",
+    "result_encoded": "110,111,116,95,97,117,116,104,101,110,116,105,99,97,116,101,100",
+    "folder": "~/Projects/hp-work/p/61aa1bdfef",
+    "k": 1
+   },
+   {
+    "bug": "a1db3869",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/failure.py",
+    "function": "classify_provider_failure",
+    "law": "LegacyReasonRetry",
+    "law_text": "/-- \"Legacy artifact / dashboard literal still maps to canonical retry.\"\nwith \"Canonical retry / provider policy uses :data:`SERVER_ERROR`.\" -/\ndef LegacyReasonRetry (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.reason = openaiServerErrorReason \u2192\n    x.status \u2260 some 401 \u2192 f x = serverError",
+    "input": "reason=\"openai_server_error\" http_status=some 403 body=\"\"",
+    "line": "111,112,101,110,97,105,95,115,101,114,118,101,114,95,101,114,114,111,114|403|",
+    "result_shown": "\"forbidden\"",
+    "result_encoded": "102,111,114,98,105,100,100,101,110",
+    "folder": "~/Projects/hp-work/p/a843b0bebe",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "b9b2bd25",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/metr_seams.py",
+  "function": "is_coordination_protocol_payload",
+  "claims": [
+   {
+    "bug": "a53b15e7",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/metr_seams.py",
+    "function": "is_coordination_protocol_payload",
+    "law": "ProtocolKeyDetected",
+    "law_text": "/-- \"True when a worker payload looks like recruit/HOLD/VETO/mailbox protocol.\"\n(also: \"worker recruit/HOLD/VETO/mailbox refused\"). A payload dict that has a\nprotocol key with a truthy value looks like protocol. -/\ndef ProtocolKeyDetected (f : Impl) : Prop :=\n  \u2200 (kvs : Entries) (k : String),\n    Legal (.val (.dict kvs)) \u2192 k \u2208 protocolKeys \u2192 hasKey kvs k = true \u2192\n    truthy (getKey kvs k) = true \u2192 f (.val (.dict kvs)) = true",
+    "input": "V D2 S7061796c6f6164 N S72656372756974 T",
+    "line": "V D2 S7061796c6f6164 N S72656372756974 T",
+    "result_shown": "false",
+    "result_encoded": "false",
+    "folder": "~/Projects/hp-work/p/1c817ce4b4",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "68948693",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/usage.py",
+  "function": "usage_from_sdk",
+  "claims": [
+   {
+    "bug": "b6774cde",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/usage.py",
+    "function": "usage_from_sdk",
+    "law": "CacheReadKept",
+    "law_text": "/-- \"Cursor's turn-ended usage also splits out cache read/write tokens. ... preserve\nthem for the cost axis\": exactly one cache read spelling with count `c` gives\n`cache_read_tokens` = `c`. -/\ndef CacheReadKept (f : Impl) : Prop :=\n  \u2200 vals extra c, Legal (Input.dict vals extra) \u2192 onlyCount vals cacheReadKeys c \u2192\n    \u2203 kvs, f (Input.dict vals extra) = some kvs \u2227 lookupKey kvs \"cache_read_tokens\" = some c",
+    "input": "sdk_usage={cacheReadTokens: 5}",
+    "line": "d0|a;a;a;a;a;a;a;a;i5;a;a;a",
+    "result_shown": "None",
+    "result_encoded": "none",
+    "folder": "~/Projects/hp-work/p/bae7b57845",
+    "k": 1
+   },
+   {
+    "bug": "b6774cde",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/usage.py",
+    "function": "usage_from_sdk",
+    "law": "CacheWriteKept",
+    "law_text": "/-- \"Cursor's turn-ended usage also splits out cache read/write tokens. ... preserve\nthem for the cost axis\": the same for cache write and `cache_write_tokens`. -/\ndef CacheWriteKept (f : Impl) : Prop :=\n  \u2200 vals extra c, Legal (Input.dict vals extra) \u2192 onlyCount vals cacheWriteKeys c \u2192\n    \u2203 kvs, f (Input.dict vals extra) = some kvs \u2227 lookupKey kvs \"cache_write_tokens\" = some c",
+    "input": "sdk_usage={cacheWriteTokens: 5}",
+    "line": "d0|a;a;a;a;a;a;a;a;a;a;i5;a",
+    "result_shown": "None",
+    "result_encoded": "none",
+    "folder": "~/Projects/hp-work/p/21168c2403",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "a54e332a",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/cli/commands_jobs.py",
+  "function": "await_summary_body",
+  "claims": [
+   {
+    "bug": "b79ed344",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/cli/commands_jobs.py",
+    "function": "await_summary_body",
+    "law": "NoneIsStateOnly",
+    "law_text": "/-- \"`summary=\"none\"` returns state only\": in mode `none` on a legal input,\nthe output body is the state, key by key, and nothing else. -/\ndef NoneIsStateOnly (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.mode = \"none\" \u2192\n    f x = .body (x.state.map fun kv => (kv.1, OVal.v kv.2))",
+    "input": "{ jobId := \"j\",",
+    "line": "s106 s110,111,110,101 s114 s 1 s116,101,114,109,105,110,97,108 t 0 D n",
+    "result_shown": "HP.Output.body [(\"terminal\", HP.OVal.v (HP.Val.bool true)), (\"summary_mode\", HP.OVal.v (HP.Val.str \"none\"))]",
+    "result_encoded": "OK 2 s116,101,114,109,105,110,97,108 V t s115,117,109,109,97,114,121,95,109,111,100,101 V s110,111,110,101",
+    "folder": "~/Projects/hp-work/p/56d8a84716",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "ca7ee1b0",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/api_discovery.py",
+  "function": "catalog_to_specs",
+  "claims": [
+   {
+    "bug": "b7e0a8d5",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/api_discovery.py",
+    "function": "catalog_to_specs",
+    "law": "BillingIsCallers",
+    "law_text": "/-- \"``billing`` is the caller-provided posture for the adapter.\" Each returned\nspec has the billing of the call. -/\ndef BillingIsCallers (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 specs, f x = Output.ok specs \u2192\n    \u2200 s \u2208 specs, s.billing = x.billing",
+    "input": "adapter=\"a\" billing=\"api\" catalog=[{id=\"m\" displayName=absent}] existing=[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[] notes=\"\" enabled=true}]",
+    "line": "97 97.112.105 1 S 109 A 1 120 97 109 1 0 0 0 112.108.97.110 0 _ 1",
+    "result_shown": "[{id=\"x\" adapter=\"a\" name=\"m\" cap=1 in=0/8 out=0/8 ctx=0 billing=\"plan\" tags=[discovered] notes=\"\" enabled=true}]",
+    "result_encoded": "OK 1 120 97 109 1 0 0 0 112.108.97.110 1 100.105.115.99.111.118.101.114.101.100 _ 1",
+    "folder": "~/Projects/hp-work/p/83f911b596",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "09775d44",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/router.py",
+  "function": "signals_from_worker_spec",
+  "claims": [
+   {
+    "bug": "b7eb3415",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/router.py",
+    "function": "signals_from_worker_spec",
+    "law": "DisabledExcluded",
+    "law_text": "/-- \"A disabled platform is never routed to, auto-discovered, or used for\nfallback.\": with no per-task override, a known adapter in `disabled` is\nrestricted away. -/\ndef DisabledExcluded (f : Impl) : Prop :=\n  \u2200 x, Legal x \u2192 payloadGet x \"allowed_adapters\" = none \u2192\n    \u2200 a d, x.disabled = some d \u2192 a \u2208 d \u2192 a \u2208 knownAdapters \u2192\n    \u2200 s, f x = .ok s \u2192 \u2203 r, s.allowedAdapters = some r \u2227 a \u2209 r",
+    "input": "{ override := HP.V.none,",
+    "line": "N A A A E1 Scursor E1 Scursor",
+    "result_shown": "HP.Output.ok",
+    "result_encoded": "OK S Sexplore I0 N N L0 N N T T E1 Scursor",
+    "folder": "~/Projects/hp-work/p/30047c9960",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "18d4efe1",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/write_intent.py",
+  "function": "adapter_may_write",
+  "claims": [
+   {
+    "bug": "caf64aa5",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/write_intent.py",
+    "function": "adapter_may_write",
+    "law": "CodexReadOnly",
+    "law_text": "/-- \"Codex read-only, Claude Code plan, and Antigravity plan runs cannot emit PATCH artifacts\"\n(Codex read-only, no sandbox bypass). -/\ndef CodexReadOnly (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 adapterIs x \"codex\" = true \u2192\n    readOnlySignal (payloadOf x) = true \u2192 truthy (payloadOf x).bypass = false \u2192 f x = false",
+    "input": "adapter='codex' payload={mode: (missing), implement: (missing), read_only: True, sandbox: (missing), permission_mode: (missing), dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None",
+    "line": "D|N|codex|A|A|T|A|A|A|.",
+    "result_shown": "True (may write)",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/6305975311",
+    "k": 1
+   },
+   {
+    "bug": "caf64aa5",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/write_intent.py",
+    "function": "adapter_may_write",
+    "law": "AntigravityPlan",
+    "law_text": "/-- \"Codex read-only, Claude Code plan, and Antigravity plan runs cannot emit PATCH artifacts\"\n(Antigravity plan). -/\ndef AntigravityPlan (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 adapterIs x \"antigravity\" = true \u2192\n    isText (payloadOf x).permissionMode \"plan\" = true \u2192 f x = false",
+    "input": "adapter='antigravity' payload={mode: (missing), implement: (missing), read_only: (missing), sandbox: (missing), permission_mode: 'plan', dangerously_bypass_approvals_and_sandbox: (missing)} swarm_mode=None",
+    "line": "D|N|antigravity|A|A|A|A|splan|A|.",
+    "result_shown": "True (may write)",
+    "result_encoded": "true",
+    "folder": "~/Projects/hp-work/p/22c7d4f13c",
+    "k": 2
+   },
+   {
+    "bug": "caf64aa5",
+    "step": 6,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/write_intent.py",
+    "function": "adapter_may_write",
+    "law": "UnknownAdapterWrites",
+    "law_text": "/-- \"Conservative for unknown adapters: treat them as writers so claims and dirty-tree guards\nstill fire.\" An adapter that is not Claude Code, Codex or Antigravity (or its alias) may write. -/\ndef UnknownAdapterWrites (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 adapterIs x \"claude-code\" = false \u2192 adapterIs x \"codex\" = false \u2192\n    adapterIs x \"antigravity\" = false \u2192 f x = true",
+    "input": "adapter='local' payload=None swarm_mode=None",
+    "line": "N|N|local|.",
+    "result_shown": "False (read-only)",
+    "result_encoded": "false",
+    "folder": "~/Projects/hp-work/p/1ca48e8d6d",
+    "k": 3
+   }
+  ]
+ },
+ {
+  "group": "3c97096f",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/adapters/antigravity.py",
+  "function": "resolve_antigravity_model",
+  "claims": [
+   {
+    "bug": "d486f0f2",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/adapters/antigravity.py",
+    "function": "resolve_antigravity_model",
+    "law": "DefaultEffortWhenRequired",
+    "law_text": "/-- \"defaulting to `high` effort when required by the model.\" -/\ndef DefaultEffortWhenRequired (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 requiresEffort (f x).model = true \u2192\n    (effortValue x).truthy = false \u2192 (f x).effort = some defaultEffort",
+    "input": "resolve_antigravity_model({\"effort\": 0, +0 other keys})",
+    "line": "P;0;-;i0",
+    "result_shown": "(\"gemini-3.7-flash\", \"0\")",
+    "result_encoded": "103.101.109.105.110.105.45.51.46.55.45.102.108.97.115.104;s48",
+    "folder": "~/Projects/hp-work/p/8f163103bc",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "9ab7fef4",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/dashboard.py",
+  "function": "cost_rollup",
+  "claims": [
+   {
+    "bug": "d9fe4f63",
+    "step": 4,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/dashboard.py",
+    "function": "cost_rollup",
+    "law": "UnnamedEstimateCounted",
+    "law_text": "/-- \"Sum estimated USD spend from ROUTING artifacts (router estimates).\"\nA routing artifact with an estimate is spend, also when it names no model. If exactly one\nrouting artifact has a truthy estimate, and it has neither a truthy `model_id` nor a truthy\n`selected_model`, the spend goes to one `\"<unknown>\"` bucket with one call. The bucket cost\nand the total are the rounded estimate. -/\ndef UnnamedEstimateCounted (f : Impl) : Prop :=\n  \u2200 (x : Input) (a : Artifact), Legal x \u2192\n    (routingArtifacts x).filter (fun b => b.costVal.truthy) = [a] \u2192\n    a.modelIdVal.truthy = false \u2192 a.selectedModelVal.truthy = false \u2192\n      (f x).total = pyRound6 (pyFloat a.costVal) \u2227\n      (f x).byModel = [{ model := unknownModel, calls := 1, cost := pyRound6 (pyFloat a.costVal) }]",
+    "input": "L k6 D A A b1 k6 N",
+    "line": "L k6 D A A b1 k6 N",
+    "result_shown": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1",
+    "result_encoded": "1/1 s60,117,110,107,110,111,119,110,62 2 1/1",
+    "folder": "~/Projects/hp-work/p/4526703d1f",
+    "k": 1
+   },
+   {
+    "bug": "d9fe4f63",
+    "step": 5,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/dashboard.py",
+    "function": "cost_rollup",
+    "law": "UnnamedEstimateCounted",
+    "law_text": "/-- \"Sum estimated USD spend from ROUTING artifacts (router estimates).\"\nA routing artifact with an estimate is spend, also when it names no model. If exactly one\nrouting artifact has a truthy estimate, and it has neither a truthy `model_id` nor a truthy\n`selected_model`, the spend goes to one `\"<unknown>\"` bucket with at least one call. The bucket cost\nand the total are the rounded estimate. -/\ndef UnnamedEstimateCounted (f : Impl) : Prop :=\n  \u2200 (x : Input) (a : Artifact), Legal x \u2192\n    (routingArtifacts x).filter (fun b => b.costVal.truthy) = [a] \u2192\n    a.modelIdVal.truthy = false \u2192 a.selectedModelVal.truthy = false \u2192\n      (f x).total = pyRound6 (pyFloat a.costVal) \u2227\n      \u2203 n : Nat, 1 \u2264 n \u2227\n        (f x).byModel = [{ model := unknownModel, calls := n, cost := pyRound6 (pyFloat a.costVal) }]",
+    "input": "L k6 D A A i1 k6 D s109 A A",
+    "line": "L k6 D A A i1 k6 D s109 A A",
+    "result_shown": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1",
+    "result_encoded": "1/1 s60,117,110,107,110,111,119,110,62 1 1/1 s109 1 0/1",
+    "folder": "~/Projects/hp-work/p/ae0b05e12a",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "fd9aa32e",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/rate_limit_headers.py",
+  "function": "parse_rate_limit_headers",
+  "claims": [
+   {
+    "bug": "de9336c9",
+    "step": 2,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/rate_limit_headers.py",
+    "function": "parse_rate_limit_headers",
+    "law": "RetryAfterIsClockPlusSeconds",
+    "law_text": "/-- \"from Retry-After, unix epoch\"\nOn 429, a Retry-After value of plain digits is a number of seconds from now.\nThe retry time is the clock plus that number, as a float sum. -/\ndef RetryAfterIsClockPlusSeconds (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 is429 x = true \u2192 \u2200 v,\n    readH (normalize x.headers) retryAfterKeys = some v \u2192 digitsOnly v = true \u2192\n    \u2203 s, f x = some s \u2227\n      s.retryAfterAt = some (fadd (clockOf x.now) (rnd (digitsVal v : Nat) 1))",
+    "input": "1|429|retry-after=1000000000",
+    "line": "1|429|retry-after=1000000000",
+    "result_shown": "S -|-|1000000000/1",
+    "result_encoded": "S -|-|1000000000/1",
+    "folder": "~/Projects/hp-work/p/21ec49d834",
+    "k": 1
+   },
+   {
+    "bug": "de9336c9",
+    "step": 4,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/rate_limit_headers.py",
+    "function": "parse_rate_limit_headers",
+    "law": "RequestWindowKindAndLimit",
+    "law_text": "/-- \"One requests- or tokens-window snapshot.\"\nA request window has the kind `requests`. When the request limit header has a\ndigit value, the window limit is the value of those digits. -/\ndef RequestWindowKindAndLimit (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    (\u2200 s w, f x = some s \u2192 s.requests = some w \u2192 w.kind = \"requests\") \u2227\n    (\u2200 v, readH (normalize x.headers) requestLimitKeys = some v \u2192 digitsOnly v = true \u2192\n      \u2203 s w, f x = some s \u2227 s.requests = some w \u2227 w.limit = some (digitsVal v))",
+    "input": "0|n|x-ratelimit-limit-requests=9007199254740993",
+    "line": "0|n|x-ratelimit-limit-requests=9007199254740993",
+    "result_shown": "S requests,9007199254740992,-,-|-|-",
+    "result_encoded": "S requests,9007199254740992,-,-|-|-",
+    "folder": "~/Projects/hp-work/p/66177412cb",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "c09906ba",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/setup_verification.py",
+  "function": "_validate",
+  "claims": [
+   {
+    "bug": "df459b30",
+    "step": 5,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/setup_verification.py",
+    "function": "_validate",
+    "law": "BadDeliveryMessage",
+    "law_text": "/-- \"Empty, degraded, blocked, stale, and mismatched results fail.\" (reason): with one job and one task that holds the requested identity and completed in one fresh attempt, a result that is not delivered, or is stale or incomplete, gets the delivery message. -/\ndef BadDeliveryMessage (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.jobCount = 1 \u2192 x.tasks.length = 1 \u2192\n    (\u2203 t \u2208 x.tasks, \u2200 kv \u2208 identityFields x.model, (t.payload.get kv.1).pyEq kv.2 = true) \u2192\n    (\u2200 t \u2208 x.tasks, t.status = \"complete\" \u2227 t.attempts.pyEq (.int 1) = true \u2227 t.completedAt.truthy = true) \u2192\n    (x.verdict.pyEq (.str \"delivered\") = false \u2228 x.stale.truthy = true \u2228 x.incomplete.truthy = true) \u2192\n    f x = msgDelivery",
+    "input": "{ jobCount := 1,",
+    "line": "#1 #1 s74 s6f.74.68.65.72 s63.6f.6d.70.6c.65.74.65 i1 i1 P6 s6d.6f.64.65.6c S s6d s70.69.6e.6e.65.64.5f.6d.6f.64.65.6c S s6d s70.69.6e.6e.65.64.5f.61.64.61.70.74.65.72.5f.6d.6f.64.65.6c.5f.6e.61.6d.65 S s6d s72.6f.75.74.65.72.5f.6d.6f.64.65.6c.5f.69.64 S s6d s61.75.74.6f.5f.72.6f.75.74.65 F s61.6c.6c.6f.77.65.64.5f.6d.6f.64.65.6c.5f.69.64.73 L1 s6d s6d s6e s2f N N N #0 #0 #0",
+    "result_shown": "Persisted model identity differs from the exact requested pin; check the model registry.",
+    "result_encoded": "s50.65.72.73.69.73.74.65.64.20.6d.6f.64.65.6c.20.69.64.65.6e.74.69.74.79.20.64.69.66.66.65.72.73.20.66.72.6f.6d.20.74.68.65.20.65.78.61.63.74.20.72.65.71.75.65.73.74.65.64.20.70.69.6e.3b.20.63.68.65.63.6b.20.74.68.65.20.6d.6f.64.65.6c.20.72.65.67.69.73.74.72.79.2e",
+    "folder": "~/Projects/hp-work/p/76ddb86d7c",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "146de2cf",
+  "repo": "marionette",
+  "file": "harness/runaway_guard.py",
+  "function": "observe_step",
+  "claims": [
+   {
+    "bug": "dfb56171",
+    "step": 5,
+    "repo": "marionette",
+    "file": "harness/runaway_guard.py",
+    "function": "observe_step",
+    "law": "NoPolicyKindNoFamilySignals",
+    "law_text": "/-- \"Record signals for this result.\"\nA kind with no policy (`read`) tracks no family signal. On a fresh session with\na non-error result of any text, the error, polling and progress keys stay unset\nwith count zero, and no signal is recorded. -/\ndef NoPolicyKindNoFamilySignals (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.state = none \u2192 x.act.kind = Kind.read \u2192 x.isError = none \u2192\n    (f x).state.errorKey = none \u2227 (f x).state.errorCount = 0 \u2227\n    (f x).state.pollKey = none \u2227 (f x).state.pollCount = 0 \u2227\n    (f x).state.progressKey = none \u2227 (f x).state.progressCount = 0 \u2227\n    (f x).state.observations = []",
+    "input": "{ state := none, act := { kind := HP.Kind.read, id := 0 }, content := \"ERROR\", isError := none, afterEnv := none }",
+    "line": "N f0 x4552524f52 _ _",
+    "result_shown": "{ raised := false,",
+    "result_encoded": "F . f0 x4552524f52 1 _ 0 _ 0 x4552524f52 1 .",
+    "folder": "~/Projects/hp-work/p/dc2c4fb43a",
+    "k": 1
+   },
+   {
+    "bug": "dfb56171",
+    "step": 6,
+    "repo": "marionette",
+    "file": "harness/runaway_guard.py",
+    "function": "observe_step",
+    "law": "NoPolicyKindNoFamilySignals",
+    "law_text": "/-- \"Record signals for this result.\"\nA kind with no policy (`read`) tracks no family signal. On a fresh session with\na result that the caller marks as no error (`is_error` false), of any text, the error, polling and progress keys stay unset\nwith count zero, and no signal is recorded. -/\ndef NoPolicyKindNoFamilySignals (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 x.state = none \u2192 x.act.kind = Kind.read \u2192 x.isError = some false \u2192\n    (f x).state.errorKey = none \u2227 (f x).state.errorCount = 0 \u2227\n    (f x).state.pollKey = none \u2227 (f x).state.pollCount = 0 \u2227\n    (f x).state.progressKey = none \u2227 (f x).state.progressCount = 0 \u2227\n    (f x).state.observations = []",
+    "input": "{ state := none,",
+    "line": "N f0 x6572726f723a2078 F _",
+    "result_shown": "{ raised := false,",
+    "result_encoded": "F . f0 x6572726f723a2078 1 _ 0 _ 0 x6572726f723a2078 1 .",
+    "folder": "~/Projects/hp-work/p/fcb22d97df",
+    "k": 2
+   }
+  ]
+ },
+ {
+  "group": "6f200f99",
+  "repo": "Puppetmaster",
+  "file": "puppetmaster/sqlite_store.py",
+  "function": "SQLiteSwarmStore.retrieve_memory",
+  "claims": [
+   {
+    "bug": "eaeb5933",
+    "step": 1,
+    "repo": "Puppetmaster",
+    "file": "puppetmaster/sqlite_store.py",
+    "function": "SQLiteSwarmStore.retrieve_memory",
+    "law": "SortedByConfidence",
+    "law_text": "/-- \"as 0.0 so the record sorts last instead of raising.\" /\n\"Malformed persisted `confidence` values are coerced to `0.0` instead of crashing memory retrieval.\"\nThe returned memories are in order of falling confidence (in tenths). -/\ndef SortedByConfidence (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192\n    (f x).Pairwise (fun a b => confTenths b.confidence \u2264 confTenths a.confidence)",
+    "input": "query=\"role abc\" limit=10 scope=None adapter=None role=None topic=None rows=[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]",
+    "line": "Q x726f6c6520616263 L 10 F - - - - N 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a",
+    "result_shown": "[(adapter=absent confidence=0 evidence=absent role=\"role\" scope=absent statement=\"abc\" topic=absent); (adapter=absent confidence=1 evidence=absent role=\"x\" scope=absent statement=\"abc\" topic=absent)]",
+    "result_encoded": "R 2 a i 0 a x726f6c65 a x616263 a a i 1 a x78 a x616263 a",
+    "folder": "~/Projects/hp-work/p/16420c56e9",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "f01f91b5",
+  "repo": "marionette",
+  "file": "harness/usage_ledger/rates.py",
+  "function": "TokenClasses.split",
+  "claims": [
+   {
+    "bug": "f44c7375",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/usage_ledger/rates.py",
+    "function": "TokenClasses.split",
+    "law": "PromptIsTokensIn",
+    "law_text": "/-- \"``tokens_in`` is the whole prompt (cache reads and writes included).\"\nThe prompt of the result (uncached input, cache reads, both writes) equals `tokens_in`. -/\ndef PromptIsTokensIn (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 (f x).prompt = x.tokensIn",
+    "input": "TokenClasses.split(tokens_in=0, tokens_out=0, cache_read=5, cache_write=0)",
+    "line": "0,0,5,0,_,_",
+    "result_shown": "TokenClasses(input_uncached=0, cache_read=5, cache_write_5m=0, cache_write_1h=0, output=0)",
+    "result_encoded": "0,5,0,0,0",
+    "folder": "~/Projects/hp-work/p/4eba89efd9",
+    "k": 1
+   }
+  ]
+ },
+ {
+  "group": "f75dc534",
+  "repo": "marionette",
+  "file": "harness/skill_store.py",
+  "function": "SkillStore.propose_update",
+  "claims": [
+   {
+    "bug": "f4652eca",
+    "step": 1,
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "SkillStore.propose_update",
+    "law": "SavedInPending",
+    "law_text": "/-- \"saved as PENDING for human approval.\" The saved file is in the files after the call,\n    in the pending state directory. -/\ndef SavedInPending (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 p fs, f x = Output.ok p fs \u2192\n    (pendingState, slugify p.name) \u2208 fs",
+    "input": "store=[pending/a.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"\" new_description=\"\" source=\"\"",
+    "line": "0,61,|61||||",
+    "result_shown": "Skill(name=\"untitled\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, pending/a.md]",
+    "result_encoded": "O|756e7469746c6564|||70656e64696e67||0|0|61|0,612d7061746368;0,61",
+    "folder": "~/Projects/hp-work/p/00a5effcae",
+    "k": 1
+   },
+   {
+    "bug": "f4652eca",
+    "step": 3,
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "SkillStore.propose_update",
+    "law": "ExactlyOneStateDir",
+    "law_text": "/-- \"ensure a skill lives in exactly one state dir\". After the call, the saved skill\n    is in no state directory except pending. -/\ndef ExactlyOneStateDir (f : Impl) : Prop :=\n  \u2200 x : Input, Legal x \u2192 \u2200 p fs, f x = Output.ok p fs \u2192\n    \u2200 st, (st, slugify p.name) \u2208 fs \u2192 st = pendingState",
+    "input": "store=[active/a.md = \"\", active/b.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"b\" new_description=\"\" source=\"\"",
+    "line": "1,61,;1,62,|61||62||",
+    "result_shown": "Skill(name=\"b\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, active/a.md, active/b.md]",
+    "result_encoded": "O|62|||70656e64696e67||0|0|61|0,612d7061746368;1,61;1,62",
+    "folder": "~/Projects/hp-work/p/3f9c3dd6fb",
+    "k": 2
+   },
+   {
+    "bug": "f4652eca",
+    "step": 5,
+    "repo": "marionette",
+    "file": "harness/skill_store.py",
+    "function": "SkillStore.propose_update",
+    "law": "LookupSanitized",
+    "law_text": "/-- \"SECURITY: sanitize on the lookup path, not just on create.\" Two slugs with the same\n    sanitized form give the same result. -/\ndef LookupSanitized (f : Impl) : Prop :=\n  \u2200 x y : Input, Legal x \u2192 Legal y \u2192\n    x.files = y.files \u2192 x.newBody = y.newBody \u2192 x.newName = y.newName \u2192\n    x.newDesc = y.newDesc \u2192 x.source = y.source \u2192\n    slugify x.slug = slugify y.slug \u2192 f x = f y",
+    "input": "store=[pending/a.md = \"\"] slug=\"a\" new_body=\"\" new_name=\"\" new_description=\"\" source=\"\"",
+    "line": "0,61,|61||||",
+    "result_shown": "Skill(name=\"untitled\", description=\"\", body=\"\", state=\"pending\", source=\"\", used_count=0, last_used=0, supersedes=\"a\") files=[pending/a-patch.md, pending/a.md]",
+    "result_encoded": "O|756e7469746c6564|||70656e64696e67||0|0|61|0,612d7061746368;0,61",
+    "folder": "~/Projects/hp-work/p/d3f72f9062",
+    "k": 3
+   }
+  ]
+ }
+]

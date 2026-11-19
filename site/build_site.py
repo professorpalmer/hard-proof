@@ -487,15 +487,55 @@ def sec_pipeline(pc: dict, bd: dict) -> str:
          f"<li><strong>A mirror of the code cannot show what the code does not have.</strong> The pipeline detected {pc['proof_detected_in_scope']} of the {scope} bugs that are in reach of the model, and none of the other {out_scope}. "
          "When the code ignores a field that it had to read, the mirror has no such field. Laws and types that are written from the documentation first do not have this limit.</li>",
          f"<li><strong>The loop asks many questions that are not the known bug.</strong> The pipeline showed {pc['items']} items: {pc['items_by_kind'].get('conflict', 0)} conflicts between the code and a law, and {pc['items_by_kind'].get('gap', 0)} gap questions. "
-         f"{pc['items_not_the_bug']} of them are not the known bug. A conflict is a difference between the code and a law that an agent wrote from the documentation. A gap question is a point that those laws leave open. We did not judge how many of these items are faults. "
+         f"{pc['items_not_the_bug']} of them are not the known bug. A conflict is a difference between the code and a law that an agent wrote from the documentation. A gap question is a point that those laws leave open. The conflicts got an audit, which is below. The gap questions did not. "
          f"In this test a script answered each item from the fixed code. In real use the owner answers. {oc.get('step limit', 0)} bugs used all six steps on such items.</li>",
          f"<li><strong>When the pipeline finds the bug, it finds it early.</strong> {first_two} of the {det} detections came in the first two steps.</li>",
          f"<li><strong>The prover is the largest cost.</strong> The prover runs cost {money(sc.get('R', 0))}, the model authors {money(sc.get('M', 0))}, the adversaries {money(sc.get('A', 0))}, and the law authors {money(sc.get('L', 0) + sc.get('LF', 0) + sc.get('LA', 0))}.</li>",
          "<li><strong>Limits.</strong> One run for each bug. "
          + (f"A fault of our harness ran {len(pc['replaced_by_a_second_run'])} bugs a second time, and the second result replaced the first. The cost above does not include those first runs. " if pc.get("replaced_by_a_second_run") else "")
          + "The laws come from documentation that an agent quoted, and a script checked only that each quote is in the source. The functions are small and pure. The data set has bugs that a later fix corrected, so it has no bug that is still unknown.</li></ul>",
+         sec_conflicts(),
          "<p>Our conclusion for daily work: a review that is pointed at the function, with a repro for each finding, is the first tool. The proof pipeline is a second gate for a rule where a missed case costs much, and it is most useful when the laws are written before the code (Section 13).</p>"]
     return "\n".join(h)
+
+
+def sec_conflicts() -> str:
+    """The audit of the conflict certificates that are not the known bug (v2/conflict_audit.py)."""
+    p = ROOT / "v2" / "conflict_triage.json"
+    if not p.exists():
+        return ""
+    t = json.loads(p.read_text())
+    c, v = t["collect"], t["verdicts"]
+    d, a = c["dropped"], v["agreed"]
+    n = c["candidates"]
+    ch = t["changed_result"]
+    latent = [f for f in t["agreed_faults"] if f["kind"] == "latent fault"]
+    docs = [f for f in t["agreed_faults"] if f["kind"] == "documentation"]
+    pr = t["pull_requests"]
+    return "\n".join([
+        "<h3>What the other conflicts were</h3>",
+        f"<p>A conflict certificate is a proof that the code breaks one law. The law is the reading of one documentation sentence by an agent. So a conflict shows that the code and that reading do not agree, and it does not show which is wrong. "
+        f"The run gave {c['conflicts_not_the_known_bug']} conflicts that are not the known bug. We sent them up the ladder of Section 13.</p>",
+        table(["Each conflict input on the newest releases", "Conflicts"],
+              [["The function gives the same result: the conflict holds", f"{n}, in {c['functions']} functions"],
+               ["The function gives a different result now", str(d.get("result changed on the newest source", 0))],
+               ["The function is absent", str(d.get("function absent on the newest source", 0))],
+               ["The folder of the pipeline stage is absent or changed", str(d.get("stage folder absent or changed", 0))]]),
+        f"<p>Two verifier agents (Opus 5.5 and Sonnet 5.5) judged each of the {n} conflicts that hold, in separate folders, with the newest source, its tests and its callers: {v['runs']} runs for {money(v['cost_usd'])}.</p>",
+        table(["Verdict", "Conflicts"],
+              [["The code is wrong, and a caller reaches it (verdict of one verifier or of the two)", str(t["any_verdict_real"])],
+               ["The two agree: the code is wrong, but no caller reaches it today", str(a.get("real_unreachable", 0))],
+               ["The two agree: the code is by design, and the documentation sentence is wrong", str(a.get("doc_wrong", 0))],
+               ["The two agree: the law says more than the sentence says", str(a.get("misread", 0))],
+               ["The two do not agree (in each, one verdict is \"the law says more\")", str(a.get("the two do not agree", 0))]]),
+        f"<p>No conflict is a bug that the product can hit today. The agreed faults are {len(latent)} latent faults and {len(docs)} wrong sentences:</p>",
+        "<ul>" + "".join(f"<li><code>{f['function']}</code>: {f['text']} {f['fix']}</li>" for f in latent + docs) + "</ul>",
+        f"<p class=\"small\">The five corrections are in pull requests {pr['Puppetmaster']} (Puppetmaster) and {pr['marionette']} (Marionette) for the development branches. They are not in a release.</p>",
+        "<ul>"
+        f"<li><strong>Most conflicts were faults of the law, not of the code.</strong> In {a.get('misread', 0)} of {n} conflicts, each verifier said that the law author read more into the sentence than the sentence says. A proof makes a law exact. It does not make the law correct. This is the place of the human in the loop of this study: the owner must own the laws.</li>",
+        f"<li><strong>As a source of bugs in old code, a review was better.</strong> Of the review findings in Section 13, the verifiers confirmed about four in ten as real and reachable. Of these conflicts, they confirmed none as reachable and {a.get('real_unreachable', 0) + a.get('doc_wrong', 0)} of {n} as a fault of some kind.</li>",
+        f"<li><strong>Some conflicts pointed at code that changed later.</strong> For {ch['by_earlier_history']} of the conflicts with a different result now, history before this study changed the function. For {ch['between_the_development_branch_before_the_fixes_and_the_releases']}, the result changed between the development branch before the fixes of Section 13 and the releases with those fixes. We did not judge if a conflict named the same fault as a fix.</li>",
+        "<li><strong>Limits.</strong> The verifiers are agents, and no human read the 73 verdicts. Each verifier got the same brief. The gap questions of the run did not get this audit.</li></ul>"])
 
 
 def sec_ladder(ls: dict) -> str:
@@ -611,8 +651,8 @@ def table(head: list[str], rows: list[list[str]], classes: dict[int, str] | None
 
 def build_zip(dest: Path) -> str:
     keep_ext = {".lean", ".py", ".json", ".toml", ".sh", ".md"}
-    skip_dirs = {".lake", ".git", "__pycache__", "site", "review"}
-    skip_names = {"lake-manifest.json", "review_score.json", "review_all.log", "findings_all.json",
+    skip_dirs = {".lake", ".git", "__pycache__", "site", "review", "conflict_audit"}
+    skip_names = {"lake-manifest.json", "review_score.json", "conflict_merged.json", "conflict_changed.json", "conflict_run.log", "review_all.log", "findings_all.json",
                   "audit_groups.json", "audit_runs.json", "audit_merged.json"}
     files: list[tuple[Path, str]] = []
     for path in sorted(ROOT.rglob("*")):
