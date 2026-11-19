@@ -352,7 +352,8 @@ class LadderTest(FlowCase):
         w = r["worktrees"][0]
         self.assertTrue(Path(w["worktree"]).is_dir())
         self.assertEqual(Path(w["worktree"]), self.out / "fix" / "pkg-mod")
-        self.assertEqual(git(self.repo, "rev-parse", "hpfix/pkg-mod"), head)
+        self.assertTrue(w["branch"].startswith("hpfix/pkg-mod-"), w)
+        self.assertEqual(git(self.repo, "rev-parse", w["branch"]), head)
         self.assertIn("pkg/mod.py", w["diffstat"])
         self.assertIn("tests/test_hpfix_pkg_mod.py", w["new_files"])
         self.assertEqual(w["check"], "accept", w)
@@ -367,6 +368,22 @@ class LadderTest(FlowCase):
 
     def bug_id(self) -> str:
         return json.loads((self.out / "confirmed.json").read_text())[0]["id"]
+
+    def test_a_second_audit_of_the_repository_has_fix_branches_of_its_own(self):
+        self.through_verify()
+        code, first = self.hpf("fix")
+        self.assertEqual(code, 0, first)
+        # A second audit folder for the same repository and the same file, while the first worktree is there.
+        first_out, self.out = self.out, self.out.parent / "audit2"
+        self.through_verify()
+        code, second = self.hpf("fix")
+        self.assertEqual(code, 0, second)
+        a, b = first["worktrees"][0], second["worktrees"][0]
+        self.assertNotEqual(a["worktree"], b["worktree"])
+        # The branch of the first audit is still there with its worktree.
+        self.assertTrue(Path(a["worktree"]).is_dir())
+        self.assertEqual(git(self.repo, "rev-parse", "--verify", a["branch"]), git(self.repo, "rev-parse", "HEAD"))
+        self.out = first_out
 
     def test_gate_fails_when_a_reviewer_wrote_no_report(self):
         # A worker that cannot sign in ends at once with no report. That is not a clean review.

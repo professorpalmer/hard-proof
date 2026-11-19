@@ -803,7 +803,9 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         rid = digest("fix", audit["commit"], base_commit, g["slug"], *adapter_key(adapter, template, ctx.effort),
                      *sorted(b["id"] for b in g["bugs"]))
         tree = ctx.out / "fix" / g["slug"]
-        branch = f"hpfix/{g['slug']}"
+        # The audit folder and the id of the run are a part of the branch name. A second audit of the same
+        # repository then has branches of its own, and this run never deletes the branch of another audit.
+        branch = f"hpfix/{g['slug']}-{digest('branch', str(ctx.out), rid)[:8]}"
         r = ctx.stored(rid)
         if r and tree.exists():
             return r, False
