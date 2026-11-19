@@ -228,6 +228,8 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
 def functions_of(source: str) -> List[Dict[str, Any]]:
     """The functions and methods of a module: qualified name, first line (decorators included), last line.
 
+    A function in a function is not in the list: it is a part of the outer function.
+
     Two definitions can have one qualified name (a property getter and its setter, or a function that a later
     `def` replaces). `nth` is the number of the definition among those with its name, in source order, and `of`
     is how many there are. The name and `nth` together are the identity of a function in its file."""
@@ -237,15 +239,26 @@ def functions_of(source: str) -> List[Dict[str, Any]]:
         return []
     out: List[Dict[str, Any]] = []
 
-    def walk(body: List[ast.stmt], prefix: str) -> None:
+    def walk(body: List[Any], prefix: str) -> None:
         for node in body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 start = min([node.lineno] + [d.lineno for d in node.decorator_list])
                 out.append({"function": prefix + node.name, "start": start, "end": node.end_lineno or node.lineno})
             elif isinstance(node, ast.ClassDef):
                 walk(node.body, prefix + node.name + ".")
+            else:
+                # A block statement (if, try, with, for, while, match) can hold a definition. Its name has no
+                # part from the block: Python binds it in the module or the class, as a definition outside one.
+                for _, value in ast.iter_fields(node):
+                    if isinstance(value, list):
+                        walk([x for x in value if isinstance(x, ast.stmt)], prefix)
+                        for part in value:
+                            # The handlers of a try statement and the cases of a match statement.
+                            if not isinstance(part, ast.stmt) and isinstance(getattr(part, "body", None), list):
+                                walk(part.body, prefix)
 
     walk(tree.body, "")
+    out.sort(key=lambda fn: fn["start"])
     count: Dict[str, int] = {}
     for fn in out:
         count[fn["function"]] = count.get(fn["function"], 0) + 1
@@ -733,8 +746,9 @@ def slug_of(file: str, unique: bool = False) -> str:
     stem = file[:-3] if file.endswith(".py") else file
     slug = re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-")
     # A path that is not a module path (pkg/a-b.py) cannot be imported, and its slug would take the name of one.
-    if unique or not re.fullmatch(r"[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*\.py", file):
-        return f"{slug}-{digest('slug', file)[-8:]}"
+    # A path with no letter and no digit (_.py) has no plain slug. A slug is a folder name, so it is never empty.
+    if unique or not slug or not re.fullmatch(r"[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*\.py", file):
+        return f"{slug or 'file'}-{digest('slug', file)[-8:]}"
     return slug
 
 

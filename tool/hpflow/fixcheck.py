@@ -14,7 +14,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from .common import git_status, run_group, run_snippet, shell_quote
 
@@ -25,10 +25,14 @@ RELATED_PART = 12
 CACHE_PARTS = ("__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache")
 
 
-def changed_files(tree: Path) -> List[str]:
-    """Each path that differs from the commit of the worktree: changed, added, deleted, renamed or new."""
+def changed_files(tree: Path) -> Optional[List[str]]:
+    """Each path that differs from the commit of the worktree: changed, added, deleted, renamed or new.
+    None when git cannot read the status of the worktree."""
+    entries = git_status(tree)
+    if entries is None:
+        return None
     paths: List[str] = []
-    for entry in git_status(tree) or []:
+    for entry in entries:
         paths += [p for p in (entry["path"], entry["source"]) if p]
     return [p for p in paths if not (set(Path(p).parts) & set(CACHE_PARTS)) and not p.endswith(".pyc")]
 
@@ -43,8 +47,17 @@ def in_scope(path: str, scope: List[str]) -> bool:
     return False
 
 
-def out_of_scope(tree: Path, scope: List[str]) -> List[str]:
-    return sorted(p for p in changed_files(tree) if not in_scope(p, scope))
+def out_of_scope(tree: Path, scope: List[str]) -> Optional[List[str]]:
+    """The changed paths that are not in the write scope. None when git cannot read the status of the worktree."""
+    changed = changed_files(tree)
+    return None if changed is None else sorted(p for p in changed if not in_scope(p, scope))
+
+
+def module_name(file: str) -> str:
+    """The name that a test uses for the module of a file: the stem, or for `pkg/__init__.py` the package `pkg`.
+    Empty when the file is an `__init__.py` with no folder."""
+    path = Path(file)
+    return path.parent.name if path.stem == "__init__" else path.stem
 
 
 def imports_module(source: str, stem: str) -> bool:
@@ -83,7 +96,10 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
     problems = []
     skipped: List[str] = []
     stray = out_of_scope(tree, spec["scope"]) if spec.get("scope") else []
-    if stray:
+    if stray is None:
+        # No list of the changed files is no proof that the change stays in its scope.
+        problems.append("git status failed in the worktree, so the check of the write scope did not run")
+    elif stray:
         problems.append("the change touches files outside the write scope (" + ", ".join(spec["scope"]) + "): "
                         + ", ".join(stray[:20]) + ". Put these files back as they were, or delete the new ones")
     for b in spec["bugs"]:
@@ -98,7 +114,7 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
         p = run_tests(spec, tree, [spec["test_file"]], 900)
         if p.returncode != 0:
             problems.append("the new test file fails:\n" + (p.stdout + p.stderr)[-1500:])
-        stem = Path(spec["file"]).stem
+        stem = module_name(spec["file"])
         related = []
         tests_dir = tree / (spec.get("tests_dir") or "tests")
         if tests_dir.is_dir():
@@ -106,7 +122,7 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
             for t in sorted(set(tests_dir.rglob("test_*.py")) | set(tests_dir.rglob("*_test.py"))):
                 if t == test_file:
                     continue
-                if stem in t.name or imports_module(t.read_text(encoding="utf-8", errors="replace"), stem):
+                if stem and (stem in t.name or imports_module(t.read_text(encoding="utf-8", errors="replace"), stem)):
                     if t.stat().st_size > MAX_RELATED_BYTES:
                         # A very large test file can run for a long time. The CI of the repository runs it.
                         skipped.append(t.relative_to(tree).as_posix())

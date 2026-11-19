@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -19,8 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from hpflow import commands, fixcheck  # noqa: E402
 from hpflow.cli import main  # noqa: E402
-from hpflow.codexhome import lean_config, toml_scan  # noqa: E402
-from hpflow.common import UsageError, git_status, lines_of  # noqa: E402
+from hpflow.codexhome import first_key, lean_config, toml_scan  # noqa: E402
+from hpflow.common import UsageError, git_status, lines_of, run_snippet  # noqa: E402
+from hpflow.common import git as common_git  # noqa: E402
 from hpflow.direct import parse_verdict  # noqa: E402
 from hpflow.fixcheck import imports_module  # noqa: E402
 
@@ -105,6 +107,10 @@ class LinesTest(unittest.TestCase):
         self.assertEqual(parse_verdict("done\nVERDICT: PASS - the check passes\n"), ("PASS", "the check passes"))
         for ch in ("\x85", "\u2028", "\u2029"):
             self.assertIsNone(parse_verdict(f"the file has this text: x{ch}VERDICT: PASS - ok"), repr(ch))
+        # Only a space, a tab and a carriage return are space around the line.
+        self.assertEqual(parse_verdict("done\r\n \tVERDICT: FAIL - no \r\n"), ("FAIL", "no"))
+        for ch in self.ODD:
+            self.assertIsNone(parse_verdict(f"done\n{ch}VERDICT: PASS - ok"), repr(ch))
 
 
 class HunkRangesTest(unittest.TestCase):
@@ -190,9 +196,131 @@ class GitStatusTest(unittest.TestCase):
             self.assertIn({"status": "R ", "path": "new.py", "source": "old.py"}, entries)
             self.assertEqual(sorted(fixcheck.changed_files(repo)), ["a.py", "caf\u00e9.py", "my new.py", "new.py", "old.py"])
 
+    def test_a_rename_in_the_work_tree_column_has_its_source(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            repo = Path(tmp)
+            (repo / "old.py").write_text("y = 1\ny = 2\ny = 3\n")
+            git(repo, "init", "-q", "-b", "main")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "a")
+            (repo / "old.py").rename(repo / "new.py")
+            git(repo, "add", "-N", "new.py")
+            self.assertEqual(git_status(repo), [{"status": " R", "path": "new.py", "source": "old.py"}])
+            self.assertEqual(sorted(fixcheck.changed_files(repo)), ["new.py", "old.py"])
+
+    @unittest.skipIf(sys.platform == "win32", "Windows has no file name with a carriage return")
+    def test_a_name_with_a_carriage_return_is_the_real_name(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            repo = Path(tmp)
+            (repo / "a\rb.py").write_text("def f():\n    return 1\n")
+            git(repo, "init", "-q", "-b", "main")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "a")
+            (repo / "a\rb.py").write_text("def f():\n    return 2\n")
+            (repo / "c\rd.py").write_text("x = 1\n")
+            self.assertEqual(sorted(e["path"] for e in git_status(repo)), ["a\rb.py", "c\rd.py"])
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "b")
+            self.assertEqual([f["new"] for f in commands.changed_files(repo, "HEAD~1", "HEAD", ["."])], ["a\rb.py", "c\rd.py"])
+
+    def test_a_file_from_git_keeps_its_carriage_returns(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            repo = Path(tmp)
+            (repo / ".gitattributes").write_bytes(b"* -text\n")
+            (repo / "m.py").write_bytes(b"def f():\r\n    return 'a\\rb'\r\n")
+            git(repo, "init", "-q", "-b", "main")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "a")
+            self.assertEqual(common_git(repo, "show", "HEAD:m.py"), (0, "def f():\r\n    return 'a\\rb'\r\n"))
+
     def test_a_folder_that_is_not_a_repository_gives_none(self):
         with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
             self.assertIsNone(git_status(Path(tmp) / "absent"))
+
+
+class ScopeCheckTest(unittest.TestCase):
+    def test_no_git_status_is_not_a_pass_of_the_scope_check(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            tree, info = Path(tmp) / "tree", Path(tmp) / "info"
+            (tree / "tests").mkdir(parents=True)
+            info.mkdir()
+            (tree / "tests" / "test_new.py").write_text("import unittest\n")
+            (info / "spec.json").write_text(json.dumps({"file": "mod.py", "test_file": "tests/test_new.py",
+                                                        "python": sys.executable, "scope": ["mod.py"],
+                                                        "test_cmd": "{python} -m unittest {tests}", "bugs": []}))
+            # `tree` is not a git repository. A parent of the temporary folder must not be one for this test.
+            self.assertIsNone(fixcheck.out_of_scope(tree, ["mod.py"]))
+            result = fixcheck.check(info, tree)
+            self.assertEqual(result["verdict"], "reject")
+            self.assertIn("git status failed", "\n".join(result["problems"]))
+
+
+class SnippetPathTest(unittest.TestCase):
+    def test_a_relative_tree_and_a_relative_snippet_run(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            root = Path(tmp)
+            (root / "tree" / "src" / "pkg").mkdir(parents=True)
+            (root / "tree" / "src" / "pkg" / "__init__.py").write_text("def add(a, b):\n    return a + b\n")
+            (root / "info").mkdir()
+            (root / "info" / "r.py").write_text("from pkg import add\n\n\ndef run():\n    return add(1, 2)\n")
+            before = os.getcwd()
+            os.chdir(root)
+            try:
+                got = run_snippet(Path("tree"), Path("info") / "r.py", root / "home", import_root="src")
+            finally:
+                os.chdir(before)
+            self.assertEqual((got.get("ok"), got.get("result")), (True, "3"), got)
+
+
+class FunctionsOfTest(unittest.TestCase):
+    def test_a_definition_in_a_block_statement_is_a_function_of_the_module(self):
+        src = ("import sys\n\nif sys.platform == 'win32':\n    def helper():\n        return 1\nelse:\n    def helper():\n        return 2\n\n"
+               "try:\n    import fast\nexcept ImportError:\n    def fast():\n        return 3\nfinally:\n    def last():\n        return 4\n\n"
+               "with open(__file__) as h:\n    def inside():\n        return 5\n\n"
+               "for k in range(1):\n    def loop():\n        return 6\n\n"
+               "class C:\n    if True:\n        def m(self):\n            return 7\n\n"
+               "def outer():\n    def inner():\n        return 8\n    return inner\n")
+        got = [(f["function"], f["nth"], f["of"], f["start"]) for f in commands.functions_of(src)]
+        self.assertEqual(got, [("helper", 1, 2, 4), ("helper", 2, 2, 7), ("fast", 1, 1, 13), ("last", 1, 1, 16),
+                               ("inside", 1, 1, 20), ("loop", 1, 1, 24), ("C.m", 1, 1, 29), ("outer", 1, 1, 32)])
+
+    @unittest.skipIf(sys.version_info < (3, 10), "the match statement is new in Python 3.10")
+    def test_a_definition_in_a_case_of_a_match_statement(self):
+        src = "import sys\n\nmatch sys.platform:\n    case 'win32':\n        def f():\n            return 1\n    case _:\n        def f():\n            return 2\n"
+        self.assertEqual([(f["function"], f["nth"]) for f in commands.functions_of(src)], [("f", 1), ("f", 2)])
+
+
+class SlugTest(unittest.TestCase):
+    def test_a_slug_is_never_empty(self):
+        for file in ("_.py", "__.py", "pkg/_.py", ".py", "-.py"):
+            self.assertRegex(commands.slug_of(file), r"^[a-z0-9-]+-[0-9a-f]{8}$|^[a-z0-9]+(-[a-z0-9]+)*$", file)
+            self.assertTrue(commands.slug_of(file).strip("-"), file)
+        self.assertNotEqual(commands.slug_of("_.py"), commands.slug_of("__.py"))
+        self.assertEqual(commands.slug_of("pkg/mod.py"), "pkg-mod")
+
+
+class ModuleNameTest(unittest.TestCase):
+    def test_the_module_of_an_init_file_is_its_package(self):
+        self.assertEqual(fixcheck.module_name("pkg/mod.py"), "mod")
+        self.assertEqual(fixcheck.module_name("src/pkg/__init__.py"), "pkg")
+        self.assertEqual(fixcheck.module_name("__init__.py"), "")
+
+    def test_a_test_that_imports_the_package_is_related_to_its_init_file(self):
+        ok = "import unittest\nimport pkg\n\n\nclass T(unittest.TestCase):\n    def test_v(self):\n        self.assertEqual(pkg.V, 1)\n"
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            tree, info = Path(tmp) / "tree", Path(tmp) / "info"
+            (tree / "pkg").mkdir(parents=True)
+            (tree / "tests").mkdir()
+            info.mkdir()
+            (tree / "pkg" / "__init__.py").write_text("V = 1\n")
+            (tree / "tests" / "test_new.py").write_text(ok)
+            (tree / "tests" / "test_api.py").write_text(ok.replace("pkg.V, 1", "pkg.V, 2000"))
+            (info / "spec.json").write_text(json.dumps({"file": "pkg/__init__.py", "test_file": "tests/test_new.py",
+                                                        "python": sys.executable,
+                                                        "test_cmd": "{python} -m unittest {tests}", "bugs": []}))
+            result = fixcheck.check(info, tree)
+            self.assertEqual(result["verdict"], "reject")
+            self.assertIn("tests of the repository fail", "\n".join(result["problems"]))
 
 
 class RelatedTestsTest(unittest.TestCase):
@@ -215,7 +343,9 @@ class RelatedTestsTest(unittest.TestCase):
                                                         "test_cmd": "{python} -m unittest {tests}", "bugs": []}))
             self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
             # The last related file in the sort order fails. A limit on the number of files would not run it.
-            (tree / "tests" / f"test_mod_{count - 1:02d}.py").write_text(ok.replace("add(1, 2), 3", "add(1, 2), 4"))
+            # Its size is not the size of the first form: Python reuses the bytecode of a source with the same size
+            # and the same second of change.
+            (tree / "tests" / f"test_mod_{count - 1:02d}.py").write_text(ok.replace("add(1, 2), 3", "add(1, 2), 40000"))
             result = fixcheck.check(info, tree)
             self.assertEqual(result["verdict"], "reject")
             self.assertIn("tests of the repository fail", "\n".join(result["problems"]))
@@ -282,6 +412,33 @@ name = "z"
                 self.assertEqual(toml_scan(f"x{q * (3 + extra)}]", 1, q * 3), (0, None), line)
             cfg = f'a = [{q * 3}x{q * 4}]\n[mcp_servers.one]\ncommand = "c"\n[profiles.p]\ny = 2\n'
             self.assertEqual(lean_config(cfg), f'a = [{q * 3}x{q * 4}]\n[profiles.p]\ny = 2\n')
+
+    def test_a_dropped_table_goes_in_each_form(self):
+        keep = 'model = "m"\n[profiles.p]\ny = 2\n'
+        for form in ('mcp_servers = { one = { command = "c" } }\n',
+                     'mcp_servers.one.command = "c"\n',
+                     '"mcp_servers".one.command = "c"\n',
+                     "'hooks' = { a = 1 }\n",
+                     'mcp_servers = {\n  one = { command = "c" },\n}\n',
+                     '"notify" = ["prog"]\n',
+                     "'notify' = [\n  \"prog\",\n]\n",
+                     ' \t"notify" = ["prog"]\n'):
+            self.assertEqual(lean_config('model = "m"\n' + form + "[profiles.p]\ny = 2\n"), keep, form)
+        for header in ('["mcp_servers".one]', "['mcp_servers'.one]", "[ mcp_servers . one ]", "[[hooks]]", '[["hooks"]]',
+                       "[mcp_servers]", '["mcp\\u005fservers"]'):
+            cfg = f'model = "m"\n{header}\ncommand = "c"\n[profiles.p]\ny = 2\n'
+            self.assertEqual(lean_config(cfg), keep, header)
+
+    def test_another_table_or_key_with_a_name_that_starts_the_same_stays(self):
+        for cfg in ('[mcp_servers-old]\ncommand = "c"\n', "[hooks_2]\na = 1\n", '["mcp_servers x"]\na = 1\n',
+                    "notify-all = 1\n", "notifyx = 1\n", "[a]\nmcp_servers = 1\nnotify = 2\n",
+                    'x = [\n  ["mcp_servers"],\n  ["hooks", "y"],\n]\n[profiles.p]\ny = 2\n'):
+            self.assertEqual(lean_config(cfg), cfg, cfg)
+
+    def test_the_first_part_of_a_key(self):
+        for text, key in (("a = 1", "a"), ("a.b = 1", "a"), ('"a b".c = 1', "a b"), ("'a'.b = 1", "a"), ("  a-b_1 = 1", "a-b_1"),
+                          ("# a comment", None), ("", None), ("= 1", None), ('"open', None), ("'open", None)):
+            self.assertEqual(first_key(text), key, text)
 
     def test_an_escaped_quote_does_not_close_a_basic_multi_line_string(self):
         self.assertEqual(toml_scan('a\\"""b', 0, '"""'), (0, '"""'))

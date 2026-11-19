@@ -76,7 +76,8 @@ PLACEHOLDERS = ("{model}", "{folder}", "{prompt_file}")
 
 def parse_verdict(text: str) -> Optional[Tuple[str, str]]:
     """The one terminal `VERDICT` line, as `parse_terminal_verdict` of Puppetmaster reads it."""
-    lines = [line.strip() for line in lines_of(text or "") if line.strip()]
+    # Only a space, a tab and a carriage return are space around a line. Another character is content.
+    lines = [line.strip(" \t\r") for line in lines_of(text or "") if line.strip(" \t\r")]
     found = [line for line in lines if line.startswith("VERDICT:")]
     if len(found) != 1 or found[0] != lines[-1]:
         return None

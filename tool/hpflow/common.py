@@ -106,10 +106,12 @@ def kill_group(p: subprocess.Popen) -> None:
 
 
 def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: float = 600, shell: bool = False,
-              env: Optional[Dict[str, str]] = None, stdin: Optional[str] = None) -> Tuple[Optional[int], str, str]:
+              env: Optional[Dict[str, str]] = None, stdin: Optional[str] = None,
+              exact: bool = False) -> Tuple[Optional[int], str, str]:
     """Run a command in its own process group. At the timeout the whole group ends.
 
     `stdin` is the text on the standard input; with None the input is empty.
+    `exact`: the output keeps each carriage return. Without it the output has the newlines of text mode.
     Returns (exit code, stdout, stderr). The exit code is None after a timeout.
     """
     try:
@@ -143,7 +145,7 @@ def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: f
     p.wait()
     for t in threads:
         t.join(DRAIN_TIMEOUT)
-    return code, decode(b"".join(chunks[0])), decode(b"".join(chunks[1]))
+    return code, decode(b"".join(chunks[0]), exact), decode(b"".join(chunks[1]), exact)
 
 
 # Seconds to read the rest of the output after the group ends. A child outside the group can hold a pipe open.
@@ -170,9 +172,11 @@ def _feed(stream: Any, data: bytes) -> None:
         pass
 
 
-def decode(data: Optional[bytes]) -> str:
-    """Output as text mode reads it: UTF-8 with replacement, and each `\r\n` or `\r` as `\n`."""
-    return (data or b"").decode("utf-8", "replace").replace("\r\n", "\n").replace("\r", "\n")
+def decode(data: Optional[bytes], exact: bool = False) -> str:
+    """Output as UTF-8 with replacement. As text mode reads it, each `\r\n` or `\r` becomes `\n`. With `exact`
+    each character stays: a file name or a file from git can have a carriage return."""
+    text = (data or b"").decode("utf-8", "replace")
+    return text if exact else text.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def sh(cmd: List[str], cwd: Optional[Path] = None, timeout: float = 600) -> Tuple[int, str]:
@@ -196,9 +200,10 @@ def lines_of(text: str) -> List[str]:
 
 def git(repo: Path, *args: str, timeout: float = 600) -> Tuple[int, str]:
     """Run git in `repo`. Each path that a command gets after "--" is a literal name, not a pattern: a file can
-    have "*", "?" or "[" in its name."""
+    have "*", "?" or "[" in its name. The output is exact: git ends its own lines with a line feed on each system,
+    and a carriage return in a name or in a file is content."""
     code, out, err = run_group(["git", "-C", str(repo), *args], timeout=timeout,
-                               env=dict(os.environ, GIT_LITERAL_PATHSPECS="1"))
+                               env=dict(os.environ, GIT_LITERAL_PATHSPECS="1"), exact=True)
     if code is None:
         return 124, "timeout"
     return code, out if code == 0 else out + err
@@ -222,8 +227,8 @@ def git_status(tree: Path) -> Optional[List[Dict[str, Optional[str]]]]:
         if len(field) < 4:
             continue
         source = None
-        if field[0] in "RC":
-            # A rename or a copy has its source path in the next field.
+        if "R" in field[:2] or "C" in field[:2]:
+            # A rename or a copy, in the index or in the work tree, has its source path in the next field.
             source = fields[i] if i < len(fields) and fields[i] else None
             i += 1
         entries.append({"status": field[:2], "path": field[3:], "source": source})
@@ -262,8 +267,9 @@ def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, impo
 
     `import_root`: the folder inside `tree` that holds the top-level package, for example `src`."""
     home.mkdir(parents=True, exist_ok=True)
-    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str(tree / import_root), str(snippet)], tree, timeout,
-                               env=snippet_env(home))
+    # The child runs in `tree`, so each path that it gets is absolute.
+    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str((tree / import_root).resolve()),
+                                str(snippet.resolve())], tree, timeout, env=snippet_env(home))
     if code is None:
         return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
     line = [x for x in lines_of(out) if x.startswith("{")]

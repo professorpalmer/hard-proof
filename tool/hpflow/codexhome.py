@@ -13,6 +13,7 @@ token of the user. A refreshed auth.json goes back only when the file of the use
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -23,8 +24,11 @@ from typing import IO, Iterator, Optional, Tuple
 
 from .common import lines_of, run_group
 
-DROPPED_TABLE = re.compile(r"^\[\[?\s*(mcp_servers|plugins|marketplaces|memories|hooks)\b")
+DROPPED_TABLES = ("mcp_servers", "plugins", "marketplaces", "memories", "hooks")
 DROPPED_TOP_KEYS = ("notify",)
+# The header of a dropped table with a bare name. No value of an array or of an inline table has this form.
+DROPPED_BARE_HEADER = re.compile(r"^\[\[?[ \t]*(" + "|".join(DROPPED_TABLES) + r")[ \t]*[.\]]")
+BARE_KEY = re.compile(r"[A-Za-z0-9_-]+")
 # The orchestration block that `puppetmaster install-rules` writes into AGENTS.md. It tells a pilot to delegate,
 # and only costs a worker context.
 PM_BEGIN, PM_END = "<!-- puppetmaster:rules:begin -->", "<!-- puppetmaster:rules:end -->"
@@ -86,25 +90,53 @@ def toml_scan(line: str, depth: int, quote: Optional[str]) -> Tuple[int, Optiona
     return depth, quote
 
 
+def first_key(text: str) -> Optional[str]:
+    """The first part of the TOML key at the start of `text`: `a` for `a = 1`, `a.b = 1`, `"a".b = 1` and `'a' = 1`.
+    None when the text does not start with a key."""
+    text = text.lstrip(" \t")
+    if text.startswith('"'):
+        i = 1
+        while i < len(text) and text[i] != '"':
+            i += 2 if text[i] == "\\" else 1
+        if i >= len(text):
+            return None
+        try:
+            # A basic TOML string has the escapes of a JSON string.
+            value = json.loads(text[:i + 1])
+        except ValueError:
+            value = text[1:i]
+        return value if isinstance(value, str) else None
+    if text.startswith("'"):
+        end = text.find("'", 1)
+        return None if end == -1 else text[1:end]
+    m = BARE_KEY.match(text)
+    return m.group(0) if m else None
+
+
 def lean_config(text: str) -> str:
-    """The config.toml of the user without the tables and keys a worker must not inherit."""
+    """The config.toml of the user without the tables and keys a worker must not inherit.
+
+    A dropped table goes in each form that TOML has for it: a header (`[mcp_servers.x]`, `[[hooks]]`,
+    `["mcp_servers".x]`), a key with dots at the top level (`mcp_servers.x.command = "c"`) and an inline table at
+    the top level (`mcp_servers = { x = { command = "c" } }`). A table that only starts with such a name
+    (`[mcp_servers-old]`) is another table and stays."""
     out = []
     depth, quote = 0, None
     in_table = dropped_table = dropped_key = False
     for line in lines_of(text):
-        if depth and quote is None and DROPPED_TABLE.match(line.strip()):
-            # No value of an array or an inline table has this form, so the file has an open bracket that never
-            # closes. The header of a dropped table ends that value: a damaged file must not keep the table.
+        stripped = line.strip(" \t")
+        if depth and quote is None and DROPPED_BARE_HEADER.match(stripped):
+            # The file has an open bracket that never closes. The header of a dropped table ends that value: a
+            # damaged file must not keep the table.
             depth = 0
         if depth == 0 and quote is None:
             # A new statement: a table header, a key, a comment or an empty line.
-            stripped = line.strip()
             dropped_key = False
             if stripped.startswith("["):
                 in_table = True
-                dropped_table = bool(DROPPED_TABLE.match(stripped))
-            elif not in_table and "=" in stripped:
-                dropped_key = stripped.split("=", 1)[0].strip() in DROPPED_TOP_KEYS
+                dropped_table = first_key(stripped.lstrip("[")) in DROPPED_TABLES
+            elif not in_table:
+                dropped_key = first_key(stripped) in DROPPED_TOP_KEYS + DROPPED_TABLES
         depth, quote = toml_scan(line, depth, quote)
         if not (dropped_table or dropped_key):
             out.append(line)
