@@ -108,5 +108,37 @@
     }
    ]
   }
+ ],
+ "release_runs": [
+  {
+   "product": "Puppetmaster",
+   "range": "v1.51.2..dev",
+   "release": "v1.51.3",
+   "targets": 7,
+   "findings_with_a_repro_that_runs": 9,
+   "classes": {
+    "real_unreachable": 8,
+    "by_design": 1
+   },
+   "confirmed_bugs": 0,
+   "gate": "pass",
+   "review_cost_usd": 3.38,
+   "verify_cost_usd": 11.05,
+   "note": "The 8 findings that no caller reaches were 4 faults in code of the same range. They are corrected in the release."
+  },
+  {
+   "product": "Marionette",
+   "range": "v0.9.685..dev",
+   "release": "v0.9.686",
+   "targets": 1,
+   "findings_with_a_repro_that_runs": 1,
+   "classes": {
+    "by_design": 1
+   },
+   "confirmed_bugs": 0,
+   "gate": "pass",
+   "review_cost_usd": 0.5,
+   "verify_cost_usd": 1.4
+  }
  ]
 }

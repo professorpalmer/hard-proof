@@ -24,8 +24,9 @@ Each number is in the paper, with the command that gives it.
 | Durable sessions make later rounds cheap | A later round costs $0.06 to $0.31, a first visit $0.40 to $0.49 |
 | A pointed agent review misses more than half of real bugs | The best of three review arms found 44 of 95 real bugs of two products |
 | A full proof pipeline does not replace a review, and it finds different bugs | 31 of 95 for about 8 times the cost of the best review arm; 6 of the 40 bugs that three review arms missed |
-| An audit ladder turns review findings into fixes | 211 findings gave 45 confirmed bugs; 51 fixes shipped in Puppetmaster 1.51.2 and Marionette 0.9.685 |
+| An audit ladder turns review findings into fixes | 211 findings gave 45 confirmed bugs; 51 fixes shipped in Puppetmaster 1.51.2 and Marionette 0.9.685, and 5 more corrections in 1.51.3 and 0.9.686 |
 | A conflict between code and a law is most often a fault of the law | 73 live conflicts from the pipeline: 0 reachable bugs, 3 latent faults, 2 wrong documentation sentences, 57 laws that say more than the sentence |
+| The release gate works on real releases | It fails on Puppetmaster 1.51.1 (7 open bugs) and passes on 1.51.2 (7 closed). Its first two release runs: 8 changed functions, no confirmed bug, 16.33 US dollars |
 | A small decision rule gets a completeness proof in minutes | The swarm policy table of Marionette: 5 laws, 16 input cases, accepted by 6 kernels; its docstring alone left one input open |
 
 The study also reports what did not work: one of its own "blind" tests was not blind, a fix step with

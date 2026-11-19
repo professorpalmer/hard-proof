@@ -530,7 +530,8 @@ def sec_conflicts() -> str:
                ["The two do not agree (in each, one verdict is \"the law says more\")", str(a.get("the two do not agree", 0))]]),
         f"<p>No conflict is a bug that the product can hit today. The agreed faults are {len(latent)} latent faults and {len(docs)} wrong sentences:</p>",
         "<ul>" + "".join(f"<li><code>{f['function']}</code>: {f['text']} {f['fix']}</li>" for f in latent + docs) + "</ul>",
-        f"<p class=\"small\">The five corrections are in pull requests {pr['Puppetmaster']} (Puppetmaster) and {pr['marionette']} (Marionette) for the development branches. They are not in a release.</p>",
+        (f"<p class=\"small\">The five corrections shipped in Puppetmaster {t['releases']['Puppetmaster'].lstrip('v')} and Marionette {t['releases']['marionette'].lstrip('v')} (pull requests {pr['Puppetmaster']} and {pr['marionette']}).</p>" if t.get("releases")
+         else f"<p class=\"small\">The five corrections are in pull requests {pr['Puppetmaster']} (Puppetmaster) and {pr['marionette']} (Marionette) for the development branches. They are not in a release.</p>"),
         "<ul>"
         f"<li><strong>Most conflicts were faults of the law, not of the code.</strong> In {a.get('misread', 0)} of {n} conflicts, each verifier said that the law author read more into the sentence than the sentence says. A proof makes a law exact. It does not make the law correct. This is the place of the human in the loop of this study: the owner must own the laws.</li>",
         f"<li><strong>As a source of bugs in old code, a review was better.</strong> Of the review findings in Section 13, the verifiers confirmed about four in ten as real and reachable. Of these conflicts, they confirmed none as reachable and {a.get('real_unreachable', 0) + a.get('doc_wrong', 0)} of {n} as a fault of some kind.</li>",
@@ -636,7 +637,9 @@ def sec_use(ls: dict) -> str:
     pc = json.loads((v2 / "retro_compare.json").read_text())
     tri = json.loads((v2 / "conflict_triage.json").read_text())
     hp = ls["hpflow_first_live_run"]
-    gate = json.loads((v2 / "gate_live.json").read_text())["runs"] if (v2 / "gate_live.json").exists() else []
+    live = json.loads((v2 / "gate_live.json").read_text()) if (v2 / "gate_live.json").exists() else {}
+    gate = live.get("runs") or []
+    release_runs = live.get("release_runs") or []
     best = max(pc["arms"], key=lambda k: pc["arms"][k]["detected"])
     times = pc["cost_usd"] / pc["review_cost_usd"][best + "/pre"]
     n = tri["collect"]["candidates"]
@@ -660,6 +663,12 @@ def sec_use(ls: dict) -> str:
     if len(gate) == 2:
         a, b = gate
         h.append(f"<p>We ran the gate on the stored audit of Section 13. On the audited release ({a['ref']}) the verdict was \"{a['verdict']}\" with {a['open']} open bugs. On the next release ({b['ref']}), which has the fixes, the verdict was \"{b['verdict']}\" with {b['closed']} closed. The gate is now a step before each release of our two products.</p>")
+    if release_runs:
+        h.append("<p>Then the gate ran before a real release for the first time, one time for each product:</p>")
+        h.append(table(["Release", "Range", "Changed functions", "Findings with a repro", "Confirmed bugs", "Gate", "Cost of the audit"],
+                       [[f"{r['product']} {r['release'].lstrip('v')}", r["range"], str(r["targets"]), str(r["findings_with_a_repro_that_runs"]), str(r["confirmed_bugs"]), r["gate"],
+                         money(r["review_cost_usd"] + r["verify_cost_usd"])] for r in release_runs]))
+        h.append("<p>No finding was a bug that a caller reaches, so the gate did not stop a release. In the Puppetmaster range, the two verifiers agreed on 8 findings that no caller reaches. They were 4 small faults in new code of that range, and they are corrected in that release. The gate does not require a fix for a finding of that class. We made the fixes because they were cheap.</p>")
     h += ["<pre>pip install hpflow\n\n"
           "hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next\n"
           "hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs\n"

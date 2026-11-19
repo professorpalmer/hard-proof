@@ -106,5 +106,9 @@
   "marionette": 704
  },
  "disagreements_with_one_misread": 9,
- "any_verdict_real": 0
+ "any_verdict_real": 0,
+ "releases": {
+  "Puppetmaster": "v1.51.3",
+  "marionette": "v0.9.686"
+ }
 }

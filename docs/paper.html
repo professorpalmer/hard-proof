@@ -73,7 +73,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
 <p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
-<p class="small">Revision 7, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
+<p class="small">Revision 8, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
 <ol class="toc">
 <li><a href="#problem">The problem</a></li>
 <li><a href="#defs">Definitions</a></li>
@@ -676,7 +676,7 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 </tbody></table></div>
 <p>No conflict is a bug that the product can hit today. The agreed faults are 3 latent faults and 2 wrong sentences:</p>
 <ul><li><code>harness/api/routing_savings.py _ids_match_for_price</code>: Two model ids of only punctuation have the same empty slug, so a registry row with the id "." gave its price to the model id "-". An empty slug is no match.</li><li><code>puppetmaster/usage.py select_usage_records</code>: A token field with text that is not a number raised ValueError and stopped the cost selection for the job. Such a field counts as 0 and is reported as unknown.</li><li><code>puppetmaster/codex_home.py home_for_session</code>: The lookup of a Codex session file accepted an id that is only the end of a different session id. The lookup accepts the file of exactly one id.</li><li><code>pmharness/stream_snapshot.py absorb_stream_snapshot</code>: The module text said that only a text that starts with the accumulated text is absorbed. The code also absorbs a text equal to it apart from whitespace at the two ends. The sentence names the second case.</li><li><code>puppetmaster/api_discovery.py catalog_to_specs</code>: The docstring said that billing is the posture of the caller. An existing entry with a known billing keeps its own. The docstring states the rule.</li></ul>
-<p class="small">The five corrections are in pull requests 308 (Puppetmaster) and 704 (Marionette) for the development branches. They are not in a release.</p>
+<p class="small">The five corrections shipped in Puppetmaster 1.51.3 and Marionette 0.9.686 (pull requests 308 and 704).</p>
 <ul><li><strong>Most conflicts were faults of the law, not of the code.</strong> In 57 of 73 conflicts, each verifier said that the law author read more into the sentence than the sentence says. A proof makes a law exact. It does not make the law correct. This is the place of the human in the loop of this study: the owner must own the laws.</li>
 <li><strong>As a source of bugs in old code, a review was better.</strong> Of the review findings in Section 13, the verifiers confirmed about four in ten as real and reachable. Of these conflicts, they confirmed none as reachable and 7 of 73 as a fault of some kind.</li>
 <li><strong>Some conflicts pointed at code that changed later.</strong> For 29 of the conflicts with a different result now, history before this study changed the function. For 9, the result changed between the development branch before the fixes of Section 13 and the releases with those fixes. We did not judge if a conflict named the same fault as a fix.</li>
@@ -762,6 +762,14 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 <h3>The gate</h3>
 <p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>
 <p>We ran the gate on the stored audit of Section 13. On the audited release (v1.51.1) the verdict was "fail" with 7 open bugs. On the next release (v1.51.2), which has the fixes, the verdict was "pass" with 7 closed. The gate is now a step before each release of our two products.</p>
+<p>Then the gate ran before a real release for the first time, one time for each product:</p>
+<div class="doc-scroll"><table>
+<thead><tr><th>Release</th><th>Range</th><th>Changed functions</th><th>Findings with a repro</th><th>Confirmed bugs</th><th>Gate</th><th>Cost of the audit</th></tr></thead>
+<tbody>
+<tr><td>Puppetmaster 1.51.3</td><td>v1.51.2..dev</td><td>7</td><td>9</td><td>0</td><td>pass</td><td>$14.43</td></tr>
+<tr><td>Marionette 0.9.686</td><td>v0.9.685..dev</td><td>1</td><td>1</td><td>0</td><td>pass</td><td>$1.90</td></tr>
+</tbody></table></div>
+<p>No finding was a bug that a caller reaches, so the gate did not stop a release. In the Puppetmaster range, the two verifiers agreed on 8 findings that no caller reaches. They were 4 small faults in new code of that range, and they are corrected in that release. The gate does not require a fix for a finding of that class. We made the fixes because they were cheap.</p>
 <pre>pip install hpflow
 
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
@@ -852,9 +860,9 @@ B_result = [id 1; id 1]</pre>
 <h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="https://puppetmaster.gg/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
-<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>91fb2e70652f924aaf497cf4f0db3f351ce9a5684580b2323127ca2060882488</code>.</li>
+<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>2356fea16487c0e755faaf7cf195bdeec171fb7b4d048b33881552829149793b</code>.</li>
 <li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. Our last run made 184 gate runs: 179 accept and 5 reject, and each verdict was the same as the run record. With the build caches present it took about 4 minutes with six parallel jobs. A first run builds each folder and takes longer.</li>
-<li><code>README.md</code> in the archive has a command for each experiment family. The link tests need a checkout of Puppetmaster.</li>
+<li><code>docs/CLAIMS.md</code> in the archive has a folder and a command for each claim. The link tests need a checkout of Puppetmaster.</li>
 <li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the package <code>hpflow</code> (the commands <code>hp</code> and <code>hpf</code>, also on PyPI), the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>
 </ul>
 
