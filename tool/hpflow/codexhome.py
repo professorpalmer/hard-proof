@@ -21,7 +21,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import IO, Iterator, Optional, Tuple
 
-from .common import run_group
+from .common import lines_of, run_group
 
 DROPPED_TABLE = re.compile(r"^\[\[?\s*(mcp_servers|plugins|marketplaces|memories|hooks)\b")
 DROPPED_TOP_KEYS = ("notify",)
@@ -50,13 +50,19 @@ def toml_scan(line: str, depth: int, quote: Optional[str]) -> Tuple[int, Optiona
     i, n = 0, len(line)
     while i < n:
         if quote:
-            end = line.find(quote, i)
-            # In a basic multi-line string a backslash escapes the next character.
-            while quote == '"""' and end > 0 and (len(line[:end]) - len(line[:end].rstrip("\\"))) % 2 == 1:
-                end = line.find(quote, end + 1)
-            if end == -1:
-                return depth, quote
-            i, quote = end + 3, None
+            if quote == '"""' and line[i] == "\\":
+                # In a basic multi-line string a backslash escapes the next character.
+                i += 2
+            elif line.startswith(quote, i):
+                # The content of a multi-line string can end with one or two quote characters, so the string
+                # closes at the end of a run of three to five.
+                i += 3
+                extra = 0
+                while extra < 2 and i < n and line[i] == quote[0]:
+                    i, extra = i + 1, extra + 1
+                quote = None
+            else:
+                i += 1
             continue
         ch = line[i]
         if ch == "#":
@@ -85,7 +91,7 @@ def lean_config(text: str) -> str:
     out = []
     depth, quote = 0, None
     in_table = dropped_table = dropped_key = False
-    for line in text.splitlines():
+    for line in lines_of(text):
         if depth and quote is None and DROPPED_TABLE.match(line.strip()):
             # No value of an array or an inline table has this form, so the file has an open bracket that never
             # closes. The header of a dropped table ends that value: a damaged file must not keep the table.

@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from . import codexhome
 from .adapters import COMMAND
-from .common import DEFAULT_CONCURRENCY, WINDOWS, UsageError, apply_cost_rule, run_group, write_json
+from .common import DEFAULT_CONCURRENCY, WINDOWS, UsageError, apply_cost_rule, lines_of, run_group, write_json
 from .runner import Runner
 
 OUTPUT_CHARS = 6000
@@ -76,7 +76,7 @@ PLACEHOLDERS = ("{model}", "{folder}", "{prompt_file}")
 
 def parse_verdict(text: str) -> Optional[Tuple[str, str]]:
     """The one terminal `VERDICT` line, as `parse_terminal_verdict` of Puppetmaster reads it."""
-    lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
+    lines = [line.strip() for line in lines_of(text or "") if line.strip()]
     found = [line for line in lines if line.startswith("VERDICT:")]
     if len(found) != 1 or found[0] != lines[-1]:
         return None

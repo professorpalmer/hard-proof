@@ -359,7 +359,7 @@ class DiffContentLineTest(unittest.TestCase):
 
     def test_a_content_line_that_looks_like_a_header_is_not_read(self):
         d = "diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n-@@ -9 +9 @@\n"
-        self.assertEqual(commands.hunk_ranges(d), {"old_ranges": [(3, 3)], "new_ranges": [(3, 3)], "deleted_ranges": []})
+        self.assertEqual(commands.hunk_ranges(d), {"old_ranges": [(3, 3)], "new_ranges": [(3, 3)]})
 
     def test_targets_finds_a_function_changed_only_by_a_deleted_dash_line(self):
         old = 'def f():\n    q = """\n-- keep\n-- drop\nselect 1\n"""\n    return q\n\n\ndef g():\n    return 2\n'

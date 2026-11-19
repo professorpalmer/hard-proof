@@ -182,11 +182,52 @@ def sh(cmd: List[str], cwd: Optional[Path] = None, timeout: float = 600) -> Tupl
     return code, out + err
 
 
+def lines_of(text: str) -> List[str]:
+    """The lines of a text from a tool or a file. Only "\n" ends a line.
+
+    `str.splitlines` also ends a line at a form feed, at U+001C to U+001E, at U+0085 and at U+2028 and U+2029.
+    Such a character in a file name, a string value or a changed line is content, so each reader of outside
+    text uses this function."""
+    lines = text.split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    return lines
+
+
 def git(repo: Path, *args: str, timeout: float = 600) -> Tuple[int, str]:
-    code, out, err = run_group(["git", "-C", str(repo), *args], timeout=timeout)
+    """Run git in `repo`. Each path that a command gets after "--" is a literal name, not a pattern: a file can
+    have "*", "?" or "[" in its name."""
+    code, out, err = run_group(["git", "-C", str(repo), *args], timeout=timeout,
+                               env=dict(os.environ, GIT_LITERAL_PATHSPECS="1"))
     if code is None:
         return 124, "timeout"
     return code, out if code == 0 else out + err
+
+
+def git_status(tree: Path) -> Optional[List[Dict[str, Optional[str]]]]:
+    """Each entry of `git status` in a work tree: the two status letters, the path and, for a rename or a copy,
+    the source path. None when git fails.
+
+    The list comes from `--porcelain=v1 -z`, which has NUL between the fields and does not quote a name. So a
+    name with a space, a quote, a line break or a non-ASCII character is the real name."""
+    code, out = git(tree, "status", "--porcelain=v1", "-z", "--untracked-files=all", timeout=120)
+    if code != 0:
+        return None
+    fields = out.split("\0")
+    entries: List[Dict[str, Optional[str]]] = []
+    i = 0
+    while i < len(fields):
+        field = fields[i]
+        i += 1
+        if len(field) < 4:
+            continue
+        source = None
+        if field[0] in "RC":
+            # A rename or a copy has its source path in the next field.
+            source = fields[i] if i < len(fields) and fields[i] else None
+            i += 1
+        entries.append({"status": field[:2], "path": field[3:], "source": source})
+    return entries
 
 
 def copy_tree(src: Path, dest: Path) -> None:
@@ -225,7 +266,7 @@ def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, impo
                                env=snippet_env(home))
     if code is None:
         return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
-    line = [x for x in out.splitlines() if x.startswith("{")]
+    line = [x for x in lines_of(out) if x.startswith("{")]
     try:
         return json.loads(line[-1]) if line else {"ok": False, "error": "no output", "message": err[-300:]}
     except ValueError:

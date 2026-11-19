@@ -14,8 +14,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import adapters, briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, is_test_file,
-                     read_json, run_snippet, sh, shell_python, shell_quote, write_json)
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, git_status,
+                     is_test_file, lines_of, read_json, run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
 from .direct import check_template
 from .runner import Runner, agent_graph
@@ -259,23 +259,23 @@ HUNK = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
 
 
 def hunk_ranges(diff: str) -> Dict[str, List[Tuple[int, int]]]:
-    """The line ranges of the hunks of a `git diff -U0` of one file.
+    """The line ranges of the hunks of a `git diff -U0` of one file: `old_ranges` are the lines that the change
+    removed from the old file, and `new_ranges` are the lines that it added to the new file.
 
     Only a hunk header starts with "@@ ": each content line of a diff starts with "+", "-" or a backslash. The
-    file headers are not read here, so the text of a changed line cannot be taken for one."""
-    out: Dict[str, List[Tuple[int, int]]] = {"old_ranges": [], "new_ranges": [], "deleted_ranges": []}
-    for line in diff.splitlines():
+    file headers are not read here, so the text of a changed line cannot be taken for one. A hunk that only adds
+    lines has no old range, and a hunk that only removes lines has no new range."""
+    out: Dict[str, List[Tuple[int, int]]] = {"old_ranges": [], "new_ranges": []}
+    for line in lines_of(diff):
         m = HUNK.match(line)
         if not m:
             continue
         old_start, old_count = int(m.group(1)), 1 if m.group(2) is None else int(m.group(2))
         new_start, new_count = int(m.group(3)), 1 if m.group(4) is None else int(m.group(4))
-        out["old_ranges"].append((old_start, old_start + old_count - 1) if old_count else (old_start, old_start + 1))
+        if old_count:
+            out["old_ranges"].append((old_start, old_start + old_count - 1))
         if new_count:
             out["new_ranges"].append((new_start, new_start + new_count - 1))
-        else:
-            # A pure deletion has no new line. The old lines that it removed show which functions it changed.
-            out["deleted_ranges"].append((old_start, old_start + old_count - 1))
     return out
 
 
@@ -283,7 +283,8 @@ def changed_files(repo: Path, a: str, b: str, paths: List[str]) -> List[Dict[str
     """Each file that differs between two commits: its old and new path and the line ranges of its hunks.
 
     The names come from `git diff --name-status -z`: a list with NUL between the fields, which git does not
-    quote. So a name with a space, a tab, a quote or a non-ASCII character is the real name."""
+    quote. So a name with a space, a tab, a quote or a non-ASCII character is the real name. The diff of one
+    file gets its name as a literal path (see `common.git`), so a name such as `a[b].py` selects only that file."""
     code, out = git(repo, "diff", "--name-status", "-z", "--no-ext-diff", "-M", a, b, "--", *paths)
     if code != 0:
         raise StepError(f"git diff failed: {out[-300:]}")
@@ -363,20 +364,28 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                 continue
             new_fns = functions_of(git(repo, "show", f"{b}:{f['new']}")[1]) if f["new"] else []
             old_fns = functions_of(git(repo, "show", f"{a}:{f['old']}")[1]) if f["old"] else []
-            cut = {fn["function"] for fn in old_fns if overlaps(fn, f["deleted_ranges"])}
+            # A function is its qualified name and `nth`. The change touched a function of the new file when a
+            # hunk added a line to it, or when a hunk removed a line from the definition that it had before.
+            before = {(fn["function"], fn["nth"]): fn for fn in old_fns}
+            after = {(fn["function"], fn["nth"]) for fn in new_fns}
+
+            def touched(fn: Dict[str, Any]) -> bool:
+                was = before.get((fn["function"], fn["nth"]))
+                return overlaps(fn, f["new_ranges"]) or (was is not None and overlaps(was, f["old_ranges"]))
+
             if is_test_file(path):
-                hit = [fn for fn in new_fns if overlaps(fn, f["new_ranges"]) or fn["function"] in cut]
+                hit = [fn for fn in new_fns if touched(fn)]
                 for fn in hit:
                     skipped.append({"file": path, "function": fn["function"], "reason": "test file"})
                 if not hit:
                     skipped.append({"file": path, "function": None, "reason": "test file"})
                 continue
-            names = {fn["function"] for fn in new_fns}
             for fn in old_fns:
-                if fn["function"] not in names and (f["new"] is None or overlaps(fn, f["old_ranges"])):
+                # A definition that the new file does not have. No diff can drop it and leave its lines.
+                if (fn["function"], fn["nth"]) not in after:
                     skipped.append({"file": path, "function": fn["function"], "reason": "removed"})
             for fn in new_fns:
-                if overlaps(fn, f["new_ranges"]) or fn["function"] in cut:
+                if touched(fn):
                     candidates.append(make_target(f["new"], fn, "changed", import_root))
     else:
         wanted: List[Tuple[str, Optional[str]]] = []
@@ -892,9 +901,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         result.update(r)
         result["check"] = fix_check(info, tree)
         _, stat = git(tree, "diff", "--stat")
-        _, status = git(tree, "status", "--porcelain", "--untracked-files=all")
         result["diffstat"] = stat.strip()
-        result["new_files"] = [x[3:] for x in status.splitlines() if x.startswith("??")]
+        result["new_files"] = [e["path"] for e in git_status(tree) or [] if e["status"] == "??"]
         reviews = [s for s in r.get("steps") or [] if s.get("node") == "review"]
         result["judge"] = reviews[-1].get("verdict") if reviews else None
         result["finished"] = now()

@@ -16,32 +16,20 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .common import run_group, run_snippet, shell_quote
+from .common import git_status, run_group, run_snippet, shell_quote
 
 MAX_RELATED_BYTES = 400_000
+# The number of related test files in one test command.
+RELATED_PART = 12
 # Files that a test run leaves. They are not a change of the worker.
 CACHE_PARTS = ("__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache")
 
 
 def changed_files(tree: Path) -> List[str]:
     """Each path that differs from the commit of the worktree: changed, added, deleted, renamed or new."""
-    code, out, _ = run_group(["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"], tree, 120)
-    if code != 0:
-        return []
     paths: List[str] = []
-    entries = out.split("\0")
-    i = 0
-    while i < len(entries):
-        entry = entries[i]
-        i += 1
-        if len(entry) < 4:
-            continue
-        paths.append(entry[3:])
-        if entry[0] in "RC":
-            # A rename or copy has its source path in the next entry.
-            if i < len(entries) and entries[i]:
-                paths.append(entries[i])
-            i += 1
+    for entry in git_status(tree) or []:
+        paths += [p for p in (entry["path"], entry["source"]) if p]
     return [p for p in paths if not (set(Path(p).parts) & set(CACHE_PARTS)) and not p.endswith(".pyc")]
 
 
@@ -124,11 +112,12 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
                         skipped.append(t.relative_to(tree).as_posix())
                         continue
                     related.append(t.relative_to(tree).as_posix())
-        related = related[:12]
-        if related:
-            p = run_tests(spec, tree, related, 1500)
+        # Each related test file runs. The parts keep a command line below the limit of the Windows shell.
+        for start in range(0, len(related), RELATED_PART):
+            p = run_tests(spec, tree, related[start:start + RELATED_PART], 1500)
             if p.returncode != 0:
                 problems.append("tests of the repository fail after the change:\n" + (p.stdout + p.stderr)[-2000:])
+                break
     return {"verdict": "accept" if not problems else "reject", "problems": problems, "large_test_files_not_run": skipped}
 
 
