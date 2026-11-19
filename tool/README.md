@@ -292,9 +292,14 @@ open bugs and passed on the next release with 7 closed.
 All commands take `--out DIR` (the audit folder), `--redo`,
 `--concurrency N` (default 5: the most worker flows that run at one time) and
 `--user-settings`. A worker is lean by default: it does not load the Claude
-Code settings, rules, hooks, MCP servers and skills of the user. That start
+Code rules, MCP servers and personal skills of the user. That start
 text was most of the cost of a worker run on our machine (about 83,000 tokens
 for each session). `--user-settings` gives each worker the full profile.
+The lean arguments are `--setting-sources ""` and `--strict-mcp-config`.
+Since 0.4.2 they do not have `--disable-slash-commands`: it made the first
+request of each session larger (37,300 against 31,100 tokens in two audits of
+the same range). With Puppetmaster 1.52.0 or later, the worker also gets the
+settings file of the user, so the sign-in environment and the hooks stay.
 Each command that `hpflow` starts (a repro, a test run, git) runs in its own
 process group with a timeout. At the timeout the whole group ends. Run them as `./hpf <command>` or as
 `python3 -m hpflow <command>` with `PYTHONPATH` set to this folder. Each

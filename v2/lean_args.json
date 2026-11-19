@@ -1,0 +1,12 @@
+{
+ "what": "Two audits of the same range (Puppetmaster v1.51.4..6df01c5e, 5 functions) with two sets of lean worker arguments.",
+ "date": "2026-11-19",
+ "arms": [
+  {"arguments": ["--setting-sources", "", "--strict-mcp-config", "--disable-slash-commands", "--no-chrome"], "hpflow": "0.4.1", "puppetmaster": "1.51.4",
+   "sessions": 9, "first_request_context_tokens_median": 37340, "turns": 96, "cost_usd_api_equivalent": 1.861, "findings": 3, "confirmed_bugs": 1, "skill_or_agent_calls": 0},
+  {"arguments": ["--setting-sources", "", "--strict-mcp-config"], "hpflow": "0.4.2", "puppetmaster": "1.52.0",
+   "sessions": 10, "first_request_context_tokens_median": 31068, "turns": 113, "cost_usd_api_equivalent": 2.063, "findings": 5, "confirmed_bugs": 1, "skill_or_agent_calls": 0}
+ ],
+ "result": "The first request of a session is about 6,300 tokens smaller (17 percent). The cost for each turn is 0.0194 against 0.0183 US dollars. The total cost of the second audit is not lower, because that run made more findings and used more turns. One pair of runs cannot show the effect on the total. Each audit confirmed the same bug.",
+ "limit": "The two arms also differ in the Puppetmaster version. Version 1.52.0 adds the settings file of the user to each worker."
+}

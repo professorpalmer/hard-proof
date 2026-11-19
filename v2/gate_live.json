@@ -169,6 +169,35 @@
    "review_cost_usd": 0.0,
    "verify_cost_usd": 0.0,
    "note": "The range has only the new Puppetmaster version. No function changed, so the audit started no worker."
+  },
+  {
+   "product": "Puppetmaster",
+   "range": "v1.51.4..dev",
+   "release": "v1.52.0",
+   "targets": 5,
+   "findings_with_a_repro_that_runs": 3,
+   "classes": {
+    "confirmed": 1,
+    "real_unreachable": 2
+   },
+   "confirmed_bugs": 1,
+   "gate": "fail, then pass",
+   "review_cost_usd": 0.9957,
+   "verify_cost_usd": 0.8651,
+   "note": "The range is the lean profile for Claude Code workers. The confirmed bug was in the new code: a relative CLAUDE_CONFIG_DIR gave a relative --settings path. It was corrected before the release, and the gate passed on the corrected commit 97edcd78. Not in paper Revision 10."
+  },
+  {
+   "product": "Marionette",
+   "range": "v0.9.687..dev",
+   "release": "v0.9.688",
+   "targets": 0,
+   "findings_with_a_repro_that_runs": 0,
+   "classes": {},
+   "confirmed_bugs": 0,
+   "gate": "pass",
+   "review_cost_usd": 0.0,
+   "verify_cost_usd": 0.0,
+   "note": "The range has only the new Puppetmaster version. No function changed, so the audit started no worker. Not in paper Revision 10."
   }
  ],
  "older_range_against_the_newest_release": {

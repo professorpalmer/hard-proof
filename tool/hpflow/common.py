@@ -14,9 +14,10 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 MODELS = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5"}
 ADAPTER = "claude-code"
 DEFAULT_CONCURRENCY = 5
-# A lean worker does not load the Claude Code settings of the user: no user rules, no hooks, no MCP servers,
-# no skills. On a machine with large user rules, this start text was most of the cost of a worker run.
-LEAN_ARGS = ["--setting-sources", "", "--strict-mcp-config", "--disable-slash-commands", "--no-chrome"]
+# A lean worker does not load the Claude Code rules, MCP servers and personal skills of the user. On a
+# machine with large user rules, this start text was most of the cost of a worker run. The list does not
+# have `--disable-slash-commands`: with it, the first request of each session was about 6,300 tokens larger.
+LEAN_ARGS = ["--setting-sources", "", "--strict-mcp-config"]
 COST_NOTE = ("Cost is API-equivalent, as the provider tool reports it. "
              "Plan billing can apply, so the real charge can be lower.")
 TOOL_DIR = Path(__file__).resolve().parent.parent
