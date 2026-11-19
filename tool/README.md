@@ -278,15 +278,23 @@ bug is open, or when a repro does not run on `REF`. A range with no changed
 function passes with no worker run.
 
 What we measured on our two products (API-equivalent cost, Claude models):
-about 1.40 US dollars for each changed function for the review and the two
-verifiers (28.53 US dollars for 20 functions), and 36 US dollars for one release range of 20 functions with
-its 7 fixes. On that audit, `gate --ref` failed on the audited release with 7
+about 0.47 US dollars for each changed function for the review and the
+verifiers with the defaults of today (9.44 US dollars for 20 functions, 8 confirmed
+bugs). The first form of the tool cost 28.53 US dollars for the same range and
+confirmed 7 bugs: each worker loaded the settings of the user, and each
+function with a finding had two verifier runs. One reviewer session for each
+file (`--group file`) cost 8.94 US dollars and confirmed 3 bugs, so it is not the
+default. On that audit, `gate --ref` failed on the audited release with 7
 open bugs and passed on the next release with 7 closed.
 
 ### Commands
 
-All commands take `--out DIR` (the audit folder), `--redo` and
-`--concurrency N` (default 5: the most worker flows that run at one time).
+All commands take `--out DIR` (the audit folder), `--redo`,
+`--concurrency N` (default 5: the most worker flows that run at one time) and
+`--user-settings`. A worker is lean by default: it does not load the Claude
+Code settings, rules, hooks, MCP servers and skills of the user. That start
+text was most of the cost of a worker run on our machine (about 83,000 tokens
+for each session). `--user-settings` gives each worker the full profile.
 Each command that `hpflow` starts (a repro, a test run, git) runs in its own
 process group with a timeout. At the timeout the whole group ends. Run them as `./hpf <command>` or as
 `python3 -m hpflow <command>` with `PYTHONPATH` set to this folder. Each
@@ -310,15 +318,21 @@ runs again. A stored run with an error (launch or wait) runs again.
   `B` side) of non-test Python files that overlap a hunk of `git diff A..B`.
   The report lists the skipped functions with the reason: too long, test
   file, removed, or over `--max`.
-- `review [--model sonnet] [--shell | --no-shell] [--passes 1] [--repro-timeout 60]`:
-  one reviewer run for each target and pass. Each finding has a repro file
+- `review [--model sonnet] [--shell | --no-shell] [--passes 1] [--repro-timeout 60] [--group file|function] [--group-size 6]`:
+  one reviewer run for the changed functions of each file (at most
+  `--group-size` functions in one run), and for each pass. `--group function`
+  gives one run for each function. Each finding has a repro file
   `finding_<n>.py` with `run()`. A script runs each repro on `src/` in a
   separate process. A finding has grade 1 when `run()` returns. Else it stays
   at grade 0 with the reason (no repro file, an import error, a timeout, or
   an exception).
-- `verify [--models opus sonnet]`: one verifier run for each target with
-  grade-1 findings and each model. A finding has grade 2 when each verifier
-  says `real`. Duplicates fold into one bug (the `duplicate_of` field of the
+- `verify [--models sonnet opus] [--group file|function] [--all-verifiers]`:
+  one verifier run for each file with grade-1 findings. The first model runs
+  for each group. The other models run only for a group in which the first
+  model says `real` for one claim or more, because a claim that the first
+  verifier does not call `real` cannot be confirmed. `--all-verifiers` runs
+  each model for each group. The default grouping is the grouping of the
+  stored review. A finding has grade 2 when each verifier says `real`. Duplicates fold into one bug (the `duplicate_of` field of the
   first model). Writes `verify.json`, `confirmed.json` and `REPORT.md` (one
   table for each class: confirmed, real but not reachable, by design, mixed).
 - `fix [--base REF] [--only BUG ...] [--model opus] [--judge-model sonnet] [--rules TEXT]`:

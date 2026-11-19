@@ -45,6 +45,7 @@ The output goes to `verify_all.json`.
 | The audit of the conflict certificates of the pipeline | `v2/conflict_audit.py`, `v2/conflict_groups.json`, `v2/conflict_verdicts.json`, `v2/conflict_triage.json` | the stored records (the two verdicts for each conflict; the text of each verifier is not in this repository) |
 | The audit ladder: findings, verdicts, fixes | `v2/ladder_summary.json`, `v2/confirmed_bugs.json`, `v2/CONFIRMED_BUGS.md`, `v2/fix_runs.json` | the stored records |
 | The release gate on a stored audit: fail on the audited release, pass on the next | `v2/gate_live.json` | `hpf gate --out <audit folder> --ref <tag>` (needs the audit folder and a checkout of Puppetmaster) |
+| Three audits of one range with different session settings | `v2/cost_cut.json`, `v2/cost_cut.py` | `python3 cost_cut.py` (needs the three audit folders) |
 | The proof of the swarm policy table | `v3/swarm_policy`, `v3/swarm_policy_docstring` | `python3 v3/summarize.py --repo <Marionette checkout>` |
 
 `exp11/meta/` has the removed law of each generated task. The workers did not have this folder.

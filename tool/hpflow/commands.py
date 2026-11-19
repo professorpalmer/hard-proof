@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, LEAN_ARGS, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
                      read_json, run_snippet, sh, write_json)
 from .fixcheck import check as fix_check
 from .runner import Runner, agent_graph
@@ -25,7 +25,9 @@ EXTRA_PATHS = ("tests", "docs", "README.md", "pyproject.toml")
 class Context:
     """The audit folder, the runner and the shared options of one call."""
 
-    def __init__(self, out: Path, runner: Runner, redo: bool = False, concurrency: int = DEFAULT_CONCURRENCY):
+    def __init__(self, out: Path, runner: Runner, redo: bool = False, concurrency: int = DEFAULT_CONCURRENCY,
+                 lean: bool = True):
+        self.lean = lean
         self.out = out.resolve()
         self.runner = runner
         self.redo = redo
@@ -280,28 +282,53 @@ def prepare_folder(ctx: Context, folder: Path) -> None:
     copy_tree(ctx.src, folder / "project")
 
 
-def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout: float) -> Dict[str, Any]:
+def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) -> List[List[Dict[str, Any]]]:
+    """The targets of one reviewer session: one function, or the functions of one file in parts of `group_size`."""
+    if group == "function":
+        return [[t] for t in targets]
+    by_file: Dict[str, List[Dict[str, Any]]] = {}
+    for t in targets:
+        by_file.setdefault(t["file"], []).append(t)
+    out: List[List[Dict[str, Any]]] = []
+    for ts in by_file.values():
+        ts = sorted(ts, key=lambda t: t["lines"][0])
+        out += [ts[i:i + group_size] for i in range(0, len(ts), group_size)]
+    return out
+
+
+def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout: float, group: str = "function",
+               group_size: int = 6) -> Dict[str, Any]:
     audit = ctx.audit()
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     if targets is None:
         raise UsageError("no targets.json: run `targets` first")
     arm = "shell" if shell else "plain"
-    jobs = [(t, p) for t in targets for p in range(1, passes + 1)]
+    jobs = [(ts, p) for ts in review_groups(targets, group, group_size) for p in range(1, passes + 1)]
 
-    def one(job: Tuple[Dict[str, Any], int]) -> Tuple[Dict[str, Any], bool]:
-        t, p = job
-        rid = digest("review", audit["commit"], t["id"], p, model_id(model), arm)
+    def one(job: Tuple[List[Dict[str, Any]], int]) -> Tuple[Dict[str, Any], bool]:
+        ts, p = job
+        t = ts[0]
+        single = group == "function"
+        rid = (digest("review", audit["commit"], t["id"], p, model_id(model), arm) if single
+               else digest("review", audit["commit"], "file", *[x["id"] for x in ts], p, model_id(model), arm))
         r = ctx.stored(rid)
         if r:
             return r, False
         folder = ctx.out / "runs" / rid
         prepare_folder(ctx, folder)
-        task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=briefs.REVIEW_ARM[arm])
-        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], model, shell=shell,
-                            check=briefs.REVIEW_CHECK, timeout=2400)
+        if single:
+            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=briefs.REVIEW_ARM[arm])
+            check = briefs.REVIEW_CHECK
+        else:
+            write_json(folder / "functions.json", [x["function"] for x in ts])
+            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"],
+                                             per_function=briefs.PER_FUNCTION, arm_text=briefs.REVIEW_ARM[arm])
+            check = briefs.REVIEW_FILE_CHECK
+        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], model, shell=shell, check=check, timeout=2400,
+                            lean=ctx.lean)
         r = ctx.runner.run(graph, folder)
-        r.update(kind="review", run=rid, folder=str(folder), target=t["id"], pass_n=p, model=model_id(model), arm=arm,
-                 finished=now())
+        r.update(kind="review", run=rid, folder=str(folder), target=t["id"], targets=[x["id"] for x in ts], pass_n=p,
+                 model=model_id(model), arm=arm, finished=now())
         ctx.save(rid, r)
         return r, True
 
@@ -317,11 +344,20 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
             r["note"] = "no valid findings.json"
             return []
         out = []
-        for i, f in enumerate(items[:5]):
+        mine = [by_id[i] for i in (r.get("targets") or [r["target"]])]
+        by_name = {t["function"]: t for t in mine}
+        seen: Dict[str, int] = {}
+        for i, f in enumerate(items[:5] if len(mine) == 1 else items):
             if not isinstance(f, dict):
                 continue
             n = f.get("n", i + 1)
-            t = by_id[r["target"]]
+            t = mine[0] if len(mine) == 1 else by_name.get(str(f.get("function")))
+            if t is None:
+                r["note_unknown_function"] = f"finding {n} names a function that is not in the list"
+                continue
+            seen[t["id"]] = seen.get(t["id"], 0) + 1
+            if len(mine) > 1 and seen[t["id"]] > briefs.PER_FUNCTION:
+                continue
             row = {"id": f"{r['run']}-{n}", "run": r["run"], "n": n, "target": t["id"], "file": t["file"],
                    "function": t["function"], "model": r["model"], "claim": str(f.get("claim"))[:600],
                    "expected": str(f.get("expected"))[:300], "confidence": f.get("confidence"),
@@ -345,12 +381,12 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
 
     for rows in pool_map(ctx, gate, records):
         findings.extend(rows)
-    write_json(ctx.out / "review.json", {"model": model_id(model), "arm": arm, "passes": passes,
+    write_json(ctx.out / "review.json", {"model": model_id(model), "arm": arm, "passes": passes, "group": group,
                                          "runs": [r["run"] for r in records], "findings": findings})
     failed = [{"run": r["run"], "target": r["target"], "error": r.get("error") or r.get("note") or r.get("status")}
               for r in records if r.get("error") or r.get("note")]
     report = {"command": "review", "ok": not failed, "runs": len(records), "worker_runs": sum(1 for _, n in results if n),
-              "reused": sum(1 for _, n in results if not n), "findings": len(findings),
+              "reused": sum(1 for _, n in results if not n), "group": group, "findings": len(findings),
               "grade_1": sum(1 for f in findings if f["grade"] == 1),
               "grade_0": [{"id": f["id"], "reason": f["reason"]} for f in findings if f["grade"] == 0],
               "failed_runs": failed}
@@ -360,8 +396,14 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
 
 # ---------------------------------------------------------------- verify
 
-def verdict_class(verdicts: Dict[str, Optional[str]], need: int) -> str:
+SINGLE_CLASS = {"real_unreachable": "real_unreachable", "intended": "by_design"}
+
+
+def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = False) -> str:
     vals = list(verdicts.values())
+    if staged and vals and vals[0] not in (None, "real") and all(v is None for v in vals[1:]):
+        # The first verifier did not say `real`, so the claim cannot be confirmed, and the others did not run.
+        return SINGLE_CLASS.get(vals[0], "mixed")
     if len(vals) < need or any(v is None for v in vals):
         return "mixed"
     if all(v == "real" for v in vals):
@@ -373,7 +415,7 @@ def verdict_class(verdicts: Dict[str, Optional[str]], need: int) -> str:
     return "mixed"
 
 
-def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
+def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged: bool = True) -> Dict[str, Any]:
     audit = ctx.audit()
     review = read_json(ctx.out / "review.json")
     if review is None:
@@ -381,14 +423,15 @@ def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
     if len(models) < 2:
         raise UsageError("verify needs two models or more")
     groups: Dict[str, Dict[str, Any]] = {}
-    for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["target"], f["run"], f["n"])):
-        g = groups.setdefault(f["target"], {"target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
+    for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
+        key = f["target"] if group == "function" else digest("file", f["file"])
+        g = groups.setdefault(key, {"key": key, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
         g["claims"].append(dict(f, k=len(g["claims"]) + 1))
-    jobs = [(g, m) for g in groups.values() for m in models]
 
     def one(job: Tuple[Dict[str, Any], str]) -> Tuple[Dict[str, Any], bool]:
         g, m = job
-        rid = digest("verify", audit["commit"], g["target"], model_id(m), *[c["id"] for c in g["claims"]])
+        rid = (digest("verify", audit["commit"], g["target"], model_id(m), *[c["id"] for c in g["claims"]]) if group == "function"
+               else digest("verify", audit["commit"], "file", g["key"], model_id(m), *[c["id"] for c in g["claims"]]))
         r = ctx.stored(rid)
         if r:
             return r, False
@@ -398,26 +441,37 @@ def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
         claims = []
         for c in g["claims"]:
             shutil.copy(c["repro"], folder / f"claim_{c['k']}.py")
-            claims.append({"k": c["k"], "claim": c["claim"], "expected_by_the_review": c["expected"],
+            claims.append({"k": c["k"], "function": c["function"], "claim": c["claim"], "expected_by_the_review": c["expected"],
                            "result_now": c["result"]})
         write_json(folder / "claims.json", claims)
-        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, n=len(claims), function=g["function"], file=g["file"])
-        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], m, shell=True, check=briefs.VERIFY_CHECK, timeout=3000)
+        head = (briefs.VERIFY_ONE_HEAD.format(n=len(claims), function=g["function"], file=g["file"]) if group == "function"
+                else briefs.VERIFY_FILE_HEAD.format(n=len(claims), file=g["file"]))
+        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head)
+        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], m, shell=True, check=briefs.VERIFY_CHECK, timeout=3000,
+                            lean=ctx.lean)
         r = ctx.runner.run(graph, folder)
         v = read_json(folder / "verdicts.json")
-        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], model=model_id(m),
+        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], model=model_id(m),
                  verdicts=v if isinstance(v, list) else None, finished=now())
         ctx.save(rid, r)
         return r, True
 
-    results = pool_map(ctx, one, jobs)
+    if staged:
+        # A claim is confirmed only when each verifier says `real`. So the later verifiers run only for a
+        # group in which the first verifier said `real` for one claim or more.
+        results = pool_map(ctx, one, [(g, models[0]) for g in groups.values()])
+        first_real = {r["group"] for r, _ in results
+                      if any(isinstance(v, dict) and v.get("verdict") == "real" for v in (r.get("verdicts") or []))}
+        results += pool_map(ctx, one, [(g, m) for g in groups.values() if g["key"] in first_real for m in models[1:]])
+    else:
+        results = pool_map(ctx, one, [(g, m) for g in groups.values() for m in models])
     records = [r for r, _ in results]
     mids = [model_id(m) for m in models]
     claims_out: List[Dict[str, Any]] = []
     bugs: List[Dict[str, Any]] = []
     for g in groups.values():
         mine = {r["model"]: {v.get("k"): v for v in (r.get("verdicts") or []) if isinstance(v, dict)}
-                for r in records if r["target"] == g["target"]}
+                for r in records if (r.get("group") or r["target"]) == g["key"]}
         first = mine.get(mids[0], {})
         root: Dict[int, int] = {}
         for c in g["claims"]:
@@ -427,8 +481,8 @@ def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
         for c in g["claims"]:
             details = {m: mine.get(m, {}).get(c["k"]) for m in mids}
             verdicts = {m: (v or {}).get("verdict") for m, v in details.items()}
-            cls = verdict_class(verdicts, len(mids))
-            row = {"id": c["id"], "k": c["k"], "target": g["target"], "file": g["file"], "function": g["function"],
+            cls = verdict_class(verdicts, len(mids), staged)
+            row = {"id": c["id"], "k": c["k"], "target": c["target"], "file": c["file"], "function": c["function"],
                    "claim": c["claim"], "result_now": c["result"], "repro": c["repro"], "verdicts": verdicts,
                    "class": cls, "grade": 2 if cls == "confirmed" else 1, "duplicate_of": root[c["k"]] if root[c["k"]] != c["k"] else None,
                    "details": details}
@@ -441,14 +495,15 @@ def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
         for key, members in clusters.items():
             lead = next((x for x in rows if x["k"] == key and x["grade"] == 2), members[0])
             info = lead["details"].get(mids[0]) or {}
-            bugs.append({"id": digest("bug", g["target"], *[x["id"] for x in members]), "target": g["target"],
-                         "file": g["file"], "function": g["function"], "claim": lead["claim"],
+            bugs.append({"id": digest("bug", lead["target"], *[x["id"] for x in members]), "target": lead["target"],
+                         "file": lead["file"], "function": lead["function"], "claim": lead["claim"],
                          "claims": [x["k"] for x in members], "result_now": lead["result_now"],
                          "what_goes_wrong": info.get("what_goes_wrong"), "caller": info.get("caller"),
                          "severity": info.get("severity"), "fix_idea": info.get("fix_idea"),
                          "repros": [{"finding": x["id"], "k": x["k"], "path": x["repro"], "result_now": x["result_now"]}
                                     for x in members]})
-    write_json(ctx.out / "verify.json", {"models": mids, "runs": [r["run"] for r in records], "claims": claims_out})
+    write_json(ctx.out / "verify.json", {"models": mids, "group": group, "staged": staged, "runs": [r["run"] for r in records],
+                                         "claims": claims_out})
     write_json(ctx.out / "confirmed.json", bugs)
     (ctx.out / "REPORT.md").write_text(report_md(audit, mids, claims_out, bugs), encoding="utf-8")
     failed = [{"run": r["run"], "model": r["model"], "error": r.get("error") or "no verdicts.json"}
@@ -456,7 +511,7 @@ def cmd_verify(ctx: Context, models: List[str]) -> Dict[str, Any]:
     by_class: Dict[str, int] = {}
     for c in claims_out:
         by_class[c["class"]] = by_class.get(c["class"], 0) + 1
-    report = {"command": "verify", "ok": not failed, "groups": len(groups), "claims": len(claims_out),
+    report = {"command": "verify", "ok": not failed, "group": group, "staged": staged, "groups": len(groups), "claims": len(claims_out),
               "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
               "classes": by_class, "confirmed_bugs": len(bugs), "failed_runs": failed,
               "report": str(ctx.out / "REPORT.md")}
@@ -471,6 +526,7 @@ def cell(x: Any) -> str:
 def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, Any]], bugs: List[Dict[str, Any]]) -> str:
     lines = [f"# hpflow audit of {Path(audit['repo']).name} at {audit['commit'][:12]}", "",
              f"Verifiers: {', '.join(models)}. A claim is confirmed (grade 2) when each verifier says `real`.",
+             "When the first verifier does not say `real` for a claim of a group, the other verifiers can be absent for that group.",
              "Grade 2 is the agreement of two agents, not a proof. The owner of the code decides what is a bug.", "",
              f"Confirmed bugs after duplicates fold: {len(bugs)}.", ""]
     titles = [("confirmed", "Confirmed"), ("real_unreachable", "Real but not reachable"), ("by_design", "By design"),
@@ -522,6 +578,8 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
         "cd", "ls", "pwd", "cat", "git diff", "git status", "git log", "git show", "git grep", "git blame", "grep", "rg",
         "wc", "head", "tail", "sed", "find", "python3", py, "sort", "uniq", "diff", "echo", "test", "mkdir", "timeout")]
     payload = {"allowed_tools": tools, "disallowed_tools": ["WebFetch", "WebSearch", "Task", "Agent", "NotebookEdit"]}
+    if ctx.lean:
+        payload["extra_args"] = list(LEAN_ARGS)
     files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
     if "tests/**" not in files:
         files.append("tests/**")
@@ -681,7 +739,7 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     if review is None:
         open_items.append("review: not run")
     else:
-        done = {r["target"] for r in review_recs if not r.get("error")}
+        done = {i for r in review_recs if not r.get("error") for i in (r.get("targets") or [r["target"]])}
         missing = [t for t in targets or [] if t["id"] not in done]
         if missing:
             open_items.append(f"review: {len(missing)} targets have no reviewer result")

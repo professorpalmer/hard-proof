@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from .common import ADAPTER, DEFAULT_CONCURRENCY, apply_cost_rule, model_id, sh
+from .common import ADAPTER, DEFAULT_CONCURRENCY, LEAN_ARGS, apply_cost_rule, model_id, sh
 
 READ_TOOLS = ["Read", "Glob", "Grep", "Write", "Edit"]
 SHELL_TOOLS = READ_TOOLS + [f"Bash({c}:*)" for c in (
@@ -30,10 +30,12 @@ class Runner:
 
 
 def agent_graph(flow_id: str, task: str, files: List[str], model: str, shell: bool = True, check: Optional[str] = None,
-                repairs: int = 1, timeout: int = 3600, node: str = "work") -> Dict[str, Any]:
+                repairs: int = 1, timeout: int = 3600, node: str = "work", lean: bool = True) -> Dict[str, Any]:
     """One agent node, an optional shell check with a repair edge, then end (as `flowrun.run_agent`)."""
     payload = {"allowed_tools": SHELL_TOOLS if shell else READ_TOOLS,
                "disallowed_tools": NO_NET + ([] if shell else ["Bash"])}
+    if lean:
+        payload["extra_args"] = list(LEAN_ARGS)
     nodes: List[Dict[str, Any]] = [
         {"id": node, "kind": "agent", "role": "code", "files": files, "task": task, "payload": payload},
         {"id": "done", "kind": "end", "status": "pass"}, {"id": "failed", "kind": "end", "status": "fail"}]

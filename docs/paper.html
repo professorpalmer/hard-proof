@@ -73,7 +73,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
 <p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
-<p class="small">Revision 8, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
+<p class="small">Revision 9, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
 <ol class="toc">
 <li><a href="#problem">The problem</a></li>
 <li><a href="#defs">Definitions</a></li>
@@ -752,13 +752,23 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 <div class="doc-scroll"><table>
 <thead><tr><th>Step</th><th>Measured cost (API-equivalent)</th></tr></thead>
 <tbody>
-<tr><td>Review and two verifiers for one changed function</td><td>$1.43 ($28.53 for 20 functions)</td></tr>
-<tr><td>One release range: 20 functions, 7 confirmed bugs, 7 fixes</td><td>$36.05</td></tr>
+<tr><td>Review and verifiers for one changed function, with the defaults of today</td><td>$0.47 ($9.44 for 20 functions)</td></tr>
+<tr><td>The first audit of that range with its fix step: 20 functions, 7 confirmed bugs, 7 fixes</td><td>$36.05</td></tr>
 <tr><td>Two verifiers for one review finding</td><td>$0.44 ($93.09 for 211 findings)</td></tr>
 <tr><td>The full proof pipeline for one function</td><td>$8.34 (mean of 95)</td></tr>
 <tr><td>The proof of one decision table, written by the pilot</td><td>no worker cost</td></tr>
 </tbody></table></div>
 <p class="small">These are costs on two Python products with Claude models. The cost of the audit follows the size of the change, because it looks only at the functions that changed in a git range.</p>
+<h3>Where the cost was</h3>
+<p>The first audit of a release range cost $28.53 for 20 functions. Most of that was not work. Each worker session started with about 83,000 tokens of text before it read a line of code: the settings, rules, MCP tool lists and skills that Claude Code loads for the user of the machine. A session with a trivial task cost $0.35 with that text and $0.03 without it. So we ran the same range two more times with two changes.</p>
+<div class="doc-scroll"><table>
+<thead><tr><th>Setting</th><th>Reviewer sessions</th><th>Verifier sessions</th><th>Cost</th><th>Findings with a repro</th><th>Confirmed bugs</th></tr></thead>
+<tbody>
+<tr><td>First form: one session for each function, each worker with the settings of the user, two verifiers for each function with a finding</td><td>20</td><td>22</td><td>$28.53</td><td>13</td><td>7</td></tr>
+<tr><td>One reviewer session for each file, the second verifier only where the first says real</td><td>6</td><td>7</td><td>$8.94</td><td>4</td><td>3</td></tr>
+<tr><td>Lean workers, one session for each function, the second verifier only where the first says real</td><td>20</td><td>20</td><td>$9.44</td><td>15</td><td>8</td></tr>
+</tbody></table></div>
+<ul><li><strong>A lean worker is the saving.</strong> A worker that does not load the settings of the user did the same review for $4.63, against $11.87. It gave 15 findings with a repro, against 13.</li><li><strong>The second verifier can wait for the first.</strong> A claim is confirmed only when each verifier says "real". So the second verifier runs only for a function where the first one said "real". This step cannot lose a confirmed bug. With lean workers and this rule, the verifier step cost $4.81, against $16.66.</li><li><strong>One reviewer session for a whole file is cheap and finds less.</strong> It cost $8.94 and confirmed 3 bugs. A reviewer does about the same amount of work in one session, so more functions in a session get less attention each. It is an option of the tool and not the default.</li><li><strong>Limits.</strong> One range and one run for each setting. The 8 bugs of the lean run and the 7 of the first run are not the same set: 5 are in the two, which shows the variation between two runs of a review.</li></ul>
 <h3>The gate</h3>
 <p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>
 <p>We ran the gate on the stored audit of Section 13. On the audited release (v1.51.1) the verdict was "fail" with 7 open bugs. On the next release (v1.51.2), which has the fixes, the verdict was "pass" with 7 closed. The gate is now a step before each release of our two products.</p>
@@ -860,7 +870,7 @@ B_result = [id 1; id 1]</pre>
 <h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="https://puppetmaster.gg/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
-<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>2356fea16487c0e755faaf7cf195bdeec171fb7b4d048b33881552829149793b</code>.</li>
+<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>31a95c00a3da46045f27030a19e5fcdbb67df67fc0149bcce3a5c0c453b03a4f</code>.</li>
 <li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. Our last run made 184 gate runs: 179 accept and 5 reject, and each verdict was the same as the run record. With the build caches present it took about 4 minutes with six parallel jobs. A first run builds each folder and takes longer.</li>
 <li><code>docs/CLAIMS.md</code> in the archive has a folder and a command for each claim. The link tests need a checkout of Puppetmaster.</li>
 <li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the package <code>hpflow</code> (the commands <code>hp</code> and <code>hpf</code>, also on PyPI), the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>

@@ -82,6 +82,8 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
     hp = ls["hpflow_first_live_run"]
     audit_cost = hp["review_cost_usd"] + hp["verify_cost_usd"]
     a, b = gate
+    lean = json.loads((ROOT / "v2" / "cost_cut.json").read_text())["runs"][-1]
+    first = json.loads((ROOT / "v2" / "cost_cut.json").read_text())["runs"][0]
     rr = json.loads((ROOT / "v2" / "gate_live.json").read_text())["release_runs"]
     return f"""<section>
 <span class="step">14 · Use it</span>
@@ -90,11 +92,12 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
 <div class="scroll"><table>
 <thead><tr><th>Step</th><th>Measured cost</th></tr></thead>
 <tbody>
-<tr><td>Review and two verifiers for one changed function</td><td>${audit_cost / hp['targets']:.2f}</td></tr>
-<tr><td>One release range: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes</td><td>${audit_cost + hp['fix_cost_usd']:.2f}</td></tr>
+<tr><td>Review and verifiers for one changed function</td><td>${lean['cost_usd'] / lean['targets']:.2f}</td></tr>
+<tr><td>One release range: {lean['targets']} functions, {lean['confirmed_bugs']} confirmed bugs</td><td>${lean['cost_usd']:.2f}</td></tr>
 <tr><td>The full proof pipeline for one function</td><td>${pc['cost_mean_usd']:.2f}</td></tr>
 <tr><td>The proof of one decision table</td><td>about ten minutes, no worker</td></tr>
 </tbody></table></div>
+<p>The first form of the audit cost ${first['cost_usd']:.2f} for that range. Most of it was the start text of each worker session: about 83,000 tokens of user settings, rules and tool lists before any work. A lean worker without that text, and a second verifier that runs only where the first says "real", brought it to ${lean['cost_usd']:.2f} with {lean['confirmed_bugs']} confirmed bugs against {first['confirmed_bugs']}.</p>
 <p>The two tools are one package, <code>hpflow</code>, on PyPI and in the repository. <code>hpf</code> audits the functions that changed in a git range, and its last step is a gate with no model call: each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. On our stored audit, the gate failed on Puppetmaster {a['ref'].lstrip('v')} with {a['open']} open bugs and passed on {b['ref'].lstrip('v')} with {b['closed']} closed. <code>hp</code> is the proof gate for one Python function.</p>
 <p>The gate now runs before each release of our two products. Its first two runs covered {rr[0]['targets']} changed functions for ${rr[0]['review_cost_usd'] + rr[0]['verify_cost_usd']:.2f} and {rr[1]['targets']} changed function for ${rr[1]['review_cost_usd'] + rr[1]['verify_cost_usd']:.2f}. No finding was a bug that a caller reaches. The audit did find 4 small faults in new code that no caller reaches, and we fixed them before the release.</p>
 <pre class="hp-theorem">pip install hpflow

@@ -631,6 +631,25 @@ def sec_table_proof() -> str:
         "So the code was correct and its documentation did not state the rule. The full order is in the docstring now. This is the same kind of result as in Section 5, on a function that is one day old.</p>"])
 
 
+def cost_cut_text(cut: list) -> list:
+    """Where the cost of the audit was, from three audits of one range (v2/cost_cut.py)."""
+    if len(cut) != 3:
+        return []
+    first, grouped, lean = cut
+    return ["<h3>Where the cost was</h3>",
+            f"<p>The first audit of a release range cost {money(first['cost_usd'])} for {first['targets']} functions. Most of that was not work. Each worker session started with about 83,000 tokens of text before it read a line of code: "
+            "the settings, rules, MCP tool lists and skills that Claude Code loads for the user of the machine. A session with a trivial task cost $0.35 with that text and $0.03 without it. "
+            "So we ran the same range two more times with two changes.</p>",
+            table(["Setting", "Reviewer sessions", "Verifier sessions", "Cost", "Findings with a repro", "Confirmed bugs"],
+                  [[r["setting"], str(r["review_sessions"]), str(r["verifier_sessions"]), money(r["cost_usd"]), str(r["findings_with_a_repro_that_runs"]), str(r["confirmed_bugs"])]
+                   for r in cut]),
+            "<ul>"
+            f"<li><strong>A lean worker is the saving.</strong> A worker that does not load the settings of the user did the same review for {money(lean['review_cost_usd'])}, against {money(first['review_cost_usd'])}. It gave {lean['findings_with_a_repro_that_runs']} findings with a repro, against {first['findings_with_a_repro_that_runs']}.</li>"
+            f"<li><strong>The second verifier can wait for the first.</strong> A claim is confirmed only when each verifier says \"real\". So the second verifier runs only for a function where the first one said \"real\". This step cannot lose a confirmed bug. With lean workers and this rule, the verifier step cost {money(lean['verify_cost_usd'])}, against {money(first['verify_cost_usd'])}.</li>"
+            f"<li><strong>One reviewer session for a whole file is cheap and finds less.</strong> It cost {money(grouped['cost_usd'])} and confirmed {grouped['confirmed_bugs']} bugs. A reviewer does about the same amount of work in one session, so more functions in a session get less attention each. It is an option of the tool and not the default.</li>"
+            f"<li><strong>Limits.</strong> One range and one run for each setting. The {lean['confirmed_bugs']} bugs of the lean run and the {first['confirmed_bugs']} of the first run are not the same set: 5 are in the two, which shows the variation between two runs of a review.</li></ul>"]
+
+
 def sec_use(ls: dict) -> str:
     """Section 14: the recommendation for daily work and how to use the tools."""
     v2 = ROOT / "v2"
@@ -644,6 +663,8 @@ def sec_use(ls: dict) -> str:
     times = pc["cost_usd"] / pc["review_cost_usd"][best + "/pre"]
     n = tri["collect"]["candidates"]
     audit_cost = hp["review_cost_usd"] + hp["verify_cost_usd"]
+    cut = json.loads((v2 / "cost_cut.json").read_text())["runs"] if (v2 / "cost_cut.json").exists() else []
+    lean = cut[-1] if cut else None
     h = ['<h2 id="use">14. What we recommend, and how to use the tools</h2>',
          "<p>This section is our reading of Sections 10 to 13 for daily work. It is a recommendation, and it is not a new result.</p>",
          "<h3>Three rules</h3><ol>",
@@ -652,12 +673,15 @@ def sec_use(ls: dict) -> str:
          f"<li><strong>Do not use laws that an agent writes from documentation as a bug finder for old code.</strong> The pipeline of Section 12 found fewer known bugs than a review for about {times:.0f} times the cost, and in {tri['verdicts']['agreed'].get('misread', 0)} of its {n} live conflicts the law was wrong, not the code.</li></ol>",
          "<h3>What it costs</h3>",
          table(["Step", "Measured cost (API-equivalent)"],
-               [["Review and two verifiers for one changed function", f"{money(audit_cost / hp['targets'])} ({money(audit_cost)} for {hp['targets']} functions)"],
-                [f"One release range: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes", money(audit_cost + hp["fix_cost_usd"])],
+               [["Review and verifiers for one changed function, with the defaults of today",
+                 f"{money(lean['cost_usd'] / lean['targets'])} ({money(lean['cost_usd'])} for {lean['targets']} functions)" if lean
+                 else f"{money(audit_cost / hp['targets'])} ({money(audit_cost)} for {hp['targets']} functions)"],
+                [f"The first audit of that range with its fix step: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes", money(audit_cost + hp["fix_cost_usd"])],
                 ["Two verifiers for one review finding", f"{money(ls['verifier_cost_usd'] / ls['findings_live_on_newest_dev'])} ({money(ls['verifier_cost_usd'])} for {ls['findings_live_on_newest_dev']} findings)"],
                 ["The full proof pipeline for one function", f"{money(pc['cost_mean_usd'])} (mean of {pc['bugs']})"],
                 ["The proof of one decision table, written by the pilot", "no worker cost"]]),
          "<p class=\"small\">These are costs on two Python products with Claude models. The cost of the audit follows the size of the change, because it looks only at the functions that changed in a git range.</p>",
+         *cost_cut_text(cut),
          "<h3>The gate</h3>",
          "<p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>"]
     if len(gate) == 2:
@@ -702,8 +726,9 @@ def table(head: list[str], rows: list[list[str]], classes: dict[int, str] | None
 
 def build_zip(dest: Path) -> str:
     keep_ext = {".lean", ".py", ".json", ".toml", ".sh", ".md"}
-    skip_dirs = {".lake", ".git", "__pycache__", "site", "review", "conflict_audit"}
-    skip_names = {"lake-manifest.json", "review_score.json", "conflict_merged.json", "conflict_changed.json", "conflict_run.log", "review_all.log", "findings_all.json",
+    private = json.loads((HERE / "private_skip.json").read_text()) if (HERE / "private_skip.json").exists() else {}
+    skip_dirs = {".lake", ".git", "__pycache__", "site", "review", "conflict_audit"} | set(private.get("dirs", []))
+    skip_names = set(private.get("names", [])) | {"lake-manifest.json", "review_score.json", "conflict_merged.json", "conflict_changed.json", "conflict_run.log", "review_all.log", "findings_all.json",
                   "audit_groups.json", "audit_runs.json", "audit_merged.json"}
     files: list[tuple[Path, str]] = []
     for path in sorted(ROOT.rglob("*")):

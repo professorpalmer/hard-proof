@@ -33,8 +33,11 @@ hpf gate  --out ~/audits/next --ref HEAD
 - `hpf fix` never commits. Review each fix and merge it yourself.
 - `hpf gate` makes no model call. It passes when each confirmed bug gives a new result on the commit that you
   release, or has a waiver with a reason (`hpf waive`).
-- Measured cost on our products: about 1.40 US dollars for each changed function for the review and the two
-  verifiers, and 36 US dollars for one release range of 20 functions with its 7 fixes (API-equivalent).
+- Measured cost on our products: about 0.47 US dollars for each changed function for the review and the
+  verifiers (9.44 US dollars for a release range of 20 functions, API-equivalent). The first form of the
+  tool cost 28.53 US dollars for the same range.
+- A worker is lean by default: it does not load the Claude Code settings, rules, MCP servers and skills of the
+  user. `--user-settings` gives each worker the full profile.
 
 For a proof of one function, start with [`tool/README.md`](../tool/README.md) (the domain contract and a quick start on
 `tool/examples/clamp`). `v3/swarm_policy` is a real decision table as a complete domain: 5 laws, a proof that

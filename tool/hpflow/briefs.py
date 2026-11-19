@@ -11,11 +11,26 @@ Write your report into the current folder:
 
 {arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
 
+REVIEW_FILE = """The folder `project/` has the Python source of a tool. Please review these functions in `project/{file}`, each with the helper functions that it calls:
+
+{functions}
+
+Look for inputs for which one of these functions gives a wrong result: a result that conflicts with its docstring, its comments, the documentation in `project/docs` or `project/README.md`, the name of the function, or what its callers in the project need. Give each function in the list the same care. Only report a problem that you are sure about. If you find no problem in a function, report none for it. Do not report style, speed, or missing features.
+
+Write your report into the current folder:
+- `findings.json`: a JSON list, the most certain finding first, at most {per_function} entries for each function. Each entry: {{"n": 1, "function": "the name of the function, exactly as in the list above", "claim": "what is wrong, in one or two sentences", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. `n` counts from 1 over all entries. An empty list when you find no problem.
+- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `project/` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
+
+{arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
+
+REVIEW_FILE_CHECK = "python3 -c \"import json;d=json.load(open('findings.json'));names=json.load(open('functions.json'));assert isinstance(d,list) and all(x.get('function') in names for x in d)\""
+PER_FUNCTION = 4
+
 REVIEW_ARM = {"plain": "You have no shell in this task. Read the code.\n\n",
               "shell": "You have a shell. You can run Python on the project to check a finding, for example `cd project && python3 -c \"...\"`.\n\n"}
 REVIEW_CHECK = "python3 -c \"import json;d=json.load(open('findings.json'));assert isinstance(d,list) and len(d)<=5\""
 
-VERIFY = """The folder `project/` has the current source of the product `{repo}` (Python package, tests and documentation). A code review made {n} claims about one function: `{function}` in `project/{file}`. Some claims can be wrong, and some can be the same claim two times.
+VERIFY = """The folder `project/` has the current source of the product `{repo}` (Python package, tests and documentation). {head}
 
 `claims.json` lists the claims. For claim `k`, the file `claim_<k>.py` defines `run()`, which calls the function on the input of the claim, and `claims.json` has the result that `run()` gives on the current source (`result_now`). You can run a claim again: `cd project && python3 -c "import sys; sys.path.insert(0, '.'); exec(open('../claim_1.py').read()); print(run())"`.
 
@@ -32,6 +47,9 @@ Write one file, `verdicts.json`, in the current folder: a JSON list with one ent
 {{"k": 1, "verdict": "real | real_unreachable | intended | unclear", "duplicate_of": null or the k of an earlier claim that states the same fault, "what_goes_wrong": "one sentence, or null", "caller": "path:line of the caller that reaches it, or null", "evidence": [{{"file": "path", "line": 12, "quote": "exact text"}}], "severity": "high | medium | low", "fix_idea": "one or two sentences, or null"}}
 
 Do not change `project/`. Do not write other files, except scratch files in `.lake/`. End with `VERDICT: PASS` when `verdicts.json` has one entry for each claim."""
+
+VERIFY_FILE_HEAD = "A code review made {n} claims about functions in `project/{file}`. Each claim in `claims.json` names its function. Some claims can be wrong, and some can be the same claim two times."
+VERIFY_ONE_HEAD = "A code review made {n} claims about one function: `{function}` in `project/{file}`. Some claims can be wrong, and some can be the same claim two times."
 
 VERIFY_CHECK = "python3 -c \"import json;d=json.load(open('verdicts.json'));c=json.load(open('claims.json'));assert {x['k'] for x in d}=={x['k'] for x in c};assert all(x['verdict'] in ('real','real_unreachable','intended','unclear') for x in d)\""
 VERDICTS = ("real", "real_unreachable", "intended", "unclear")

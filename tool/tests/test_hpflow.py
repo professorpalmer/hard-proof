@@ -94,6 +94,7 @@ class FakeRunner(Runner):
     def __init__(self) -> None:
         self.calls: List[Dict[str, Any]] = []
         self.lock = threading.Lock()
+        self.first_verdict = "real"
 
     def run(self, graph: Dict[str, Any], folder: Path) -> Dict[str, Any]:
         model = graph["defaults"]["model"]
@@ -110,8 +111,8 @@ class FakeRunner(Runner):
             claims = json.loads((folder / "claims.json").read_text())
             out = []
             for c in claims:
-                if model == OPUS:
-                    v = {"k": c["k"], "verdict": "real", "duplicate_of": 1 if c["k"] == 2 else None,
+                if model == SONNET:
+                    v = {"k": c["k"], "verdict": self.first_verdict, "duplicate_of": 1 if c["k"] == 2 else None,
                          "what_goes_wrong": "add subtracts", "caller": "pkg/mod.py:1", "fix_idea": "use +"}
                 else:
                     v = {"k": c["k"], "verdict": "intended" if c["k"] == 3 else "real", "duplicate_of": None}
@@ -122,6 +123,13 @@ class FakeRunner(Runner):
             kind = "review"
             assert (folder / "project" / "pkg" / "mod.py").exists()
             findings = [{"n": n, "claim": f"claim {n}", "expected": "5", "confidence": "high"} for n in REPROS]
+            if (folder / "functions.json").exists():
+                names = json.loads((folder / "functions.json").read_text())
+                if len(names) > 1:
+                    findings = [dict(findings[0], function=names[0]), dict(findings[3], function=names[1]),
+                                dict(findings[4], function="not_in_the_list")]
+                else:
+                    findings = [dict(f, function=names[0]) for f in findings]
             (folder / "findings.json").write_text(json.dumps(findings))
             for n, text in REPROS.items():
                 (folder / f"finding_{n}.py").write_text(text)
@@ -304,6 +312,50 @@ class LadderTest(FlowCase):
         code, r = self.hpf("gate", "--ref", "HEAD")
         self.assertEqual((code, r["verdict"], r["targets"], r["confirmed_bugs"]), (0, "pass", 0, 0), r)
         self.assertEqual(self.runner.calls, [])
+
+    def test_one_reviewer_session_for_the_functions_of_one_file(self):
+        self.init()
+        code, r = self.hpf("targets", "--function", "pkg/mod.py:add", "pkg/mod.py:sub")
+        self.assertEqual((code, len(r["targets"])), (0, 2), r)
+        code, r = self.hpf("review", "--repro-timeout", "2", "--group", "file")
+        self.assertEqual((code, r["group"]), (0, "file"), r)
+        self.assertEqual(self.runner.count("review"), 1)
+        findings = json.loads((self.out / "review.json").read_text())["findings"]
+        self.assertEqual(sorted((f["n"], f["function"]) for f in findings), [(1, "add"), (4, "sub")])
+        self.assertEqual(self.hpf("status")[1]["not_done"], ["verify: not run"])
+        code, r = self.hpf("verify")
+        self.assertEqual((code, r["groups"], self.runner.count("verify")), (0, 1, 2), r)
+        claims = json.loads((self.out / "verify.json").read_text())["claims"]
+        self.assertEqual({c["function"] for c in claims}, {"add", "sub"})
+
+    def test_one_session_for_each_function_and_each_verifier_on_request(self):
+        self.init()
+        self.hpf("targets", "--function", "pkg/mod.py:add", "pkg/mod.py:sub")
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual((code, r["group"], self.runner.count("review")), (0, "function", 2), r)
+        self.assertEqual(self.runner.calls[0]["graph"]["nodes"][0]["payload"]["extra_args"][:2], ["--setting-sources", ""])
+        self.runner.first_verdict = "intended"
+        code, r = self.hpf("verify", "--all-verifiers")
+        self.assertEqual((code, r["group"], r["groups"], self.runner.count("verify")), (0, "function", 2, 4), r)
+
+    def test_the_second_verifier_runs_only_where_the_first_says_real(self):
+        self.init()
+        self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.assertEqual(self.hpf("review", "--repro-timeout", "2")[0], 0)
+        self.runner.first_verdict = "intended"
+        code, r = self.hpf("verify")
+        self.assertEqual((code, r["staged"], self.runner.count("verify")), (0, True, 1), r)
+        self.assertEqual({c["model"] for c in self.runner.calls if c["kind"] == "verify"}, {SONNET})
+        self.assertEqual(r["classes"], {"by_design": 3})
+        self.assertEqual(r["confirmed_bugs"], 0)
+        code, g = self.hpf("gate", "--ref", "HEAD")
+        self.assertEqual((code, g["verdict"]), (0, "pass"), g)
+
+    def test_a_worker_gets_the_user_settings_only_on_request(self):
+        self.init()
+        self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.assertEqual(self.hpf("review", "--repro-timeout", "2", "--user-settings")[0], 0)
+        self.assertNotIn("extra_args", self.runner.calls[0]["graph"]["nodes"][0]["payload"])
 
     def test_waive(self):
         self.through_verify()

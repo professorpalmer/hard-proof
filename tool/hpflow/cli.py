@@ -20,6 +20,9 @@ class Parser(argparse.ArgumentParser):
 def add_common(p: argparse.ArgumentParser) -> None:
     p.add_argument("--out", required=True, help="the audit folder")
     p.add_argument("--redo", action="store_true", help="run the workers again, also when a result is stored")
+    p.add_argument("--user-settings", dest="lean", action="store_false", default=True,
+                   help="give each worker the Claude Code settings, rules, MCP servers and skills of the user; "
+                        "the default is a lean worker with none of them")
     p.add_argument("--concurrency", type=int, default=DEFAULT_CONCURRENCY,
                    help=f"the most worker flows that run at one time (default {DEFAULT_CONCURRENCY})")
 
@@ -47,10 +50,20 @@ def add_review(p: argparse.ArgumentParser) -> None:
     p.add_argument("--no-shell", dest="shell", action="store_false")
     p.add_argument("--passes", type=int, default=1)
     p.add_argument("--repro-timeout", type=float, default=60)
+    p.add_argument("--group", choices=["function", "file"], default="function",
+                   help="one reviewer and verifier session for each function (default), or for the functions of each file. "
+                        "The file form costs less and found fewer bugs in our test")
+    p.add_argument("--group-size", type=int, default=6, help="the most functions of one file in one reviewer session")
+
+
+def add_verify_group(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--group", choices=["file", "function"], help="default: the grouping of the stored review")
 
 
 def add_verify(p: argparse.ArgumentParser) -> None:
-    p.add_argument("--models", nargs="+", default=["opus", "sonnet"])
+    p.add_argument("--models", nargs="+", default=["sonnet", "opus"])
+    p.add_argument("--all-verifiers", dest="staged", action="store_false", default=True,
+                   help="run each verifier for each group; the default runs the later verifiers only where the first says real")
 
 
 def add_fix(p: argparse.ArgumentParser) -> None:
@@ -76,7 +89,7 @@ def build_parser() -> Parser:
     parser = Parser(prog="hpflow", description="Take Python functions up the evidence ladder with agent workers.")
     sub = parser.add_subparsers(dest="command", parser_class=Parser)
     for name, adders in (("init", [add_init]), ("targets", [add_targets]), ("review", [add_review]),
-                         ("verify", [add_verify]), ("fix", [add_fix]), ("status", []),
+                         ("verify", [add_verify, add_verify_group]), ("fix", [add_fix]), ("status", []),
                          ("waive", [add_waive]), ("gate", [add_gate]),
                          ("audit", [add_init, add_targets, add_review, add_verify])):
         p = sub.add_parser(name)
@@ -84,6 +97,14 @@ def build_parser() -> Parser:
         for add in adders:
             add(p)
     return parser
+
+
+def read_group(ctx: c.Context, given: Optional[str]) -> str:
+    """The grouping of the verify step: the option, else the grouping of the stored review, else `file`."""
+    if given:
+        return given
+    review = c.read_json(ctx.out / "review.json") or {}
+    return review.get("group") or "function"
 
 
 def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
@@ -95,9 +116,9 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
     if cmd == "review":
         if args.passes < 1:
             raise UsageError("--passes must be 1 or more")
-        return c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout)
+        return c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size)
     if cmd == "verify":
-        return c.cmd_verify(ctx, args.models)
+        return c.cmd_verify(ctx, args.models, read_group(ctx, getattr(args, "group", None)), args.staged)
     if cmd == "fix":
         return c.cmd_fix(ctx, args.base, args.only, args.fix_model, args.judge_model, args.rules)
     if cmd == "status":
@@ -111,8 +132,8 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
         calls: List[Callable[[], Dict[str, Any]]] = [
             lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd),
             lambda: c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n),
-            lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout),
-            lambda: c.cmd_verify(ctx, args.models)]
+            lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size),
+            lambda: c.cmd_verify(ctx, args.models, args.group, args.staged)]
         for call in calls:
             r = call()
             steps.append(r)
@@ -133,7 +154,7 @@ def main(argv: Optional[List[str]] = None, runner: Optional[Runner] = None) -> i
             raise UsageError("--concurrency must be 1 or more")
         out = Path(args.out).expanduser().resolve()
         runner = runner or PuppetmasterRunner(out / "graphs", concurrency=args.concurrency)
-        ctx = c.Context(out, runner, redo=args.redo, concurrency=args.concurrency)
+        ctx = c.Context(out, runner, redo=args.redo, concurrency=args.concurrency, lean=args.lean)
         report = run_command(args, ctx)
         code = 0 if report.get("ok") else 1
     except UsageError as e:

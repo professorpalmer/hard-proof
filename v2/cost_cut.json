@@ -1,0 +1,149 @@
+{
+ "range": "Puppetmaster v1.50.0..v1.51.1",
+ "runs": [
+  {
+   "folder": "audit-pm-1510",
+   "setting": "First form: one session for each function, each worker with the settings of the user, two verifiers for each function with a finding",
+   "targets": 20,
+   "review_sessions": 20,
+   "verifier_sessions": 22,
+   "verifier_sessions_by_model": {
+    "claude-opus-5-5": 11,
+    "claude-sonnet-5-5": 11
+   },
+   "review_cost_usd": 11.87,
+   "verify_cost_usd": 16.66,
+   "cost_usd": 28.53,
+   "seconds": 1959,
+   "findings_with_a_repro_that_runs": 13,
+   "classes": {
+    "confirmed": 7,
+    "real_unreachable": 5,
+    "mixed": 1
+   },
+   "confirmed_bugs": 7,
+   "bugs": [
+    {
+     "file": "puppetmaster/routing_authority.py",
+     "function": "_pin_failure_detail"
+    },
+    {
+     "file": "puppetmaster/routing_authority.py",
+     "function": "validate_pinned_dispatch"
+    },
+    {
+     "file": "puppetmaster/registry_sync.py",
+     "function": "unroutable_pin_hint"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "_registry_starter_sync_check"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "run_doctor"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "run_doctor"
+    },
+    {
+     "file": "puppetmaster/codegraph.py",
+     "function": "ensure_codegraph_provisioned"
+    }
+   ]
+  },
+  {
+   "folder": "audit-pm-1510-grouped",
+   "setting": "One reviewer session for each file, the second verifier only where the first says real",
+   "targets": 20,
+   "review_sessions": 6,
+   "verifier_sessions": 7,
+   "verifier_sessions_by_model": {
+    "claude-sonnet-5-5": 4,
+    "claude-opus-5-5": 3
+   },
+   "review_cost_usd": 3.91,
+   "verify_cost_usd": 5.03,
+   "cost_usd": 8.94,
+   "seconds": 619,
+   "findings_with_a_repro_that_runs": 4,
+   "classes": {
+    "confirmed": 3,
+    "real_unreachable": 1
+   },
+   "confirmed_bugs": 3,
+   "bugs": [
+    {
+     "file": "puppetmaster/codegraph.py",
+     "function": "ensure_codegraph_provisioned"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "run_doctor"
+    },
+    {
+     "file": "puppetmaster/registry_sync.py",
+     "function": "unroutable_pin_hint"
+    }
+   ]
+  },
+  {
+   "folder": "audit-pm-1510-lean",
+   "setting": "Lean workers, one session for each function, the second verifier only where the first says real",
+   "targets": 20,
+   "review_sessions": 20,
+   "verifier_sessions": 20,
+   "verifier_sessions_by_model": {
+    "claude-sonnet-5-5": 13,
+    "claude-opus-5-5": 7
+   },
+   "review_cost_usd": 4.63,
+   "verify_cost_usd": 4.81,
+   "cost_usd": 9.44,
+   "seconds": 1727,
+   "findings_with_a_repro_that_runs": 15,
+   "classes": {
+    "confirmed": 8,
+    "real_unreachable": 5,
+    "mixed": 1,
+    "by_design": 1
+   },
+   "confirmed_bugs": 8,
+   "bugs": [
+    {
+     "file": "puppetmaster/cli/commands_models.py",
+     "function": "_run_models_subcommand"
+    },
+    {
+     "file": "puppetmaster/codegraph.py",
+     "function": "_run_git"
+    },
+    {
+     "file": "puppetmaster/codegraph.py",
+     "function": "_run_git"
+    },
+    {
+     "file": "puppetmaster/codegraph.py",
+     "function": "ensure_codegraph_provisioned"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "_registry_starter_sync_check"
+    },
+    {
+     "file": "puppetmaster/diagnostics.py",
+     "function": "run_doctor"
+    },
+    {
+     "file": "puppetmaster/registry_sync.py",
+     "function": "unroutable_pin_hint"
+    },
+    {
+     "file": "puppetmaster/routing_authority.py",
+     "function": "validate_pinned_dispatch"
+    }
+   ]
+  }
+ ]
+}

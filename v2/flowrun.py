@@ -50,7 +50,7 @@ def job_record(job: str, cwd: Path) -> tuple[float, float]:
 
 def run_agent(folder: Path, flow_id: str, task: str, files: list[str], model: str = "opus", shell: bool = True,
               check: str | None = None, repairs: int = 1, timeout: int = 3600, node: str = "work",
-              extra_allowed: list[str] | None = None) -> dict:
+              extra_allowed: list[str] | None = None, effort: str | None = None) -> dict:
     """One agent node, an optional shell check with a repair edge, then end."""
     folder.mkdir(parents=True, exist_ok=True)
     if not (folder / ".git").exists():
@@ -59,7 +59,10 @@ def run_agent(folder: Path, flow_id: str, task: str, files: list[str], model: st
         sh(["git", "-c", "user.name=hp", "-c", "user.email=hp@localhost", "commit", "-q", "--allow-empty", "-m", "start"], folder)
     allowed = (SHELL_TOOLS if shell else READ_TOOLS) + (extra_allowed or [])
     payload = {"allowed_tools": allowed, "disallowed_tools": NO_NET + ([] if shell else ["Bash"])}
-    nodes = [{"id": node, "kind": "agent", "role": "code", "files": files, "task": task, "payload": payload},
+    agent = {"id": node, "kind": "agent", "role": "code", "files": files, "task": task, "payload": payload}
+    if effort:
+        agent["effort"] = effort
+    nodes = [agent,
              {"id": "done", "kind": "end", "status": "pass"}, {"id": "failed", "kind": "end", "status": "fail"}]
     if check:
         nodes.insert(1, {"id": "check", "kind": "shell", "command": check})
