@@ -1,0 +1,222 @@
+{
+ "direct": {
+  "runs": 95,
+  "findings": 116,
+  "with_repro_ok": 116,
+  "hits": 43,
+  "detected": 36,
+  "other": 73,
+  "other_changed_later": 24,
+  "cost_usd": 10.1,
+  "real_signal_per_100_runs": 63.2,
+  "first": {
+   "runs": 48,
+   "findings": 61,
+   "with_repro_ok": 61,
+   "hits": 25,
+   "detected": 20,
+   "other": 36,
+   "other_changed_later": 13,
+   "cost_usd": 5.34,
+   "real_signal_per_100_runs": 68.8
+  }
+ },
+ "direct_final": {
+  "runs": 95,
+  "findings": 118,
+  "with_repro_ok": 117,
+  "hits": 44,
+  "detected": 36,
+  "other": 74,
+  "other_changed_later": 30,
+  "cost_usd": 10.09,
+  "real_signal_per_100_runs": 69.5,
+  "first": {
+   "runs": 48,
+   "findings": 60,
+   "with_repro_ok": 59,
+   "hits": 23,
+   "detected": 18,
+   "other": 37,
+   "other_changed_later": 16,
+   "cost_usd": 5.25,
+   "real_signal_per_100_runs": 70.8
+  }
+ },
+ "direct_review": {
+  "runs": 95,
+  "findings": 86,
+  "with_repro_ok": 84,
+  "hits": 31,
+  "detected": 29,
+  "other": 55,
+  "other_changed_later": 22,
+  "cost_usd": 7.26,
+  "real_signal_per_100_runs": 53.7,
+  "first": {
+   "runs": 48,
+   "findings": 48,
+   "with_repro_ok": 47,
+   "hits": 15,
+   "detected": 14,
+   "other": 33,
+   "other_changed_later": 14,
+   "cost_usd": 3.84,
+   "real_signal_per_100_runs": 58.3
+  }
+ },
+ "effort_low": {
+  "runs": 48,
+  "findings": 54,
+  "with_repro_ok": 53,
+  "hits": 17,
+  "detected": 15,
+  "other": 37,
+  "other_changed_later": 15,
+  "cost_usd": 4.18,
+  "real_signal_per_100_runs": 62.5,
+  "first": {
+   "runs": 48,
+   "findings": 54,
+   "with_repro_ok": 53,
+   "hits": 17,
+   "detected": 15,
+   "other": 37,
+   "other_changed_later": 15,
+   "cost_usd": 4.18,
+   "real_signal_per_100_runs": 62.5
+  }
+ },
+ "haiku": {
+  "runs": 48,
+  "findings": 65,
+  "with_repro_ok": 22,
+  "hits": 5,
+  "detected": 4,
+  "other": 60,
+  "other_changed_later": 2,
+  "cost_usd": 0.71,
+  "real_signal_per_100_runs": 12.5,
+  "first": {
+   "runs": 48,
+   "findings": 65,
+   "with_repro_ok": 22,
+   "hits": 5,
+   "detected": 4,
+   "other": 60,
+   "other_changed_later": 2,
+   "cost_usd": 0.71,
+   "real_signal_per_100_runs": 12.5
+  }
+ },
+ "lean": {
+  "runs": 48,
+  "findings": 66,
+  "with_repro_ok": 65,
+  "hits": 22,
+  "detected": 17,
+  "other": 44,
+  "other_changed_later": 16,
+  "cost_usd": 7.24,
+  "real_signal_per_100_runs": 68.8,
+  "first": {
+   "runs": 48,
+   "findings": 66,
+   "with_repro_ok": 65,
+   "hits": 22,
+   "detected": 17,
+   "other": 44,
+   "other_changed_later": 16,
+   "cost_usd": 7.24,
+   "real_signal_per_100_runs": 68.8
+  }
+ },
+ "nudge": {
+  "runs": 95,
+  "findings": 106,
+  "with_repro_ok": 106,
+  "hits": 35,
+  "detected": 32,
+  "other": 71,
+  "other_changed_later": 29,
+  "cost_usd": 9.23,
+  "real_signal_per_100_runs": 64.2,
+  "first": {
+   "runs": 48,
+   "findings": 57,
+   "with_repro_ok": 57,
+   "hits": 20,
+   "detected": 18,
+   "other": 37,
+   "other_changed_later": 16,
+   "cost_usd": 4.84,
+   "real_signal_per_100_runs": 70.8
+  }
+ },
+ "short_nudge": {
+  "runs": 95,
+  "findings": 101,
+  "with_repro_ok": 101,
+  "hits": 37,
+  "detected": 35,
+  "other": 64,
+  "other_changed_later": 21,
+  "cost_usd": 7.46,
+  "real_signal_per_100_runs": 58.9,
+  "first": {
+   "runs": 48,
+   "findings": 52,
+   "with_repro_ok": 52,
+   "hits": 21,
+   "detected": 19,
+   "other": 31,
+   "other_changed_later": 12,
+   "cost_usd": 3.81,
+   "real_signal_per_100_runs": 64.6
+  }
+ },
+ "tools": {
+  "runs": 95,
+  "findings": 111,
+  "with_repro_ok": 111,
+  "hits": 42,
+  "detected": 34,
+  "other": 69,
+  "other_changed_later": 25,
+  "cost_usd": 9.86,
+  "real_signal_per_100_runs": 62.1,
+  "first": {
+   "runs": 48,
+   "findings": 62,
+   "with_repro_ok": 62,
+   "hits": 26,
+   "detected": 19,
+   "other": 36,
+   "other_changed_later": 14,
+   "cost_usd": 5.36,
+   "real_signal_per_100_runs": 68.8
+  }
+ },
+ "tools_short": {
+  "runs": 95,
+  "findings": 99,
+  "with_repro_ok": 98,
+  "hits": 32,
+  "detected": 32,
+  "other": 67,
+  "other_changed_later": 24,
+  "cost_usd": 8.35,
+  "real_signal_per_100_runs": 58.9,
+  "first": {
+   "runs": 48,
+   "findings": 51,
+   "with_repro_ok": 50,
+   "hits": 17,
+   "detected": 17,
+   "other": 34,
+   "other_changed_later": 13,
+   "cost_usd": 4.28,
+   "real_signal_per_100_runs": 62.5
+  }
+ }
+}

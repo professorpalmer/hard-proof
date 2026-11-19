@@ -1,0 +1,163 @@
+[
+ {
+  "id": "01726353978213407832",
+  "target": "14443072037502298895",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "lean_config",
+  "claim": "A bracket inside a string value of a dropped table (e.g. command = \"foo[\") is counted as an open array, so lean_config swallows the following lines, including the kept [profiles.p] table.",
+  "claims": [
+   1
+  ],
+  "result_now": "'model=\"x\"\\n'",
+  "what_goes_wrong": "A '[' inside a string value in a dropped table (e.g. an mcp_servers command or args entry) leaves skip_depth positive, so every following line, including kept tables like [profiles.p], is silently dropped from the worker's lean config.toml.",
+  "caller": "project/tool/hpflow/codexhome.py:150",
+  "severity": "medium",
+  "fix_idea": "End skip_depth when a line matches a table header (as the kept_depth path does), and count only brackets outside quoted strings and comments.",
+  "repros": [
+   {
+    "finding": "07266977121956140776-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/07266977121956140776/finding_1.py",
+    "result_now": "'model=\"x\"\\n'"
+   }
+  ]
+ },
+ {
+  "id": "02496210662984404447",
+  "target": "07143527077318763139",
+  "file": "tool/hpflow/commands.py",
+  "function": "fix_graph",
+  "claim": "The flow id built in fix_graph does not include the bug ids of the group, although the task text differs. Two fix runs of the same file with different bugs (e.g. --only) get the same graph id.",
+  "claims": [
+   1
+  ],
+  "result_now": "True",
+  "what_goes_wrong": "Two fix runs of the same file with different bug sets (cmd_fix --only) get the same graph id, so the second run overwrites the stored graph file <id>.json and the first run's record['graph'] then points to a graph whose task text lists other bugs.",
+  "caller": "project/tool/hpflow/commands.py:864",
+  "severity": "low",
+  "fix_idea": "Add the sorted bug ids of g[\"bugs\"] to the digest that builds fid in fix_graph, as cmd_fix does for the run id.",
+  "repros": [
+   {
+    "finding": "09065422309681541390-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/09065422309681541390/finding_1.py",
+    "result_now": "True"
+   }
+  ]
+ },
+ {
+  "id": "04102356558269090353",
+  "target": "07705665422700961594",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_init",
+  "claim": "An explicit path such as './pkg' passes the presence check (git resolves it) but is stored unnormalized, so in_paths and the git diff pathspecs never match 'pkg/...' files; only trailing slashes are cleaned.",
+  "claims": [
+   1
+  ],
+  "result_now": "['./pkg']",
+  "what_goes_wrong": "A user passing --paths ./pkg gets './pkg' stored in audit.json, so in_paths never matches 'pkg/...' files and changed-function targets are silently dropped.",
+  "caller": "project/tool/hpflow/cli.py:150",
+  "severity": "medium",
+  "fix_idea": "Normalize each path with posixpath.normpath (dropping a leading './') before the presence check and before storing.",
+  "repros": [
+   {
+    "finding": "09198327588054714252-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/09198327588054714252/finding_1.py",
+    "result_now": "['./pkg']"
+   }
+  ]
+ },
+ {
+  "id": "16262374414290137292",
+  "target": "07705665422700961594",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_init",
+  "claim": "import_root './src' is only stripped of slashes, so it is stored as './src' and the package path becomes './src/pkg'; top_of and run_snippet then misbehave.",
+  "claims": [
+   2
+  ],
+  "result_now": "('./src', ['./src/pkg'])",
+  "what_goes_wrong": "A user passing --import-root ./src gets './src' stored, so top_of never strips the root (file names are 'src/...') and package paths become './src/pkg', giving wrong top names and snippets.",
+  "caller": "project/tool/hpflow/cli.py:150",
+  "severity": "medium",
+  "fix_idea": "Normalize import_root with posixpath.normpath and strip any leading './' before use.",
+  "repros": [
+   {
+    "finding": "09198327588054714252-2",
+    "k": 2,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/09198327588054714252/finding_2.py",
+    "result_now": "('./src', ['./src/pkg'])"
+   }
+  ]
+ },
+ {
+  "id": "17627950655761053126",
+  "target": "08765864503575113115",
+  "file": "tool/hpflow/commands.py",
+  "function": "parse_diff",
+  "claim": "git writes a trailing tab after a path that contains a space in the ---/+++ header lines. parse_diff keeps the tab in the path, so the file cannot be found.",
+  "claims": [
+   1
+  ],
+  "result_now": "('my file.py\\t', 'my file.py\\t')",
+  "what_goes_wrong": "A changed .py file whose path contains a space gets a trailing tab in its path, so in_paths/git show fail and the changed functions of that file are silently not targeted.",
+  "caller": "project/tool/hpflow/commands.py:335",
+  "severity": "medium",
+  "fix_idea": "Strip the trailing tab from the header path (rstrip('\\t')), or run git diff with -z / parse the diff --git line.",
+  "repros": [
+   {
+    "finding": "14240585150320709544-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/14240585150320709544/finding_1.py",
+    "result_now": "('my file.py\\t', 'my file.py\\t')"
+   }
+  ]
+ },
+ {
+  "id": "12325202032198276168",
+  "target": "08765864503575113115",
+  "file": "tool/hpflow/commands.py",
+  "function": "parse_diff",
+  "claim": "git quotes paths with non-ASCII characters in the ---/+++ headers, as \"a/\\303\\251.py\". parse_diff strips two characters and leaves a stray quote, giving a wrong path.",
+  "claims": [
+   2
+  ],
+  "result_now": "('/\\\\303\\\\251.py\"', '/\\\\303\\\\251.py\"')",
+  "what_goes_wrong": "With git's default core.quotepath, a changed file with a non-ASCII name appears as a quoted octal path, which parse_diff turns into a garbage path (stray quote, no a/ strip), so that file is skipped by cmd_targets --changed.",
+  "caller": "project/tool/hpflow/commands.py:335",
+  "severity": "medium",
+  "fix_idea": "Pass -c core.quotepath=false to git diff and unquote C-style quoted paths (strip quotes, decode escapes) before removing the a/ b/ prefix.",
+  "repros": [
+   {
+    "finding": "14240585150320709544-2",
+    "k": 2,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/14240585150320709544/finding_2.py",
+    "result_now": "('/\\\\303\\\\251.py\"', '/\\\\303\\\\251.py\"')"
+   }
+  ]
+ },
+ {
+  "id": "18013889301795007084",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "The search for related tests misses a test file that imports the changed module with a top-level `from mod import x` (no dot, module not in the file name), so its failing tests are never run and the fix is accepted.",
+  "claims": [
+   1
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "A repository test file that does `from mod import f` (flat layout, module not in file name) is not selected as related, so a fix that breaks it is accepted instead of rejected.",
+  "caller": "project/tool/hpflow/commands.py:867",
+  "severity": "medium",
+  "fix_idea": "Also match a `from <dotted path ending in stem> import ...` line in the related-test regex.",
+  "repros": [
+   {
+    "finding": "10037347622470429817-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta2/runs/10037347622470429817/finding_1.py",
+    "result_now": "'accept'"
+   }
+  ]
+ }
+]

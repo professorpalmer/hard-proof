@@ -650,6 +650,77 @@ def cost_cut_text(cut: list) -> list:
             f"<li><strong>Limits.</strong> One range and one run for each setting. The {lean['confirmed_bugs']} bugs of the lean run and the {first['confirmed_bugs']} of the first run are not the same set: 5 are in the two, which shows the variation between two runs of a review.</li></ul>"]
 
 
+def release_050_text(rel: dict) -> list:
+    """Version 0.5 of the tool: no orchestrator, the cost, the test of the tool on its own release, and one
+    comparison with two review tools (v2/release_050.py)."""
+    if not rel:
+        return []
+    old, *new = rel["same_range"]
+    cost = sum(r["cost_usd"] for r in new) / len(new)
+    wall = sum(r["wall_seconds"] for r in new) / len(new)
+    known = {k["arm"]: k for k in rel["known_bugs"]}
+    lean, final, flow = known["lean"], known["direct_final"], known["tools"]
+    sa = rel["self_audit"]
+    rounds = sa["rounds"]
+    live = rel["live_runs"]
+    h = rel["head_to_head"]
+    arms, runs = h["arms"], h["runs"]
+    names = {"hpf": "<code>hpf audit</code> (version 0.4 defaults)", "claude": "Claude Code, <code>/code-review high</code>",
+             "codex": "Codex, <code>codex review</code>"}
+    out = ["<h3>Version 0.5: no orchestrator, and any agent tool</h3>",
+           "<p>Until version 0.4, a Puppetmaster flow started each worker of <code>hpflow</code>. Version 0.5 starts the workers itself. "
+           "It needs one agent tool with a login, and no other package. It has three adapters: Claude Code (the default), Codex, and a command template "
+           "for any other agent tool (<code>--adapter command --agent-cmd</code>). "
+           f"We ran the audit live with each adapter on the same {live[0]['targets']} functions: " +
+           ", ".join(f"{r['adapter']} confirmed {r['confirmed_bugs']} bugs" for r in live) +
+           ". The fix step has a live run on Claude Code only.</p>",
+           "<p>The change of the runner must not change the result. We gave one set of worker arguments to the two runners on the 95 known bugs of Section 12. "
+           "A finding detects a known bug when its repro gives a different result before and after the real fix, so no agent is the judge. "
+           f"The runner of version 0.5 detected {final['detected']} of {final['bugs']}, and the Puppetmaster flow detected {flow['detected']} of {flow['bugs']}.</p>",
+           "<h3>The cost of version 0.5</h3>",
+           "<p>A worker session sends its start context again with each turn, and most of that context was the list of tools of the agent tool. "
+           "Version 0.5 gives a worker six tools (Bash, Read, Grep, Glob, Write, Edit) and medium effort. We then ran the audit of the 20 functions again, three times.</p>",
+           table(["Setting", "Sessions", "Cost", "Time on the clock", "Findings with a repro", "Confirmed bugs"],
+                 [[r["setting"], str(r["review_sessions"] + r["verifier_sessions"]), money(r["cost_usd"]),
+                   f"{r['wall_seconds'] / 60:.1f} min", str(r["findings"]), str(r["confirmed_bugs"])] for r in rel["same_range"]]),
+           f"<p>The mean of the three runs is {money(cost)} and {wall / 60:.1f} minutes, against {money(old['cost_usd'])} and {old['wall_seconds'] / 60:.1f} minutes: "
+           f"{100 * (1 - cost / old['cost_usd']):.0f} percent less cost. The count of confirmed bugs changes from run to run ({', '.join(str(r['confirmed_bugs']) for r in new)} against {old['confirmed_bugs']}), "
+           "so this table alone does not show that the cheaper worker finds as much. The 95 known bugs do: "
+           f"on the first {lean['first_48']['runs']} of them the worker of version 0.4 detected {lean['first_48']['detected']} for {money(lean['first_48']['cost_usd'])}, "
+           f"and the worker of version 0.5 detected {final['first_48']['detected']} for {money(final['first_48']['cost_usd'])}. "
+           f"A reviewer on Haiku detected {known['haiku']['detected']} of {known['haiku']['bugs']}, and low effort detected {known['effort_low']['detected']} of {known['effort_low']['bugs']}, so neither is a default.</p>",
+           "<p class=\"small\">We also tried a flag that takes the changing parts out of the system prompt. With the tool list it lost confirmed bugs in three of three audits, so it is not in the default. Costs are API-equivalent.</p>",
+           "<h3>The tool on its own release</h3>",
+           f"<p>Before the release of version 0.5 we ran <code>hpf</code> on its own release range, with the gate as the rule for the release. Then we ran it on each set of fixes. "
+           f"The {len(rounds)} rounds confirmed {sa['confirmed_bugs']} bugs for {money(sa['cost_usd'])}. At the release commit the gate passes for each round: "
+           f"{sa['closed_by_repro']} bugs are closed by their repro, and {sa['waived']} have a waiver (their repro calls a function that a fix removed).</p>",
+           table(["Round", "What it audited", "Functions", "Findings with a repro", "Confirmed bugs", "Of medium or high severity", "Cost"],
+                 [[str(r["round"]), r["what"], str(r["targets"]), str(r["findings"]), str(r["confirmed_bugs"]),
+                   str(r["confirmed_by_severity"].get("medium", 0) + r["confirmed_by_severity"].get("high", 0)), money(r["cost_usd"])] for r in rounds]),
+           "<ul>"
+           "<li><strong>The count does not go to zero fast.</strong> A reviewer reads the whole function each time one of its lines changes, and each pass finds other faults. "
+           f"On the 95 known bugs, the two passes with one set of arguments detected {rel['two_passes']['each'][0]} and {rel['two_passes']['each'][1]}, and {rel['two_passes']['together']} together. "
+           "So a round on the fixes also finds older gaps of the functions that the fixes touched. The severity goes down from round to round.</li>"
+           "<li><strong>A fix of one case is not a fix.</strong> Three readers of outside text (git names, the Codex configuration, test imports) failed on a new input form in each of the first rounds. "
+           "We then replaced each one with a form that has no such cases: the NUL-separated lists of git, a scanner that knows the strings of TOML, and the Python parser.</li>"
+           "<li><strong>The stop rule was written before the last rounds.</strong> A release needs a round with no bug that the fixes of the round before made, and with no bug of medium or high severity. "
+           "Round 6 did not pass this rule: two of its bugs were gaps of code from round 5. Round 7 confirmed nothing.</li>"
+           "<li><strong>CI found two faults of ours that this Mac did not show.</strong> The audit job in CI passed with 12 failed workers, because the gate passed with no review report. "
+           "The gate now counts a review run with no valid report as failed. And one new test passed here and failed on four systems, because it depended on the time of a file.</li></ul>",
+           "<h3>One comparison with two review tools</h3>",
+           f"<p>We gave one release range of Puppetmaster ({h['range']}, 20 changed functions) to three tools, with one run each. "
+           "The findings of the three went into one list with no tool name and no repro, in a random order. Two verifier agents on different models judged each claim, and a claim counts when the two said \"real\" with a caller. "
+           "We wrote the rules before the runs of the two other tools.</p>",
+           table(["Tool", "Findings", "Confirmed distinct bugs", "Bugs that only this tool found", "Time on the clock", "Cost"],
+                 [[names[a], str(arms[a]["findings"]), str(arms[a]["confirmed_distinct_bugs"]), str(arms[a]["only_this_arm"]),
+                   f"{old['wall_seconds'] if a == 'hpf' else runs[a]['seconds']} s",
+                   money(runs[a].get("cost_usd_api_equivalent"))] for a in ("hpf", "claude", "codex")]),
+           f"<p class=\"small\">The three tools together found {h['union_distinct_bugs']} distinct bugs. Each of the two other tools found one bug that <code>hpf</code> missed. "
+           "Limits: one range, one run for each tool, one owner, and the models are not the same. The <code>hpf</code> run was a stored run of version 0.4, and its findings got new verdicts in this blind step. "
+           f"<code>hpf</code> cost about {runs['hpf']['cost_usd_api_equivalent'] / runs['claude']['cost_usd_api_equivalent']:.0f} times the Claude Code review, so it is the more thorough tool here and not the cheaper one. The Codex run was on a subscription and reports no cost.</p>"]
+    return out
+
+
 def sec_use(ls: dict) -> str:
     """Section 14: the recommendation for daily work and how to use the tools."""
     v2 = ROOT / "v2"
@@ -665,6 +736,9 @@ def sec_use(ls: dict) -> str:
     audit_cost = hp["review_cost_usd"] + hp["verify_cost_usd"]
     cut = json.loads((v2 / "cost_cut.json").read_text())["runs"] if (v2 / "cost_cut.json").exists() else []
     lean = cut[-1] if cut else None
+    rel = json.loads((v2 / "release_050.json").read_text()) if (v2 / "release_050.json").exists() else {}
+    now = rel["same_range"][1:] if rel else []
+    now_cost = sum(r["cost_usd"] for r in now) / len(now) if now else None
     h = ['<h2 id="use">14. What we recommend, and how to use the tools</h2>',
          "<p>This section is our reading of Sections 10 to 13 for daily work. It is a recommendation, and it is not a new result.</p>",
          "<h3>Three rules</h3><ol>",
@@ -673,8 +747,9 @@ def sec_use(ls: dict) -> str:
          f"<li><strong>Do not use laws that an agent writes from documentation as a bug finder for old code.</strong> The pipeline of Section 12 found fewer known bugs than a review for about {times:.0f} times the cost, and in {tri['verdicts']['agreed'].get('misread', 0)} of its {n} live conflicts the law was wrong, not the code.</li></ol>",
          "<h3>What it costs</h3>",
          table(["Step", "Measured cost (API-equivalent)"],
-               [["Review and verifiers for one changed function, with the defaults of today",
-                 f"{money(lean['cost_usd'] / lean['targets'])} ({money(lean['cost_usd'])} for {lean['targets']} functions)" if lean
+               [["Review and verifiers for one changed function, with the defaults of today (version 0.5)",
+                 f"{money(now_cost / now[0]['targets'])} ({money(now_cost)} for {now[0]['targets']} functions, mean of {len(now)} runs)" if now
+                 else f"{money(lean['cost_usd'] / lean['targets'])} ({money(lean['cost_usd'])} for {lean['targets']} functions)" if lean
                  else f"{money(audit_cost / hp['targets'])} ({money(audit_cost)} for {hp['targets']} functions)"],
                 [f"The first audit of that range with its fix step: {hp['targets']} functions, {hp['confirmed']} confirmed bugs, {hp['fixes_at_grade_3']} fixes", money(audit_cost + hp["fix_cost_usd"])],
                 ["Two verifiers for one review finding", f"{money(ls['verifier_cost_usd'] / ls['findings_live_on_newest_dev'])} ({money(ls['verifier_cost_usd'])} for {ls['findings_live_on_newest_dev']} findings)"],
@@ -682,6 +757,7 @@ def sec_use(ls: dict) -> str:
                 ["The proof of one decision table, written by the pilot", "no worker cost"]]),
          "<p class=\"small\">These are costs on two Python products with Claude models. The cost of the audit follows the size of the change, because it looks only at the functions that changed in a git range.</p>",
          *cost_cut_text(cut),
+         *release_050_text(rel),
          "<h3>The gate</h3>",
          "<p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>"]
     if len(gate) == 2:
@@ -701,11 +777,11 @@ def sec_use(ls: dict) -> str:
           "hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next\n"
           "hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs\n"
           "hpf gate  --out ~/audits/next --ref HEAD</pre>",
-          "<p>The package <code>hpflow</code> is on PyPI and has the two commands <code>hpf</code> and <code>hp</code>. The name <code>hardproof</code> on PyPI is a different project that is not related to this work. The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>",
+          "<p>The package <code>hpflow</code> is on PyPI and has the two commands <code>hpf</code> and <code>hp</code>. The name <code>hardproof</code> on PyPI is a different project that is not related to this work. The audit and the fix step need one agent tool with a login: Claude Code, Codex, or another tool through a command template. They need no other package. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>",
           "<h3>What a pass does not say</h3><ul>",
           "<li>A pass says that each bug that two verifier agents confirmed is closed or waived. It does not say that the code has no bug. The best review arm of Section 12 found 44 of 95 known bugs.</li>",
           "<li>The fix step can make a wrong fix that passes its check and its judge. Section 13 has five. A human must review each fix before the merge, and <code>hpflow</code> does not commit or merge.</li>",
-          "<li>The tools are a first version. They work on Python functions, the workers are Claude models through Claude Code, and we tested them on our own two products only.</li></ul>"]
+          "<li>The tools are a first version. They work on Python functions. Most of our runs used Claude models through Claude Code, and we tested the tools on our own products only.</li></ul>"]
     return "\n".join(h)
 
 

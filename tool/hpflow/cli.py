@@ -7,9 +7,11 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from . import adapters
 from . import commands as c
-from .common import DEFAULT_CONCURRENCY, StepError, UsageError
-from .runner import PuppetmasterRunner, Runner
+from .common import DEFAULT_CONCURRENCY, StepError, UsageError, read_json
+from .direct import DirectRunner, check_template
+from .runner import Runner
 
 
 class Parser(argparse.ArgumentParser):
@@ -21,15 +23,33 @@ def add_common(p: argparse.ArgumentParser) -> None:
     p.add_argument("--out", required=True, help="the audit folder")
     p.add_argument("--redo", action="store_true", help="run the workers again, also when a result is stored")
     p.add_argument("--user-settings", dest="lean", action="store_false", default=True,
-                   help="give each worker the Claude Code settings, rules, MCP servers and skills of the user; "
-                        "the default is a lean worker with none of them")
+                   help="give each worker the settings, rules, MCP servers and skills of the user (Claude Code), or "
+                        "the Codex home of the user (Codex); the default is a lean worker with none of them")
     p.add_argument("--concurrency", type=int, default=DEFAULT_CONCURRENCY,
-                   help=f"the most worker flows that run at one time (default {DEFAULT_CONCURRENCY})")
+                   help=f"the most workers that run at one time (default {DEFAULT_CONCURRENCY})")
+
+
+MODEL_HELP = ("a short Claude Code name (haiku, sonnet, opus) with the default adapter, or a model name that the "
+              "agent tool knows")
+
+
+def add_adapter(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--adapter", choices=list(adapters.ADAPTERS),
+                   help="the agent tool of the workers: claude-code (the claude command), codex (the codex command), or "
+                        "command (any tool, with --agent-cmd). The option becomes the adapter of the audit folder. "
+                        f"Default: the adapter of the audit folder, else {adapters.DEFAULT_ADAPTER}")
+    p.add_argument("--agent-cmd", help="the command line of --adapter command, with the placeholders {model}, {folder} "
+                                       "and {prompt_file}. The task text is also on its standard input. It is stored "
+                                       "in the audit folder like --adapter")
+    p.add_argument("--effort", choices=list(adapters.EFFORTS), default=adapters.DEFAULT_EFFORT,
+                   help=f"the reasoning effort of claude-code and codex workers (default {adapters.DEFAULT_EFFORT})")
 
 
 def add_init(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repo", required=True)
     p.add_argument("--ref", required=True)
+    p.add_argument("--import-root", help="the folder that holds the top-level package when it is not the repository "
+                                         "root, for example src")
     p.add_argument("--paths", nargs="+")
     p.add_argument("--python")
     p.add_argument("--test-cmd", help="template with {python} and {tests}")
@@ -44,16 +64,31 @@ def add_targets(p: argparse.ArgumentParser, required: bool = True) -> None:
     p.add_argument("--max", type=int, dest="max_n")
 
 
+def positive_int(text: str) -> int:
+    """An argparse type for a whole number of 1 or more."""
+    try:
+        n = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid int value: {text!r}") from None
+    if n < 1:
+        raise argparse.ArgumentTypeError("must be 1 or more")
+    return n
+
+
 def add_review(p: argparse.ArgumentParser) -> None:
-    p.add_argument("--model", default="sonnet")
+    p.add_argument("--model", help=f"the reviewer model (default sonnet on claude-code): {MODEL_HELP}")
     p.add_argument("--shell", dest="shell", action="store_true", default=True)
     p.add_argument("--no-shell", dest="shell", action="store_false")
-    p.add_argument("--passes", type=int, default=1)
+    p.add_argument("--passes", type=positive_int, default=1)
     p.add_argument("--repro-timeout", type=float, default=60)
     p.add_argument("--group", choices=["function", "file"], default="function",
                    help="one reviewer and verifier session for each function (default), or for the functions of each file. "
                         "The file form costs less and found fewer bugs in our test")
-    p.add_argument("--group-size", type=int, default=6, help="the most functions of one file in one reviewer session")
+    p.add_argument("--group-size", type=positive_int, default=6, help="the most functions of one file in one reviewer session")
+    p.add_argument("--short-prompt", action="store_true",
+                   help="Claude Code only: the reviewer gets a short system prompt and a line that tells it to read less. "
+                        "In our test a review cost about 25 percent less and found 29 to 35 of 95 known bugs, "
+                        "against 34 to 36 with the default prompt")
 
 
 def add_verify_group(p: argparse.ArgumentParser) -> None:
@@ -61,7 +96,8 @@ def add_verify_group(p: argparse.ArgumentParser) -> None:
 
 
 def add_verify(p: argparse.ArgumentParser) -> None:
-    p.add_argument("--models", nargs="+", default=["sonnet", "opus"])
+    p.add_argument("--models", nargs="+", help=f"two verifier models or more (default sonnet opus on claude-code), "
+                                                f"the first runs first: {MODEL_HELP}")
     p.add_argument("--all-verifiers", dest="staged", action="store_false", default=True,
                    help="run each verifier for each group; the default runs the later verifiers only where the first says real")
 
@@ -69,8 +105,8 @@ def add_verify(p: argparse.ArgumentParser) -> None:
 def add_fix(p: argparse.ArgumentParser) -> None:
     p.add_argument("--base")
     p.add_argument("--only", nargs="+")
-    p.add_argument("--model", default="opus", dest="fix_model")
-    p.add_argument("--judge-model", default="sonnet")
+    p.add_argument("--model", dest="fix_model", help=f"the fix model (default opus on claude-code): {MODEL_HELP}")
+    p.add_argument("--judge-model", help=f"the judge model (default sonnet on claude-code): {MODEL_HELP}")
     p.add_argument("--rules", help="the rules of the repository for the fix worker and the judge")
 
 
@@ -88,10 +124,11 @@ def add_gate(p: argparse.ArgumentParser) -> None:
 def build_parser() -> Parser:
     parser = Parser(prog="hpflow", description="Take Python functions up the evidence ladder with agent workers.")
     sub = parser.add_subparsers(dest="command", parser_class=Parser)
-    for name, adders in (("init", [add_init]), ("targets", [add_targets]), ("review", [add_review]),
-                         ("verify", [add_verify, add_verify_group]), ("fix", [add_fix]), ("status", []),
-                         ("waive", [add_waive]), ("gate", [add_gate]),
-                         ("audit", [add_init, add_targets, add_review, add_verify])):
+    for name, adders in (("init", [add_init]), ("targets", [add_targets]), ("review", [add_adapter, add_review]),
+                         ("verify", [add_adapter, add_verify, add_verify_group]),
+                         ("fix", [add_adapter, add_fix]),
+                         ("status", []), ("waive", [add_waive]), ("gate", [add_gate]),
+                         ("audit", [add_adapter, add_init, add_targets, add_review, add_verify])):
         p = sub.add_parser(name)
         add_common(p)
         for add in adders:
@@ -110,13 +147,14 @@ def read_group(ctx: c.Context, given: Optional[str]) -> str:
 def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
     cmd = args.command
     if cmd == "init":
-        return c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd)
+        return c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root)
     if cmd == "targets":
         return c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n)
     if cmd == "review":
         if args.passes < 1:
             raise UsageError("--passes must be 1 or more")
-        return c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size)
+        return c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
+                                        args.short_prompt)
     if cmd == "verify":
         return c.cmd_verify(ctx, args.models, read_group(ctx, getattr(args, "group", None)), args.staged)
     if cmd == "fix":
@@ -128,11 +166,25 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
     if cmd == "gate":
         return c.cmd_gate(ctx, args.ref, args.repro_timeout)
     if cmd == "audit":
+        if args.passes < 1:
+            raise UsageError("--passes must be 1 or more")
+        # Check the models before init: a usage error must come before the workers of the review run.
+        old = read_json(ctx.out / "audit.json") or {}
+        adapter = args.adapter or old.get("adapter") or adapters.DEFAULT_ADAPTER
+        template = args.agent_cmd or old.get("agent_cmd")
+        adapters.check(adapter, template)
+        if adapter == adapters.COMMAND:
+            check_template(str(template))
+        adapters.model_id(adapter, adapters.model_or_default(adapter, args.model, "sonnet", "--model"))
+        for m in adapters.model_or_default(adapter, args.models, ["sonnet", "opus"], "--models"):
+            adapters.model_id(adapter, m)
+        adapters.payload(adapter, shell=args.shell, lean=ctx.lean, agent_cmd=template)
         steps: List[Dict[str, Any]] = []
         calls: List[Callable[[], Dict[str, Any]]] = [
-            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd),
+            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root),
             lambda: c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n),
-            lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size),
+            lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
+                                        args.short_prompt),
             lambda: c.cmd_verify(ctx, args.models, args.group, args.staged)]
         for call in calls:
             r = call()
@@ -153,8 +205,10 @@ def main(argv: Optional[List[str]] = None, runner: Optional[Runner] = None) -> i
         if args.concurrency < 1:
             raise UsageError("--concurrency must be 1 or more")
         out = Path(args.out).expanduser().resolve()
-        runner = runner or PuppetmasterRunner(out / "graphs", concurrency=args.concurrency)
-        ctx = c.Context(out, runner, redo=args.redo, concurrency=args.concurrency, lean=args.lean)
+        runner = runner or DirectRunner(out / "graphs", concurrency=args.concurrency)
+        ctx = c.Context(out, runner, redo=args.redo, concurrency=args.concurrency, lean=args.lean,
+                        adapter=getattr(args, "adapter", None), agent_cmd=getattr(args, "agent_cmd", None),
+                        effort=getattr(args, "effort", adapters.DEFAULT_EFFORT))
         report = run_command(args, ctx)
         code = 0 if report.get("ok") else 1
     except UsageError as e:

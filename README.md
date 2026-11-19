@@ -26,8 +26,8 @@ hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
 hpf gate  --out ~/audits/next --ref HEAD
 ```
 
-`hpf audit` and `hpf fix` start agent workers through the Puppetmaster command line and Claude Code. `hpf gate`
-makes no model call. For all steps, the costs and the limits, see [Use the tools](https://github.com/professorpalmer/hard-proof/blob/main/docs/USE.md).
+`hpf audit` and `hpf fix` start agent workers with one agent tool that has a login: Claude Code, Codex, or
+another tool through a command template. `hpf gate` makes no model call. For all steps, the costs and the limits, see [Use the tools](https://github.com/professorpalmer/hard-proof/blob/main/docs/USE.md).
 
 ## Index
 

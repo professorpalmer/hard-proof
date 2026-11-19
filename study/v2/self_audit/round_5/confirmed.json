@@ -1,0 +1,140 @@
+[
+ {
+  "id": "02792992148304392446",
+  "target": "14443072037502298895",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "lean_config",
+  "claim": "A top-level table written as an inline table (mcp_servers = {...}) is not dropped, because only the key notify is checked outside of table headers.",
+  "claims": [
+   2
+  ],
+  "result_now": "'mcp_servers = {a = {command = \"x\"}}\\nmodel = \"m\"\\n'",
+  "what_goes_wrong": "A user who writes mcp_servers (or plugins, hooks...) as a top-level inline table or dotted key keeps those MCP servers in the lean home, so workers inherit what the lean home promises to drop.",
+  "caller": "project/tool/hpflow/codexhome.py:180",
+  "severity": "medium",
+  "fix_idea": "Also drop top-level keys whose first dotted segment is one of the dropped table names, treating them as dropped keys like notify.",
+  "repros": [
+   {
+    "finding": "13006414796707991604-2",
+    "k": 2,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/13006414796707991604/finding_2.py",
+    "result_now": "'mcp_servers = {a = {command = \"x\"}}\\nmodel = \"m\"\\n'"
+   }
+  ]
+ },
+ {
+  "id": "12854089175111626589",
+  "target": "14443072037502298895",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "lean_config",
+  "claim": "A top-level key written with a quoted name (\"notify\" = [...]) is the same key as notify in TOML but is not dropped.",
+  "claims": [
+   3
+  ],
+  "result_now": "'\"notify\" = [\"a\"]\\nmodel = \"m\"\\n'",
+  "what_goes_wrong": "A top-level key written as \"notify\" (quoted, same key in TOML) is kept, so the user's notify program still runs from worker homes.",
+  "caller": "project/tool/hpflow/codexhome.py:180",
+  "severity": "low",
+  "fix_idea": "Strip surrounding single or double quotes from the key name before comparing with DROPPED_TOP_KEYS.",
+  "repros": [
+   {
+    "finding": "13006414796707991604-3",
+    "k": 3,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/13006414796707991604/finding_3.py",
+    "result_now": "'\"notify\" = [\"a\"]\\nmodel = \"m\"\\n'"
+   }
+  ]
+ },
+ {
+  "id": "10617429218003040524",
+  "target": "00360003531955294043",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_fix",
+  "claim": "slug_of (used by cmd_fix for the worktree, branch and test file name) returns an empty string for a file whose stem has only underscores, such as _.py. The worktree path ctx.out/fix/'' is then the shared fix folder itself, and the test file becomes test_hpfix_.py. A rerun would remove the whole fix folder, including other files' worktrees.",
+  "claims": [
+   1
+  ],
+  "result_now": "''",
+  "what_goes_wrong": "For a confirmed bug in a file like _.py (or _/_.py) slug_of returns '' because '_.py' passes the module-path regex, so cmd_fix uses ctx.out/fix itself as the worktree and a rerun does shutil.rmtree/worktree remove on the folder holding every other file's worktree.",
+  "caller": "project/tool/hpflow/cli.py:161",
+  "severity": "low",
+  "fix_idea": "In slug_of, add the digest suffix whenever the slug is empty (e.g. `if unique or not slug or not re.fullmatch(...)`).",
+  "repros": [
+   {
+    "finding": "14006183947072358783-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/14006183947072358783/finding_1.py",
+    "result_now": "''"
+   }
+  ]
+ },
+ {
+  "id": "04343606724182036353",
+  "target": "01839987994575891253",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_targets",
+  "claim": "functions_of only walks the top-level body and class bodies, so a function defined inside a module-level if/try/with block is never a target. `--file` skips both `helper` definitions in the repro, and `--function pkg/m.py:helper` raises UsageError (no function). `--changed` never targets them either.",
+  "claims": [
+   1
+  ],
+  "result_now": "['pkg/m.py:plain']",
+  "what_goes_wrong": "functions_of only recurses into module-level def and class bodies, so functions defined inside a module-level if/try/with/else block (e.g. platform or ImportError fallbacks) are silently never audited by --file or --changed, and --function raises UsageError 'no function'.",
+  "caller": "project/tool/hpflow/cli.py:152",
+  "severity": "low",
+  "fix_idea": "In functions_of's walk, also recurse into the bodies of If/Try/With/For/While (body, orelse, handlers, finalbody) with the same prefix, but not into function bodies.",
+  "repros": [
+   {
+    "finding": "04272886640898278942-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/04272886640898278942/finding_1.py",
+    "result_now": "['pkg/m.py:plain']"
+   }
+  ]
+ },
+ {
+  "id": "03350710598821274975",
+  "target": "08960885625160912820",
+  "file": "tool/hpflow/common.py",
+  "function": "git",
+  "claim": "git() returns output decoded with decode(), which turns every CR into LF, so NUL-separated (-z) output with a file name that contains a carriage return gives a wrong name (and git show of a CRLF file loses its CRs). Names from -z output are meant to be the real names.",
+  "claims": [
+   1
+  ],
+  "result_now": "(0, 'c\\nd\\x00')",
+  "what_goes_wrong": "A file name containing a CR is returned from -z output with the CR turned into LF, so the later git show/diff for that name fails or the file is skipped/misreported.",
+  "caller": "project/tool/hpflow/commands.py:288",
+  "severity": "low",
+  "fix_idea": "Have git() return output without newline translation (decode UTF-8 only), or add a raw option used by the -z callers and git show.",
+  "repros": [
+   {
+    "finding": "11459415063472640907-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/11459415063472640907/finding_1.py",
+    "result_now": "(0, 'c\\nd\\x00')"
+   }
+  ]
+ },
+ {
+  "id": "17310544742041783181",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "Related tests are chosen by the file stem only. For a changed package file such as pkg/__init__.py the stem is '__init__', so tests that do 'import pkg' are never run and a fix that breaks them is accepted.",
+  "claims": [
+   1
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "For a fix in a package file such as pkg/__init__.py the stem is '__init__', so tests that 'import pkg' are not found as related and a fix that breaks them gets verdict 'accept'.",
+  "caller": "project/tool/hpflow/commands.py:902",
+  "severity": "medium",
+  "fix_idea": "When the stem is '__init__', use the parent folder name (the package) as the stem, so 'import pkg' and 'from pkg import x' match in imports_module.",
+  "repros": [
+   {
+    "finding": "12607587550119806763-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta4/runs/12607587550119806763/finding_1.py",
+    "result_now": "'accept'"
+   }
+  ]
+ }
+]

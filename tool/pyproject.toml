@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hpflow"
-version = "0.4.2"
-description = "A proof gate for one Python function (Lean 4), and an audit ladder that takes review findings to fixes."
+version = "0.5.0"
+description = "A proof gate for one Python function (Lean 4), and an audit ladder that takes review findings to fixes with the agent command line you have (Claude Code, Codex, or any other)."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }

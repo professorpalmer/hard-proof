@@ -1,0 +1,117 @@
+[
+ {
+  "id": "06045925156076217301",
+  "target": "10753518477892660378",
+  "file": "tool/hpflow/codexhome.py",
+  "function": "toml_scan",
+  "claim": "A multi-line string whose content ends with a quote character (TOML closes it with 4 or 5 quotes, e.g. a = [\"\"\"x\"\"\"\"]) is closed at the first three quotes; the extra quote starts a basic string that swallows the following ']' so depth stays 1. Same for ''' literal strings.",
+  "claims": [
+   1
+  ],
+  "result_now": "(1, None)",
+  "what_goes_wrong": "A multi-line string ending in a quote (valid TOML, e.g. a = [\"\"\"x\"\"\"\"]) leaves depth at 1, so lean_config treats following lines as inside an array and a later top-level `notify = ...` key is not dropped from the worker's config.",
+  "caller": "project/tool/hpflow/codexhome.py:174",
+  "severity": "low",
+  "fix_idea": "After finding the closing delimiter, extend it over any additional run of the same quote character (up to 2 more) before resuming the scan.",
+  "repros": [
+   {
+    "finding": "03015460918048006294-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta3/runs/03015460918048006294/finding_1.py",
+    "result_now": "(1, None)"
+   }
+  ]
+ },
+ {
+  "id": "02747412169679331828",
+  "target": "01839987994575891253",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_targets",
+  "claim": "In --changed mode, a function whose last body lines were deleted is missed when git reports the deletion as a mixed hunk (old lines removed and a new line added right after the function, e.g. a comment replacing the blank line). hunk_ranges records no deleted_ranges for a mixed hunk and the new line lies outside the function, so the changed function is not a target.",
+  "claims": [
+   1
+  ],
+  "result_now": "[]",
+  "what_goes_wrong": "When a commit removes the last lines of a function and adds a line just outside it (a mixed hunk), `hpflow targets --changed A..B` leaves out the changed function, so it is never reviewed.",
+  "caller": "project/tool/hpflow/cli.py:152",
+  "severity": "medium",
+  "fix_idea": "In hunk_ranges, add the old range to deleted_ranges whenever old_count > 0, not only when new_count is 0. Then the old function's overlap with it marks the new function as changed.",
+  "repros": [
+   {
+    "finding": "01102839799142475586-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta3/runs/01102839799142475586/finding_1.py",
+    "result_now": "[]"
+   }
+  ]
+ },
+ {
+  "id": "18355514963695380635",
+  "target": "02475893164349943637",
+  "file": "tool/hpflow/commands.py",
+  "function": "changed_files",
+  "claim": "The per-file `git diff` gets the file name as a pathspec, so glob characters in a name (e.g. `a*.py`) are expanded. The diff of that file then also includes other files that match (`ab.py`), and their hunks are added to its ranges.",
+  "claims": [
+   1
+  ],
+  "result_now": "[('a*.py', [(2, 2), (2, 3)]), ('ab.py', [(2, 3)])]",
+  "what_goes_wrong": "A changed file whose name has glob characters (*, ?, [) gets the hunks of other files that match its name as a pathspec, so `hpflow targets --changed` picks functions that did not change in that file.",
+  "caller": "project/tool/hpflow/commands.py:360",
+  "severity": "low",
+  "fix_idea": "Pass the file names as literal pathspecs, e.g. prefix each with `:(literal)` or run git with `--literal-pathspecs`, in the per-file diff and the first diff.",
+  "repros": [
+   {
+    "finding": "17807384810352100000-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta3/runs/17807384810352100000/finding_1.py",
+    "result_now": "[('a*.py', [(2, 2), (2, 3)]), ('ab.py', [(2, 3)])]"
+   }
+  ]
+ },
+ {
+  "id": "17438915523133554457",
+  "target": "16157054446530292974",
+  "file": "tool/hpflow/commands.py",
+  "function": "hunk_ranges",
+  "claim": "hunk_ranges splits the diff with str.splitlines(), which also breaks at form feed, \\x1c-\\x1e, \\x85 and \\u2028/\\u2029. A changed line that holds such a character followed by text like '@@ -50 +50 @@' is read as a hunk header, so a fake range is added.",
+  "claims": [
+   1
+  ],
+  "result_now": "{'old_ranges': [(3, 3), (50, 50)], 'new_ranges': [(3, 3), (50, 50)], 'deleted_ranges': []}",
+  "what_goes_wrong": "A changed source line containing a form feed, \\x1c-\\x1e, \\x85 or \\u2028/\\u2029 followed by text like '@@ -50 +50 @@' is split into its own line by splitlines() and read as a hunk header, adding a fake range so unrelated functions are reported as changed.",
+  "caller": "project/tool/hpflow/commands.py:305",
+  "severity": "low",
+  "fix_idea": "Split only on '\\n' (diff.split('\\n')) so content characters cannot create new lines.",
+  "repros": [
+   {
+    "finding": "01581086511058079815-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta3/runs/01581086511058079815/finding_1.py",
+    "result_now": "{'old_ranges': [(3, 3), (50, 50)], 'new_ranges': [(3, 3), (50, 50)], 'deleted_ranges': []}"
+   }
+  ]
+ },
+ {
+  "id": "14363566604519097405",
+  "target": "14278923741692573217",
+  "file": "tool/hpflow/fixcheck.py",
+  "function": "check",
+  "claim": "check() runs at most 12 related test files (related[:12]) and silently drops the rest without reporting them, so a failing related test beyond the first 12 is never run and the change is accepted although the docstring requires that the tests naming the changed module must pass.",
+  "claims": [
+   1
+  ],
+  "result_now": "'accept'",
+  "what_goes_wrong": "When more than 12 repository tests name the changed module, the extras are dropped without a word, so a fix that breaks one of them is accepted although the contract says the related tests must pass.",
+  "caller": "project/tool/hpflow/commands.py:778",
+  "severity": "medium",
+  "fix_idea": "Run all related tests (or in batches), or report the dropped ones in the result like large_test_files_not_run, and reject or flag when some were not run.",
+  "repros": [
+   {
+    "finding": "04908995460398310238-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-self-delta3/runs/04908995460398310238/finding_1.py",
+    "result_now": "'accept'"
+   }
+  ]
+ }
+]

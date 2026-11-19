@@ -1,0 +1,281 @@
+{
+ "mode": "changed",
+ "changed": "b0b8fff..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "14443072037502298895",
+   "file": "tool/hpflow/codexhome.py",
+   "function": "lean_config",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    44,
+    81
+   ],
+   "length": 38,
+   "source": "changed"
+  },
+  {
+   "id": "07705665422700961594",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_init",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    149,
+    211
+   ],
+   "length": 63,
+   "source": "changed"
+  },
+  {
+   "id": "08765864503575113115",
+   "file": "tool/hpflow/commands.py",
+   "function": "parse_diff",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    246,
+    278
+   ],
+   "length": 33,
+   "source": "changed"
+  },
+  {
+   "id": "17600983525471700825",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_review",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    417,
+    529
+   ],
+   "length": 113,
+   "source": "changed"
+  },
+  {
+   "id": "08669459056972566812",
+   "file": "tool/hpflow/commands.py",
+   "function": "fix_key",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    734,
+    739
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "07143527077318763139",
+   "file": "tool/hpflow/commands.py",
+   "function": "fix_graph",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    750,
+    784
+   ],
+   "length": 35,
+   "source": "changed"
+  },
+  {
+   "id": "00360003531955294043",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_fix",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    787,
+    891
+   ],
+   "length": 105,
+   "source": "changed"
+  },
+  {
+   "id": "14278923741692573217",
+   "file": "tool/hpflow/fixcheck.py",
+   "function": "check",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    73,
+    118
+   ],
+   "length": 46,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "LeanConfigTest.test_notify_after_a_top_level_array_of_arrays_is_dropped",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "LeanConfigTest.test_notify_after_a_flat_top_level_array_is_dropped",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "LeanConfigTest.test_notify_in_a_table_after_a_top_level_array_is_kept",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "LeanConfigTest.test_a_bracket_in_a_string_of_a_kept_array",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "LeanConfigTest.test_an_unclosed_kept_array_does_not_keep_a_dropped_table",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "PrepareNotifyTest.test_prepare_drops_notify_after_an_array_of_arrays",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_codexhome.py",
+   "function": "PrepareNotifyTest.test_prepare_keeps_notify_of_a_table",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "CountFixRunner.__init__",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "CountFixRunner.run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixKeyTest.runs",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixKeyTest.test_another_model_judge_model_or_rules_starts_a_worker",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixKeyTest.test_the_same_settings_reuse_the_fix",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixGraphTestCommandTest.task",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixGraphTestCommandTest.test_a_python_path_with_a_space_is_quoted",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FixGraphTestCommandTest.test_a_plain_python_path_stays_as_it_was",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "InitNameTest.init",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "InitNameTest.test_a_package_with_a_non_ascii_name_is_found",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "InitNameTest.test_ascii_packages_keep_their_paths",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.files",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.test_content_lines_in_a_hunk_keep_the_paths",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.test_the_headers_of_the_next_file_are_read",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.test_targets_finds_a_function_changed_only_by_a_deleted_dash_line",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "DiffContentLineTest.test_targets_of_a_plain_deleted_line_stay",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FileChunkReviewTest.rows",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FileChunkReviewTest.test_a_one_function_chunk_drops_findings_on_other_functions",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FileChunkReviewTest.test_a_one_function_chunk_keeps_the_per_function_cap",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_commands.py",
+   "function": "FileChunkReviewTest.test_a_one_function_chunk_keeps_findings_on_its_function",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_fixcheck.py",
+   "function": "RelatedTestSearch.test_a_name_list_import_is_related",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_fixcheck.py",
+   "function": "RelatedTestSearch.test_a_parenthesized_name_list_import_is_related",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_fixcheck.py",
+   "function": "RelatedTestSearch.test_a_name_list_import_of_another_module_is_not_related",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_fixcheck.py",
+   "function": "RelatedTestSearch.test_a_related_test_named_with_test_suffix_is_run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_fixcheck.py",
+   "function": "RelatedTestSearch.test_an_unrelated_test_named_with_test_suffix_is_not_run",
+   "reason": "test file"
+  }
+ ]
+}

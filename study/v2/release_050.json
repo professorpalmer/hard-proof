@@ -1,0 +1,508 @@
+{
+ "version": "0.5.0",
+ "commit": "e0dd1d3",
+ "self_audit": {
+  "rounds": [
+   {
+    "folder": "audit-hpflow-self-full",
+    "commit": "2d8c14b",
+    "range": "hpflow-v0.4.2..HEAD",
+    "targets": 86,
+    "findings": 39,
+    "confirmed_bugs": 23,
+    "confirmed_by_severity": {
+     "medium": 16,
+     "low": 6,
+     "high": 1
+    },
+    "review_sessions": 86,
+    "verifier_sessions": 56,
+    "review_cost_usd": 7.47,
+    "verify_cost_usd": 8.35,
+    "cost_usd": 15.82,
+    "worker_seconds": 4265,
+    "wall_seconds": 583,
+    "round": 1,
+    "what": "The release range",
+    "gate": {
+     "verdict": "pass",
+     "closed": 23,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta",
+    "commit": "fffdee7",
+    "range": "fade222..HEAD",
+    "targets": 24,
+    "findings": 15,
+    "confirmed_bugs": 10,
+    "confirmed_by_severity": {
+     "low": 4,
+     "medium": 6
+    },
+    "review_sessions": 24,
+    "verifier_sessions": 23,
+    "review_cost_usd": 2.43,
+    "verify_cost_usd": 3.24,
+    "cost_usd": 5.66,
+    "worker_seconds": 1512,
+    "wall_seconds": 257,
+    "round": 2,
+    "what": "The fixes of round 1",
+    "gate": {
+     "verdict": "pass",
+     "closed": 9,
+     "open": 0,
+     "waived": 1
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta2",
+    "commit": "bc1f34a",
+    "range": "b0b8fff..HEAD",
+    "targets": 8,
+    "findings": 8,
+    "confirmed_bugs": 7,
+    "confirmed_by_severity": {
+     "medium": 6,
+     "low": 1
+    },
+    "review_sessions": 8,
+    "verifier_sessions": 11,
+    "review_cost_usd": 1.1,
+    "verify_cost_usd": 1.69,
+    "cost_usd": 2.79,
+    "worker_seconds": 882,
+    "wall_seconds": 213,
+    "round": 3,
+    "what": "The fixes of round 2",
+    "gate": {
+     "verdict": "pass",
+     "closed": 5,
+     "open": 0,
+     "waived": 2
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta3",
+    "commit": "6e775a1",
+    "range": "bc1f34a..HEAD",
+    "targets": 10,
+    "findings": 10,
+    "confirmed_bugs": 5,
+    "confirmed_by_severity": {
+     "low": 3,
+     "medium": 2
+    },
+    "review_sessions": 10,
+    "verifier_sessions": 14,
+    "review_cost_usd": 1.17,
+    "verify_cost_usd": 1.88,
+    "cost_usd": 3.05,
+    "worker_seconds": 1007,
+    "wall_seconds": 223,
+    "round": 4,
+    "what": "The fixes of round 3",
+    "gate": {
+     "verdict": "pass",
+     "closed": 5,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta4",
+    "commit": "82c9d81",
+    "range": "6e775a1..HEAD",
+    "targets": 13,
+    "findings": 12,
+    "confirmed_bugs": 6,
+    "confirmed_by_severity": {
+     "medium": 2,
+     "low": 4
+    },
+    "review_sessions": 13,
+    "verifier_sessions": 15,
+    "review_cost_usd": 1.37,
+    "verify_cost_usd": 2.29,
+    "cost_usd": 3.66,
+    "worker_seconds": 1332,
+    "wall_seconds": 265,
+    "round": 5,
+    "what": "The fixes of round 4",
+    "gate": {
+     "verdict": "pass",
+     "closed": 6,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta5",
+    "commit": "72f53d4",
+    "range": "82c9d81..HEAD",
+    "targets": 14,
+    "findings": 6,
+    "confirmed_bugs": 4,
+    "confirmed_by_severity": {
+     "low": 4
+    },
+    "review_sessions": 14,
+    "verifier_sessions": 10,
+    "review_cost_usd": 1.23,
+    "verify_cost_usd": 1.32,
+    "cost_usd": 2.54,
+    "worker_seconds": 975,
+    "wall_seconds": 208,
+    "round": 6,
+    "what": "The fixes of round 5",
+    "gate": {
+     "verdict": "pass",
+     "closed": 4,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-self-delta6",
+    "commit": "e0dd1d3",
+    "range": "72f53d4..HEAD",
+    "targets": 8,
+    "findings": 3,
+    "confirmed_bugs": 0,
+    "confirmed_by_severity": {},
+    "review_sessions": 8,
+    "verifier_sessions": 3,
+    "review_cost_usd": 0.81,
+    "verify_cost_usd": 0.21,
+    "cost_usd": 1.02,
+    "worker_seconds": 480,
+    "wall_seconds": 107,
+    "round": 7,
+    "what": "The fixes of round 6",
+    "gate": {
+     "verdict": "pass",
+     "closed": 0,
+     "open": 0,
+     "waived": 0
+    }
+   }
+  ],
+  "confirmed_bugs": 55,
+  "closed_by_repro": 52,
+  "waived": 3,
+  "cost_usd": 34.54
+ },
+ "same_range": [
+  {
+   "folder": "audit-pm-1510-lean",
+   "commit": "a1d6041",
+   "range": "v1.50.0..v1.51.1",
+   "targets": 20,
+   "findings": 15,
+   "confirmed_bugs": 8,
+   "confirmed_by_severity": {
+    "medium": 1,
+    "low": 6,
+    "high": 1
+   },
+   "review_sessions": 20,
+   "verifier_sessions": 20,
+   "review_cost_usd": 4.63,
+   "verify_cost_usd": 4.81,
+   "cost_usd": 9.44,
+   "worker_seconds": 1727,
+   "wall_seconds": 627,
+   "setting": "hpflow 0.4.2: lean workers, all tools of Claude Code"
+  },
+  {
+   "folder": "audit-pm-1510-toolsonly",
+   "commit": "a1d6041",
+   "range": "v1.50.0..v1.51.1",
+   "targets": 20,
+   "findings": 12,
+   "confirmed_bugs": 7,
+   "confirmed_by_severity": {
+    "low": 5,
+    "medium": 1,
+    "high": 1
+   },
+   "review_sessions": 20,
+   "verifier_sessions": 18,
+   "review_cost_usd": 3.0,
+   "verify_cost_usd": 2.85,
+   "cost_usd": 5.84,
+   "worker_seconds": 1597,
+   "wall_seconds": 414,
+   "setting": "hpflow 0.5.0: six tools, medium effort"
+  },
+  {
+   "folder": "audit-pm-1510-toolsonly2",
+   "commit": "a1d6041",
+   "range": "v1.50.0..v1.51.1",
+   "targets": 20,
+   "findings": 13,
+   "confirmed_bugs": 5,
+   "confirmed_by_severity": {
+    "low": 4,
+    "medium": 1
+   },
+   "review_sessions": 20,
+   "verifier_sessions": 16,
+   "review_cost_usd": 2.8,
+   "verify_cost_usd": 2.46,
+   "cost_usd": 5.26,
+   "worker_seconds": 1408,
+   "wall_seconds": 360,
+   "setting": "hpflow 0.5.0: six tools, medium effort (run 2)"
+  },
+  {
+   "folder": "audit-pm-1510-toolsonly3",
+   "commit": "a1d6041",
+   "range": "v1.50.0..v1.51.1",
+   "targets": 20,
+   "findings": 11,
+   "confirmed_bugs": 7,
+   "confirmed_by_severity": {
+    "low": 4,
+    "medium": 2,
+    "high": 1
+   },
+   "review_sessions": 20,
+   "verifier_sessions": 16,
+   "review_cost_usd": 2.69,
+   "verify_cost_usd": 2.36,
+   "cost_usd": 5.05,
+   "worker_seconds": 1428,
+   "wall_seconds": 406,
+   "setting": "hpflow 0.5.0: six tools, medium effort (run 3)"
+  }
+ ],
+ "known_bugs": [
+  {
+   "arm": "lean",
+   "what": "hpflow 0.4.2 arguments, first 48 bugs",
+   "bugs": 48,
+   "detected": 17,
+   "other_findings_changed_later": 16,
+   "cost_usd": 7.24,
+   "first_48": {
+    "runs": 48,
+    "detected": 17,
+    "other_changed_later": 16,
+    "cost_usd": 7.24
+   }
+  },
+  {
+   "arm": "direct_final",
+   "what": "hpflow 0.5.0 defaults, all 95 bugs",
+   "bugs": 95,
+   "detected": 36,
+   "other_findings_changed_later": 30,
+   "cost_usd": 10.09,
+   "first_48": {
+    "runs": 48,
+    "detected": 18,
+    "other_changed_later": 16,
+    "cost_usd": 5.25
+   }
+  },
+  {
+   "arm": "tools",
+   "what": "the same arguments through a Puppetmaster flow (0.4 runner), all 95 bugs",
+   "bugs": 95,
+   "detected": 34,
+   "other_findings_changed_later": 25,
+   "cost_usd": 9.86,
+   "first_48": {
+    "runs": 48,
+    "detected": 19,
+    "other_changed_later": 14,
+    "cost_usd": 5.36
+   }
+  },
+  {
+   "arm": "tools_short",
+   "what": "the short reviewer prompt (an option), all 95 bugs",
+   "bugs": 95,
+   "detected": 32,
+   "other_findings_changed_later": 24,
+   "cost_usd": 8.36,
+   "first_48": {
+    "runs": 48,
+    "detected": 17,
+    "other_changed_later": 13,
+    "cost_usd": 4.28
+   }
+  },
+  {
+   "arm": "effort_low",
+   "what": "low effort, first 48 bugs",
+   "bugs": 48,
+   "detected": 15,
+   "other_findings_changed_later": 15,
+   "cost_usd": 4.18,
+   "first_48": {
+    "runs": 48,
+    "detected": 15,
+    "other_changed_later": 15,
+    "cost_usd": 4.18
+   }
+  },
+  {
+   "arm": "haiku",
+   "what": "Haiku 5.5 as reviewer, first 48 bugs",
+   "bugs": 48,
+   "detected": 4,
+   "other_findings_changed_later": 2,
+   "cost_usd": 0.71,
+   "first_48": {
+    "runs": 48,
+    "detected": 4,
+    "other_changed_later": 2,
+    "cost_usd": 0.71
+   }
+  }
+ ],
+ "two_passes": {
+  "arms": [
+   "tools",
+   "direct"
+  ],
+  "each": [
+   34,
+   36
+  ],
+  "together": 45
+ },
+ "live_runs": [
+  {
+   "folder": "claude5",
+   "commit": "a1d6041",
+   "range": null,
+   "targets": 2,
+   "findings": 3,
+   "confirmed_bugs": 3,
+   "confirmed_by_severity": {
+    "low": 3
+   },
+   "review_sessions": 2,
+   "verifier_sessions": 4,
+   "review_cost_usd": 0.18,
+   "verify_cost_usd": 0.64,
+   "cost_usd": 0.82,
+   "worker_seconds": 203,
+   "wall_seconds": 109,
+   "adapter": "Claude Code"
+  },
+  {
+   "folder": "codex5",
+   "commit": "a1d6041",
+   "range": null,
+   "targets": 2,
+   "findings": 3,
+   "confirmed_bugs": 3,
+   "confirmed_by_severity": {
+    "low": 3
+   },
+   "review_sessions": 2,
+   "verifier_sessions": 4,
+   "review_cost_usd": null,
+   "verify_cost_usd": null,
+   "cost_usd": null,
+   "worker_seconds": 348,
+   "wall_seconds": 211,
+   "adapter": "Codex"
+  },
+  {
+   "folder": "audit",
+   "commit": "a1d6041",
+   "range": null,
+   "targets": 2,
+   "findings": 3,
+   "confirmed_bugs": 3,
+   "confirmed_by_severity": {
+    "medium": 2,
+    "low": 1
+   },
+   "review_sessions": 2,
+   "verifier_sessions": 4,
+   "review_cost_usd": null,
+   "verify_cost_usd": null,
+   "cost_usd": null,
+   "worker_seconds": 1704,
+   "wall_seconds": 1203,
+   "adapter": "the command adapter (the tool <code>opencode</code> with a model of OpenRouter)"
+  }
+ ],
+ "head_to_head": {
+  "range": "v1.50.0..v1.51.1",
+  "arms": {
+   "hpf": {
+    "findings": 15,
+    "confirmed_claims": 8,
+    "confirmed_distinct_bugs": 8,
+    "only_this_arm": 7,
+    "bugs": [
+     "covered_hint",
+     "k14",
+     "k15",
+     "k17",
+     "k18",
+     "k23",
+     "k27",
+     "k7"
+    ]
+   },
+   "claude": {
+    "findings": 10,
+    "confirmed_claims": 2,
+    "confirmed_distinct_bugs": 2,
+    "only_this_arm": 1,
+    "bugs": [
+     "covered_hint",
+     "k12"
+    ]
+   },
+   "codex": {
+    "findings": 2,
+    "confirmed_claims": 2,
+    "confirmed_distinct_bugs": 2,
+    "only_this_arm": 1,
+    "bugs": [
+     "covered_hint",
+     "k2"
+    ]
+   }
+  },
+  "union_distinct_bugs": 10,
+  "verifier_cost_usd": 7.88,
+  "runs": {
+   "hpf": {
+    "tool": "hpflow 0.4.0 defaults, lean workers (stored run audit-pm-1510-lean)",
+    "seconds": 1727,
+    "cost_usd_api_equivalent": 9.44,
+    "sessions": 40
+   },
+   "claude": {
+    "tool": "Claude Code 2.1.316, /code-review high main..feature",
+    "model": "claude-opus-5-5",
+    "seconds": 171,
+    "cost_usd_api_equivalent": 0.779,
+    "tool_calls": 18,
+    "findings": 10,
+    "note": "The report says that no finding was checked by a run of code."
+   },
+   "codex": {
+    "tool": "codex-cli 0.160.0, codex review --base main",
+    "model": "gpt-6.1-sol, xhigh (config of the owner)",
+    "seconds": 192,
+    "cost_usd_api_equivalent": null,
+    "findings": 2,
+    "note": "Plan billing, no cost in the output. The report says that both cases were reproduced with focused checks."
+   }
+  }
+ }
+}

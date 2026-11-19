@@ -49,6 +49,8 @@ The output goes to `verify_all.json`.
 | The audit ladder: findings, verdicts, fixes | `v2/ladder_summary.json`, `v2/confirmed_bugs.json`, `v2/CONFIRMED_BUGS.md`, `v2/fix_runs.json` | the stored records |
 | The release gate on a stored audit: fail on the audited release, pass on the next | `v2/gate_live.json` | `hpf gate --out <audit folder> --ref <tag>` (needs the audit folder and a checkout of Puppetmaster) |
 | One release range, three review tools, one blind verify step | `v2/h2h` (rules in `PROTOCOL.md`, result in `result.json`) | `python3 h2h.py summary` in `v2` (reads the stored verdicts, makes no model call) |
+| Cost settings of a review worker on the 95 known bugs, and the direct runner against Puppetmaster | `v2/levers`, `v2/levers.py` | the stored records `v2/levers/score.json` and `v2/levers/score_other.json` (a new score needs the run folders) |
+| Version 0.5 of the tool: the cost of three audits of one range, the live runs of the three adapters, and the audit of the tool on its own release in 7 rounds | `v2/release_050.json`, `v2/self_audit/round_<n>` (the report, the confirmed bugs and the waivers of each round) | `python3 release_050.py --ref <commit>` in `v2` (needs the audit folders; it runs the gate of each round and makes no model call) |
 | Three audits of one range with different session settings | `v2/cost_cut.json`, `v2/cost_cut.py` | `python3 cost_cut.py` (needs the three audit folders) |
 | The proof of the swarm policy table | `v3/swarm_policy`, `v3/swarm_policy_docstring` | `python3 v3/summarize.py --repo <Marionette checkout>` |
 

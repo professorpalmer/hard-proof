@@ -19,9 +19,12 @@ TOOL = Path(__file__).resolve().parent.parent
 if str(TOOL) not in sys.path:
     sys.path.insert(0, str(TOOL))
 
+from hpflow import adapters  # noqa: E402
+from hpflow.adapters import CODEX_NO_NET  # noqa: E402
+from hpflow.direct import DirectRunner  # noqa: E402
 from hpflow.cli import build_parser, main  # noqa: E402
 from hpflow.common import apply_cost_rule, run_group, run_snippet  # noqa: E402
-from hpflow.runner import PuppetmasterRunner, Runner  # noqa: E402
+from hpflow.runner import Runner  # noqa: E402
 
 MOD_A = '''def add(a, b):
     """Return the sum of a and b."""
@@ -95,6 +98,8 @@ class FakeRunner(Runner):
         self.calls: List[Dict[str, Any]] = []
         self.lock = threading.Lock()
         self.first_verdict = "real"
+        self.no_report = False
+        self.first_model = SONNET
 
     def run(self, graph: Dict[str, Any], folder: Path) -> Dict[str, Any]:
         model = graph["defaults"]["model"]
@@ -111,7 +116,7 @@ class FakeRunner(Runner):
             claims = json.loads((folder / "claims.json").read_text())
             out = []
             for c in claims:
-                if model == SONNET:
+                if model == self.first_model:
                     v = {"k": c["k"], "verdict": self.first_verdict, "duplicate_of": 1 if c["k"] == 2 else None,
                          "what_goes_wrong": "add subtracts", "caller": "pkg/mod.py:1", "fix_idea": "use +"}
                 else:
@@ -121,7 +126,7 @@ class FakeRunner(Runner):
             steps = [{"node": "work", "ok": True, "verdict": "PASS", "seconds": 4, "cost_usd": 0.2}]
         else:
             kind = "review"
-            assert (folder / "project" / "pkg" / "mod.py").exists()
+            assert (folder / "project" / "pkg" / "mod.py").exists() or (folder / "project" / "src" / "pkg" / "mod.py").exists()
             findings = [{"n": n, "claim": f"claim {n}", "expected": "5", "confidence": "high"} for n in REPROS]
             if (folder / "functions.json").exists():
                 names = json.loads((folder / "functions.json").read_text())
@@ -130,13 +135,17 @@ class FakeRunner(Runner):
                                 dict(findings[4], function="not_in_the_list")]
                 else:
                     findings = [dict(f, function=names[0]) for f in findings]
-            (folder / "findings.json").write_text(json.dumps(findings))
-            for n, text in REPROS.items():
-                (folder / f"finding_{n}.py").write_text(text)
+            if not self.no_report:
+                (folder / "findings.json").write_text(json.dumps(findings))
+                for n, text in REPROS.items():
+                    (folder / f"finding_{n}.py").write_text(text)
             steps = [{"node": "work", "ok": True, "verdict": "PASS", "seconds": 3, "cost_usd": 0.1}]
+        adapter = graph["defaults"]["adapter"]
         with self.lock:
-            self.calls.append({"kind": kind, "model": model, "folder": str(folder), "graph": graph})
-        return {"status": "done", "steps": steps, "jobs": ["j"], "cost_usd": sum(s.get("cost_usd", 0) for s in steps),
+            self.calls.append({"kind": kind, "model": model, "adapter": adapter, "folder": str(folder), "graph": graph})
+        # Only the Claude Code adapter reports a cost. Another adapter gives an unknown cost, as a real run does.
+        cost = sum(s.get("cost_usd", 0) for s in steps) if adapter == "claude-code" else None
+        return {"status": "done", "steps": steps, "jobs": ["j"], "cost_usd": cost,
                 "seconds": sum(s.get("seconds", 0) for s in steps)}
 
     def count(self, kind: str) -> int:
@@ -229,6 +238,77 @@ class FixCheckTest(unittest.TestCase):
         self.assertEqual(result["large_test_files_not_run"], ["tests/test_mod_big.py"])
 
 
+    def test_a_change_outside_the_write_scope_rejects_the_fix(self):
+        from hpflow import fixcheck
+
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            tree, info = Path(tmp) / "tree", Path(tmp) / "info"
+            (tree / "pkg").mkdir(parents=True)
+            (tree / "tests").mkdir()
+            info.mkdir()
+            (tree / "pkg" / "__init__.py").write_text("")
+            (tree / "pkg" / "mod.py").write_text("def add(a, b):\n    return a - b\n")
+            (tree / "README.md").write_text("old\n")
+            git(tree, "init", "-q", "-b", "main")
+            git(tree, "add", "-A")
+            git(tree, "commit", "-q", "-m", "a")
+            (tree / "pkg" / "mod.py").write_text("def add(a, b):\n    return a + b\n")
+            ok = "import unittest\nfrom pkg.mod import add\n\n\nclass T(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(add(1, 2), 3)\n"
+            (tree / "tests" / "test_hpfix_pkg_mod.py").write_text(ok)
+            (tree / "README.md").write_text("new\n")
+            (tree / "notes with space.txt").write_text("x\n")
+            (info / "spec.json").write_text(json.dumps({"file": "pkg/mod.py", "test_file": "tests/test_hpfix_pkg_mod.py", "python": sys.executable,
+                                                        "test_cmd": "{python} -m unittest {tests}", "bugs": [],
+                                                        "scope": ["pkg/**", "tests/**"]}))
+            result = fixcheck.check(info, tree)
+            self.assertEqual(result["verdict"], "reject", result)
+            self.assertIn("README.md, notes with space.txt", result["problems"][0])
+            # The files of a test run and the files in the scope are not a problem.
+            self.assertNotIn("__pycache__", result["problems"][0])
+            self.assertNotIn("pkg/mod.py", result["problems"][0].split("): ")[1])
+            git(tree, "checkout", "--", "README.md")
+            (tree / "notes with space.txt").unlink()
+            self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
+
+
+class ImportRootTest(FlowCase):
+    """A repository that keeps its package below `src/`."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        (self.repo / "src").mkdir()
+        git(self.repo, "mv", "pkg", "src/pkg")
+        git(self.repo, "commit", "-q", "-m", "src layout")
+        (self.repo / "src" / "pkg" / "mod.py").write_text(MOD_B + "\n\ndef twice(a):\n    return add(a, a)\n")
+        git(self.repo, "commit", "-q", "-am", "c")
+
+    def test_a_package_below_src_is_found_imported_and_graded(self):
+        code, r = self.hpf("init", "--repo", str(self.repo), "--ref", "HEAD", "--import-root", "src",
+                           "--test-cmd", "{python} -m unittest {tests}", "--python", sys.executable)
+        self.assertEqual(code, 0, r)
+        self.assertEqual(r["audit"]["paths"], ["src/pkg", "tests"])
+        self.assertEqual(r["audit"]["import_root"], "src")
+        code, r = self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.assertEqual((code, r["targets"]), (0, ["src/pkg/mod.py:twice"]), r)
+        target = json.loads((self.out / "targets.json").read_text())["targets"][0]
+        self.assertEqual(target["top"], "pkg")
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual(code, 0, r)
+        task = self.runner.calls[0]["graph"]["nodes"][0]["task"]
+        self.assertIn("the folder `project/src/` is the first entry of `sys.path`, so `import pkg` works", task)
+        findings = {f["n"]: f for f in json.loads((self.out / "review.json").read_text())["findings"]}
+        # The repro imports `pkg.mod`, which is importable only with `src` on the path.
+        self.assertEqual((findings[1]["grade"], findings[1]["result"]), (1, "-1"))
+        code, r = self.hpf("verify")
+        self.assertEqual(code, 0, r)
+        verify_task = next(c for c in self.runner.calls if c["kind"] == "verify")["graph"]["nodes"][0]["task"]
+        self.assertIn("sys.path.insert(0, 'src')", verify_task)
+
+    def test_an_import_root_that_is_absent_is_a_usage_error(self):
+        code, r = self.hpf("init", "--repo", str(self.repo), "--ref", "HEAD", "--import-root", "lib")
+        self.assertEqual(code, 2, r)
+
+
 class LadderTest(FlowCase):
     def test_review_grades(self):
         self.init()
@@ -272,7 +352,8 @@ class LadderTest(FlowCase):
         w = r["worktrees"][0]
         self.assertTrue(Path(w["worktree"]).is_dir())
         self.assertEqual(Path(w["worktree"]), self.out / "fix" / "pkg-mod")
-        self.assertEqual(git(self.repo, "rev-parse", "hpfix/pkg-mod"), head)
+        self.assertTrue(w["branch"].startswith("hpfix/pkg-mod-"), w)
+        self.assertEqual(git(self.repo, "rev-parse", w["branch"]), head)
         self.assertIn("pkg/mod.py", w["diffstat"])
         self.assertIn("tests/test_hpfix_pkg_mod.py", w["new_files"])
         self.assertEqual(w["check"], "accept", w)
@@ -287,6 +368,38 @@ class LadderTest(FlowCase):
 
     def bug_id(self) -> str:
         return json.loads((self.out / "confirmed.json").read_text())[0]["id"]
+
+    def test_a_second_audit_of_the_repository_has_fix_branches_of_its_own(self):
+        self.through_verify()
+        code, first = self.hpf("fix")
+        self.assertEqual(code, 0, first)
+        # A second audit folder for the same repository and the same file, while the first worktree is there.
+        first_out, self.out = self.out, self.out.parent / "audit2"
+        self.through_verify()
+        code, second = self.hpf("fix")
+        self.assertEqual(code, 0, second)
+        a, b = first["worktrees"][0], second["worktrees"][0]
+        self.assertNotEqual(a["worktree"], b["worktree"])
+        # The branch of the first audit is still there with its worktree.
+        self.assertTrue(Path(a["worktree"]).is_dir())
+        self.assertEqual(git(self.repo, "rev-parse", "--verify", a["branch"]), git(self.repo, "rev-parse", "HEAD"))
+        self.out = first_out
+
+    def test_gate_fails_when_a_reviewer_wrote_no_report(self):
+        # A worker that cannot sign in ends at once with no report. That is not a clean review.
+        self.init()
+        self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.runner.no_report = True
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual((code, r["findings"], len(r["failed_runs"])), (1, 0, 1), r)
+        code, g = self.hpf("gate")
+        self.assertEqual((code, g["verdict"]), (1, "fail"), g)
+        self.assertEqual(g["incomplete"], ["review: 1 targets have no reviewer result", "review: 1 runs failed"])
+        # A second review with a report makes the audit complete again.
+        self.runner.no_report = False
+        code, r = self.hpf("review", "--repro-timeout", "2", "--redo")
+        self.assertEqual(code, 0, r)
+        self.assertNotIn("review: 1 runs failed", self.hpf("status")[1]["not_done"])
 
     def test_gate_fails_before_the_review(self):
         self.init()
@@ -356,10 +469,35 @@ class LadderTest(FlowCase):
         self.hpf("targets", "--function", "pkg/mod.py:add", "pkg/mod.py:sub")
         code, r = self.hpf("review", "--repro-timeout", "2")
         self.assertEqual((code, r["group"], self.runner.count("review")), (0, "function", 2), r)
-        self.assertEqual(self.runner.calls[0]["graph"]["nodes"][0]["payload"]["extra_args"][:2], ["--setting-sources", ""])
+        payload = self.runner.calls[0]["graph"]["nodes"][0]["payload"]
+        args = payload["extra_args"]
+        self.assertEqual(args[args.index("--setting-sources"):][:3], ["--setting-sources", "", "--strict-mcp-config"])
+        self.assertEqual(payload["effort"], "medium")
+        # The worker gets only the tools of its task: the schemas of all built-in tools were most of each request.
+        self.assertEqual(args[args.index("--tools") + 1], "Bash,Read,Grep,Glob,Write,Edit")
+        self.assertNotIn("--exclude-dynamic-system-prompt-sections", args)
+        self.assertNotIn("--system-prompt", args)
+        self.assertNotIn(adapters.READ_LESS.strip(), self.runner.calls[0]["graph"]["nodes"][0]["task"])
         self.runner.first_verdict = "intended"
         code, r = self.hpf("verify", "--all-verifiers")
         self.assertEqual((code, r["group"], r["groups"], self.runner.count("verify")), (0, "function", 2, 4), r)
+
+    def test_the_short_prompt_of_a_reviewer_is_an_option(self):
+        self.init()
+        self.hpf("targets", "--function", "pkg/mod.py:add")
+        code, r = self.hpf("review", "--repro-timeout", "2", "--short-prompt")
+        self.assertEqual(code, 0, r)
+        node = self.runner.calls[0]["graph"]["nodes"][0]
+        args = node["payload"]["extra_args"]
+        self.assertEqual(args[args.index("--system-prompt") + 1], adapters.REVIEW_PROMPT)
+        self.assertNotIn("--exclude-dynamic-system-prompt-sections", args)
+        self.assertIn(adapters.READ_LESS.strip(), node["task"])
+
+    def test_a_verifier_keeps_the_default_system_prompt(self):
+        self.through_verify()
+        args = next(c for c in self.runner.calls if c["kind"] == "verify")["graph"]["nodes"][0]["payload"]["extra_args"]
+        self.assertNotIn("--system-prompt", args)
+        self.assertEqual(args[-2:], ["--tools", "Bash,Read,Grep,Glob,Write,Edit"])
 
     def test_the_second_verifier_runs_only_where_the_first_says_real(self):
         self.init()
@@ -424,21 +562,148 @@ class LadderTest(FlowCase):
             self.assertRegex(name, r"^[0-9]+$")
 
 
-FAKE_PM = r'''#!/usr/bin/env python3
-import json, sys
-a = sys.argv[1:]
-if a[:2] == ["flow", "run"]:
-    print(json.dumps({"run_id": "flow-1"}))
-elif a[:2] == ["flow", "wait"]:
-    print(json.dumps({"status": "done", "steps": [
-        {"node": "work", "ok": True, "verdict": "FAIL", "job_ids": ["j1"]},
-        {"node": "check", "ok": False},
-        {"node": "work", "ok": True, "verdict": "PASS", "job_ids": ["j2"]}]}))
-elif a[0] == "status":
-    print(json.dumps({"job": {"created_at": "2026-01-01T00:00:00", "completed_at": "2026-01-01T00:00:10"}}))
-elif a[0] == "artifacts":
-    print('{"total_cost_usd": %s}' % {"j1": "0.4", "j2": "0.5"}[a[1]])
-'''
+LUNA, SOL = "gpt-6-luna", "gpt-6.1-sol"
+
+
+class AdapterTest(FlowCase):
+    def review_ready(self) -> None:
+        self.init()
+        self.assertEqual(self.hpf("targets", "--changed", "HEAD~1..HEAD")[0], 0)
+
+    def test_the_graph_has_the_adapter_and_model_of_the_options_and_no_claude_arguments(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--repro-timeout", "2", "--adapter", "codex", "--model", SOL)
+        self.assertEqual((code, r["adapter"]), (0, "codex"), r)
+        graph = self.runner.calls[0]["graph"]
+        self.assertEqual((graph["defaults"]["adapter"], graph["defaults"]["model"]), ("codex", SOL))
+        payload = graph["nodes"][0]["payload"]
+        self.assertEqual(payload, {"extra_args": CODEX_NO_NET, "lean_home": True, "effort": "medium"})
+        self.assertNotIn("--setting-sources", json.dumps(graph))
+        self.assertNotIn("allowed_tools", payload)
+        self.assertEqual(json.loads((self.out / "audit.json").read_text())["adapter"], "codex")
+
+    def test_a_later_command_uses_the_adapter_of_the_audit_folder(self):
+        self.review_ready()
+        self.assertEqual(self.hpf("review", "--repro-timeout", "2", "--adapter", "codex", "--model", SOL)[0], 0)
+        self.runner.first_model = SOL
+        code, r = self.hpf("verify", "--models", SOL, LUNA)
+        self.assertEqual((code, r["adapter"]), (0, "codex"), r)
+        verifiers = [c for c in self.runner.calls if c["kind"] == "verify"]
+        self.assertEqual({(c["adapter"], c["model"]) for c in verifiers}, {("codex", SOL), ("codex", LUNA)})
+        self.assertEqual(json.loads((self.out / "verify.json").read_text())["adapter"], "codex")
+        code, s = self.hpf("status")
+        self.assertEqual((code, s["adapter"]), (0, "codex"), s)
+        self.assertEqual((s["steps"]["review"]["adapters"], s["steps"]["verify"]["adapters"]), (["codex"], ["codex"]))
+        # A short Claude name in a later command of a codex audit folder is an error too.
+        self.assertEqual(self.hpf("verify", "--redo")[0], 2)
+
+    def test_stored_results_of_two_adapters_do_not_mix(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual((code, r["worker_runs"], r["adapter"]), (0, 1, "claude-code"), r)
+        # The same model id on another adapter is another worker run.
+        code, r = self.hpf("review", "--repro-timeout", "2", "--adapter", "codex", "--model", SONNET)
+        self.assertEqual((code, r["worker_runs"], r["reused"]), (0, 1, 0), r)
+        folders = {c["folder"] for c in self.runner.calls}
+        self.assertEqual(len(folders), 2)
+        code, r = self.hpf("review", "--repro-timeout", "2", "--adapter", "claude-code")
+        self.assertEqual((code, r["worker_runs"], r["reused"]), (0, 0, 1), r)
+        records = [json.loads(p.read_text()) for p in (self.out / "records").iterdir()]
+        self.assertEqual(sorted(r["adapter"] for r in records), ["claude-code", "codex"])
+        # Another effort is another worker run too; the default effort keeps the ids of hpflow 0.4.
+        code, r = self.hpf("review", "--repro-timeout", "2", "--effort", "high")
+        self.assertEqual((code, r["worker_runs"], r["effort"]), (0, 1, "high"), r)
+        self.assertEqual(self.runner.calls[-1]["graph"]["nodes"][0]["payload"]["effort"], "high")
+
+    def test_a_short_claude_name_on_another_adapter_is_a_usage_error(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--adapter", "codex", "--model", "sonnet")
+        self.assertEqual(code, 2, r)
+        self.assertIn("short Claude Code name", r["usage_error"])
+        self.assertIn("model name that the codex tool knows", r["usage_error"])
+        code, r = self.hpf("review", "--adapter", "codex")
+        self.assertEqual(code, 2, r)
+        self.assertIn("give --model", r["usage_error"])
+        code, r = self.hpf("audit", "--repo", str(self.repo), "--ref", "HEAD", "--changed", "HEAD~1..HEAD",
+                           "--adapter", "codex", "--model", SOL, "--python", sys.executable)
+        self.assertEqual(code, 2, r)
+        self.assertIn("give --models", r["usage_error"])
+        self.assertEqual(self.runner.calls, [])
+        # A command that stops on a usage error does not change the adapter of the audit folder.
+        self.assertNotIn("adapter", json.loads((self.out / "audit.json").read_text()))
+
+    def test_codex_has_no_plain_arm(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--adapter", "codex", "--model", SOL, "--no-shell")
+        self.assertEqual(code, 2, r)
+        self.assertIn("shell tool", r["usage_error"])
+        self.assertEqual(self.runner.calls, [])
+
+    def test_the_command_adapter_needs_a_template_and_stores_it(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--adapter", "command", "--model", "m1")
+        self.assertEqual(code, 2, r)
+        self.assertIn("--agent-cmd", r["usage_error"])
+        code, r = self.hpf("review", "--adapter", "command", "--model", "m1", "--agent-cmd", "tool 'open")
+        self.assertEqual(code, 2, r)
+        code, r = self.hpf("review", "--repro-timeout", "2", "--adapter", "command", "--model", "m1",
+                           "--agent-cmd", "mytool --model {model} --task {prompt_file}")
+        self.assertEqual((code, r["adapter"]), (0, "command"), r)
+        self.assertEqual(self.runner.calls[0]["graph"]["nodes"][0]["payload"], {"command": "mytool --model {model} --task {prompt_file}"})
+        self.assertEqual(json.loads((self.out / "audit.json").read_text())["agent_cmd"], "mytool --model {model} --task {prompt_file}")
+        # A second template is another tool: its results do not mix with the first.
+        code, r = self.hpf("review", "--repro-timeout", "2", "--model", "m1", "--agent-cmd", "othertool {prompt_file}")
+        self.assertEqual((code, r["worker_runs"]), (0, 1), r)
+
+    def test_an_unknown_adapter_is_a_usage_error(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--adapter", "hermes", "--model", "x")
+        self.assertEqual(code, 2, r)
+        self.assertEqual(self.runner.calls, [])
+
+    def test_a_settings_file_with_a_byte_order_mark_is_used(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            old = os.environ.get("CLAUDE_CONFIG_DIR")
+            os.environ["CLAUDE_CONFIG_DIR"] = tmp
+            try:
+                path = Path(tmp) / "settings.json"
+                path.write_bytes(b"\xef\xbb\xbf" + b'{"env": {"A": "1"}}')
+                self.assertEqual(adapters.claude_settings_file(), path.resolve())
+            finally:
+                if old is None:
+                    os.environ.pop("CLAUDE_CONFIG_DIR")
+                else:
+                    os.environ["CLAUDE_CONFIG_DIR"] = old
+
+    def test_a_lean_claude_worker_gets_the_settings_file_of_the_user(self):
+        self.review_ready()
+        with tempfile.TemporaryDirectory() as tmp:
+            old = os.environ.get("CLAUDE_CONFIG_DIR")
+            os.environ["CLAUDE_CONFIG_DIR"] = tmp
+            try:
+                (Path(tmp) / "settings.json").write_text('{"env": {"A": "1"}}')
+                self.assertEqual(self.hpf("review", "--repro-timeout", "2")[0], 0)
+                (Path(tmp) / "settings.json").write_text('[1]')
+                self.assertEqual(self.hpf("review", "--repro-timeout", "2", "--redo")[0], 0)
+            finally:
+                if old is None:
+                    os.environ.pop("CLAUDE_CONFIG_DIR")
+                else:
+                    os.environ["CLAUDE_CONFIG_DIR"] = old
+            first, second = (c["graph"]["nodes"][0]["payload"]["extra_args"] for c in self.runner.calls)
+        self.assertEqual(first[:2], ["--settings", str((Path(tmp) / "settings.json").resolve())])
+        # A file that is not a JSON object is not passed, as with Puppetmaster 1.52.0.
+        self.assertNotIn("--settings", second)
+
+    def test_an_unknown_cost_is_null_not_zero(self):
+        self.review_ready()
+        code, r = self.hpf("review", "--repro-timeout", "2", "--adapter", "codex", "--model", SOL)
+        self.assertEqual(code, 0, r)
+        self.assertIsNone(r["cost_usd_api_equivalent"])
+        self.assertEqual(r["cost_unknown_runs"], 1)
+        code, s = self.hpf("status")
+        self.assertIsNone(s["steps"]["review"]["cost_usd_api_equivalent"], s)
+        self.assertEqual(s["steps"]["verify"]["cost_usd_api_equivalent"], 0)
 
 
 class CostTest(unittest.TestCase):
@@ -449,52 +714,66 @@ class CostTest(unittest.TestCase):
         self.assertAlmostEqual(steps[0]["cost_usd"], 0.4)
         self.assertAlmostEqual(steps[1]["cost_usd"], 0.1)
 
-    def test_puppetmaster_runner_with_a_fake_command(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            (root / "bin").mkdir()
-            pm = root / "bin" / "puppetmaster"
-            pm.write_text(FAKE_PM.replace("#!/usr/bin/env python3", "#!" + sys.executable))
-            pm.chmod(0o755)
-            old = os.environ["PATH"]
-            os.environ["PATH"] = f"{root / 'bin'}{os.pathsep}{old}"
-            try:
-                graph = {"id": "hpf-1", "entry": "work", "defaults": {"timeout_seconds": 60}, "nodes": [], "edges": []}
-                r = PuppetmasterRunner(root / "graphs").run(graph, root / "w")
-            finally:
-                os.environ["PATH"] = old
-            self.assertEqual(r["status"], "done", r)
-            self.assertAlmostEqual(r["cost_usd"], 0.5)
-            visits = [s for s in r["steps"] if s["node"] == "work"]
-            self.assertAlmostEqual(visits[1]["cost_usd"], 0.1)
-            self.assertEqual(r["jobs"], ["j1", "j2"])
-            self.assertEqual(r["seconds"], 20)
-            self.assertTrue((root / "graphs" / "hpf-1.json").exists())
-            self.assertTrue(re.match(r"^flow-1$", r["flow"]))
+    def test_an_unknown_cost_makes_the_total_unknown(self):
+        steps = [{"node": "work", "reported_usd": 0.4}, {"node": "check"}, {"node": "work", "reported_usd": None}]
+        self.assertIsNone(apply_cost_rule(steps))
+        self.assertIsNone(steps[2]["cost_usd"])
+        self.assertNotIn("cost_usd", steps[1])
+
+
+def alive(pid: int) -> bool:
+    """True while the process `pid` runs. On Windows `os.kill(pid, 0)` ends the process, so this asks the kernel."""
+    if os.name == "nt":
+        import ctypes
+        kernel = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        kernel.OpenProcess.restype = ctypes.c_void_p
+        handle = kernel.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            return False
+        code = ctypes.c_ulong()
+        ok = kernel.GetExitCodeProcess(ctypes.c_void_p(handle), ctypes.byref(code))
+        kernel.CloseHandle(ctypes.c_void_p(handle))
+        return bool(ok) and code.value == 259  # STILL_ACTIVE
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    return True
 
 
 def gone(pid: int, seconds: float = 5) -> bool:
     """True when the process `pid` ends within `seconds`."""
     end = time.monotonic() + seconds
     while time.monotonic() < end:
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
+        if not alive(pid):
             return True
         time.sleep(0.05)
     return False
 
 
+# A Python child that sleeps. The tests start it, and not `sh` or `sleep`, so they run on each system.
+SLEEPER = "[sys.executable, '-c', 'import time; time.sleep(30)']"
+
+
 class ProcessGroupTest(unittest.TestCase):
     def test_timeout_ends_the_whole_group(self):
         start = time.monotonic()
-        code, out, _ = run_group(["/bin/sh", "-c", "sleep 30 & echo $!; wait"], timeout=1)
+        leader = ("import subprocess, sys, time\n"
+                  f"p = subprocess.Popen({SLEEPER})\n"
+                  "print(p.pid, flush=True)\n"
+                  "time.sleep(30)\n")
+        code, out, _ = run_group([sys.executable, "-c", leader], timeout=3)
         self.assertIsNone(code)
-        self.assertLess(time.monotonic() - start, 10)
+        self.assertLess(time.monotonic() - start, 15)
         self.assertTrue(gone(int(out.split()[0])), "the child of the command still runs after the timeout")
 
+    @unittest.skipIf(os.name == "nt", "Windows has no process group signal: `taskkill /T` cannot find the children of "
+                                      "a leader that is gone (README, Limits)")
     def test_a_child_left_after_a_normal_exit_ends(self):
-        code, out, _ = run_group(["/bin/sh", "-c", "sleep 30 >/dev/null 2>&1 & echo $!"], timeout=10)
+        leader = ("import subprocess, sys\n"
+                  f"p = subprocess.Popen({SLEEPER}, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
+                  "print(p.pid)\n")
+        code, out, _ = run_group([sys.executable, "-c", leader], timeout=10)
         self.assertEqual(code, 0)
         self.assertTrue(gone(int(out.split()[0])))
 
@@ -503,23 +782,23 @@ class ProcessGroupTest(unittest.TestCase):
             root = Path(tmp)
             pidfile = root / "pid"
             snippet = root / "s.py"
-            snippet.write_text("def run():\n    import subprocess, time\n"
-                               f"    p = subprocess.Popen(['/bin/sleep', '30'])\n"
+            snippet.write_text("def run():\n    import subprocess, sys, time\n"
+                               f"    p = subprocess.Popen({SLEEPER})\n"
                                f"    open({str(pidfile)!r}, 'w').write(str(p.pid))\n"
                                "    time.sleep(30)\n")
-            got = run_snippet(root, snippet, root / "home", timeout=2)
-            self.assertEqual(got["error"], "timeout")
+            got = run_snippet(root, snippet, root / "home", timeout=3)
+            self.assertEqual(got["error"], "timeout", got)
             self.assertTrue(gone(int(pidfile.read_text())))
 
 
 class ConcurrencyTest(unittest.TestCase):
     def test_default_is_five(self):
-        self.assertEqual(PuppetmasterRunner(Path("/nonexistent")).concurrency, 5)
+        self.assertEqual(DirectRunner(Path("/nonexistent")).concurrency, 5)
         args = build_parser().parse_args(["review", "--out", "/nonexistent"])
         self.assertEqual(args.concurrency, 5)
 
     def test_runner_limits_parallel_flows(self):
-        runner = PuppetmasterRunner(Path("/nonexistent"), concurrency=2)
+        runner = DirectRunner(Path("/nonexistent"), concurrency=2)
         lock, live, peak = threading.Lock(), [0], [0]
 
         def fake(graph: Dict[str, Any], folder: Path) -> Dict[str, Any]:

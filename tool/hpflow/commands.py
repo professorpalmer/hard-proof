@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import ast
+import posixpath
 import re
 import shlex
 import shutil
@@ -12,10 +13,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from . import briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, LEAN_ARGS, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file, model_id,
-                     read_json, run_snippet, sh, write_json)
+from . import adapters, briefs
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, git_status,
+                     is_test_file, lines_of, read_json, repro_state, run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
+from .direct import check_template
 from .runner import Runner, agent_graph
 
 DEFAULT_TEST_CMD = "{python} -m pytest -q -p no:cacheprovider {tests}"
@@ -26,8 +28,12 @@ class Context:
     """The audit folder, the runner and the shared options of one call."""
 
     def __init__(self, out: Path, runner: Runner, redo: bool = False, concurrency: int = DEFAULT_CONCURRENCY,
-                 lean: bool = True):
+                 lean: bool = True, adapter: Optional[str] = None, agent_cmd: Optional[str] = None,
+                 effort: str = adapters.DEFAULT_EFFORT):
         self.lean = lean
+        self.given_adapter = adapter
+        self.given_agent_cmd = agent_cmd
+        self.effort = effort
         self.out = out.resolve()
         self.runner = runner
         self.redo = redo
@@ -48,6 +54,37 @@ class Context:
             raise UsageError(f"no audit in {self.out}: run `init` first")
         return a
 
+    def adapter(self) -> str:
+        """The adapter of the workers of this call.
+
+        The rule: an `--adapter` option wins and becomes the adapter of the audit folder (the key `adapter` of
+        audit.json). With no option, a command uses the adapter of the audit folder, else `claude-code`. So a later
+        `verify`, `fix` or `status` uses the adapter of the last command that named one."""
+        return self.given_adapter or self.audit().get("adapter") or adapters.DEFAULT_ADAPTER
+
+    def agent_cmd(self) -> Optional[str]:
+        """The command template of `--adapter command`, with the same rule as the adapter (the key `agent_cmd`)."""
+        return self.given_agent_cmd or self.audit().get("agent_cmd")
+
+    def check_adapter(self) -> Tuple[str, Optional[str]]:
+        """The adapter and the command template of this call. A usage error when they cannot start a worker."""
+        adapter, template = self.adapter(), self.agent_cmd()
+        adapters.check(adapter, template)
+        if adapter == adapters.COMMAND:
+            check_template(str(template))
+        return adapter, template if adapter == adapters.COMMAND else None
+
+    def keep_adapter(self) -> None:
+        """Store `--adapter` and `--agent-cmd` in audit.json. A command calls it after its options are valid."""
+        audit = self.audit()
+        new = dict(audit)
+        if self.given_adapter:
+            new["adapter"] = self.given_adapter
+        if self.given_agent_cmd:
+            new["agent_cmd"] = self.given_agent_cmd
+        if new != audit:
+            write_json(self.out / "audit.json", new)
+
     def record_path(self, rid: str) -> Path:
         return self.out / "records" / f"{rid}.json"
 
@@ -65,6 +102,20 @@ class Context:
             write_json(self.record_path(rid), record)
 
 
+def adapter_key(adapter: str, agent_cmd: Optional[str] = None, effort: str = adapters.DEFAULT_EFFORT) -> List[str]:
+    """The worker part of a record id: the adapter, the command template and the effort.
+
+    The default adapter and the default effort add nothing, so the ids of hpflow 0.4 stay valid (its workers
+    ran on Claude Code, and Puppetmaster gave them `--effort medium`)."""
+    key = [] if adapter == adapters.DEFAULT_ADAPTER else [adapter]
+    if agent_cmd:
+        key.append(agent_cmd)
+    # The command adapter does not pass the effort to its tool, so the effort does not change its result.
+    if effort != adapters.DEFAULT_EFFORT and adapter != adapters.COMMAND:
+        key.append(f"effort={effort}")
+    return key
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -77,14 +128,38 @@ def pool_map(ctx: Context, fn: Callable[[Any], Any], items: List[Any]) -> List[A
 
 
 def costs(records: List[Dict[str, Any]]) -> Dict[str, Any]:
-    return {"cost_usd_api_equivalent": round(sum(r.get("cost_usd") or 0 for r in records), 4),
-            "seconds": round(sum(r.get("seconds") or 0 for r in records)), "cost_note": COST_NOTE}
+    """The cost and the time of worker records. One run with an unknown cost makes the total unknown (None)."""
+    known = round(sum(r.get("cost_usd") or 0 for r in records), 4)
+    unknown = sum(1 for r in records if "cost_usd" in r and r["cost_usd"] is None)
+    out: Dict[str, Any] = {"cost_usd_api_equivalent": None if unknown else known,
+                           "seconds": round(sum(r.get("seconds") or 0 for r in records)), "cost_note": COST_NOTE}
+    if unknown:
+        out.update(cost_unknown_runs=unknown, cost_usd_of_the_other_runs=known)
+    return out
+
+
+def adapter_report(ctx: Context, adapter: str) -> Dict[str, Any]:
+    out = {"adapter": adapter, "adapter_notes": adapters.notes(adapter, ctx.lean)}
+    if adapter != adapters.COMMAND:
+        out["effort"] = ctx.effort
+    return out
 
 
 # ---------------------------------------------------------------- init
 
+def repo_path(text: str, option: str) -> str:
+    """One form for a path of the repository: forward slashes, no `./`, no `..`, no slash at the end. "" is the root.
+
+    git gives each name in this form, so a path of the user in another form (`./pkg`, `pkg/`, `a/../pkg`) would
+    match no file."""
+    norm = posixpath.normpath(text.replace("\\", "/"))
+    if norm.startswith("/") or norm == ".." or norm.startswith("../") or re.match(r"^[A-Za-z]:", norm):
+        raise UsageError(f"{option} takes a path inside the repository, not {text}")
+    return "" if norm == "." else norm
+
+
 def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], python: Optional[str],
-             test_cmd: Optional[str]) -> Dict[str, Any]:
+             test_cmd: Optional[str], import_root: Optional[str] = None) -> Dict[str, Any]:
     root = Path(repo).expanduser().resolve()
     code, top = git(root, "rev-parse", "--show-toplevel")
     if code != 0:
@@ -98,17 +173,26 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
     def present(p: str) -> bool:
         return git(root, "cat-file", "-e", f"{commit}:{p}")[0] == 0
 
+    import_root = repo_path(import_root or ".", "--import-root")
+    if import_root and not present(import_root):
+        raise UsageError(f"the import root {import_root} is not in {commit[:12]}")
     if paths:
-        missing = [p for p in paths if not present(p.rstrip("/"))]
+        paths = [repo_path(p, "--paths") for p in paths]
+        if "" in paths:
+            raise UsageError("--paths takes folders and files of the repository, not the repository root")
+        missing = [p for p in paths if not present(p)]
         if missing:
             raise UsageError(f"these paths are not in {commit[:12]}: {', '.join(missing)}")
-        paths = [p.rstrip("/") for p in paths]
     else:
-        _, listing = git(root, "ls-tree", "--name-only", "-d", commit)
-        paths = [d for d in listing.split() if d not in EXTRA_PATHS and present(f"{d}/__init__.py")]
-        paths += [p for p in EXTRA_PATHS if present(p)]
+        base = f"{import_root}/" if import_root else ""
+        # With -z git does not quote a name with non-ASCII characters, and a name can hold a space.
+        _, listing = git(root, "ls-tree", "-z", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
+        paths = [base + d for d in listing.split("\0") if d and d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
+        # Check before the extra paths: they hold no package, so an audit of only them reviews no code.
         if not paths:
-            raise UsageError("no package folder (a top-level folder with __init__.py) found: give --paths")
+            raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "
+                             "found: give --paths, and --import-root for a layout such as src/")
+        paths += [p for p in EXTRA_PATHS if present(p)]
     if python is None:
         venv = root / ".venv" / "bin" / "python"
         python = str(venv) if venv.exists() else sys.executable
@@ -117,6 +201,11 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         raise UsageError(f"{ctx.out} holds an audit of {old.get('commit', '')[:12]}: use a new --out or --redo")
     audit = {"repo": str(root), "ref": ref, "commit": commit, "paths": paths, "python": python,
              "test_cmd": test_cmd or DEFAULT_TEST_CMD, "created": (old or {}).get("created") or now()}
+    if import_root:
+        audit["import_root"] = import_root
+    for key in ("adapter", "agent_cmd"):
+        if (old or {}).get(key):
+            audit[key] = old[key]
     snapshot = "kept"
     if ctx.redo or not old or old.get("paths") != paths or not ctx.src.is_dir():
         if ctx.src.exists():
@@ -137,46 +226,97 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
 # ---------------------------------------------------------------- targets
 
 def functions_of(source: str) -> List[Dict[str, Any]]:
-    """The functions and methods of a module: qualified name, first line (decorators included), last line."""
+    """The functions and methods of a module: qualified name, first line (decorators included), last line.
+
+    A function in a function is not in the list: it is a part of the outer function.
+
+    Two definitions can have one qualified name (a property getter and its setter, or a function that a later
+    `def` replaces). `nth` is the number of the definition among those with its name, in source order, and `of`
+    is how many there are. The name and `nth` together are the identity of a function in its file."""
     try:
         tree = ast.parse(source)
     except SyntaxError:
         return []
     out: List[Dict[str, Any]] = []
 
-    def walk(body: List[ast.stmt], prefix: str) -> None:
+    def walk(body: List[Any], prefix: str) -> None:
         for node in body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 start = min([node.lineno] + [d.lineno for d in node.decorator_list])
                 out.append({"function": prefix + node.name, "start": start, "end": node.end_lineno or node.lineno})
             elif isinstance(node, ast.ClassDef):
                 walk(node.body, prefix + node.name + ".")
+            else:
+                # A block statement (if, try, with, for, while, match) can hold a definition. Its name has no
+                # part from the block: Python binds it in the module or the class, as a definition outside one.
+                for _, value in ast.iter_fields(node):
+                    if isinstance(value, list):
+                        walk([x for x in value if isinstance(x, ast.stmt)], prefix)
+                        for part in value:
+                            # The handlers of a try statement and the cases of a match statement.
+                            if not isinstance(part, ast.stmt) and isinstance(getattr(part, "body", None), list):
+                                walk(part.body, prefix)
 
     walk(tree.body, "")
+    out.sort(key=lambda fn: fn["start"])
+    count: Dict[str, int] = {}
+    for fn in out:
+        count[fn["function"]] = count.get(fn["function"], 0) + 1
+        fn["nth"] = count[fn["function"]]
+    for fn in out:
+        fn["of"] = count[fn["function"]]
     return out
 
 
-def parse_diff(text: str) -> List[Dict[str, Any]]:
-    """Files of a `git diff -U0`, each with the old and new path and the line ranges of its hunks."""
-    files: List[Dict[str, Any]] = []
-    cur: Optional[Dict[str, Any]] = None
-    hunk = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
-    for line in text.splitlines():
-        if line.startswith("diff --git "):
-            cur = {"old": None, "new": None, "old_ranges": [], "new_ranges": []}
-            files.append(cur)
-        elif cur is None:
+HUNK = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
+
+
+def hunk_ranges(diff: str) -> Dict[str, List[Tuple[int, int]]]:
+    """The line ranges of the hunks of a `git diff -U0` of one file: `old_ranges` are the lines that the change
+    removed from the old file, and `new_ranges` are the lines that it added to the new file.
+
+    Only a hunk header starts with "@@ ": each content line of a diff starts with "+", "-" or a backslash. The
+    file headers are not read here, so the text of a changed line cannot be taken for one. A hunk that only adds
+    lines has no old range, and a hunk that only removes lines has no new range."""
+    out: Dict[str, List[Tuple[int, int]]] = {"old_ranges": [], "new_ranges": []}
+    for line in lines_of(diff):
+        m = HUNK.match(line)
+        if not m:
             continue
-        elif line.startswith("--- "):
-            cur["old"] = None if line[4:] == "/dev/null" else line[4:][2:]
-        elif line.startswith("+++ "):
-            cur["new"] = None if line[4:] == "/dev/null" else line[4:][2:]
+        old_start, old_count = int(m.group(1)), 1 if m.group(2) is None else int(m.group(2))
+        new_start, new_count = int(m.group(3)), 1 if m.group(4) is None else int(m.group(4))
+        if old_count:
+            out["old_ranges"].append((old_start, old_start + old_count - 1))
+        if new_count:
+            out["new_ranges"].append((new_start, new_start + new_count - 1))
+    return out
+
+
+def changed_files(repo: Path, a: str, b: str, paths: List[str]) -> List[Dict[str, Any]]:
+    """Each file that differs between two commits: its old and new path and the line ranges of its hunks.
+
+    The names come from `git diff --name-status -z`: a list with NUL between the fields, which git does not
+    quote. So a name with a space, a tab, a quote or a non-ASCII character is the real name. The diff of one
+    file gets its name as a literal path (see `common.git`), so a name such as `a[b].py` selects only that file."""
+    code, out = git(repo, "diff", "--name-status", "-z", "--no-ext-diff", "-M", a, b, "--", *paths)
+    if code != 0:
+        raise StepError(f"git diff failed: {out[-300:]}")
+    fields = out.split("\0")
+    files: List[Dict[str, Any]] = []
+    i = 0
+    while i < len(fields) and fields[i]:
+        status = fields[i]
+        if status[0] in "RC":
+            old, new = fields[i + 1], fields[i + 2]
+            i += 3
         else:
-            m = hunk.match(line)
-            if m:
-                for (s, c), key in (((m.group(1), m.group(2)), "old_ranges"), ((m.group(3), m.group(4)), "new_ranges")):
-                    start, count = int(s), 1 if c is None else int(c)
-                    cur[key].append((start, start + count - 1) if count else (start, start + 1))
+            old = None if status[0] == "A" else fields[i + 1]
+            new = None if status[0] == "D" else fields[i + 1]
+            i += 2
+        code, diff = git(repo, "diff", "-U0", "--no-color", "--no-ext-diff", "-M", a, b, "--", *[p for p in (old, new) if p])
+        if code != 0:
+            raise StepError(f"git diff failed: {diff[-300:]}")
+        files.append(dict({"old": old, "new": new}, **hunk_ranges(diff)))
     return files
 
 
@@ -184,14 +324,32 @@ def overlaps(fn: Dict[str, Any], ranges: List[Tuple[int, int]]) -> bool:
     return any(a <= fn["end"] and fn["start"] <= b for a, b in ranges)
 
 
-def top_of(file: str) -> str:
+def top_of(file: str, import_root: str = "") -> str:
+    """The top-level module of a file: its first folder below the import root."""
+    if import_root and file.startswith(import_root + "/"):
+        file = file[len(import_root) + 1:]
     parts = Path(file).parts
     return parts[0] if len(parts) > 1 else Path(file).stem
 
 
-def make_target(file: str, fn: Dict[str, Any], how: str) -> Dict[str, Any]:
-    return {"id": digest("target", file, fn["function"]), "file": file, "function": fn["function"], "top": top_of(file),
+def make_target(file: str, fn: Dict[str, Any], how: str, import_root: str = "") -> Dict[str, Any]:
+    """The target of one function. `fn` is a record of `functions_of`.
+
+    The id comes from the identity of the function: the file, the qualified name and `nth`. The first definition
+    of a name has the id that hpflow 0.4 gave it, so an audit folder of 0.4 keeps its stored runs. A later
+    definition of the same name has its number in the id, so it is a target of its own."""
+    nth = fn["nth"]
+    identity = (file, fn["function"]) if nth == 1 else (file, fn["function"], nth)
+    return {"id": digest("target", *identity), "file": file, "function": fn["function"], "nth": nth, "of": fn["of"],
+            "top": top_of(file, import_root),
             "lines": [fn["start"], fn["end"]], "length": fn["end"] - fn["start"] + 1, "source": how}
+
+
+def target_label(t: Dict[str, Any]) -> str:
+    """The name of a target for a worker. A name with more than one definition in its file gets the line of this one."""
+    if (t.get("of") or 1) == 1:
+        return t["function"]
+    return f"{t['function']} (definition {t['nth']} of {t['of']} with this name, at line {t['lines'][0]})"
 
 
 def in_paths(file: str, paths: List[str]) -> bool:
@@ -201,6 +359,7 @@ def in_paths(file: str, paths: List[str]) -> bool:
 def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[str]], files: Optional[List[str]],
                 max_lines: int, max_n: Optional[int]) -> Dict[str, Any]:
     audit = ctx.audit()
+    import_root = audit.get("import_root") or ""
     repo = Path(audit["repo"])
     candidates: List[Dict[str, Any]] = []
     skipped: List[Dict[str, Any]] = []
@@ -212,29 +371,35 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
         for ref in (a, b):
             if git(repo, "rev-parse", "--verify", f"{ref}^{{commit}}")[0] != 0:
                 raise UsageError(f"the ref {ref} is not a commit of {repo}")
-        code, diff = git(repo, "diff", "-U0", "--no-color", "--no-ext-diff", a, b, "--", *audit["paths"])
-        if code != 0:
-            raise StepError(f"git diff failed: {diff[-300:]}")
-        for f in parse_diff(diff):
+        for f in changed_files(repo, a, b, audit["paths"]):
             path = f["new"] or f["old"]
             if not path or not path.endswith(".py") or not in_paths(path, audit["paths"]):
                 continue
             new_fns = functions_of(git(repo, "show", f"{b}:{f['new']}")[1]) if f["new"] else []
             old_fns = functions_of(git(repo, "show", f"{a}:{f['old']}")[1]) if f["old"] else []
+            # A function is its qualified name and `nth`. The change touched a function of the new file when a
+            # hunk added a line to it, or when a hunk removed a line from the definition that it had before.
+            before = {(fn["function"], fn["nth"]): fn for fn in old_fns}
+            after = {(fn["function"], fn["nth"]) for fn in new_fns}
+
+            def touched(fn: Dict[str, Any]) -> bool:
+                was = before.get((fn["function"], fn["nth"]))
+                return overlaps(fn, f["new_ranges"]) or (was is not None and overlaps(was, f["old_ranges"]))
+
             if is_test_file(path):
-                hit = [fn for fn in new_fns if overlaps(fn, f["new_ranges"])]
+                hit = [fn for fn in new_fns if touched(fn)]
                 for fn in hit:
                     skipped.append({"file": path, "function": fn["function"], "reason": "test file"})
                 if not hit:
                     skipped.append({"file": path, "function": None, "reason": "test file"})
                 continue
-            names = {fn["function"] for fn in new_fns}
             for fn in old_fns:
-                if fn["function"] not in names and (f["new"] is None or overlaps(fn, f["old_ranges"])):
+                # A definition that the new file does not have. No diff can drop it and leave its lines.
+                if (fn["function"], fn["nth"]) not in after:
                     skipped.append({"file": path, "function": fn["function"], "reason": "removed"})
             for fn in new_fns:
-                if overlaps(fn, f["new_ranges"]):
-                    candidates.append(make_target(f["new"], fn, "changed"))
+                if touched(fn):
+                    candidates.append(make_target(f["new"], fn, "changed", import_root))
     else:
         wanted: List[Tuple[str, Optional[str]]] = []
         for spec in functions or []:
@@ -253,7 +418,7 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                 if not fns:
                     raise UsageError(f"no function {name} in {file}")
             for fn in fns:
-                candidates.append(make_target(file, fn, "function" if name else "file"))
+                candidates.append(make_target(file, fn, "function" if name else "file", import_root))
     seen, targets = set(), []
     for t in sorted(candidates, key=lambda t: (t["file"], t["lines"][0])):
         if t["id"] in seen:
@@ -296,39 +461,51 @@ def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) ->
     return out
 
 
-def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout: float, group: str = "function",
-               group_size: int = 6) -> Dict[str, Any]:
+def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, repro_timeout: float, group: str = "function",
+               group_size: int = 6, short_prompt: bool = False) -> Dict[str, Any]:
     audit = ctx.audit()
+    import_root = audit.get("import_root") or ""
+    # The folder of a worker that is first on the import path of a repro.
+    root = "project/" + (f"{import_root}/" if import_root else "")
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     if targets is None:
         raise UsageError("no targets.json: run `targets` first")
+    adapter, template = ctx.check_adapter()
+    mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
+    payload = adapters.payload(adapter, shell=shell, lean=ctx.lean, effort=ctx.effort, agent_cmd=template, reviewer=short_prompt)
+    key = adapter_key(adapter, template, ctx.effort)
+    if short_prompt:
+        # The short prompt changes the system prompt and the brief, so its records are not those of the default prompt.
+        key.append("short_prompt")
+    ctx.keep_adapter()
     arm = "shell" if shell else "plain"
+    arm_text = briefs.REVIEW_ARM[arm] + (adapters.review_hint(adapter) if ctx.lean and short_prompt else "")
     jobs = [(ts, p) for ts in review_groups(targets, group, group_size) for p in range(1, passes + 1)]
 
     def one(job: Tuple[List[Dict[str, Any]], int]) -> Tuple[Dict[str, Any], bool]:
         ts, p = job
         t = ts[0]
         single = group == "function"
-        rid = (digest("review", audit["commit"], t["id"], p, model_id(model), arm) if single
-               else digest("review", audit["commit"], "file", *[x["id"] for x in ts], p, model_id(model), arm))
+        rid = (digest("review", audit["commit"], t["id"], p, *key, mid, arm) if single
+               else digest("review", audit["commit"], "file", *[x["id"] for x in ts], p, *key, mid, arm))
         r = ctx.stored(rid)
         if r:
             return r, False
         folder = ctx.out / "runs" / rid
         prepare_folder(ctx, folder)
         if single:
-            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=briefs.REVIEW_ARM[arm])
-            check = briefs.REVIEW_CHECK
+            task = briefs.REVIEW.format(function=target_label(t), file=t["file"], top=t["top"], arm_text=arm_text, root=root)
+            check = shell_python(briefs.REVIEW_CHECK)
         else:
-            write_json(folder / "functions.json", [x["function"] for x in ts])
-            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"],
-                                             per_function=briefs.PER_FUNCTION, arm_text=briefs.REVIEW_ARM[arm])
-            check = briefs.REVIEW_FILE_CHECK
-        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], model, shell=shell, check=check, timeout=2400,
-                            lean=ctx.lean)
+            write_json(folder / "functions.json", [target_label(x) for x in ts])
+            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{target_label(x)}`" for x in ts), file=t["file"], top=t["top"], root=root,
+                                             per_function=briefs.PER_FUNCTION, arm_text=arm_text)
+            check = shell_python(briefs.REVIEW_FILE_CHECK)
+        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check,
+                            timeout=2400)
         r = ctx.runner.run(graph, folder)
         r.update(kind="review", run=rid, folder=str(folder), target=t["id"], targets=[x["id"] for x in ts], pass_n=p,
-                 model=model_id(model), arm=arm, finished=now())
+                 adapter=adapter, model=mid, arm=arm, finished=now())
         ctx.save(rid, r)
         return r, True
 
@@ -341,22 +518,26 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
         folder = Path(r["folder"])
         items = read_json(folder / "findings.json")
         if not isinstance(items, list):
+            # Store the note: `status` and `gate` read the record, and a run with no report is not a review.
             r["note"] = "no valid findings.json"
+            ctx.save(r["run"], r)
             return []
         out = []
         mine = [by_id[i] for i in (r.get("targets") or [r["target"]])]
-        by_name = {t["function"]: t for t in mine}
+        by_name = {target_label(t): t for t in mine}
         seen: Dict[str, int] = {}
-        for i, f in enumerate(items[:5] if len(mine) == 1 else items):
+        # The group decides the brief, so it decides the rules: a file chunk can hold one function.
+        single = group == "function"
+        for i, f in enumerate(items[:5] if single else items):
             if not isinstance(f, dict):
                 continue
             n = f.get("n", i + 1)
-            t = mine[0] if len(mine) == 1 else by_name.get(str(f.get("function")))
+            t = mine[0] if single else by_name.get(str(f.get("function")))
             if t is None:
                 r["note_unknown_function"] = f"finding {n} names a function that is not in the list"
                 continue
             seen[t["id"]] = seen.get(t["id"], 0) + 1
-            if len(mine) > 1 and seen[t["id"]] > briefs.PER_FUNCTION:
+            if not single and seen[t["id"]] > briefs.PER_FUNCTION:
                 continue
             row = {"id": f"{r['run']}-{n}", "run": r["run"], "n": n, "target": t["id"], "file": t["file"],
                    "function": t["function"], "model": r["model"], "claim": str(f.get("claim"))[:600],
@@ -366,13 +547,13 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
             if not snippet.exists():
                 row.update(grade=0, reason="no repro file")
             else:
-                got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout)
+                got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout, import_root=import_root)
                 row["run_result"] = got
                 if got.get("ok"):
                     row.update(grade=1, result=got["result"])
                 elif got.get("error") == "timeout":
                     row.update(grade=0, reason=f"the repro timed out ({repro_timeout} seconds)")
-                elif got.get("error") in ("ImportError", "ModuleNotFoundError", "AttributeError", "NameError"):
+                elif got.get("error") in MISSING:
                     row.update(grade=0, reason=f"the repro cannot import the function: {got.get('error')}: {got.get('message')}")
                 else:
                     row.update(grade=0, reason=f"run() raised {got.get('error')}: {got.get('message')}")
@@ -381,7 +562,7 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
 
     for rows in pool_map(ctx, gate, records):
         findings.extend(rows)
-    write_json(ctx.out / "review.json", {"model": model_id(model), "arm": arm, "passes": passes, "group": group,
+    write_json(ctx.out / "review.json", {"adapter": adapter, "model": mid, "arm": arm, "passes": passes, "group": group,
                                          "runs": [r["run"] for r in records], "findings": findings})
     failed = [{"run": r["run"], "target": r["target"], "error": r.get("error") or r.get("note") or r.get("status")}
               for r in records if r.get("error") or r.get("note")]
@@ -390,6 +571,7 @@ def cmd_review(ctx: Context, model: str, shell: bool, passes: int, repro_timeout
               "grade_1": sum(1 for f in findings if f["grade"] == 1),
               "grade_0": [{"id": f["id"], "reason": f["reason"]} for f in findings if f["grade"] == 0],
               "failed_runs": failed}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -415,23 +597,30 @@ def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = 
     return "mixed"
 
 
-def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged: bool = True) -> Dict[str, Any]:
+def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function", staged: bool = True) -> Dict[str, Any]:
     audit = ctx.audit()
     review = read_json(ctx.out / "review.json")
     if review is None:
         raise UsageError("no review.json: run `review` first")
-    if len(models) < 2:
+    adapter, template = ctx.check_adapter()
+    mids = [adapters.model_id(adapter, m) for m in adapters.model_or_default(adapter, models, ["sonnet", "opus"], "--models")]
+    if len(mids) < 2:
         raise UsageError("verify needs two models or more")
+    if len(set(mids)) < len(mids):
+        raise UsageError("give each verifier model once: the verdicts of one model are stored under its id")
+    payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
+    key = adapter_key(adapter, template, ctx.effort)
+    ctx.keep_adapter()
     groups: Dict[str, Dict[str, Any]] = {}
     for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
-        key = f["target"] if group == "function" else digest("file", f["file"])
-        g = groups.setdefault(key, {"key": key, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
+        gkey = f["target"] if group == "function" else digest("file", f["file"])
+        g = groups.setdefault(gkey, {"key": gkey, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
         g["claims"].append(dict(f, k=len(g["claims"]) + 1))
 
     def one(job: Tuple[Dict[str, Any], str]) -> Tuple[Dict[str, Any], bool]:
         g, m = job
-        rid = (digest("verify", audit["commit"], g["target"], model_id(m), *[c["id"] for c in g["claims"]]) if group == "function"
-               else digest("verify", audit["commit"], "file", g["key"], model_id(m), *[c["id"] for c in g["claims"]]))
+        rid = (digest("verify", audit["commit"], g["target"], *key, m, *[c["id"] for c in g["claims"]]) if group == "function"
+               else digest("verify", audit["commit"], "file", g["key"], *key, m, *[c["id"] for c in g["claims"]]))
         r = ctx.stored(rid)
         if r:
             return r, False
@@ -446,12 +635,11 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
         write_json(folder / "claims.json", claims)
         head = (briefs.VERIFY_ONE_HEAD.format(n=len(claims), function=g["function"], file=g["file"]) if group == "function"
                 else briefs.VERIFY_FILE_HEAD.format(n=len(claims), file=g["file"]))
-        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head)
-        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], m, shell=True, check=briefs.VERIFY_CHECK, timeout=3000,
-                            lean=ctx.lean)
+        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head, imp=audit.get("import_root") or ".")
+        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=shell_python(briefs.VERIFY_CHECK), timeout=3000)
         r = ctx.runner.run(graph, folder)
         v = read_json(folder / "verdicts.json")
-        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], model=model_id(m),
+        r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], adapter=adapter, model=m,
                  verdicts=v if isinstance(v, list) else None, finished=now())
         ctx.save(rid, r)
         return r, True
@@ -459,14 +647,13 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
     if staged:
         # A claim is confirmed only when each verifier says `real`. So the later verifiers run only for a
         # group in which the first verifier said `real` for one claim or more.
-        results = pool_map(ctx, one, [(g, models[0]) for g in groups.values()])
+        results = pool_map(ctx, one, [(g, mids[0]) for g in groups.values()])
         first_real = {r["group"] for r, _ in results
                       if any(isinstance(v, dict) and v.get("verdict") == "real" for v in (r.get("verdicts") or []))}
-        results += pool_map(ctx, one, [(g, m) for g in groups.values() if g["key"] in first_real for m in models[1:]])
+        results += pool_map(ctx, one, [(g, m) for g in groups.values() if g["key"] in first_real for m in mids[1:]])
     else:
-        results = pool_map(ctx, one, [(g, m) for g in groups.values() for m in models])
+        results = pool_map(ctx, one, [(g, m) for g in groups.values() for m in mids])
     records = [r for r, _ in results]
-    mids = [model_id(m) for m in models]
     claims_out: List[Dict[str, Any]] = []
     bugs: List[Dict[str, Any]] = []
     for g in groups.values():
@@ -502,7 +689,8 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
                          "severity": info.get("severity"), "fix_idea": info.get("fix_idea"),
                          "repros": [{"finding": x["id"], "k": x["k"], "path": x["repro"], "result_now": x["result_now"]}
                                     for x in members]})
-    write_json(ctx.out / "verify.json", {"models": mids, "group": group, "staged": staged, "runs": [r["run"] for r in records],
+    write_json(ctx.out / "verify.json", {"adapter": adapter, "models": mids, "group": group, "staged": staged,
+                                         "runs": [r["run"] for r in records],
                                          "claims": claims_out})
     write_json(ctx.out / "confirmed.json", bugs)
     (ctx.out / "REPORT.md").write_text(report_md(audit, mids, claims_out, bugs), encoding="utf-8")
@@ -515,6 +703,7 @@ def cmd_verify(ctx: Context, models: List[str], group: str = "function", staged:
               "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
               "classes": by_class, "confirmed_bugs": len(bugs), "failed_runs": failed,
               "report": str(ctx.out / "REPORT.md")}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -551,9 +740,16 @@ def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, A
 
 # ---------------------------------------------------------------- fix
 
-def slug_of(file: str) -> str:
+def slug_of(file: str, unique: bool = False) -> str:
+    """The name of the worktree, branch and test file of a file. With `unique`, a part of the digest of the path
+    keeps apart the files whose plain slugs are the same (pkg/a_b.py and pkg/a/b.py give pkg-a-b)."""
     stem = file[:-3] if file.endswith(".py") else file
-    return re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-")
+    slug = re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-")
+    # A path that is not a module path (pkg/a-b.py) cannot be imported, and its slug would take the name of one.
+    # A path with no letter and no digit (_.py) has no plain slug. A slug is a folder name, so it is never empty.
+    if unique or not slug or not re.fullmatch(r"[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*\.py", file):
+        return f"{slug or 'file'}-{digest('slug', file)[-8:]}"
+    return slug
 
 
 def bug_text(bugs: List[Dict[str, Any]]) -> str:
@@ -566,31 +762,64 @@ def bug_text(bugs: List[Dict[str, Any]]) -> str:
     return "\n".join(rows)
 
 
-def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str, info: Path, model: str,
-              judge_model: str, rules: str) -> Dict[str, Any]:
-    py = audit["python"]
-    check = (f"PYTHONPATH={shlex.quote(str(TOOL_DIR))} {shlex.quote(sys.executable)} -m hpflow.fixcheck "
-             f"{shlex.quote(str(info))}")
-    test_run = audit["test_cmd"].format(python=py, tests=g["test_file"])
-    fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
-               info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
-    tools = ["Read", "Glob", "Grep", "Write", "Edit"] + [f"Bash({c}:*)" for c in (
-        "cd", "ls", "pwd", "cat", "git diff", "git status", "git log", "git show", "git grep", "git blame", "grep", "rg",
-        "wc", "head", "tail", "sed", "find", "python3", py, "sort", "uniq", "diff", "echo", "test", "mkdir", "timeout")]
-    payload = {"allowed_tools": tools, "disallowed_tools": ["WebFetch", "WebSearch", "Task", "Agent", "NotebookEdit"]}
-    if ctx.lean:
-        payload["extra_args"] = list(LEAN_ARGS)
+def check_script(info: Path) -> str:
+    """The text of `check.py` in the info folder of a fix: it runs `hpflow.fixcheck` on that folder.
+
+    A file, not a `PYTHONPATH=... python -m` line: the worker and the judge can then run the check with one plain
+    command that their allow list has, and the same command works in cmd.exe."""
+    return ("import runpy\nimport sys\n\n"
+            f"sys.path.insert(0, {str(TOOL_DIR)!r})\n"
+            f"sys.argv = ['hpflow.fixcheck', {str(info)!r}]\n"
+            "runpy.run_module('hpflow.fixcheck', run_name='__main__')\n")
+
+
+def fixcheck_command(info: Path) -> str:
+    """The shell command of the script check of a fix."""
+    utf8 = " -X utf8" if WINDOWS else ""
+    return f"{shell_quote(sys.executable)}{utf8} {shell_quote(str(info / 'check.py'))}"
+
+
+def fix_key(adapter: str, model: str, judge_model: str, rules: str) -> List[str]:
+    """The part of a fix id for the models and the rules. The defaults add nothing, so the ids of hpflow 0.4 stay
+    valid: its fix workers ran on Opus with a Sonnet judge and the default rules."""
+    default = (adapter == adapters.DEFAULT_ADAPTER and model == adapters.CLAUDE_MODELS["opus"]
+               and judge_model == adapters.CLAUDE_MODELS["sonnet"] and rules == briefs.DEFAULT_RULES)
+    return [] if default else [model, judge_model, digest("rules", rules)]
+
+
+def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
+    """The paths that a fix worker can change: the audit paths and the tests."""
     files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
     if "tests/**" not in files:
         files.append("tests/**")
-    return {"id": f"hpf-{digest('fixflow', g['slug'], base)}", "entry": "build",
-            "defaults": {"adapter": "claude-code", "model": model_id(model), "timeout_seconds": 5400, "finish": "criteria"},
+    return files
+
+
+def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str, info: Path, adapter: str,
+              template: Optional[str], model: str, judge_model: str, rules: str) -> Dict[str, Any]:
+    py = audit["python"]
+    check = fixcheck_command(info)
+    # Quoted as fixcheck.test_command does, so a python path with a space stays one argument.
+    test_run = audit["test_cmd"].format(python=shell_quote(py), tests=shell_quote(g["test_file"]))
+    fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
+               info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
+    # The check command is in the list, so the worker and the judge can run it as the brief says.
+    commands = (*adapters.FIX_COMMANDS, py, check)
+    payload = adapters.payload(adapter, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort, agent_cmd=template)
+    judge_payload = adapters.payload(adapter, judge=True, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort,
+                                     agent_cmd=template)
+    files = fix_scope(ctx, audit)
+    # The bugs are a part of the id: two runs for one file with other bugs (`--only`) must not share a graph file.
+    fid = digest("fixflow", g["slug"], base, *adapter_key(adapter, template, ctx.effort),
+                 *fix_key(adapter, model, judge_model, rules), *sorted(b["id"] for b in g["bugs"]))
+    return {"id": f"hpf-{fid}", "entry": "build",
+            "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria"},
             "nodes": [
                 {"id": "build", "kind": "agent", "role": "code", "files": files, "task": briefs.BUILD.format(**fmt),
                  "payload": payload},
                 {"id": "check", "kind": "shell", "command": check, "timeoutMs": 2700000},
-                {"id": "review", "kind": "judge", "model": model_id(judge_model), "task": briefs.JUDGE.format(**fmt),
-                 "payload": payload},
+                {"id": "review", "kind": "judge", "model": judge_model, "task": briefs.JUDGE.format(**fmt),
+                 "payload": judge_payload},
                 {"id": "done", "kind": "end", "status": "pass"},
                 {"id": "failed", "kind": "end", "status": "fail"}],
             "edges": [{"from": "build", "to": "check", "when": "ok"},
@@ -604,9 +833,14 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
                       {"from": "review", "to": "failed"}]}
 
 
-def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model: str, judge_model: str,
+def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model: Optional[str], judge_model: Optional[str],
             rules: Optional[str]) -> Dict[str, Any]:
     audit = ctx.audit()
+    adapter, template = ctx.check_adapter()
+    model = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "opus", "--model"))
+    judge_model = adapters.model_id(adapter, adapters.model_or_default(adapter, judge_model, "sonnet", "--judge-model"))
+    ctx.keep_adapter()
+    rules_text = rules or briefs.DEFAULT_RULES
     repo = Path(audit["repo"])
     bugs = read_json(ctx.out / "confirmed.json")
     if bugs is None:
@@ -622,16 +856,25 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         raise UsageError(f"the base {base_ref} is not a commit of {repo}")
     base_commit = base_commit.strip()
     groups: Dict[str, Dict[str, Any]] = {}
+    # The new test file goes into the tests folder of the audit paths (for example `tool/tests`), else `tests`.
+    tests_dir = next((p for p in audit["paths"] if Path(p).name == "tests"), "tests")
+    plain: Dict[str, set] = {}
     for b in bugs:
-        s = slug_of(b["file"])
-        g = groups.setdefault(s, {"slug": s, "file": b["file"],
-                                  "test_file": f"tests/test_hpfix_{s.replace('-', '_')}.py", "bugs": []})
+        plain.setdefault(slug_of(b["file"]), set()).add(b["file"])
+    for b in bugs:
+        s = slug_of(b["file"], unique=len(plain[slug_of(b["file"])]) > 1)
+        g = groups.setdefault(b["file"], {"slug": s, "file": b["file"],
+                                          "test_file": f"{tests_dir}/test_hpfix_{s.replace('-', '_')}.py", "bugs": []})
         g["bugs"].append(b)
 
     def one(g: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
-        rid = digest("fix", audit["commit"], base_commit, g["slug"], *sorted(b["id"] for b in g["bugs"]))
+        # The models and the rules change the fix, so a run with others does not reuse the stored one.
+        rid = digest("fix", audit["commit"], base_commit, g["slug"], *adapter_key(adapter, template, ctx.effort),
+                     *sorted(b["id"] for b in g["bugs"]), *fix_key(adapter, model, judge_model, rules_text))
         tree = ctx.out / "fix" / g["slug"]
-        branch = f"hpfix/{g['slug']}"
+        # The audit folder and the id of the run are a part of the branch name. A second audit of the same
+        # repository then has branches of its own, and this run never deletes the branch of another audit.
+        branch = f"hpfix/{g['slug']}-{digest('branch', str(ctx.out), rid)[:8]}"
         r = ctx.stored(rid)
         if r and tree.exists():
             return r, False
@@ -644,7 +887,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
             git(repo, "branch", "-D", branch)
             tree.parent.mkdir(parents=True, exist_ok=True)
             code, out = git(repo, "worktree", "add", "-q", "-b", branch, str(tree), base_commit)
-        result: Dict[str, Any] = {"kind": "fix", "run": rid, "slug": g["slug"], "file": g["file"], "branch": branch,
+        result: Dict[str, Any] = {"kind": "fix", "run": rid, "adapter": adapter, "model": model, "judge_model": judge_model,
+                                  "slug": g["slug"], "file": g["file"], "branch": branch,
                                   "tree": str(tree), "base": base_commit, "bugs": [b["id"] for b in g["bugs"]],
                                   "test_file": g["test_file"]}
         if code != 0:
@@ -663,15 +907,16 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
                 repros.append({"k": rp["k"], "file": name, "result_now": rp["result_now"]})
             spec_bugs.append({"id": b["id"], "repros": repros})
         write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": audit["python"],
-                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs})
-        graph = fix_graph(ctx, audit, g, base_commit, info, model, judge_model, rules or briefs.DEFAULT_RULES)
+                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit),
+                                        "import_root": audit.get("import_root") or "", "tests_dir": tests_dir})
+        (info / "check.py").write_text(check_script(info), encoding="utf-8")
+        graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules_text)
         r = ctx.runner.run(graph, tree)
         result.update(r)
         result["check"] = fix_check(info, tree)
         _, stat = git(tree, "diff", "--stat")
-        _, status = git(tree, "status", "--porcelain", "--untracked-files=all")
         result["diffstat"] = stat.strip()
-        result["new_files"] = [x[3:] for x in status.splitlines() if x.startswith("??")]
+        result["new_files"] = [e["path"] for e in git_status(tree) or [] if e["status"] == "??"]
         reviews = [s for s in r.get("steps") or [] if s.get("node") == "review"]
         result["judge"] = reviews[-1].get("verdict") if reviews else None
         result["finished"] = now()
@@ -680,7 +925,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
 
     results = pool_map(ctx, one, list(groups.values()))
     records = [r for r, _ in results]
-    write_json(ctx.out / "fix.json", {"base": base_commit, "runs": [r["run"] for r in records]})
+    write_json(ctx.out / "fix.json", {"adapter": adapter, "base": base_commit, "runs": [r["run"] for r in records]})
     rows = [{"slug": r["slug"], "worktree": r["tree"], "branch": r["branch"], "bugs": r["bugs"],
              "flow_status": r.get("status"), "diffstat": r.get("diffstat"), "new_files": r.get("new_files"),
              "check": (r.get("check") or {}).get("verdict"), "check_problems": (r.get("check") or {}).get("problems"),
@@ -689,6 +934,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
     report = {"command": "fix", "ok": ok, "base": base_commit, "worktrees": rows,
               "worker_runs": sum(1 for _, n in results if n), "reused": sum(1 for _, n in results if not n),
               "note": "hpflow does not commit, push or merge. Review each worktree and commit it yourself."}
+    report.update(adapter_report(ctx, adapter))
     report.update(costs(records))
     return report
 
@@ -720,7 +966,8 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     verify_recs = recs((verify or {}).get("runs") or [])
     fix_recs = recs((fix or {}).get("runs") or [])
     for name, rs in (("review", review_recs), ("verify", verify_recs), ("fix", fix_recs)):
-        steps[name] = dict(runs=len(rs), **costs(rs))
+        # A record of hpflow 0.4 has no `adapter` key: those workers ran on Claude Code.
+        steps[name] = dict(runs=len(rs), adapters=sorted({r.get("adapter") or adapters.DEFAULT_ADAPTER for r in rs}), **costs(rs))
     grade: Dict[str, int] = {}
     if review:
         for f in review["findings"]:
@@ -739,11 +986,12 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     if review is None:
         open_items.append("review: not run")
     else:
-        done = {i for r in review_recs if not r.get("error") for i in (r.get("targets") or [r["target"]])}
+        # A run with an error (the worker did not start) or a note (it wrote no valid report) reviewed nothing.
+        done = {i for r in review_recs if not (r.get("error") or r.get("note")) for i in (r.get("targets") or [r["target"]])}
         missing = [t for t in targets or [] if t["id"] not in done]
         if missing:
             open_items.append(f"review: {len(missing)} targets have no reviewer result")
-        bad = [r["run"] for r in review_recs if r.get("error")]
+        bad = [r["run"] for r in review_recs if r.get("error") or r.get("note")]
         if bad:
             open_items.append(f"review: {len(bad)} runs failed")
     if review is not None and any(f["grade"] >= 1 for f in review["findings"]) and verify is None:
@@ -757,6 +1005,7 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
         if unfixed:
             open_items.append(f"fix: {len(unfixed)} confirmed bugs have no accepted fix with a PASS judge")
     return {"command": "status", "ok": True, "repo": audit["repo"], "commit": audit["commit"],
+            "adapter": audit.get("adapter") or adapters.DEFAULT_ADAPTER,
             "targets": len(targets or []), "grades": counts, "confirmed_bugs": len(confirmed or []), "steps": steps,
             "not_done": open_items, "cost_note": COST_NOTE}
 
@@ -821,10 +1070,11 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
         elif tree is not None:
             same, unknown = [], []
             for rp in b["repros"]:
-                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout)
-                if got.get("ok") and got.get("result") == rp["result_now"]:
+                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout, import_root=audit.get("import_root") or "")
+                state = repro_state(got, rp["result_now"])
+                if state == "same":
                     same.append(rp["k"])
-                elif not got.get("ok") and (got.get("error") == "timeout" or got.get("error") in MISSING):
+                elif state == "unknown":
                     unknown.append(f"claim {rp['k']}: {got.get('error')}")
             if same:
                 row.update(state="open", reason=f"the repro of claim {', '.join(str(k) for k in same)} gives the old result on {commit[:12]}")
