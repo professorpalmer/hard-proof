@@ -1,0 +1,54 @@
+[
+ {
+  "id": "06085847354901452351",
+  "target": "12803824691138107717",
+  "file": "tool/hpflow/cli.py",
+  "function": "main",
+  "claim": "The audit pre-check (\"a usage error must come before the workers of the review run\") does not check that --models gives two or more distinct models, which cmd_verify requires. So `audit ... --models sonnet` runs init, targets and review (starting workers) and only then fails in verify.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "(1, 1, None, ['init', 'targets', 'review'])",
+  "what_goes_wrong": "`hpflow audit --models sonnet` (or a repeated model) passes the pre-check, runs init, targets and the paid review workers, and only then fails in verify with 'verify needs two models or more', wasting the review cost.",
+  "caller": "project/tool/hpflow/__main__.py:7",
+  "severity": "medium",
+  "fix_idea": "In the audit pre-check, map the models to ids and apply the same checks as cmd_verify (at least two, no duplicates) before init.",
+  "repros": [
+   {
+    "finding": "15896127577013051321-1",
+    "k": 1,
+    "path": "/home/runner/work/_temp/audit/runs/15896127577013051321/finding_1.py",
+    "result_now": "(1, 1, None, ['init', 'targets', 'review'])"
+   }
+  ]
+ },
+ {
+  "id": "12870938145754403555",
+  "target": "07474856800192809990",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_import",
+  "claim": "A SARIF result whose artifact uri is not a valid URL (for example 'file://[bad/x.py') makes urlsplit raise ValueError inside file_of_uri. outside.read does not catch it, so the whole import call crashes instead of skipping that one entry with a reason, as the module docstring promises.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "ValueError",
+  "what_goes_wrong": "One SARIF result with a malformed artifact uri (e.g. 'file://[bad/x.py') makes urlsplit raise ValueError, so the whole import command crashes and no other finding in the file is imported.",
+  "caller": "project/tool/hpflow/cli.py:180",
+  "severity": "medium",
+  "fix_idea": "Wrap file_of_uri in sarif_entries in try/except ValueError and append (None, 'the file address is not valid') for that result.",
+  "repros": [
+   {
+    "finding": "00954921218962799126-1",
+    "k": 1,
+    "path": "/home/runner/work/_temp/audit/runs/00954921218962799126/finding_1.py",
+    "result_now": "ValueError"
+   }
+  ]
+ }
+]

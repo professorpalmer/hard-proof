@@ -760,7 +760,19 @@ def self_text(sa: dict | None) -> list:
     return [f"<p class=\"small\">The change itself went through the gate before its release, with the stop rule of version 0.5: {len(rounds)} rounds, "
             f"{sa['confirmed_bugs']} confirmed bugs ({counts}), {money(sa['cost_usd'])}. "
             + ("Each one had low severity. " if worst <= {"low"} else "")
-            + f"The gate passes at the release commit with {sa['closed_by_repro']} bugs closed by their repro.</p>"]
+            + f"The gate passes at the release commit with {sa['closed_by_repro']} bugs closed by their repro.</p>",
+            *ci_text(sa.get("ci_job"))]
+
+
+def ci_text(ci: dict | None) -> list:
+    """What the audit job in CI found in the change, after the local rounds."""
+    if not ci:
+        return []
+    return [f"<p class=\"small\">After the third local round, the audit job in CI made a review of its own of the change. It confirmed {ci['confirmed_bugs']} more bugs, of {' and '.join(ci['severities'])} severity: "
+            "a file address in a SARIF file that the address parser refuses stopped the full import, and an audit with one verifier model failed only after the review ran. "
+            "The gate of the job failed, and that stopped the merge. After the fixes, the fourth local round and a second run of the job confirmed "
+            + ("nothing" if not ci["second_run_confirmed_bugs"] else str(ci["second_run_confirmed_bugs"]) + " bugs")
+            + ". Each run of a review is a new sample, so a second reviewer with no memory of the first finds other bugs.</p>"]
 
 
 def sec_use(ls: dict) -> str:

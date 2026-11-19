@@ -1,0 +1,382 @@
+{
+ "mode": "changed",
+ "changed": "hpflow-v0.5.0..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "03291032900523284295",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_findings",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    58,
+    62
+   ],
+   "length": 5,
+   "source": "changed"
+  },
+  {
+   "id": "15732612589227400961",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_import",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    65,
+    68
+   ],
+   "length": 4,
+   "source": "changed"
+  },
+  {
+   "id": "13636498213896981480",
+   "file": "tool/hpflow/cli.py",
+   "function": "add_audit_targets",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    71,
+    73
+   ],
+   "length": 3,
+   "source": "changed"
+  },
+  {
+   "id": "13592540538335005912",
+   "file": "tool/hpflow/cli.py",
+   "function": "build_parser",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    142,
+    155
+   ],
+   "length": 14,
+   "source": "changed"
+  },
+  {
+   "id": "07510137286282714691",
+   "file": "tool/hpflow/cli.py",
+   "function": "run_command",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    166,
+    224
+   ],
+   "length": 59,
+   "source": "changed"
+  },
+  {
+   "id": "12803824691138107717",
+   "file": "tool/hpflow/cli.py",
+   "function": "main",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    227,
+    248
+   ],
+   "length": 22,
+   "source": "changed"
+  },
+  {
+   "id": "07352805564492806572",
+   "file": "tool/hpflow/commands.py",
+   "function": "repro_grade",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    464,
+    478
+   ],
+   "length": 15,
+   "source": "changed"
+  },
+  {
+   "id": "17600983525471700825",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_review",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    481,
+    580
+   ],
+   "length": 100,
+   "source": "changed"
+  },
+  {
+   "id": "06472191850690077456",
+   "file": "tool/hpflow/commands.py",
+   "function": "place_claim",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    588,
+    623
+   ],
+   "length": 36,
+   "source": "changed"
+  },
+  {
+   "id": "07474856800192809990",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_import",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    626,
+    724
+   ],
+   "length": 99,
+   "source": "changed"
+  },
+  {
+   "id": "12597329650580419621",
+   "file": "tool/hpflow/commands.py",
+   "function": "all_findings",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    727,
+    732
+   ],
+   "length": 6,
+   "source": "changed"
+  },
+  {
+   "id": "03224574987867754209",
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_verify",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    758,
+    868
+   ],
+   "length": 111,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_hpfix_tool_hpflow_cli.py",
+   "function": "audit_args",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportRunner.run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportCase.setUp",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportCase.write",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportCase.imports",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_a_claim_gets_a_repro_then_two_verifiers_and_the_gate",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.git_commit",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_an_imported_finding_and_a_review_finding_of_one_function_go_to_one_verifier_session",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_a_claim_with_no_answer_is_a_failed_run",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_an_entry_that_the_ladder_cannot_take_is_skipped_with_a_reason",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_the_line_decides_between_functions_with_one_name",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_the_tool_name_of_a_sarif_file_comes_before_the_source_option",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_sarif_results_are_claims",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_a_file_that_is_not_a_findings_file_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_a_second_call_reuses_the_stored_result",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ImportTest.test_more_claims_than_one_session_takes_make_more_sessions",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.audit",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.test_an_audit_of_outside_findings_only",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.test_an_audit_with_a_review_and_outside_findings",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.test_a_bad_findings_file_stops_the_audit_before_a_worker_runs",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "AuditWithFindingsTest.test_an_audit_needs_targets_or_findings",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.read",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_the_two_forms_of_the_hpflow_list",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_a_long_claim_is_cut",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_the_path_of_a_sarif_address",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_a_file_that_cannot_be_read_is_a_usage_error",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_a_bar_in_a_cell_stays_text",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_a_cell_is_one_line",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_the_cut_does_not_cut_an_escape",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "BriefTextTest.test_the_review_and_verify_briefs_did_not_change",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "BriefTextTest.test_the_import_brief_has_each_field",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/hpflow/commands.py",
+   "function": "cell",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/commands.py",
+   "function": "report_md",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_status",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/commands.py",
+   "function": "cmd_gate",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "text_of",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "line_of",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "entry",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "file_of_uri",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "sarif_entries",
+   "reason": "over --max 12"
+  },
+  {
+   "file": "tool/hpflow/outside.py",
+   "function": "read",
+   "reason": "over --max 12"
+  }
+ ]
+}

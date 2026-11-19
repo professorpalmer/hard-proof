@@ -22,7 +22,10 @@ from bugs import WORK
 HERE = Path(__file__).resolve().parent
 RUNS = [("hpflow-import-live-run1", "first brief"), ("hpflow-import-live", "brief of the release")]
 SELF = [("audit-hpflow-060", "The release range"), ("audit-hpflow-060-delta", "The fixes of round 1"),
-        ("audit-hpflow-060-delta2", "The fixes of round 2")]
+        ("audit-hpflow-060-delta2", "The fixes of round 2"), ("audit-hpflow-060-delta3", "The fixes for the audit job in CI")]
+# The audit job in CI (run 44617239293) made a review of its own of the change, after local round 3. Its report
+# is in `self_audit_060/ci_run`. The second run of the job (44618792648, on the fixes) confirmed nothing.
+CI_RUN = {"run": 44617239293, "second_run": 44618792648, "second_run_confirmed_bugs": 0}
 # The distinct bugs that the blind judge of `h2h` confirmed among the 12 findings (h2h/result.json, bug ids
 # `covered_hint`, `k2`, `k12`), by the function and a word of the claim.
 H2H_BUGS = {"covered_hint": ("unroutable_pin_hint", "id"), "k2": ("unroutable_pin_hint", "registry path"),
@@ -70,7 +73,11 @@ def self_audit(ref: str) -> dict:
         for item in ("REPORT.md", "confirmed.json", "targets.json"):
             if (folder / item).exists():
                 shutil.copyfile(folder / item, keep / item)
-    return {"ref": ref, "rounds": rounds, "confirmed_bugs": sum(r["confirmed_bugs"] for r in rounds),
+    ci = load(HERE / "self_audit_060" / "ci_run" / "confirmed.json")
+    return {"ref": ref, "rounds": rounds,
+            "ci_job": dict(CI_RUN, confirmed_bugs=len(ci), severities=sorted({b["severity"] for b in ci}),
+                           functions=[b["function"] for b in ci]),
+            "confirmed_bugs": sum(r["confirmed_bugs"] for r in rounds),
             "closed_by_repro": sum(r["gate"]["closed"] or 0 for r in rounds),
             "cost_usd": round(sum(r["cost_usd"] or 0 for r in rounds), 2)}
 

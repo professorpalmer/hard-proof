@@ -107,7 +107,7 @@
   }
  ],
  "self_audit_of_the_change": {
-  "ref": "b5f0cbb",
+  "ref": "c78d8ef",
   "rounds": [
    {
     "folder": "audit-hpflow-060",
@@ -184,10 +184,47 @@
      "open": 0,
      "waived": 0
     }
+   },
+   {
+    "folder": "audit-hpflow-060-delta3",
+    "commit": "c78d8ef",
+    "range": "b5f0cbb..HEAD",
+    "targets": 6,
+    "findings": 1,
+    "confirmed_bugs": 0,
+    "confirmed_by_severity": {},
+    "review_sessions": 6,
+    "verifier_sessions": 2,
+    "review_cost_usd": 0.66,
+    "verify_cost_usd": 0.32,
+    "cost_usd": 0.98,
+    "worker_seconds": 358,
+    "wall_seconds": 146,
+    "round": 4,
+    "what": "The fixes for the audit job in CI",
+    "gate": {
+     "verdict": "pass",
+     "closed": 0,
+     "open": 0,
+     "waived": 0
+    }
    }
   ],
+  "ci_job": {
+   "run": 44617239293,
+   "second_run": 44618792648,
+   "second_run_confirmed_bugs": 0,
+   "confirmed_bugs": 2,
+   "severities": [
+    "medium"
+   ],
+   "functions": [
+    "main",
+    "cmd_import"
+   ]
+  },
   "confirmed_bugs": 6,
   "closed_by_repro": 6,
-  "cost_usd": 4.76
+  "cost_usd": 5.74
  }
 }
