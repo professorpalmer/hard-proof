@@ -32,7 +32,8 @@ from bugs import PKG, SRC, WORK
 from flowrun import run_agent
 
 HERE = Path(__file__).resolve().parent
-TOOL = HERE.parent / "tool"
+# The tool folder is beside the study folders in the working copy, and one level up in the public repository.
+TOOL = next((p / "tool" for p in HERE.parents if (p / "tool" / "hpflow").is_dir()), HERE.parent / "tool")
 HP = str(TOOL / "hp")
 RUNS = WORK / "p"
 OUT = HERE / "retro"

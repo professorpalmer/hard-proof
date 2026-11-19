@@ -2,10 +2,13 @@
 
 Each claim of the paper has a folder and a command in this file.
 
+The study is in the folder `study/` of this repository. Each folder in this file is in `study/`, and each
+command runs from there.
+
 ## Check each stored result
 
 ```bash
-python3 verify_all.py
+cd study && python3 verify_all.py
 ```
 
 This command runs each gate again on each stored worker result, with the extra

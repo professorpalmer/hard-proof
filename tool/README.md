@@ -14,7 +14,7 @@ The two come from the study "Proved is not finished"
 and the limits. Source: https://github.com/professorpalmer/hard-proof
 
 `hp` replaces the hand-written gate scripts of the study
-(`exp12/base/gate12.py` and the scripts before it) with one command set and
+(`study/exp12/base/gate12.py` and the scripts before it) with one command set and
 one domain contract. A new Python function gets a proof gate with no new gate
 code.
 

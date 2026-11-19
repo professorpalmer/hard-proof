@@ -4,10 +4,10 @@
 
 | Folder | Content |
 | --- | --- |
-| `exp1` to `exp12`, `reps` | The experiments of the first study: Lean models, laws, challenge files, gate scripts, link tests, each run folder with the worker solution |
-| `baseline` | The review with no proof duty at 48 decision points, the audit of worker transcripts, and the second run of the blind tables |
-| `v2` | The loop tests, the data set of 95 real bugs, the review arms, the proof pipeline on real bugs, the audit of findings, and the fix records |
-| `v3` | The first proof on a new product function: the swarm policy table of Marionette |
+| `study/exp1` to `study/exp12`, `study/reps` | The experiments of the first study: Lean models, laws, challenge files, gate scripts, link tests, each run folder with the worker solution |
+| `study/baseline` | The review with no proof duty at 48 decision points, the audit of worker transcripts, and the second run of the blind tables |
+| `study/v2` | The loop tests, the data set of 95 real bugs, the review arms, the proof pipeline on real bugs, the audit of findings, and the fix records |
+| `study/v3` | The first proof on a new product function: the swarm policy table of Marionette |
 | `tool/hpflow/proof` | The command `hp`: one proof gate for one Python function: model, link test, laws, and four kinds of certificate |
 | `tool/hpflow` | The audit ladder as one command set: targets from a git range, review, script gate, two verifiers, fix, and the release gate |
 | `site` | The build scripts of the paper and of this PDF |
@@ -22,6 +22,8 @@
   `--inadvisably-no-sandbox`. Run untrusted Lean code only in a sandbox.
 
 ## Run records
+
+The paths in this section are in `study/`.
 
 - `reps/*.json`: one record for each worker run: flow id, visits, worker verdicts, worker time,
   cost, changed files, and the verdict of the pilot gate.

@@ -40,7 +40,7 @@ hpf gate  --out ~/audits/next --ref HEAD
   user. `--user-settings` gives each worker the full profile.
 
 For a proof of one function, start with [`tool/README.md`](../tool/README.md) (the domain contract and a quick start on
-`tool/examples/clamp`). `v3/swarm_policy` is a real decision table as a complete domain: 5 laws, a proof that
+`tool/examples/clamp`). `study/v3/swarm_policy` is a real decision table as a complete domain: 5 laws, a proof that
 the code passes them, and a proof that the laws leave no input open.
 
 A pass of the gate does not say that the code has no bug. The tools are a first version: Python functions,

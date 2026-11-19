@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/professorpalmer/hard-proof/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://github.com/professorpalmer/hard-proof/blob/main/tool/pyproject.toml)
 
+![hpf: no repro, no bug. No fix, no release.](https://professorpalmer.github.io/hard-proof/social-card.png)
+
 Hard Proof is a way to accept agent-written code on evidence. A review finding counts only with a repro that a
 script runs. A small rule that the owner states gets a machine-checked proof, and an adversary proves what the
 rule leaves open.
@@ -51,6 +53,7 @@ makes no model call. For all steps, the costs and the limits, see [Use the tools
 |---|---|
 | [Claims and commands](https://github.com/professorpalmer/hard-proof/blob/main/docs/CLAIMS.md) | The folder and the command for each claim of the paper |
 | [Repository layout](https://github.com/professorpalmer/hard-proof/blob/main/docs/LAYOUT.md) | What each folder holds, the requirements, and the run records |
+| [Study folders](https://github.com/professorpalmer/hard-proof/tree/main/study) | Each experiment, the run records and the data |
 
 The full docs list is in the [docs index](https://github.com/professorpalmer/hard-proof/blob/main/docs/README.md).
 
