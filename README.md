@@ -54,6 +54,9 @@ Install the two tools (Python 3.9 or later, no dependency):
 pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
 ```
 
+The tools are not on PyPI. A different project has the name `hardproof` there, so install from this
+repository as shown.
+
 Audit the functions that changed since a tag, and gate the release:
 
 ```bash

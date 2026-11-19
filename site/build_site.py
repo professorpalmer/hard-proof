@@ -698,7 +698,7 @@ def build_zip(dest: Path) -> str:
                   "audit_groups.json", "audit_runs.json", "audit_merged.json"}
     files: list[tuple[Path, str]] = []
     for path in sorted(ROOT.rglob("*")):
-        if not path.is_file() or any(part in skip_dirs for part in path.relative_to(ROOT).parts):
+        if not path.is_file() or any(part in skip_dirs or part.endswith(".egg-info") for part in path.relative_to(ROOT).parts):
             continue
         rel = path.relative_to(ROOT)
         if path.name in skip_names or path.name.startswith(("wait_", "start_")):

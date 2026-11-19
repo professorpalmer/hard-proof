@@ -16,7 +16,10 @@ pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=
 ```
 
 This gives four commands: `hp` and `hardproof` (the proof gate), `hpf` and
-`hpflow` (the audit ladder). The package has no Python dependency. From a
+`hpflow` (the audit ladder). The package has no Python dependency. Its
+distribution name is `hpflow`, and it is not on PyPI: install it from this
+repository. A different project has the name `hardproof` on PyPI, so
+`pip install hardproof` does not give these tools. From a
 checkout, `./hp` and `./hpf` in this folder do the same with no install.
 
 | Command | Needs |
