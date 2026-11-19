@@ -1,13 +1,16 @@
 """The briefs of the workers. The texts come from the study scripts in `hard-proof/v2`."""
 from __future__ import annotations
 
+# The rule for a repro file. Each brief that asks for a repro has this text.
+RUN_FILE = ("a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `{root}` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.")
+
 REVIEW = """The folder `project/` has the Python source of a tool. Please review one function: `{function}` in `project/{file}`, with the helper functions that it calls.
 
 Look for inputs for which this function gives a wrong result: a result that conflicts with its docstring, its comments, the documentation in `project/docs` or `project/README.md`, the name of the function, or what its callers in the project need. Only report a problem that you are sure about. If you find no problem, report none. Do not report style, speed, or missing features.
 
 Write your report into the current folder:
 - `findings.json`: a JSON list, the most certain finding first, at most 5 entries. Each entry: {{"n": 1, "claim": "what is wrong, in one or two sentences", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. An empty list when you find no problem.
-- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `{root}` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
+- For each finding `n`, """ + RUN_FILE + """
 
 {arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
 
@@ -19,7 +22,7 @@ Look for inputs for which one of these functions gives a wrong result: a result 
 
 Write your report into the current folder:
 - `findings.json`: a JSON list, the most certain finding first, at most {per_function} entries for each function. Each entry: {{"n": 1, "function": "the name of the function, exactly as in the list above", "claim": "what is wrong, in one or two sentences", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. `n` counts from 1 over all entries. An empty list when you find no problem.
-- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `{root}` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
+- For each finding `n`, """ + RUN_FILE + """
 
 {arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
 
@@ -29,6 +32,25 @@ PER_FUNCTION = 4
 REVIEW_ARM = {"plain": "You have no shell in this task. Read the code.\n\n",
               "shell": "You have a shell. You can run Python on the project to check a finding, for example `cd project && python3 -c \"...\"`.\n\n"}
 REVIEW_CHECK = "python3 -c \"import json;d=json.load(open('findings.json'));assert isinstance(d,list) and len(d)<=5\""
+
+IMPORT = """The folder `project/` has the Python source of a tool. A reviewer outside this audit made {n} claims about one function: `{function}` in `project/{file}`. The file `outside_claims.json` lists the claims. A claim can be wrong, and a claim can be about something that is not a wrong result.
+
+Your work: decide for each claim if you can show it. To show a claim, you need an input for which the project gives a wrong result because of this function: a result that conflicts with a docstring, a comment, the documentation in `project/docs` or `project/README.md`, the name of the function, or what a caller in the project needs. The wrong result can be the result of this function. It can also be the result of a caller in the project that uses this function, for example when the function cannot give a correct result with the arguments that its callers have: then `run()` calls that caller. Read the function, the helper functions that it calls, and its callers (use grep). Do not report a problem that is not in `outside_claims.json`.
+
+Write your report into the current folder:
+- `findings.json`: a JSON list with one entry for each claim that you can show. Each entry: {{"n": the `n` of the claim, "claim": "what is wrong, in one or two sentences, as you checked it", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. An empty list when you can show no claim.
+- For each entry `n` of `findings.json`, """ + RUN_FILE + """
+- `not_shown.json`: a JSON list with one entry for each other claim. Each entry: {{"n": the `n` of the claim, "reason": "one sentence: the claim is false (give the evidence), or it is about style, speed or a missing feature and no result is wrong, or a repro needs something that `run()` cannot build"}}. An empty list when you can show each claim.
+
+Each claim must be in exactly one of the two lists.
+
+{arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
+
+IMPORT_CHECK = ("python3 -c \"import json;c=json.load(open('outside_claims.json'));d=json.load(open('findings.json'));"
+                "s=json.load(open('not_shown.json'));assert isinstance(d,list) and isinstance(s,list);"
+                "assert sorted([x['n'] for x in d]+[x['n'] for x in s])==sorted(x['n'] for x in c)\"")
+# The most outside claims about one function in one worker session.
+IMPORT_PART = 8
 
 VERIFY = """The folder `project/` has the current source of the product `{repo}` (Python package, tests and documentation). {head}
 

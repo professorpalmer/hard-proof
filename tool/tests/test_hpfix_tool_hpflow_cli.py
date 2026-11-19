@@ -60,7 +60,8 @@ def audit_args(passes: int) -> types.SimpleNamespace:
         command="audit", adapter=None, agent_cmd=None, model=None, models=None,
         shell=True, repo="r", ref="x", paths=None, python=None, test_cmd=None, import_root=None,
         changed="a..b", functions=None, files=None, max_lines=150, max_n=None, passes=passes,
-        repro_timeout=60, group="function", group_size=6, short_prompt=False, staged=True)
+        repro_timeout=60, group="function", group_size=6, short_prompt=False, staged=True,
+        findings=None, source=None)
 
 
 class AuditPassesTest(unittest.TestCase):

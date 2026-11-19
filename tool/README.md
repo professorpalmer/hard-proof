@@ -394,8 +394,9 @@ When the owner decides that a confirmed bug stays as it is, record it:
 hpf waive --out ~/audits/next --bug ID --reason "why the behavior stays" --by NAME
 ```
 
-The gate fails when a review or a verifier run is absent, when a confirmed
-bug is open, or when a repro does not run on `REF`. A range with no changed
+The gate fails when a review or a verifier run is absent, when a finding
+came after the last `verify` and has no verdict, when a confirmed bug is
+open, or when a repro does not run on `REF`. A range with no changed
 function passes with no worker run.
 
 What we measured on our two products (API-equivalent cost, Claude models):
@@ -407,6 +408,72 @@ function with a finding had two verifier runs. One reviewer session for each
 file (`--group file`) cost 8.94 US dollars and confirmed 3 bugs, so it is not the
 default. On that audit, `gate --ref` failed on the audited release with 7
 open bugs and passed on the next release with 7 closed.
+
+### Findings of another reviewer
+
+`hpf` can take the findings of another review tool, of a person, or of an
+agent workflow. A finding of another tool has no repro, so it enters the
+ladder as a claim. A worker must show each claim with a repro. A claim with a
+repro that runs is a finding of grade 1, and the two verifiers and the gate
+then handle it like a finding of the review step.
+
+```sh
+hpf audit --repo . --ref HEAD --findings other-review.json --out ~/audits/next
+hpf gate  --out ~/audits/next --ref HEAD
+```
+
+With `--changed A..B` and `--findings FILE` in one call, the audit has the
+two sources. On an audit folder that is there, `hpf import --findings FILE`
+adds the claims, and `hpf verify` then judges them.
+
+The findings file is a JSON list. Each entry names one function of a Python
+file in the audited paths:
+
+```json
+[
+  {"file": "pkg/mod.py", "function": "Class.method", "claim": "what is wrong"},
+  {"file": "pkg/mod.py", "line": 120, "claim": "what is wrong", "source": "tool name"}
+]
+```
+
+- `file`: the path in the repository. A full path below the repository is
+  also read.
+- `function` or `line`, or the two: the qualified name of the function, or a
+  line inside it. A method name with no class name is read when the file has
+  one such method.
+- `claim`: the text of the finding.
+- `source`: the name of the tool. `--source NAME` gives it for each entry
+  that has none.
+
+An object with the key `findings` is the same list. A SARIF 2.1.0 file is
+also read: each result gives its message, the file and the start line of its
+first location, and the name of its tool.
+
+An entry that the ladder cannot take is skipped, and the report gives the
+reason for each one: the place is not in a function, the file is not Python,
+it is a test file, it is not in the audited paths, or the name fits two
+functions. A file that is not JSON in one of these forms is a usage error.
+
+The worker gives one answer for each claim: a repro, or a reason why it
+cannot show the claim (`not_shown` in the report). A claim with no answer
+makes the run a failed run, and the gate then fails. `REPORT.md` and
+`confirmed.json` name the source of each claim.
+
+What we measured (Claude models, `study/v2/import_live.json`): the 12
+findings of two review tools on one release range of Puppetmaster, 10 from
+Claude Code review and 2 from Codex review. One entry was about a test file
+and was skipped. A worker showed 7 of the 11 claims with a repro and gave a
+reason for the other 4 (style, speed, or behavior by design). The two
+verifiers confirmed 4 claims, which are 3 distinct bugs. They are the 3 bugs
+that a blind judge confirmed among the same 12 findings in an earlier test.
+The run cost 2.19 US dollars and took 3.2 minutes.
+
+A first run with an earlier brief found 2 of those 3 bugs. The third fault
+shows only in a caller of the named function, and the worker said that the
+function gives no wrong result. The brief now tells the worker to show such
+a claim through the caller. This is the limit of the step: a claim that the
+worker does not show does not reach a verifier. Read the `not_shown` list of
+the report.
 
 ### Commands
 
@@ -436,7 +503,7 @@ about 25 percent less again, and it found fewer bugs in our test (see
 repository root: `--import-root src` for a `src/` layout, or the folder of the package in a larger
 repository. A repro then imports the package with that folder first on the import path.
 
-The commands that start workers (`review`, `verify`, `fix`, `audit`) also take
+The commands that start workers (`review`, `import`, `verify`, `fix`, `audit`) also take
 `--adapter claude-code|codex|command`, `--agent-cmd TEMPLATE` and
 `--effort low|medium|high|xhigh` (default `medium`; not for `command`).
 
@@ -471,8 +538,15 @@ runs again. A stored run with a launch error runs again.
   separate process. A finding has grade 1 when `run()` returns. Else it stays
   at grade 0 with the reason (no repro file, an import error, a timeout, or
   an exception).
+- `import --findings FILE ... [--source NAME] [--adapter NAME] [--model sonnet] [--repro-timeout 60]`:
+  read the findings of another reviewer (see "Findings of another reviewer")
+  and write `imports.json`. One worker run for the claims about each function
+  (at most 8 claims in one run). The script that grades a review finding
+  grades each repro. The files of the last call are the import of the audit
+  folder. A stored worker result is used again.
 - `verify [--adapter NAME] [--models sonnet opus] [--group file|function] [--all-verifiers]`:
-  one verifier run for each file with grade-1 findings. The first model runs
+  one verifier run for each file with grade-1 findings, from `review` and
+  from `import`. The first model runs
   for each group. The other models run only for a group in which the first
   model says `real` for one claim or more, because a claim that the first
   verifier does not call `real` cannot be confirmed. `--all-verifiers` runs
@@ -493,7 +567,9 @@ runs again. A stored run with a launch error runs again.
   pushes or merges. The report lists each worktree, its diff stat, its new
   files, the check verdict and the judge verdict.
 - `audit ...`: `init`, `targets`, `review` and `verify` in one call, with the
-  options of each. It stops at the first step that fails.
+  options of each. It stops at the first step that fails. With
+  `--findings FILE`, the call also has the `import` step, and it needs no
+  targets: then it is `init`, `import` and `verify`.
 - `status`: the adapter of the audit folder, the count of findings at each
   grade, the adapters, cost and time of each step, and what is not done.
 - `waive --bug ID --reason TEXT [--by NAME]`: record in `waivers.json` that a

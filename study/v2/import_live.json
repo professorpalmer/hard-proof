@@ -1,0 +1,109 @@
+{
+ "input": "the findings of Claude Code review and Codex review in h2h/findings_claude.json and h2h/findings_codex.json",
+ "ref": "Puppetmaster v1.51.1",
+ "blind_judge": {
+  "findings": 12,
+  "confirmed_claims": 4,
+  "confirmed_distinct_bugs": 3
+ },
+ "runs": [
+  {
+   "folder": "hpflow-import-live-run1",
+   "brief": "first brief",
+   "entries": 12,
+   "skipped": [
+    "a test file"
+   ],
+   "claims": 11,
+   "shown_by_a_repro": 6,
+   "not_shown": 5,
+   "import_sessions": 6,
+   "verifier_sessions": 7,
+   "confirmed_claims": 4,
+   "confirmed_distinct_bugs": 3,
+   "bugs": [
+    {
+     "function": "_run_models_sync",
+     "sources": [
+      "Claude Code review"
+     ],
+     "severity": "low",
+     "claim": "_run_models_sync only catches RuntimeError, so an OSError/PermissionError from the lock or write in sync_starter_registry (e.g. unwritable registry directory with --apply) escapes as a traceback instead of 'error: ...' and exit 1."
+    },
+    {
+     "function": "_run_cli",
+     "sources": [
+      "Claude Code review"
+     ],
+     "severity": "low",
+     "claim": "On the BaseException path (e.g. KeyboardInterrupt in communicate) _run_cli kills the process group but never waits on the Popen or closes its pipes, so the child stays unreaped (returncode None) and pipes stay open, unlike subprocess.run."
+    },
+    {
+     "function": "unroutable_pin_hint",
+     "sources": [
+      "Claude Code review",
+      "Codex review"
+     ],
+     "severity": "medium",
+     "claim": "The hint looks up the starter entry by exact id only. When the registry holds the same adapter/model under another id (cursor/my-grok, disabled), it says the entry is absent and advises `models sync --apply`, which plan_starter_sync skips as covered."
+    }
+   ],
+   "bugs_of_the_blind_judge_found": {
+    "covered_hint": true,
+    "k2": false,
+    "k12": true
+   },
+   "cost_usd": 1.75,
+   "wall_seconds": 142
+  },
+  {
+   "folder": "hpflow-import-live",
+   "brief": "brief of the release",
+   "entries": 12,
+   "skipped": [
+    "a test file"
+   ],
+   "claims": 11,
+   "shown_by_a_repro": 7,
+   "not_shown": 4,
+   "import_sessions": 6,
+   "verifier_sessions": 8,
+   "confirmed_claims": 4,
+   "confirmed_distinct_bugs": 3,
+   "bugs": [
+    {
+     "function": "_run_models_sync",
+     "sources": [
+      "Claude Code review"
+     ],
+     "severity": "low",
+     "claim": "_run_models_sync catches only RuntimeError, so with --apply on a registry in a non-writable directory the lock acquisition raises PermissionError and the CLI crashes with a traceback instead of printing 'error: ...' and returning 1."
+    },
+    {
+     "function": "unroutable_pin_hint",
+     "sources": [
+      "Claude Code review",
+      "Codex review"
+     ],
+     "severity": "medium",
+     "claim": "The lookup is by exact id only, so a disabled entry with the same adapter and model under another id (cursor/my-grok) is reported as absent and the user is told to run `models sync --apply`, which skips it as covered."
+    },
+    {
+     "function": "unroutable_pin_hint",
+     "sources": [
+      "Codex review"
+     ],
+     "severity": "medium",
+     "claim": "The hint text has no registry path and the function takes none, so for a task with a custom registry_path the suggested `models sync --apply` and enable commands omit --registry-path and act on the default registry."
+    }
+   ],
+   "bugs_of_the_blind_judge_found": {
+    "covered_hint": true,
+    "k2": true,
+    "k12": true
+   },
+   "cost_usd": 2.19,
+   "wall_seconds": 192
+  }
+ ]
+}

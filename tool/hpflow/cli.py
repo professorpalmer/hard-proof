@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-from . import adapters
+from . import adapters, outside
 from . import commands as c
 from .common import DEFAULT_CONCURRENCY, StepError, UsageError, read_json
 from .direct import DirectRunner, check_template
@@ -53,6 +53,24 @@ def add_init(p: argparse.ArgumentParser) -> None:
     p.add_argument("--paths", nargs="+")
     p.add_argument("--python")
     p.add_argument("--test-cmd", help="template with {python} and {tests}")
+
+
+def add_findings(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--findings", nargs="+", metavar="FILE",
+                   help="files with the findings of another reviewer: a JSON list of {file, function or line, claim}, "
+                        "or SARIF 2.1.0. A worker must show each claim with a repro before a verifier reads it")
+    p.add_argument("--source", help="the name of the tool for a finding that does not give one")
+
+
+def add_import(p: argparse.ArgumentParser) -> None:
+    add_findings(p)
+    p.add_argument("--model", help=f"the model of the worker that writes the repros (default sonnet on claude-code): {MODEL_HELP}")
+    p.add_argument("--repro-timeout", type=float, default=60)
+
+
+def add_audit_targets(p: argparse.ArgumentParser) -> None:
+    """The targets of `audit`. With `--findings`, an audit needs no target."""
+    add_targets(p, required=False)
 
 
 def add_targets(p: argparse.ArgumentParser, required: bool = True) -> None:
@@ -125,10 +143,11 @@ def build_parser() -> Parser:
     parser = Parser(prog="hpflow", description="Take Python functions up the evidence ladder with agent workers.")
     sub = parser.add_subparsers(dest="command", parser_class=Parser)
     for name, adders in (("init", [add_init]), ("targets", [add_targets]), ("review", [add_adapter, add_review]),
+                         ("import", [add_adapter, add_import]),
                          ("verify", [add_adapter, add_verify, add_verify_group]),
                          ("fix", [add_adapter, add_fix]),
                          ("status", []), ("waive", [add_waive]), ("gate", [add_gate]),
-                         ("audit", [add_adapter, add_init, add_targets, add_review, add_verify])):
+                         ("audit", [add_adapter, add_init, add_audit_targets, add_review, add_findings, add_verify])):
         p = sub.add_parser(name)
         add_common(p)
         for add in adders:
@@ -155,6 +174,10 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
             raise UsageError("--passes must be 1 or more")
         return c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
                                         args.short_prompt)
+    if cmd == "import":
+        if not args.findings:
+            raise UsageError("import needs --findings FILE")
+        return c.cmd_import(ctx, args.findings, args.source, args.model, args.repro_timeout)
     if cmd == "verify":
         return c.cmd_verify(ctx, args.models, read_group(ctx, getattr(args, "group", None)), args.staged)
     if cmd == "fix":
@@ -179,29 +202,35 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
         for m in adapters.model_or_default(adapter, args.models, ["sonnet", "opus"], "--models"):
             adapters.model_id(adapter, m)
         adapters.payload(adapter, shell=args.shell, lean=ctx.lean, agent_cmd=template)
+        for name in args.findings or []:
+            outside.read(Path(name).expanduser(), args.source)
         steps: List[Dict[str, Any]] = []
         calls: List[Callable[[], Dict[str, Any]]] = [
-            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root),
-            lambda: c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n),
-            lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
-                                        args.short_prompt),
-            lambda: c.cmd_verify(ctx, args.models, args.group, args.staged)]
+            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root)]
+        if args.changed or args.functions or args.files:
+            calls += [
+                lambda: c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n),
+                lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
+                                     args.short_prompt)]
+        if args.findings:
+            calls.append(lambda: c.cmd_import(ctx, args.findings, args.source, args.model, args.repro_timeout))
+        calls.append(lambda: c.cmd_verify(ctx, args.models, args.group, args.staged))
         for call in calls:
             r = call()
             steps.append(r)
             if not r.get("ok"):
                 break
         return {"command": "audit", "ok": all(s.get("ok") for s in steps) and len(steps) == len(calls), "steps": steps}
-    raise UsageError("give a command: init, targets, review, verify, fix, audit, status, waive or gate")
+    raise UsageError("give a command: init, targets, review, import, verify, fix, audit, status, waive or gate")
 
 
 def main(argv: Optional[List[str]] = None, runner: Optional[Runner] = None) -> int:
     try:
         args = build_parser().parse_args(argv)
         if not args.command:
-            raise UsageError("give a command: init, targets, review, verify, fix, audit, status, waive or gate")
-        if args.command == "audit" and not (args.changed or args.functions or args.files):
-            raise UsageError("audit needs --changed, --function or --file")
+            raise UsageError("give a command: init, targets, review, import, verify, fix, audit, status, waive or gate")
+        if args.command == "audit" and not (args.changed or args.functions or args.files or args.findings):
+            raise UsageError("audit needs --changed, --function, --file or --findings")
         if args.concurrency < 1:
             raise UsageError("--concurrency must be 1 or more")
         out = Path(args.out).expanduser().resolve()

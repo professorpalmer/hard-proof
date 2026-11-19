@@ -31,6 +31,10 @@ hpf gate  --out ~/audits/next --ref HEAD
 - `hpf audit` and `hpf fix` start agent workers. They need one agent tool with a login, and no other
   package: Claude Code (the default), Codex (`--adapter codex`), or another tool through a command template
   (`--adapter command --agent-cmd`). [`tool/README.md`](../tool/README.md) has an example for each.
+- `hpf audit --findings FILE` takes the findings of another review tool: a JSON list of
+  `{"file", "function" or "line", "claim"}`, or a SARIF file. A worker must show each claim with a repro.
+  Then the two verifiers and the gate handle it like a finding of `hpf`. With `--findings` and no
+  `--changed`, the audit judges only those findings.
 - `hpf fix` never commits. Review each fix and merge it yourself.
 - `hpf gate` makes no model call. It passes when each confirmed bug gives a new result on the commit that you
   release, or has a waiver with a reason (`hpf waive`).
