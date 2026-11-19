@@ -869,9 +869,13 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
 
 
 def cell(x: Any) -> str:
-    """The text of one cell of a Markdown table. A backslash in the text is doubled first, so a backslash before
-    a bar cannot take the escape of the bar."""
-    return str("" if x is None else x).replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ")[:300]
+    """The text of one cell of a Markdown table, on one line.
+
+    Each run of space characters (a line feed, a carriage return, a tab and the others) becomes one space. The
+    cut to 300 characters comes before the escapes, so it cannot cut an escape in two. A backslash is doubled
+    before a bar gets its escape, so a backslash of the text cannot take the escape of the bar."""
+    text = re.sub(r"\s+", " ", str("" if x is None else x))[:300]
+    return text.replace("\\", "\\\\").replace("|", "\\|")
 
 
 def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, Any]], bugs: List[Dict[str, Any]]) -> str:

@@ -303,6 +303,8 @@ class OutsideFormTest(unittest.TestCase):
         self.assertEqual(outside.file_of_uri("file:///C:/repo/a.py"), "C:/repo/a.py")
         self.assertEqual(outside.file_of_uri("file://C:/repo/a.py"), "C:/repo/a.py")
         self.assertEqual(outside.file_of_uri("file://localhost/repo/a.py"), "/repo/a.py")
+        self.assertEqual(outside.file_of_uri("file://LOCALHOST/repo/a.py"), "/repo/a.py")
+        self.assertEqual(outside.file_of_uri("FILE://LocalHost/repo/a.py"), "/repo/a.py")
         self.assertEqual(outside.file_of_uri("file://server/share/a.py"), "//server/share/a.py")
         self.assertEqual(outside.file_of_uri("C:\\repo\\a.py"), "C:\\repo\\a.py")
         self.assertEqual(outside.file_of_uri("https://example.com/a.py"), "https://example.com/a.py")
@@ -320,6 +322,20 @@ class ReportCellTest(unittest.TestCase):
         self.assertEqual(cell("a\\|b"), "a\\\\\\|b")
         self.assertEqual(cell("C:\\x\ny"), "C:\\\\x y")
         self.assertEqual(cell(None), "")
+
+    def test_a_cell_is_one_line(self):
+        from hpflow.commands import cell
+        for ch in ("\r", "\r\n", "\n", "\t", "\x0b", "\x0c", "\x85", "\u2028", "\u2029", " \r\n\t "):
+            self.assertEqual(cell(f"a{ch}b"), "a b", repr(ch))
+
+    def test_the_cut_does_not_cut_an_escape(self):
+        from hpflow.commands import cell
+        for text in ("x" * 299 + "|" + "y", "x" * 299 + "\\" + "y", "x" * 298 + "\\|" + "y"):
+            out = cell(text)
+            # Each backslash of the output is one half of a pair, or the escape of a bar.
+            rest = out.replace("\\\\", "").replace("\\|", "")
+            self.assertNotIn("\\", rest, text[-4:])
+            self.assertNotIn("|", rest, text[-4:])
 
 
 class BriefTextTest(unittest.TestCase):

@@ -63,7 +63,8 @@ def file_of_uri(uri: str) -> str:
         if re.fullmatch(r"[A-Za-z]:", parts.netloc):
             # `file://C:/x.py` has the drive in the place of the host.
             return parts.netloc + path
-        if parts.netloc and parts.netloc != "localhost":
+        # `hostname` is the host in lower case and with no port: the name of a host has no case.
+        if (parts.hostname or "") not in ("", "localhost"):
             # A file on another host. It is not a file of the repository.
             return f"//{parts.netloc}{path}"
         # `file:///C:/x.py` has the path `/C:/x.py`. The path on Windows is `C:/x.py`.
