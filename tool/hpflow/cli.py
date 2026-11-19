@@ -199,8 +199,7 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
         if adapter == adapters.COMMAND:
             check_template(str(template))
         adapters.model_id(adapter, adapters.model_or_default(adapter, args.model, "sonnet", "--model"))
-        for m in adapters.model_or_default(adapter, args.models, ["sonnet", "opus"], "--models"):
-            adapters.model_id(adapter, m)
+        c.verifier_models(adapter, args.models)
         adapters.payload(adapter, shell=args.shell, lean=ctx.lean, agent_cmd=template)
         for name in args.findings or []:
             outside.read(Path(name).expanduser(), args.source)

@@ -275,6 +275,14 @@ class AuditWithFindingsTest(ImportCase):
         self.assertEqual(self.runner.calls, [])
         self.assertFalse((self.out / "audit.json").exists())
 
+    def test_bad_verifier_models_stop_the_audit_before_a_worker_runs(self):
+        for models, text in ((["sonnet"], "verify needs two models or more"), (["sonnet", "sonnet"], "give each verifier model once")):
+            code, r = self.audit("--changed", "HEAD~1..HEAD", "--models", *models)
+            self.assertEqual(code, 2, r)
+            self.assertIn(text, r["usage_error"])
+        self.assertEqual(self.runner.calls, [])
+        self.assertFalse((self.out / "audit.json").exists())
+
     def test_an_audit_needs_targets_or_findings(self):
         code, r = self.audit()
         self.assertEqual((code, r["usage_error"]), (2, "audit needs --changed, --function, --file or --findings"))
@@ -308,6 +316,40 @@ class OutsideFormTest(unittest.TestCase):
         self.assertEqual(outside.file_of_uri("file://server/share/a.py"), "//server/share/a.py")
         self.assertEqual(outside.file_of_uri("C:\\repo\\a.py"), "C:\\repo\\a.py")
         self.assertEqual(outside.file_of_uri("https://example.com/a.py"), "https://example.com/a.py")
+
+    def test_no_sarif_result_stops_the_read(self):
+        ok = {"message": {"text": "c"}, "locations": [{"physicalLocation": {"artifactLocation": {"uri": "a.py"}, "region": {"startLine": 1}}}]}
+
+        def at(uri: Any) -> dict:
+            return {"message": {"text": "c"}, "locations": [{"physicalLocation": {"artifactLocation": {"uri": uri}, "region": {"startLine": 1}}}]}
+        odd = [at("file://[bad/x.py"), at("//[::1/x.py"), at("file://host:port/x.py"), at(7), at(""), at("%zz.py"), None, [], "text", 3,
+               {"message": "text"}, {"message": {"text": "c"}, "locations": "x"}, {"message": {"text": "c"}, "locations": [None]},
+               {"message": {"text": "c"}, "locations": [{"physicalLocation": "x"}]},
+               {"message": {"text": "c"}, "locations": [{"physicalLocation": {"artifactLocation": "a.py", "region": 1}}]},
+               {"ruleId": 5, "message": {"text": "c"}, "locations": ok["locations"]}]
+        data = {"runs": [{"tool": "x", "results": odd + [ok]}, {"results": "x"}, {"tool": {"driver": "x"}, "results": [ok]}, None, 5]}
+        entries, skipped = self.read(data)
+        self.assertEqual(len(entries) + len(skipped), len(odd) + 2)
+        self.assertEqual([e["file"] for e in entries if e["file"] == "a.py"], ["a.py"] * 3)
+        reasons = {s["index"]: s["reason"] for s in skipped}
+        self.assertEqual(reasons[0], "the file address of the first location is not valid")
+        self.assertEqual(reasons[1], "the file address of the first location is not valid")
+
+    def test_no_entry_of_the_list_form_stops_the_read(self):
+        odd = [None, 5, "x", [], {}, {"file": 5, "claim": "c", "line": 1}, {"file": "a.py", "claim": 5, "line": 1},
+               {"file": "a.py", "claim": "c", "line": "1"}, {"file": "a.py", "claim": "c", "line": 0}, {"file": "a.py", "claim": "c", "line": 1.5},
+               {"file": "a.py", "claim": "c", "function": 5}, {"file": "a.py", "claim": "c", "function": ""}]
+        entries, skipped = self.read(odd + [{"file": "a.py", "claim": "c", "line": 1, "source": 5}])
+        self.assertEqual((len(entries), len(skipped)), (1, len(odd)))
+        self.assertEqual(entries[0]["source"], "tool")
+
+    def test_a_file_that_json_cannot_load_is_a_usage_error(self):
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            path = Path(tmp) / "f.json"
+            for data in (b"\xff\xfe\x00bad", b"[" * 200000, b""):
+                path.write_bytes(data)
+                with self.assertRaises(UsageError, msg=data[:8]):
+                    outside.read(path)
 
     def test_a_file_that_cannot_be_read_is_a_usage_error(self):
         with self.assertRaises(UsageError):

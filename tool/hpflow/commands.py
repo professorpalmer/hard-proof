@@ -755,17 +755,24 @@ def verdict_class(verdicts: Dict[str, Optional[str]], need: int, staged: bool = 
     return "mixed"
 
 
+def verifier_models(adapter: str, models: Optional[List[str]]) -> List[str]:
+    """The model ids of the verifiers, or a usage error. `verify` and the check before an `audit` use this, so
+    an audit with a bad `--models` stops before a reviewer runs."""
+    mids = [adapters.model_id(adapter, m) for m in adapters.model_or_default(adapter, models, ["sonnet", "opus"], "--models")]
+    if len(mids) < 2:
+        raise UsageError("verify needs two models or more")
+    if len(set(mids)) < len(mids):
+        raise UsageError("give each verifier model once: the verdicts of one model are stored under its id")
+    return mids
+
+
 def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function", staged: bool = True) -> Dict[str, Any]:
     audit = ctx.audit()
     findings = all_findings(ctx)
     if findings is None:
         raise UsageError("no review.json and no imports.json: run `review` or `import` first")
     adapter, template = ctx.check_adapter()
-    mids = [adapters.model_id(adapter, m) for m in adapters.model_or_default(adapter, models, ["sonnet", "opus"], "--models")]
-    if len(mids) < 2:
-        raise UsageError("verify needs two models or more")
-    if len(set(mids)) < len(mids):
-        raise UsageError("give each verifier model once: the verdicts of one model are stored under its id")
+    mids = verifier_models(adapter, models)
     payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
     key = adapter_key(adapter, template, ctx.effort)
     ctx.keep_adapter()

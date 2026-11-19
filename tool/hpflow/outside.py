@@ -73,6 +73,34 @@ def file_of_uri(uri: str) -> str:
     return unquote(uri) if not parts.scheme or len(parts.scheme) == 1 else uri
 
 
+def sarif_result(index: int, result: Any, tool: str) -> Tuple[Optional[Entry], Optional[str]]:
+    """One result of a SARIF run: the entry, or the reason why it is skipped."""
+    if not isinstance(result, dict):
+        return None, "the result is not an object"
+    message = result.get("message") if isinstance(result.get("message"), dict) else {}
+    text = text_of(message.get("text")) or text_of(message.get("markdown"))
+    locations = result.get("locations") if isinstance(result.get("locations"), list) else []
+    place = locations[0].get("physicalLocation") if locations and isinstance(locations[0], dict) else None
+    place = place if isinstance(place, dict) else {}
+    artifact = place.get("artifactLocation") if isinstance(place.get("artifactLocation"), dict) else {}
+    region = place.get("region") if isinstance(place.get("region"), dict) else {}
+    uri, line = text_of(artifact.get("uri")), line_of(region.get("startLine"))
+    if text is None:
+        return None, "no message text"
+    if uri is None:
+        return None, "no file in the first location"
+    if line is None:
+        return None, "no start line in the first location"
+    try:
+        file = file_of_uri(uri)
+    except ValueError:
+        # The address parser of Python refuses some texts, for example an open bracket in the host.
+        return None, "the file address of the first location is not valid"
+    rule = text_of(result.get("ruleId"))
+    claim = f"{rule}: {text}" if rule else text
+    return {"index": index, "file": file, "function": None, "line": line, "claim": claim[:MAX_CLAIM], "source": tool}, None
+
+
 def sarif_entries(data: Dict[str, Any], source: Optional[str]) -> List[Tuple[Optional[Entry], Optional[str]]]:
     out: List[Tuple[Optional[Entry], Optional[str]]] = []
     for run in data.get("runs") or []:
@@ -81,30 +109,9 @@ def sarif_entries(data: Dict[str, Any], source: Optional[str]) -> List[Tuple[Opt
         driver = ((run.get("tool") or {}).get("driver") or {}) if isinstance(run.get("tool"), dict) else {}
         # The name that the file gives comes first, as for an entry of the hpflow form.
         tool = text_of(driver.get("name") if isinstance(driver, dict) else None) or source or "outside"
-        for result in run.get("results") or []:
-            index = len(out)
-            if not isinstance(result, dict):
-                out.append((None, "the result is not an object"))
-                continue
-            message = result.get("message") if isinstance(result.get("message"), dict) else {}
-            text = text_of(message.get("text")) or text_of(message.get("markdown"))
-            locations = result.get("locations") if isinstance(result.get("locations"), list) else []
-            place = locations[0].get("physicalLocation") if locations and isinstance(locations[0], dict) else None
-            place = place if isinstance(place, dict) else {}
-            artifact = place.get("artifactLocation") if isinstance(place.get("artifactLocation"), dict) else {}
-            region = place.get("region") if isinstance(place.get("region"), dict) else {}
-            uri, line = text_of(artifact.get("uri")), line_of(region.get("startLine"))
-            if text is None:
-                out.append((None, "no message text"))
-            elif uri is None:
-                out.append((None, "no file in the first location"))
-            elif line is None:
-                out.append((None, "no start line in the first location"))
-            else:
-                rule = text_of(result.get("ruleId"))
-                claim = f"{rule}: {text}" if rule else text
-                out.append(({"index": index, "file": file_of_uri(uri), "function": None, "line": line,
-                             "claim": claim[:MAX_CLAIM], "source": tool}, None))
+        results = run.get("results") if isinstance(run.get("results"), list) else []
+        for result in results:
+            out.append(sarif_result(len(out), result, tool))
     return out
 
 
@@ -116,7 +123,8 @@ def read(path: Path, source: Optional[str] = None) -> Tuple[List[Entry], List[Di
         data = json.loads(path.read_text(encoding="utf-8-sig"))
     except OSError as e:
         raise UsageError(f"cannot read the findings file {path}: {e.strerror or e}") from None
-    except ValueError as e:
+    except (ValueError, RecursionError) as e:
+        # A file that is not UTF-8 text gives a ValueError too. A file with very deep lists gives a RecursionError.
         raise UsageError(f"the findings file {path} is not JSON: {e}") from None
     if isinstance(data, dict) and isinstance(data.get("runs"), list):
         pairs = sarif_entries(data, source)
