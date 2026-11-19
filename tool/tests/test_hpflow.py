@@ -98,6 +98,7 @@ class FakeRunner(Runner):
         self.calls: List[Dict[str, Any]] = []
         self.lock = threading.Lock()
         self.first_verdict = "real"
+        self.no_report = False
         self.first_model = SONNET
 
     def run(self, graph: Dict[str, Any], folder: Path) -> Dict[str, Any]:
@@ -134,9 +135,10 @@ class FakeRunner(Runner):
                                 dict(findings[4], function="not_in_the_list")]
                 else:
                     findings = [dict(f, function=names[0]) for f in findings]
-            (folder / "findings.json").write_text(json.dumps(findings))
-            for n, text in REPROS.items():
-                (folder / f"finding_{n}.py").write_text(text)
+            if not self.no_report:
+                (folder / "findings.json").write_text(json.dumps(findings))
+                for n, text in REPROS.items():
+                    (folder / f"finding_{n}.py").write_text(text)
             steps = [{"node": "work", "ok": True, "verdict": "PASS", "seconds": 3, "cost_usd": 0.1}]
         adapter = graph["defaults"]["adapter"]
         with self.lock:
@@ -365,6 +367,22 @@ class LadderTest(FlowCase):
 
     def bug_id(self) -> str:
         return json.loads((self.out / "confirmed.json").read_text())[0]["id"]
+
+    def test_gate_fails_when_a_reviewer_wrote_no_report(self):
+        # A worker that cannot sign in ends at once with no report. That is not a clean review.
+        self.init()
+        self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.runner.no_report = True
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual((code, r["findings"], len(r["failed_runs"])), (1, 0, 1), r)
+        code, g = self.hpf("gate")
+        self.assertEqual((code, g["verdict"]), (1, "fail"), g)
+        self.assertEqual(g["incomplete"], ["review: 1 targets have no reviewer result", "review: 1 runs failed"])
+        # A second review with a report makes the audit complete again.
+        self.runner.no_report = False
+        code, r = self.hpf("review", "--repro-timeout", "2", "--redo")
+        self.assertEqual(code, 0, r)
+        self.assertNotIn("review: 1 runs failed", self.hpf("status")[1]["not_done"])
 
     def test_gate_fails_before_the_review(self):
         self.init()

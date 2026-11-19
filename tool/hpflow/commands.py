@@ -429,7 +429,9 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
         folder = Path(r["folder"])
         items = read_json(folder / "findings.json")
         if not isinstance(items, list):
+            # Store the note: `status` and `gate` read the record, and a run with no report is not a review.
             r["note"] = "no valid findings.json"
+            ctx.save(r["run"], r)
             return []
         out = []
         mine = [by_id[i] for i in (r.get("targets") or [r["target"]])]
@@ -857,11 +859,12 @@ def cmd_status(ctx: Context) -> Dict[str, Any]:
     if review is None:
         open_items.append("review: not run")
     else:
-        done = {i for r in review_recs if not r.get("error") for i in (r.get("targets") or [r["target"]])}
+        # A run with an error (the worker did not start) or a note (it wrote no valid report) reviewed nothing.
+        done = {i for r in review_recs if not (r.get("error") or r.get("note")) for i in (r.get("targets") or [r["target"]])}
         missing = [t for t in targets or [] if t["id"] not in done]
         if missing:
             open_items.append(f"review: {len(missing)} targets have no reviewer result")
-        bad = [r["run"] for r in review_recs if r.get("error")]
+        bad = [r["run"] for r in review_recs if r.get("error") or r.get("note")]
         if bad:
             open_items.append(f"review: {len(bad)} runs failed")
     if review is not None and any(f["grade"] >= 1 for f in review["findings"]) and verify is None:

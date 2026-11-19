@@ -32,13 +32,32 @@ jobs:
           python -m pip install pytest ./tool
           claude --version
           hpf --help > /dev/null
+      - name: Check the agent login
+        run: |
+          claude -p "Reply with the one word: ready" --model claude-haiku-5-5 --output-format json > "$RUNNER_TEMP/login.json" || true
+          python - "$RUNNER_TEMP/login.json" <<'PY'
+          import json, sys
+          raw = open(sys.argv[1]).read()
+          try:
+              d = json.loads(raw)
+          except ValueError:
+              print("no JSON from the agent:", raw[:300]); sys.exit(1)
+          print("is_error:", d.get("is_error"), "| result:", str(d.get("result"))[:300])
+          sys.exit(1 if d.get("is_error") else 0)
+          PY
       - name: Audit the functions that changed since the last release tag
         run: |
+          set -o pipefail
           BASE=$(git describe --tags --abbrev=0 --match 'hpflow-v*' origin/main)
           echo "range: $BASE..HEAD"
           hpf audit --repo . --ref HEAD --changed "$BASE..HEAD" --out "$RUNNER_TEMP/audit" \
             --import-root tool --paths tool/hpflow tool/tests --python "$(which python)" \
             --max 12 --concurrency 4 | tee "$RUNNER_TEMP/audit.json"
+      - name: Worker logs after a failure
+        if: failure()
+        run: |
+          for f in $(ls "$RUNNER_TEMP"/audit/direct/*/work-1.stderr.txt 2>/dev/null | head -2); do echo "== $f"; tail -c 1500 "$f"; done
+          for f in $(ls "$RUNNER_TEMP"/audit/direct/*/work-1.stdout.txt 2>/dev/null | head -1); do echo "== $f"; tail -c 2500 "$f"; done
       - name: Report
         if: always()
         run: |
