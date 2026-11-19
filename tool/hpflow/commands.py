@@ -173,8 +173,9 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         paths = [p.rstrip("/") for p in paths]
     else:
         base = f"{import_root}/" if import_root else ""
-        _, listing = git(root, "ls-tree", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
-        paths = [base + d for d in listing.split() if d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
+        # With -z git does not quote a name with non-ASCII characters, and a name can hold a space.
+        _, listing = git(root, "ls-tree", "-z", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
+        paths = [base + d for d in listing.split("\0") if d and d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
         # Check before the extra paths: they hold no package, so an audit of only them reviews no code.
         if not paths:
             raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "
@@ -246,20 +247,24 @@ def parse_diff(text: str) -> List[Dict[str, Any]]:
     """Files of a `git diff -U0`, each with the old and new path and the line ranges of its hunks."""
     files: List[Dict[str, Any]] = []
     cur: Optional[Dict[str, Any]] = None
+    in_hunk = False
     hunk = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
     for line in text.splitlines():
         if line.startswith("diff --git "):
             cur = {"old": None, "new": None, "old_ranges": [], "new_ranges": [], "deleted_ranges": []}
             files.append(cur)
+            in_hunk = False
         elif cur is None:
             continue
-        elif line.startswith("--- "):
+        # After the first hunk a line '--- x' is a removed line '-- x', not the header of the old file.
+        elif line.startswith("--- ") and not in_hunk:
             cur["old"] = None if line[4:] == "/dev/null" else line[4:][2:]
-        elif line.startswith("+++ "):
+        elif line.startswith("+++ ") and not in_hunk:
             cur["new"] = None if line[4:] == "/dev/null" else line[4:][2:]
         else:
             m = hunk.match(line)
             if m:
+                in_hunk = True
                 for (s, c), key in (((m.group(1), m.group(2)), "old_ranges"), ((m.group(3), m.group(4)), "new_ranges")):
                     start, count = int(s), 1 if c is None else int(c)
                     if count:
@@ -474,16 +479,18 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
         mine = [by_id[i] for i in (r.get("targets") or [r["target"]])]
         by_name = {target_label(t): t for t in mine}
         seen: Dict[str, int] = {}
-        for i, f in enumerate(items[:5] if len(mine) == 1 else items):
+        # The group decides the brief, so it decides the rules: a file chunk can hold one function.
+        single = group == "function"
+        for i, f in enumerate(items[:5] if single else items):
             if not isinstance(f, dict):
                 continue
             n = f.get("n", i + 1)
-            t = mine[0] if len(mine) == 1 else by_name.get(str(f.get("function")))
+            t = mine[0] if single else by_name.get(str(f.get("function")))
             if t is None:
                 r["note_unknown_function"] = f"finding {n} names a function that is not in the list"
                 continue
             seen[t["id"]] = seen.get(t["id"], 0) + 1
-            if len(mine) > 1 and seen[t["id"]] > briefs.PER_FUNCTION:
+            if not single and seen[t["id"]] > briefs.PER_FUNCTION:
                 continue
             row = {"id": f"{r['run']}-{n}", "run": r["run"], "n": n, "target": t["id"], "file": t["file"],
                    "function": t["function"], "model": r["model"], "claim": str(f.get("claim"))[:600],
@@ -724,6 +731,14 @@ def fixcheck_command(info: Path) -> str:
     return f"{shell_quote(sys.executable)}{utf8} {shell_quote(str(info / 'check.py'))}"
 
 
+def fix_key(adapter: str, model: str, judge_model: str, rules: str) -> List[str]:
+    """The part of a fix id for the models and the rules. The defaults add nothing, so the ids of hpflow 0.4 stay
+    valid: its fix workers ran on Opus with a Sonnet judge and the default rules."""
+    default = (adapter == adapters.DEFAULT_ADAPTER and model == adapters.CLAUDE_MODELS["opus"]
+               and judge_model == adapters.CLAUDE_MODELS["sonnet"] and rules == briefs.DEFAULT_RULES)
+    return [] if default else [model, judge_model, digest("rules", rules)]
+
+
 def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
     """The paths that a fix worker can change: the audit paths and the tests."""
     files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
@@ -736,7 +751,8 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
               template: Optional[str], model: str, judge_model: str, rules: str) -> Dict[str, Any]:
     py = audit["python"]
     check = fixcheck_command(info)
-    test_run = audit["test_cmd"].format(python=py, tests=g["test_file"])
+    # Quoted as fixcheck.test_command does, so a python path with a space stays one argument.
+    test_run = audit["test_cmd"].format(python=shell_quote(py), tests=shell_quote(g["test_file"]))
     fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
                info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
     # The check command is in the list, so the worker and the judge can run it as the brief says.
@@ -745,7 +761,9 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
     judge_payload = adapters.payload(adapter, judge=True, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort,
                                      agent_cmd=template)
     files = fix_scope(ctx, audit)
-    return {"id": f"hpf-{digest('fixflow', g['slug'], base, *adapter_key(adapter, template, ctx.effort))}", "entry": "build",
+    fid = digest("fixflow", g["slug"], base, *adapter_key(adapter, template, ctx.effort),
+                 *fix_key(adapter, model, judge_model, rules))
+    return {"id": f"hpf-{fid}", "entry": "build",
             "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria"},
             "nodes": [
                 {"id": "build", "kind": "agent", "role": "code", "files": files, "task": briefs.BUILD.format(**fmt),
@@ -773,6 +791,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
     model = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "opus", "--model"))
     judge_model = adapters.model_id(adapter, adapters.model_or_default(adapter, judge_model, "sonnet", "--judge-model"))
     ctx.keep_adapter()
+    rules_text = rules or briefs.DEFAULT_RULES
     repo = Path(audit["repo"])
     bugs = read_json(ctx.out / "confirmed.json")
     if bugs is None:
@@ -800,8 +819,9 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         g["bugs"].append(b)
 
     def one(g: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
+        # The models and the rules change the fix, so a run with others does not reuse the stored one.
         rid = digest("fix", audit["commit"], base_commit, g["slug"], *adapter_key(adapter, template, ctx.effort),
-                     *sorted(b["id"] for b in g["bugs"]))
+                     *sorted(b["id"] for b in g["bugs"]), *fix_key(adapter, model, judge_model, rules_text))
         tree = ctx.out / "fix" / g["slug"]
         # The audit folder and the id of the run are a part of the branch name. A second audit of the same
         # repository then has branches of its own, and this run never deletes the branch of another audit.
@@ -841,7 +861,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
                                         "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit),
                                         "import_root": audit.get("import_root") or "", "tests_dir": tests_dir})
         (info / "check.py").write_text(check_script(info), encoding="utf-8")
-        graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules or briefs.DEFAULT_RULES)
+        graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules_text)
         r = ctx.runner.run(graph, tree)
         result.update(r)
         result["check"] = fix_check(info, tree)

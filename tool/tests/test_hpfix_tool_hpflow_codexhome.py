@@ -61,6 +61,40 @@ class LeanConfigTest(unittest.TestCase):
         text = 'model="m"\n[t]\nargs=[\n["a"],\n]\n[mcp_servers.x]\ncommand="c"\n'
         self.assertEqual(codexhome.lean_config(text), 'model="m"\n[t]\nargs=[\n["a"],\n]\n')
 
+    def test_notify_after_a_top_level_array_of_arrays_is_dropped(self) -> None:
+        text = 'a = [\n  [1,2],\n]\nnotify = ["x"]\nmodel = "m"\n'
+        self.assertEqual(codexhome.lean_config(text), 'a = [\n  [1,2],\n]\nmodel = "m"\n')
+
+    def test_notify_after_a_flat_top_level_array_is_dropped(self) -> None:
+        text = 'a = [\n  1,\n]\nnotify = ["x"]\nmodel = "m"\n'
+        self.assertEqual(codexhome.lean_config(text), 'a = [\n  1,\n]\nmodel = "m"\n')
+
+    def test_notify_in_a_table_after_a_top_level_array_is_kept(self) -> None:
+        text = 'a = [\n  [1],\n]\n[t]\nnotify = ["x"]\n'
+        self.assertEqual(codexhome.lean_config(text), text)
+
+    def test_a_bracket_in_a_string_of_a_kept_array(self) -> None:
+        text = 'a = [\n  "[x",\n]\n[mcp_servers.x]\ncommand="c"\n[t]\nb=1\n'
+        self.assertEqual(codexhome.lean_config(text), 'a = [\n  "[x",\n]\n[t]\nb=1\n')
+
+    def test_an_unclosed_kept_array_does_not_keep_a_dropped_table(self) -> None:
+        text = 'a = [\n  1,\n[mcp_servers.x]\ncommand="c"\n[t]\nb=1\n'
+        self.assertEqual(codexhome.lean_config(text), 'a = [\n  1,\n[t]\nb=1\n')
+
+
+class PrepareNotifyTest(PrepareAgentsTest):
+    def test_prepare_drops_notify_after_an_array_of_arrays(self) -> None:
+        (self.user / "config.toml").write_text('x = [\n  [1],\n  [2],\n]\nnotify = ["a"]\nmodel = "m"\n', encoding="utf-8")
+        codexhome.prepare("codex")
+        lean = (self.work / "config.toml").read_text(encoding="utf-8")
+        self.assertEqual(lean, 'x = [\n  [1],\n  [2],\n]\nmodel = "m"\n')
+
+    def test_prepare_keeps_notify_of_a_table(self) -> None:
+        (self.user / "config.toml").write_text('model = "m"\n[t]\nnotify = ["a"]\n', encoding="utf-8")
+        codexhome.prepare("codex")
+        lean = (self.work / "config.toml").read_text(encoding="utf-8")
+        self.assertEqual(lean, 'model = "m"\n[t]\nnotify = ["a"]\n')
+
 
 if __name__ == "__main__":
     unittest.main()

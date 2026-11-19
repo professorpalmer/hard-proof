@@ -94,13 +94,17 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
         related = []
         tests_dir = tree / (spec.get("tests_dir") or "tests")
         if tests_dir.is_dir():
-            for t in sorted(tests_dir.rglob("test_*.py")):
+            # A file named *_test.py is a test file too (see common.is_test_file).
+            for t in sorted(set(tests_dir.rglob("test_*.py")) | set(tests_dir.rglob("*_test.py"))):
                 if t == test_file:
                     continue
                 text = t.read_text(errors="replace")[:20000]
                 # A dotted import such as `import pkg.mod` can end the line right after the module name.
+                # A name list such as `from pkg import a, mod` can name the module after another name.
                 if (stem in t.name or f"import {stem}" in text or f".{stem} " in text
-                        or re.search(rf"^\s*import\s+[\w.]+\.{re.escape(stem)}\b", text, re.M)):
+                        or re.search(rf"^\s*import\s+[\w.]+\.{re.escape(stem)}\b", text, re.M)
+                        or re.search(rf"^\s*from\s+[\w.]+\s+import\s+(\([^)]*|[^\n]*)\b{re.escape(stem)}\b",
+                                     text, re.M)):
                     if t.stat().st_size > MAX_RELATED_BYTES:
                         # A very large test file can run for a long time. The CI of the repository runs it.
                         skipped.append(t.relative_to(tree).as_posix())

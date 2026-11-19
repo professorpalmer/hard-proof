@@ -46,12 +46,22 @@ def lean_config(text: str) -> str:
     out = []
     dropping = False
     skip_depth = 0
+    # A kept multi-line array can have lines that start with "[", which are not table headers either.
+    kept_depth = 0
+    in_table = False
     for line in text.splitlines():
         stripped = line.strip()
         if skip_depth:
             skip_depth += stripped.count("[") - stripped.count("]")
             continue
+        if kept_depth and not DROPPED_TABLE.match(stripped):
+            # A dropped table ends the value, so a miscounted bracket never lets that table through.
+            kept_depth += stripped.count("[") - stripped.count("]")
+            out.append(line)
+            continue
+        kept_depth = 0
         if stripped.startswith("["):
+            in_table = True
             dropping = bool(DROPPED_TABLE.match(stripped))
             if dropping:
                 continue
@@ -61,11 +71,13 @@ def lean_config(text: str) -> str:
             skip_depth = depth if depth > 0 else 0
             continue
         key = stripped.split("=", 1)[0].strip() if "=" in stripped else ""
-        if key in DROPPED_TOP_KEYS and not any(x.strip().startswith("[") for x in out):
+        if key in DROPPED_TOP_KEYS and not in_table:
             depth = stripped.count("[") - stripped.count("]")
             skip_depth = depth if depth > 0 else 0
             continue
         out.append(line)
+        if key and not stripped.startswith("[") and stripped.split("=", 1)[1].strip().startswith("["):
+            kept_depth = max(stripped.count("[") - stripped.count("]"), 0)
     return "\n".join(out) + "\n"
 
 

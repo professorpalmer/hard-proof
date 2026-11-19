@@ -277,5 +277,140 @@ class ShortPromptTest(unittest.TestCase):
         self.assertEqual(self.runs(True, True), (0, 1, 1))
 
 
+class CountFixRunner:
+    def __init__(self):
+        self.n = 0
+
+    def run(self, graph, folder):
+        self.n += 1
+        return {"status": "pass", "steps": []}
+
+
+class FixKeyTest(unittest.TestCase):
+    """A fix run is reused only for the same model, judge model and rules."""
+
+    def runs(self, first: tuple, second: tuple) -> int:
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            repo = make_repo(root, {"pkg/a.py": "def f():\n    return 1\n"})
+            out = root / "out"
+            out.mkdir()
+            rep = root / "repro.py"
+            rep.write_text("def run():\n    return 1\n")
+            head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True).stdout.strip()
+            (out / "audit.json").write_text(json.dumps({"repo": str(repo), "commit": head, "paths": ["pkg"],
+                                                        "python": sys.executable, "test_cmd": "{python} {tests}"}))
+            bugs = [{"id": "b0", "file": "pkg/a.py", "function": "f", "claims": [1], "claim": "x", "result_now": "1",
+                     "what_goes_wrong": "x", "caller": "x", "fix_idea": "x",
+                     "repros": [{"finding": "r0", "k": 1, "path": str(rep), "result_now": "1"}]}]
+            (out / "confirmed.json").write_text(json.dumps(bugs))
+            runner = CountFixRunner()
+            ctx = commands.Context(out, runner)
+            commands.cmd_fix(ctx, None, None, *first)
+            commands.cmd_fix(ctx, None, None, *second)
+            return runner.n
+
+    def test_another_model_judge_model_or_rules_starts_a_worker(self):
+        self.assertEqual(self.runs(("opus", None, None), ("sonnet", None, None)), 2)
+        self.assertEqual(self.runs(("opus", "sonnet", None), ("opus", "opus", None)), 2)
+        self.assertEqual(self.runs(("opus", None, None), ("opus", None, "other rules")), 2)
+
+    def test_the_same_settings_reuse_the_fix(self):
+        self.assertEqual(self.runs(("opus", None, None), ("opus", None, None)), 1)
+        self.assertEqual(self.runs(("opus", None, "r"), ("opus", None, "r")), 1)
+
+
+class FixGraphTestCommandTest(unittest.TestCase):
+    def task(self, py: str) -> str:
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            ctx = type("C", (), {"lean": False, "effort": adapters.DEFAULT_EFFORT, "src": tmp})()
+            audit = {"python": py, "test_cmd": "{python} -m pytest {tests}", "repo": str(tmp), "paths": ["src"]}
+            g = {"bugs": [], "slug": "s", "file": "src/a.py", "test_file": "tests/test_a.py"}
+            graph = commands.fix_graph(ctx, audit, g, "base", tmp / "info", adapters.DEFAULT_ADAPTER, None, "m", "j", "r")
+            return graph["nodes"][0]["task"]
+
+    def test_a_python_path_with_a_space_is_quoted(self):
+        py = "/opt/my python/bin/python"
+        self.assertIn(commands.shell_quote(py) + " -m pytest", self.task(py))
+        self.assertNotIn(py + " -m pytest", self.task(py))
+
+    def test_a_plain_python_path_stays_as_it_was(self):
+        self.assertIn("/usr/bin/python3 -m pytest tests/test_a.py", self.task("/usr/bin/python3"))
+
+
+class InitNameTest(unittest.TestCase):
+    def init(self, files: list):
+        with tempfile.TemporaryDirectory() as t:
+            repo = make_repo(Path(t), {f: "" for f in files})
+            ctx = commands.Context(Path(t) / "out", None)
+            return commands.cmd_init(ctx, str(repo), "HEAD", None, None, None)["audit"]["paths"]
+
+    def test_a_package_with_a_non_ascii_name_is_found(self):
+        self.assertEqual(self.init(["pkg_é/__init__.py"]), ["pkg_é"])
+        self.assertEqual(self.init(["a/__init__.py", "pkg_é/__init__.py"]), ["a", "pkg_é"])
+
+    def test_ascii_packages_keep_their_paths(self):
+        self.assertEqual(self.init(["a/__init__.py", "b/__init__.py", "c/x.py"]), ["a", "b"])
+
+
+class DiffContentLineTest(unittest.TestCase):
+    """A content line '-- x' or '++ x' of a hunk is shown as '--- x' or '+++ x' and is not a file header."""
+
+    def files(self, text: str) -> list:
+        return [(f["old"], f["new"], f["old_ranges"], f["new_ranges"]) for f in commands.parse_diff(text)]
+
+    def test_content_lines_in_a_hunk_keep_the_paths(self):
+        d = "diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n"
+        self.assertEqual(self.files(d), [("a.py", "a.py", [(3, 3)], [(3, 3)])])
+
+    def test_the_headers_of_the_next_file_are_read(self):
+        d = ("diff --git a/a.py b/a.py\n--- a/a.py\n+++ b/a.py\n@@ -3 +3 @@\n--- old\n+++ new\n"
+             "diff --git a/b.py b/b.py\nnew file mode 100644\n--- /dev/null\n+++ b/b.py\n@@ -0,0 +1 @@\n+x = 1\n")
+        self.assertEqual(self.files(d), [("a.py", "a.py", [(3, 3)], [(3, 3)]), (None, "b.py", [(0, 1)], [(1, 1)])])
+
+    def test_targets_finds_a_function_changed_only_by_a_deleted_dash_line(self):
+        old = 'def f():\n    q = """\n-- keep\n-- drop\nselect 1\n"""\n    return q\n\n\ndef g():\n    return 2\n'
+        self.assertEqual(DeletionTest().targets(old, old.replace("-- drop\n", "")), ["pkg/m.py:f"])
+
+    def test_targets_of_a_plain_deleted_line_stay(self):
+        old = 'def f():\n    q = """\n-- keep\nselect 1\ndrop\n"""\n    return q\n\n\ndef g():\n    return 2\n'
+        self.assertEqual(DeletionTest().targets(old, old.replace("drop\n", "")), ["pkg/m.py:f"])
+
+
+class FileChunkReviewTest(unittest.TestCase):
+    def rows(self, n_functions: int, named: str, count: int) -> list:
+        with tempfile.TemporaryDirectory() as d:
+            out = Path(d)
+            (out / "src").mkdir()
+            (out / "audit.json").write_text(json.dumps({"commit": "abc", "paths": ["."]}))
+            targets = [{"id": f"t{i}", "file": "a.py", "function": f"f{i}", "top": "a", "lines": [i * 10, i * 10 + 5]}
+                       for i in range(1, n_functions + 1)]
+            (out / "targets.json").write_text(json.dumps({"targets": targets}))
+            last = f"f{n_functions}"
+
+            class Runner:
+                def run(self, graph, folder):
+                    names = json.loads((folder / "functions.json").read_text())
+                    items = [{"n": i, "function": named, "claim": "c", "expected": "e", "confidence": "high"}
+                             for i in range(1, count + 1)] if names == [last] else []
+                    (folder / "findings.json").write_text(json.dumps(items))
+                    return {"status": "pass"}
+
+            commands.cmd_review(commands.Context(out, Runner()), None, False, 1, 5, group="file", group_size=6)
+            rows = json.loads((out / "review.json").read_text())["findings"]
+            return sorted((r["function"], r["n"]) for r in rows)
+
+    def test_a_one_function_chunk_drops_findings_on_other_functions(self):
+        self.assertEqual(self.rows(7, "f1", 5), [])
+
+    def test_a_one_function_chunk_keeps_the_per_function_cap(self):
+        from hpflow import briefs
+        self.assertEqual(len(self.rows(7, "f7", 8)), briefs.PER_FUNCTION)
+
+    def test_a_one_function_chunk_keeps_findings_on_its_function(self):
+        self.assertEqual(self.rows(1, "f1", 2), [("f1", 1), ("f1", 2)])
+
+
 if __name__ == "__main__":
     unittest.main()

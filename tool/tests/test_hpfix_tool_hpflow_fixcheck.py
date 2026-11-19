@@ -51,6 +51,49 @@ class RelatedTestSearch(unittest.TestCase):
             info, tree = make_tree(Path(tmp), bad)
             self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
 
+    def test_a_name_list_import_is_related(self):
+        bad = ("import unittest\nfrom pkg import __name__ as pkg_name, mod\n\n\nclass T(unittest.TestCase):\n"
+               "    def test_add(self):\n        self.assertEqual(mod.add(1, 2), 4)\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            info, tree = make_tree(Path(tmp), bad)
+            result = fixcheck.check(info, tree)
+        self.assertEqual(result["verdict"], "reject")
+        self.assertIn("tests of the repository fail", "\n".join(result["problems"]))
+
+    def test_a_parenthesized_name_list_import_is_related(self):
+        bad = ("import unittest\nfrom pkg import (\n    module,\n    mod,\n)\n\n\nclass T(unittest.TestCase):\n"
+               "    def test_add(self):\n        self.assertEqual(mod.add(1, 2), 4)\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            info, tree = make_tree(Path(tmp), bad)
+            self.assertEqual(fixcheck.check(info, tree)["verdict"], "reject")
+
+    def test_a_name_list_import_of_another_module_is_not_related(self):
+        # The stem `mod` is a prefix of `module`. That test does not name the changed module.
+        bad = ("import unittest\nfrom pkg import (\n    __name__ as pkg_name,\n    module,\n)\n\n\n"
+               "class T(unittest.TestCase):\n"
+               "    def test_add(self):\n        self.assertEqual(module.add(1, 2), 4)\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            info, tree = make_tree(Path(tmp), bad)
+            self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
+
+    def test_a_related_test_named_with_test_suffix_is_run(self):
+        bad = ("import unittest\nfrom pkg.mod import add\n\n\nclass T(unittest.TestCase):\n"
+               "    def test_add(self):\n        self.assertEqual(add(1, 2), 4)\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            info, tree = make_tree(Path(tmp), OK_TEST)
+            (tree / "tests" / "mod_test.py").write_text(bad)
+            result = fixcheck.check(info, tree)
+        self.assertEqual(result["verdict"], "reject")
+        self.assertIn("tests of the repository fail", "\n".join(result["problems"]))
+
+    def test_an_unrelated_test_named_with_test_suffix_is_not_run(self):
+        bad = ("import unittest\nfrom pkg.module import add\n\n\nclass T(unittest.TestCase):\n"
+               "    def test_add(self):\n        self.assertEqual(add(1, 2), 4)\n")
+        with tempfile.TemporaryDirectory() as tmp:
+            info, tree = make_tree(Path(tmp), OK_TEST)
+            (tree / "tests" / "other_test.py").write_text(bad)
+            self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
+
 
 if __name__ == "__main__":
     unittest.main()
