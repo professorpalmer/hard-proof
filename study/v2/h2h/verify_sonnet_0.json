@@ -1,0 +1,97 @@
+{
+ "flow_id": "h2h-7ade489395",
+ "folder": "~/Projects/hp-work/h2h/verify/7ade489395",
+ "model": "sonnet",
+ "flow": "flow_7255e7f520fc",
+ "flow_status": "done",
+ "visits": 1,
+ "verdicts": [
+  {
+   "k": 1,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "capture_output=True overwrites a caller stdout/stderr and Popen has no input=, unlike subprocess.run.",
+   "caller": null,
+   "evidence": "codegraph.py:105-121 docstring 'subprocess.run for a CodeGraph command'; all callers (lines 430,452,519,868,1651) pass only stdin=DEVNULL, capture_output, text, timeout, check; none passes stdout/stderr/input.",
+   "severity": "low"
+  },
+  {
+   "k": 2,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "For a pin that fails in a non-default registry, the hint tells the user to run `models sync --apply` and `models set` with no --registry-path, so they change the default registry.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "unroutable_pin_hint(source, registry, *, adapter) has no registry_path (registry_sync.py:182); resolve_and_bind_explicit_pin has `path` from payload registry_path (routing_authority.py:92) but _pin_failure_detail (line 23) does not pass it; SYNC_COMMAND and enable_command are fixed strings; `models sync` has --registry-path (_parser.py:2676).",
+   "severity": "medium"
+  },
+  {
+   "k": 3,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A pin whose starter model exists under a different id (disabled) is reported as absent and the user is told to run `models sync --apply`, which skips it, so the repair does nothing.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "Probed: registry with claude-code/my-haiku disabled, hint returns 'is a starter registry entry that this registry does not have ... --apply'; plan_starter_sync (registry_sync.py:115-118) puts it in covered; test_same_model_below_a_different_id_is_not_added.",
+   "severity": "medium"
+  },
+  {
+   "k": 4,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "registry_sync.py:82 `if not spec.is_routable or ...: return spec` keeps a starter entry's own disabled state and reason; no starter spec is non-routable today (probed 0 of starter_registry()); docs only promise enabled=false, and a disabled entry already satisfies that.",
+   "severity": "none"
+  },
+  {
+   "k": 5,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "The enable command text is duplicated in the CLI, so it can drift from enable_command, but today the output is the same text.",
+   "caller": null,
+   "evidence": "commands_models.py:741-744 'puppetmaster models set <id> enabled=true disabled_reason= disabled_authority=' vs registry_sync.py:74-78 enable_command; the CLI text keeps the <id> placeholder, so it is a template and not a wrong result.",
+   "severity": "low"
+  },
+  {
+   "k": 6,
+   "verdict": "real_unreachable",
+   "duplicate_of": 1,
+   "what_goes_wrong": "input= passed to _run_cli reaches Popen and raises TypeError instead of feeding stdin.",
+   "caller": null,
+   "evidence": "codegraph.py:105-121 passes **kwargs to subprocess.Popen; no caller of _run_cli passes input=.",
+   "severity": "low"
+  },
+  {
+   "k": 7,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A renamed file whose source name contains ' -> ' (git quotes the source) gives a wrong path fragment, so the freshness sample lists a bogus path.",
+   "caller": "puppetmaster/codegraph.py:1752",
+   "evidence": "_porcelain_path (codegraph.py:1716-1727) does rest.split(' -> ', 1)[1] before it looks at quotes, though its docstring says 'dest on rename'; _git_changes_since line 1752 feeds it every `git status --porcelain` line. The drift is still counted, so the harm is only a wrong sample name. Not run against git here (command was blocked); derived from the code.",
+   "severity": "low"
+  },
+  {
+   "k": 8,
+   "verdict": "real",
+   "duplicate_of": 3,
+   "what_goes_wrong": "Same fault as claim 3: a disabled starter model under a custom id is reported as absent and the sync repair skips it.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "Probed with disabled claude-code/my-haiku: hint says the registry does not have claude-code/haiku-5-5; plan_starter_sync covered branch at registry_sync.py:115-118.",
+   "severity": "medium"
+  },
+  {
+   "k": 9,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "docs/MODEL_ROUTING.md:241 'doctor gives the warning registry-starter-sync with the count of absent ids'; the same doc says sync adds locked-adapter entries with enabled false; diagnostics.py:208 counts plan.additions, which includes locked adapters by design (registry_sync.py:119-127).",
+   "severity": "low"
+  }
+ ],
+ "jobs": [
+  "job_bb35d679a0e8"
+ ],
+ "seconds": 96,
+ "cost_usd": 0.74,
+ "chunk": 0
+}

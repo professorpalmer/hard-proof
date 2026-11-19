@@ -1,0 +1,14 @@
+[
+ {
+  "claim": "When a task uses a non-default registry_path, the suggested repair commands omit --registry-path. Following `models sync --apply` therefore modifies the default registry instead of repairing the registry that rejected the pin. The enable command has the same problem.",
+  "file": "puppetmaster/registry_sync.py",
+  "line": 200,
+  "function": "unroutable_pin_hint"
+ },
+ {
+  "claim": "When a disabled starter model exists under a custom ID, this exact-ID lookup reports it as absent and recommends `models sync --apply`. However, plan_starter_sync recognizes the matching execution identity and deliberately skips it, so the recommended repair does nothing. For example, a disabled Haiku entry named `claude-code/my-haiku` reproduces this mismatch.",
+  "file": "puppetmaster/registry_sync.py",
+  "line": 195,
+  "function": "unroutable_pin_hint"
+ }
+]

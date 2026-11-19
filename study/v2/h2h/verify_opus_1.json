@@ -1,0 +1,97 @@
+{
+ "flow_id": "h2h-6768085bab",
+ "folder": "~/Projects/hp-work/h2h/verify/6768085bab",
+ "model": "opus",
+ "flow": "flow_cbe5531d1821",
+ "flow_status": "done",
+ "visits": 1,
+ "verdicts": [
+  {
+   "k": 10,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "A test depends on the last-segment match: project/tests/test_billing_provenance.py:145-147 `self.assertEqual(resolve_model_pin('agentic/old-provider/shared', [selected]).registry_id, selected.id)` with selected.id 'agentic/new-provider/shared'. Docstring model_registry.py:1822-1828: accepts `cursor/grok-4-5` and `grok-4.5` (and slug-equivalent forms). An exact id still wins first (model_registry.py:1838, test_puppetmaster.py:16759), and two candidates raise AmbiguousModelPinError.",
+   "severity": "none"
+  },
+  {
+   "k": 11,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "The printed `models set` command does not quote the id, so an id with a space or a shell metacharacter gives a command that does not work when pasted.",
+   "caller": null,
+   "evidence": "The only callers are registry_sync.py:90 (`enable_command(spec.id)` where spec comes from starter_registry()) and registry_sync.py:210 (`present.id`, which equals `starter_pin.registry_id`, a starter id, registry_sync.py:201-203). Probed: all 43 starter ids match [A-Za-z0-9._/:-]+, so no caller passes an unsafe id today.",
+   "severity": "low"
+  },
+  {
+   "k": 12,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the registry directory is not writable, `puppetmaster models sync --apply` ends with an uncaught PermissionError traceback (from the lock file .models.json.lock) and not with `error: ...` and exit 1.",
+   "caller": "puppetmaster/cli/commands_models.py:612",
+   "evidence": "commands_models.py:674-678 catches only RuntimeError; sync_starter_registry (registry_sync.py:167) takes InterProcessFileLock.for_target, then read_text and write_private_text, which raise OSError. Probed on project/: read-only models.json in a writable directory gives rc 0 (the claim's first case does not fail); read-only directory gives `PermissionError [Errno 13] Permission denied: .../.models.json.lock`.",
+   "severity": "low"
+  },
+  {
+   "k": 13,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "On the BaseException path and when the second communicate fails, the Popen is not waited and its pipes are not closed, unlike subprocess.run.",
+   "caller": null,
+   "evidence": "Docstring codegraph.py:107: \"``subprocess.run`` for a CodeGraph command, with one difference at a timeout.\" codegraph.py:127-129 kills and re-raises without wait/close. No product path makes this observable: the whole process group gets SIGKILL first (codegraph.py:96), and CPython Popen.__del__ puts an unreaped child on subprocess._active, which the next Popen reaps; the pipe file objects close at GC. A KeyboardInterrupt ends the CLI process.",
+   "severity": "low"
+  },
+  {
+   "k": 14,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "`models set <id> effort=high` on a claude-code or codex entry replaces payload_defaults.extra_args with only the effort flags, so other extra_args that the owner set are lost without a message.",
+   "caller": "puppetmaster/cli/commands_models.py:228",
+   "evidence": "commands_models.py:173-175 comment \"Merge so unrelated defaults (e.g. temperature) survive an effort change\" but the merge is shallow (`{**spec.payload_defaults, **effort_defaults}`) and effort_defaults is `{\"extra_args\": [...]}` (commands_models.py:93, :116). `payload_defaults.extra_args=` is a supported `models set` key (commands_models.py:180-185). Probed: extra_args ['--add-dir','/tmp'] becomes ['--effort','high'].",
+   "severity": "medium"
+  },
+  {
+   "k": 15,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "With an mcp.json that is not valid JSON, `puppetmaster doctor` says 'no puppetmaster stdio entry in mcp.json' (Pi) or 'OMP / oh-my-pi TUI not installed' (OMP, no CLI), so the user gets no word that the file is broken.",
+   "caller": "puppetmaster/diagnostics.py:85",
+   "evidence": "diagnostics.py:1452 sets 'mcp.json unreadable: ...', then mcp = {} makes entry None and diagnostics.py:1466 overwrites the detail; same at diagnostics.py:1360/1374 for Pi (caller diagnostics.py:84). run_doctor is called from cli/_dispatch.py:698. Probed on project/ with mcp.json = '{not json': omp-pilot status 'optional' 'not installed'; pi-pilot detail ends 'no puppetmaster stdio entry in mcp.json'. The 'warn for partial install' part is not documented: omp_pilot_check docstring says only \"Status is optional/ok/warn only. Missing ``omp`` CLI is not an error.\"",
+   "severity": "low"
+  },
+  {
+   "k": 16,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "Docstring registry_sync.py:155-158: \"The write appends rows to the parsed JSON document. It does not rebuild the rows that are already there, so their fields, their key order and the fields this release does not know stay as they are.\" The raw read is the design; both reads occur inside one InterProcessFileLock (registry_sync.py:167-171), so the two views cannot drift. Only an extra file read, no wrong result.",
+   "severity": "none"
+  },
+  {
+   "k": 17,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the repository path starts with the HOME string but is not under HOME (HOME /home/bob, repo /home/bob2/proj), `puppetmaster doctor` shows a valid rule file as an 'error' row 'check raised: ValueError ...' and not 'ok'.",
+   "caller": "puppetmaster/cli/_dispatch.py:698",
+   "evidence": "diagnostics.py:458 `str(p.relative_to(Path.home())) if str(p).startswith(str(Path.home())) else str(p)`; _guard (diagnostics.py:44-45) converts the ValueError to status 'error'. run_doctor(Path.cwd()) at cli/_dispatch.py:698 passes the repo as root (diagnostics.py:75, candidates diagnostics.py:437-439). Probed on project/: status='error', detail \"check raised: ValueError: '.../bob2/proj/AGENTS.md' is not in the subpath of '.../bob'\".",
+   "severity": "low"
+  },
+  {
+   "k": 18,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A pin by wire name whose model is in the registry only under a custom disabled id gets the hint 'starter entry ... does not have. Run models sync --apply', but sync treats that starter id as covered and adds nothing, so the user follows a fix that changes nothing and is not told that the entry is disabled.",
+   "caller": "puppetmaster/orchestrator.py:1957",
+   "evidence": "routing_authority.py:98-102 calls _pin_failure_detail -> unroutable_pin_hint, which looks up only `spec.id == starter_pin.registry_id` (registry_sync.py:201-203). plan_starter_sync skips a starter id with the same _execution_identity (registry_sync.py:116-119). Probed on project/: custom disabled 'claude-code/my-custom' with the starter's model, pin 'claude-haiku-4-5' gives the 'does not have. Run `puppetmaster models sync`' hint, and plan_starter_sync gives covered [('claude-code/haiku-4-5','claude-code/my-custom')], added [].",
+   "severity": "low"
+  }
+ ],
+ "jobs": [
+  "job_4f3fb4b37444"
+ ],
+ "seconds": 214,
+ "cost_usd": 2.148,
+ "chunk": 1
+}

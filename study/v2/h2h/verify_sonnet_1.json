@@ -1,0 +1,97 @@
+{
+ "flow_id": "h2h-b2b2f5d211",
+ "folder": "~/Projects/hp-work/h2h/verify/b2b2f5d211",
+ "model": "sonnet",
+ "flow": "flow_384e0b0ff0a3",
+ "flow_status": "done",
+ "visits": 1,
+ "verdicts": [
+  {
+   "k": 10,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "puppetmaster/model_registry.py:1823-1851 docstring: 'Accepts both cursor/grok-4-5 and grok-4.5 (and slug-equivalent forms ...)'; the last-segment token match is the designed fallback, it is limited to enabled entries of the given adapter, and more than one match raises AmbiguousModelPinError.",
+   "severity": "none"
+  },
+  {
+   "k": 11,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "enable_command does not quote the id, so an id with a space or shell metacharacter would give a broken command.",
+   "caller": null,
+   "evidence": "registry_sync.py:74-78 has no quoting, but both callers pass only starter ids: registry_sync.py:90 (spec.id from starter_registry) and registry_sync.py:210 (present.id equals starter_pin.registry_id, found by starter id); starter ids hold no spaces or metacharacters.",
+   "severity": "low"
+  },
+  {
+   "k": 12,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "`models sync --apply` on a registry file that cannot be read or written raises OSError/PermissionError (load_registry read_text, write_private_text) and the user gets a traceback, not `error:` and exit 1.",
+   "caller": "puppetmaster/cli/commands_models.py:676",
+   "evidence": "commands_models.py:674-678 catches only RuntimeError; model_registry.py:243-245 catches only JSONDecodeError around read_text; registry_sync.py write_private_text writes the file.",
+   "severity": "low"
+  },
+  {
+   "k": 13,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "After a BaseException (such as KeyboardInterrupt) in communicate, the child is killed but not waited and its pipes are not closed until GC, unlike subprocess.run.",
+   "caller": null,
+   "evidence": "codegraph.py:129-131 kills the tree and re-raises with no process.wait() or pipe close; only an interrupt can reach it, the timeout path calls communicate again (codegraph.py:125), and the Popen finalizer reaps the child later, so no product caller sees a wrong result.",
+   "severity": "low"
+  },
+  {
+   "k": 14,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "`models set <id> effort=<level>` on claude-code or codex replaces the whole extra_args list, so any other extra_args flags in the entry are silently removed.",
+   "caller": "puppetmaster/cli/commands_models.py:175",
+   "evidence": "payload_defaults = {**(spec.payload_defaults or {}), **effort_defaults} is a shallow merge, and model_payload_defaults_for_effort returns {'extra_args': [...]} (lines 93, 116); the comment at lines 173-174 says unrelated defaults survive.",
+   "severity": "medium"
+  },
+  {
+   "k": 15,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A malformed mcp.json gives the detail 'no puppetmaster stdio entry in mcp.json' instead of 'mcp.json unreadable', so with the omp CLI present the warn text names the wrong cause (and with no CLI the check is optional, not warn).",
+   "caller": "puppetmaster/diagnostics.py:85",
+   "evidence": "diagnostics.py omp_pilot_check: the except branch sets mcp_detail='mcp.json unreadable: ...' and mcp={}; the following else branch (entry missing) overwrites it with 'no puppetmaster stdio entry in mcp.json'.",
+   "severity": "low"
+  },
+  {
+   "k": 16,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "registry_sync.py sync_starter_registry docstring: 'The write appends rows to the parsed JSON document. It does not rebuild the rows that are already there, so their fields, their key order and the fields this release does not know stay as they are.' Both reads run under InterProcessFileLock, so the views cannot drift; this is a style point, not a wrong result.",
+   "severity": "none"
+  },
+  {
+   "k": 17,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the project folder or a rule path is a string-prefix sibling of HOME (HOME /home/bob, project /home/bob2/proj), relative_to raises ValueError and the doctor reports an existing valid rule file as an error row.",
+   "caller": "puppetmaster/diagnostics.py:75",
+   "evidence": "diagnostics.py:454-457: str(p).startswith(str(Path.home())) then p.relative_to(Path.home()); root comes from run_doctor (line 75) and is the user's working folder.",
+   "severity": "low"
+  },
+  {
+   "k": 18,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A pin that matches a disabled entry stored under a custom id gets the hint that the starter entry is absent and to run `models sync`, but sync skips it as covered by that custom id, so the advice does not help.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "registry_sync.py unroutable_pin_hint looks up the registry only by starter_pin.registry_id; plan_starter_sync puts an entry with the same execution identity in `covered` and does not add it.",
+   "severity": "low"
+  }
+ ],
+ "jobs": [
+  "job_1baea5732a55"
+ ],
+ "seconds": 74,
+ "cost_usd": 0.617,
+ "chunk": 1
+}

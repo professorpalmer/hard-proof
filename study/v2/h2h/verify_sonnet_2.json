@@ -1,0 +1,97 @@
+{
+ "flow_id": "h2h-032e609fe5",
+ "folder": "~/Projects/hp-work/h2h/verify/032e609fe5",
+ "model": "sonnet",
+ "flow": "flow_0fab6b6a69bb",
+ "flow_status": "done",
+ "visits": 1,
+ "verdicts": [
+  {
+   "k": 19,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "CHANGELOG v1.51.1 scopes the fix to 'The five callers in puppetmaster/codegraph.py' and to the npm shim that starts the real Node binary; codegraph_repair.py:439 docstring says it deliberately runs the JS entry point through the same Node binary, not the shim, so subprocess.run kills the direct node child and no shim child exists.",
+   "severity": "none"
+  },
+  {
+   "k": 20,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "Ran a check: registry entry agentic/openai-codex/gpt-5.6-luna-pro; resolve_and_bind_explicit_pin gave model=gpt-5.6-luna and pinned_adapter_model_name=gpt-5.6-luna; validate_pinned_dispatch(payload, adapter='agentic') returned OK with no error (routing_authority.py:151-162, worker_runtime.py:108).",
+   "severity": "none"
+  },
+  {
+   "k": 21,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the registry holds the same adapter and model under a different id, a failed pin tells the user to run `models sync --apply`, which skips the entry (covered) and adds nothing, so the advice does not fix the pin.",
+   "caller": "puppetmaster/routing_authority.py:25",
+   "evidence": "registry_sync.py:195 looks up the entry with spec.id == starter_pin.registry_id only; CHANGELOG v1.51.0: 'A starter entry is not added when the registry has the same adapter and model below a different id.'",
+   "severity": "low"
+  },
+  {
+   "k": 22,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "A task text exactly equal to a flag token such as '--format' is dropped with the next argument.",
+   "caller": null,
+   "evidence": "codegraph.py:717-750 scans all argv after 'context'; codegraph.py:503 puts the task at index 1, but no product caller produces a task that is exactly --format, --max-nodes or --max-files (the task is worker goal text).",
+   "severity": "low"
+  },
+  {
+   "k": 23,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A registry file that is not UTF-8 (for example UTF-16 from PowerShell redirection) makes load_registry raise UnicodeDecodeError, which is not caught, so doctor shows an 'error' check 'check raised: UnicodeDecodeError' instead of the 'registry unreadable' warning.",
+   "caller": "puppetmaster/diagnostics.py:81",
+   "evidence": "diagnostics.py:199-201 catches only RuntimeError; model_registry.py:243-246 catches only json.JSONDecodeError around read_text(encoding='utf-8'); _guard (diagnostics.py:42-45) turns it into an error Check, so doctor does not crash.",
+   "severity": "low"
+  },
+  {
+   "k": 24,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "PUPPETMASTER_CODEGRAPH_PROVISION_TIMEOUT_SECONDS=inf raises OverflowError (not ValueError) out of a function documented as never raising.",
+   "caller": null,
+   "evidence": "codegraph.py:374-381 catches ValueError only; ensure_codegraph_provisioned docstring says 'fully best-effort ... rather than raising'; the variable is a number of seconds (default 300) and no product code sets it to inf.",
+   "severity": "low"
+  },
+  {
+   "k": 25,
+   "verdict": "unclear",
+   "duplicate_of": null,
+   "what_goes_wrong": "The test could fail on a slow runner if the child needs more than 3 s to write its pid file, although _run_cli is correct.",
+   "caller": null,
+   "evidence": "tests/test_codegraph_process_group.py:51 timeout=3 and line 53 assertTrue(pid_file.exists(), ...); the owner must decide whether a 3 s margin is acceptable on slow CI (Windows, coverage) or must grow.",
+   "severity": "low"
+  },
+  {
+   "k": 26,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "registry_sync.py:157-161 and CHANGELOG v1.51.0 promise only that rows keep 'fields, key order, position and unknown fields' (a json round trip keeps all; \\u00e8 and 1.5 are the same values); _plan_for_path calls load_registry (model_registry.py:231, 'atomically validate') under the lock before the write, and the appended rows come from the starter registry.",
+   "severity": "none"
+  },
+  {
+   "k": 27,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A changed file with a non-ASCII or special-character name is quoted by git, the path is not decoded, stat fails, and the file is counted as drift even when the index is newer, so the index shows as stale.",
+   "caller": "puppetmaster/codegraph.py:1752",
+   "evidence": "_run_git (codegraph.py:1643) passes no core.quotepath=false; _porcelain_path (codegraph.py:1716-1727) only strips the outer quotes; _git_changes_since treats an OSError from stat as changed (mtime = cutoff + 1).",
+   "severity": "low"
+  }
+ ],
+ "jobs": [
+  "job_0f578d1f5a25"
+ ],
+ "seconds": 121,
+ "cost_usd": 0.0,
+ "chunk": 2
+}

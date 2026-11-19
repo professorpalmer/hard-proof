@@ -1,0 +1,9 @@
+{
+ "tool": "Claude Code 2.1.316, /code-review high main..feature",
+ "model": "claude-opus-5-5",
+ "seconds": 171,
+ "cost_usd_api_equivalent": 0.779,
+ "tool_calls": 18,
+ "findings": 10,
+ "note": "The report says that no finding was checked by a run of code."
+}

@@ -1,0 +1,8 @@
+{
+ "tool": "codex-cli 0.160.0, codex review --base main",
+ "model": "gpt-6.1-sol, xhigh (config of the owner)",
+ "seconds": 192,
+ "cost_usd_api_equivalent": null,
+ "findings": 2,
+ "note": "Plan billing, no cost in the output. The report says that both cases were reproduced with focused checks."
+}

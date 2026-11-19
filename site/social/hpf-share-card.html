@@ -16,11 +16,31 @@ h1 i{font-style:normal;color:var(--amber)}
 .chips{display:flex;gap:12px;margin-top:20px}
 .chips span{font-size:19px;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 18px;background:var(--panel)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:18px;margin-top:26px;flex:1;min-height:0}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 26px;display:flex;flex-direction:column;justify-content:center}
-.big{font-size:62px;font-weight:600;letter-spacing:-3px;line-height:1}
-.big small{font-size:30px;letter-spacing:-1px;color:var(--mute);font-weight:500}
-.claim{font-size:23px;font-weight:600;line-height:1.25;margin-top:10px}
-.ev{font-size:17.5px;line-height:1.35;color:var(--mute);margin-top:6px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 24px;display:flex;flex-direction:column;justify-content:space-between}
+.hd{display:flex;align-items:center;gap:16px}
+.big{font-size:54px;font-weight:600;letter-spacing:-3px;line-height:1;white-space:nowrap}
+.big small{font-size:27px;letter-spacing:-1px;color:var(--mute);font-weight:500}
+.claim{font-size:20px;font-weight:600;line-height:1.22}
+.ev{font-size:15.5px;line-height:1.3;color:var(--mute)}
+.rows{display:flex;flex-direction:column;gap:7px}
+.row{display:grid;grid-template-columns:168px 1fr 34px;align-items:center;gap:10px;font-size:15.5px;color:var(--mute)}
+.row b{font-family:"SF Mono",Menlo,Consolas,monospace;font-weight:600;font-size:18px;color:var(--text);text-align:right}
+.bar{height:16px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+.stack{display:flex;height:26px;border-radius:6px;overflow:hidden;background:var(--line)}
+.stack i{display:block;height:100%}
+.under{display:flex;justify-content:space-between;font-size:15.5px;color:var(--mute);margin-top:6px}
+.under b{color:var(--text);font-weight:600}
+.dots{display:flex;gap:10px}
+.dots u{display:block;width:30px;height:30px;border-radius:50%}
+.key{display:flex;gap:16px;font-size:14px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.key u{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}
+.rel{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.rel div{text-align:center;font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;color:var(--mute)}
+.rel u{display:block;height:30px;border-radius:6px;margin-bottom:5px;border:1px solid var(--line)}
+.sq{display:grid;grid-template-columns:repeat(15,20px);gap:5px}
+.sq u{display:block;width:20px;height:20px;border-radius:4px;background:#3F5A24}
+.sq u.x{background:var(--red)}
 .strip{margin-top:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px 26px;display:flex;align-items:center;justify-content:space-between;font-size:20px;color:var(--mute)}
 .strip b{font-weight:600;font-size:26px}
 .strip em{font-style:normal;color:var(--dim);padding:0 6px}
@@ -51,12 +71,51 @@ html.og h1{margin-top:18px}
     <span>Runs after any agent workflow</span>
   </div>
   <div class="grid">
-    <div class="tile"><div class="big mono" style="color:var(--green)">+42%</div><div class="claim">more real bugs than a full formal proof pipeline</div><div class="ev">44 against 31 of 95 known bugs, for 87% less cost</div></div>
-    <div class="tile"><div class="big mono" style="color:var(--amber)">59%</div><div class="claim">of AI review findings cut before you read them</div><div class="ev">211 findings in, 87 passed two verifier agents</div></div>
-    <div class="tile"><div class="big mono" style="color:var(--amber)">$3.65</div><div class="claim">average audit cost for a release</div><div class="ev">6 releases gated for $21.92 in total</div></div>
-    <div class="tile"><div class="big mono" style="color:var(--red)">2<small> of 6</small></div><div class="claim">releases stopped at the gate</div><div class="ev">all 4 bugs were in new code that an agent wrote</div></div>
-    <div class="tile"><div class="big mono" style="color:var(--red)">5<small> of 45</small></div><div class="claim">agent fixes rejected by the second review</div><div class="ev">each fix needs a test, then a second reviewer</div></div>
-    <div class="tile"><div class="big mono" style="color:var(--green)">51</div><div class="claim">fixes shipped, each with a test</div><div class="ev">across two products in daily use</div></div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--green)">8<small> vs </small><span style="color:var(--mute)">2</span></div><div class="claim">confirmed bugs against each AI review tool</div></div>
+      <div class="rows">
+        <div class="row"><span>hpf</span><div class="bar"><i style="width:100%;background:var(--green)"></i></div><b>8</b></div>
+        <div class="row"><span>Claude Code review</span><div class="bar"><i style="width:25%;background:var(--gray)"></i></div><b>2</b></div>
+        <div class="row"><span>Codex review</span><div class="bar"><i style="width:25%;background:var(--gray)"></i></div><b>2</b></div>
+      </div>
+      <div class="ev">Puppetmaster v1.50.0 to v1.51.1, one blind judge for all three</div>
+    </div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--green)">7</div><div class="claim">bugs that both review tools missed</div></div>
+      <div>
+        <div class="dots"><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--green)"></u><u style="background:var(--text)"></u><u style="background:var(--gray)"></u><u style="background:var(--gray)"></u></div>
+        <div class="key"><span><u style="background:var(--green)"></u>only hpf</span><span><u style="background:var(--text)"></u>all three</span><span><u style="background:var(--gray)"></u>only one review tool</span></div>
+      </div>
+      <div class="ev">The 10 confirmed bugs of that change. Each tool found 1 that hpf missed</div>
+    </div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--green)">+42%</div><div class="claim">more real bugs than a full formal proof pipeline</div></div>
+      <div class="rows">
+        <div class="row"><span>Review with a repro</span><div class="bar"><i style="width:46.3%;background:var(--green)"></i></div><b>44</b></div>
+        <div class="row"><span>Formal proof pipeline</span><div class="bar"><i style="width:32.6%;background:var(--gray)"></i></div><b>31</b></div>
+      </div>
+      <div class="ev">Of 95 known bugs. Cost: $105 against $793</div>
+    </div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--amber)">59%</div><div class="claim">of AI review findings cut before you read them</div></div>
+      <div>
+        <div class="stack"><i style="width:41.2%;background:var(--amber)"></i><i style="width:58.8%;background:#4A3A1C"></i></div>
+        <div class="under"><span><b>87</b> passed two verifier agents</span><span><b>124</b> cut</span></div>
+      </div>
+      <div class="ev">211 findings with a repro, from two products</div>
+    </div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--red)">2<small> of 6</small></div><div class="claim">releases stopped at the gate</div></div>
+      <div class="rel">
+        <div><u></u>1.51.3</div><div><u></u>0.9.686</div><div><u style="background:var(--red);border-color:var(--red)"></u>1.51.4</div><div><u></u>0.9.687</div><div><u style="background:var(--red);border-color:var(--red)"></u>1.52.0</div><div><u></u>0.9.688</div>
+      </div>
+      <div class="ev">All 4 bugs were in new code that an agent wrote</div>
+    </div>
+    <div class="tile">
+      <div class="hd"><div class="big mono" style="color:var(--red)">5<small> of 45</small></div><div class="claim">agent fixes rejected by the second review</div></div>
+      <div class="sq" id="sq"></div>
+      <div class="ev">Each fix needs a test, then a second reviewer</div>
+    </div>
   </div>
   <div class="strip">
     <span class="lead">One real audit</span>
@@ -65,8 +124,11 @@ html.og h1{margin-top:18px}
   </div>
   <div class="foot">
     <div class="pill mono"><em>$</em> pip install hpflow</div>
-    <div class="src">github.com/professorpalmer/hard-proof &nbsp;·&nbsp; MIT<br><span>Our own data from two products. Each number has a command in the repo. A pass is not a proof. Costs are API-equivalent.</span></div>
+    <div class="src">github.com/professorpalmer/hard-proof &nbsp;·&nbsp; MIT<br><span>Our own data from two products. Head-to-head: one release range, one run for each tool. A pass is not a proof.</span></div>
   </div>
 </div>
+<script>
+(function(){var el=document.getElementById('sq'),bad={3:1,11:1,19:1,27:1,40:1};for(var i=0;i<45;i++){var u=document.createElement('u');if(bad[i])u.className='x';el.appendChild(u);}})();
+</script>
 </body>
 </html>

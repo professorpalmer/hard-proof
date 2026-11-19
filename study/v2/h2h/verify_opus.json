@@ -1,0 +1,250 @@
+{
+ "model": "opus",
+ "cost_usd": 6.521,
+ "seconds": 623,
+ "verdicts": [
+  {
+   "k": 1,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "capture_output=True silently replaces caller stdout/stderr and input= raises TypeError from Popen, unlike the documented subprocess.run behavior.",
+   "caller": null,
+   "evidence": "puppetmaster/codegraph.py:114-118 sets stdout/stderr=PIPE and calls subprocess.Popen(command, **kwargs). Docstring line 107 says it is subprocess.run 'with one difference at a timeout'; docs/CHANGELOG.md v1.51.1: 'has the signature of subprocess.run'. All five callers (codegraph.py:430, 452, 519, 868, 1651) pass stdin=subprocess.DEVNULL, capture_output=True and no stdout/stderr/input.",
+   "severity": "low"
+  },
+  {
+   "k": 2,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the pin was resolved against a registry set by PUPPETMASTER_MODELS_PATH or a payload registry_path, the hint commands have no --registry-path, so a user who runs them in a shell without that env syncs or enables ~/.puppetmaster/models.json and the failing registry stays unrepaired.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "routing_authority.py:92 path = registry_path or registry_path_from_payload(payload, allow_default=True) (payload registry_path or default_registry_path(), which honors $PUPPETMASTER_MODELS_PATH, model_registry.py:225); orchestrator.py:1957 calls it for every explicit pin. registry_sync.py:203-212 emits `puppetmaster models sync --apply` and enable_command(id) with no registry path; models sync takes --registry-path (cli/_parser.py:2676).",
+   "severity": "low"
+  },
+  {
+   "k": 3,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A pin on a starter id whose identity the registry has under another id fails with a hint to run `models sync --apply`, but sync lists it as covered and adds nothing, so the user follows a repair that does nothing.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "Probed on project/: registry [claude-code/my-haiku with adapter_model_name claude-haiku-5-5]; resolve_model_pin('claude-code/haiku-5-5') -> None (exact id only, normalized tail 'haiku-5-5' != 'claude-haiku-5-5'); unroutable_pin_hint returns \"'claude-code/haiku-5-5' is a starter registry entry that this registry does not have. Run `puppetmaster models sync` ... --apply to add them.\"; plan_starter_sync returns covered [('claude-code/haiku-5-5','claude-code/my-haiku')] and no addition. registry_sync.py:194-196 looks up present only by spec.id; registry_sync.py:115-118 skips covered ids. Path: orchestrator.py:1957 -> routing_authority.py:95-99.",
+   "severity": "medium"
+  },
+  {
+   "k": 4,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "A starter spec that is already not routable would be appended without the models_sync disabled_reason and disabled_authority that the module docstring promises.",
+   "caller": null,
+   "evidence": "registry_sync.py:82 `if not spec.is_routable or (enable and not adapter_locked): return spec`; module docstring lines 13-15 say the default entry gets disabled_reason naming `puppetmaster models sync` and disabled_authority models_sync. Probed: [s for s in starter_registry() if not s.is_routable] == [], so no starter entry reaches the branch today.",
+   "severity": "low"
+  },
+  {
+   "k": 5,
+   "verdict": "unclear",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "cli/commands_models.py:742-743 prints 'puppetmaster models set <id> enabled=true disabled_reason= disabled_authority=', which is byte-equal to registry_sync.enable_command('<id>') (registry_sync.py:74-78) today; no output is wrong. Owner decision: whether the duplicated text must be replaced by enable_command('<id>') to keep one source.",
+   "severity": "none"
+  },
+  {
+   "k": 6,
+   "verdict": "real_unreachable",
+   "duplicate_of": 1,
+   "what_goes_wrong": "input= raises TypeError from Popen instead of feeding stdin as subprocess.run does.",
+   "caller": null,
+   "evidence": "codegraph.py:118 subprocess.Popen(command, **kwargs) and :120 process.communicate(timeout=timeout) with no input; CHANGELOG v1.51.1 'has the signature of subprocess.run'. No caller passes input= (codegraph.py:430, 452, 519, 868, 1651 all pass stdin=subprocess.DEVNULL).",
+   "severity": "low"
+  },
+  {
+   "k": 7,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "For a staged rename of a file whose name contains ' -> ', the CodeGraph freshness report lists a fragment such as 'b.txt\" -> c.txt' in changed_sample in place of the destination path.",
+   "caller": "puppetmaster/codegraph.py:1752",
+   "evidence": "Probed: git status --porcelain gives 'R  \"a -> b.txt\" -> c.txt' after `git mv \"a -> b.txt\" c.txt`; _porcelain_path returns 'b.txt\" -> c.txt' (codegraph.py:1721-1722 splits on the first ' -> '); _git_changes_since returned (['b.txt\" -> c.txt'], 1, False, 1). Reached from codegraph_freshness (codegraph.py:1849) via `puppetmaster codegraph` freshness (cli/commands_codegraph.py:233) and MCP (mcp_server.py:2034). The count stays correct because the stat failure counts it as changed.",
+   "severity": "low"
+  },
+  {
+   "k": 8,
+   "verdict": "real",
+   "duplicate_of": 3,
+   "what_goes_wrong": "A pin on a starter id that the registry has disabled under a custom id gets the 'absent, run models sync --apply' hint, and sync skips it as covered, so the hint does not name the disabled entry or its enable command.",
+   "caller": "puppetmaster/routing_authority.py:99",
+   "evidence": "Probed on project/: registry [claude-code/my-haiku, enabled=False]; unroutable_pin_hint('claude-code/haiku-5-5' and 'claude-haiku-5-5') both return the absent text; plan_starter_sync returns covered [('claude-code/haiku-5-5','claude-code/my-haiku')]. registry_sync.py:194-196 exact-id lookup.",
+   "severity": "medium"
+  },
+  {
+   "k": 9,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "registry_sync.py module docstring: 'An entry on an adapter that the platform lock disables is always written with enabled: false.' docs/MODEL_ROUTING.md: 'With --enable ... An entry on an adapter that the platform lock disables always gets enabled: false' and 'A write changes the registry digest. A task with a model pin that was queued before the write fails at dispatch. Start it again.' tests/test_registry_sync.py:311 test_doctor_is_ok_after_apply: the warning clears after one apply, so it is not permanent, and the digest change is documented.",
+   "severity": "none"
+  },
+  {
+   "k": 10,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "A test depends on the last-segment match: project/tests/test_billing_provenance.py:145-147 `self.assertEqual(resolve_model_pin('agentic/old-provider/shared', [selected]).registry_id, selected.id)` with selected.id 'agentic/new-provider/shared'. Docstring model_registry.py:1822-1828: accepts `cursor/grok-4-5` and `grok-4.5` (and slug-equivalent forms). An exact id still wins first (model_registry.py:1838, test_puppetmaster.py:16759), and two candidates raise AmbiguousModelPinError.",
+   "severity": "none"
+  },
+  {
+   "k": 11,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "The printed `models set` command does not quote the id, so an id with a space or a shell metacharacter gives a command that does not work when pasted.",
+   "caller": null,
+   "evidence": "The only callers are registry_sync.py:90 (`enable_command(spec.id)` where spec comes from starter_registry()) and registry_sync.py:210 (`present.id`, which equals `starter_pin.registry_id`, a starter id, registry_sync.py:201-203). Probed: all 43 starter ids match [A-Za-z0-9._/:-]+, so no caller passes an unsafe id today.",
+   "severity": "low"
+  },
+  {
+   "k": 12,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the registry directory is not writable, `puppetmaster models sync --apply` ends with an uncaught PermissionError traceback (from the lock file .models.json.lock) and not with `error: ...` and exit 1.",
+   "caller": "puppetmaster/cli/commands_models.py:612",
+   "evidence": "commands_models.py:674-678 catches only RuntimeError; sync_starter_registry (registry_sync.py:167) takes InterProcessFileLock.for_target, then read_text and write_private_text, which raise OSError. Probed on project/: read-only models.json in a writable directory gives rc 0 (the claim's first case does not fail); read-only directory gives `PermissionError [Errno 13] Permission denied: .../.models.json.lock`.",
+   "severity": "low"
+  },
+  {
+   "k": 13,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "On the BaseException path and when the second communicate fails, the Popen is not waited and its pipes are not closed, unlike subprocess.run.",
+   "caller": null,
+   "evidence": "Docstring codegraph.py:107: \"``subprocess.run`` for a CodeGraph command, with one difference at a timeout.\" codegraph.py:127-129 kills and re-raises without wait/close. No product path makes this observable: the whole process group gets SIGKILL first (codegraph.py:96), and CPython Popen.__del__ puts an unreaped child on subprocess._active, which the next Popen reaps; the pipe file objects close at GC. A KeyboardInterrupt ends the CLI process.",
+   "severity": "low"
+  },
+  {
+   "k": 14,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "`models set <id> effort=high` on a claude-code or codex entry replaces payload_defaults.extra_args with only the effort flags, so other extra_args that the owner set are lost without a message.",
+   "caller": "puppetmaster/cli/commands_models.py:228",
+   "evidence": "commands_models.py:173-175 comment \"Merge so unrelated defaults (e.g. temperature) survive an effort change\" but the merge is shallow (`{**spec.payload_defaults, **effort_defaults}`) and effort_defaults is `{\"extra_args\": [...]}` (commands_models.py:93, :116). `payload_defaults.extra_args=` is a supported `models set` key (commands_models.py:180-185). Probed: extra_args ['--add-dir','/tmp'] becomes ['--effort','high'].",
+   "severity": "medium"
+  },
+  {
+   "k": 15,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "With an mcp.json that is not valid JSON, `puppetmaster doctor` says 'no puppetmaster stdio entry in mcp.json' (Pi) or 'OMP / oh-my-pi TUI not installed' (OMP, no CLI), so the user gets no word that the file is broken.",
+   "caller": "puppetmaster/diagnostics.py:85",
+   "evidence": "diagnostics.py:1452 sets 'mcp.json unreadable: ...', then mcp = {} makes entry None and diagnostics.py:1466 overwrites the detail; same at diagnostics.py:1360/1374 for Pi (caller diagnostics.py:84). run_doctor is called from cli/_dispatch.py:698. Probed on project/ with mcp.json = '{not json': omp-pilot status 'optional' 'not installed'; pi-pilot detail ends 'no puppetmaster stdio entry in mcp.json'. The 'warn for partial install' part is not documented: omp_pilot_check docstring says only \"Status is optional/ok/warn only. Missing ``omp`` CLI is not an error.\"",
+   "severity": "low"
+  },
+  {
+   "k": 16,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "Docstring registry_sync.py:155-158: \"The write appends rows to the parsed JSON document. It does not rebuild the rows that are already there, so their fields, their key order and the fields this release does not know stay as they are.\" The raw read is the design; both reads occur inside one InterProcessFileLock (registry_sync.py:167-171), so the two views cannot drift. Only an extra file read, no wrong result.",
+   "severity": "none"
+  },
+  {
+   "k": 17,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the repository path starts with the HOME string but is not under HOME (HOME /home/bob, repo /home/bob2/proj), `puppetmaster doctor` shows a valid rule file as an 'error' row 'check raised: ValueError ...' and not 'ok'.",
+   "caller": "puppetmaster/cli/_dispatch.py:698",
+   "evidence": "diagnostics.py:458 `str(p.relative_to(Path.home())) if str(p).startswith(str(Path.home())) else str(p)`; _guard (diagnostics.py:44-45) converts the ValueError to status 'error'. run_doctor(Path.cwd()) at cli/_dispatch.py:698 passes the repo as root (diagnostics.py:75, candidates diagnostics.py:437-439). Probed on project/: status='error', detail \"check raised: ValueError: '.../bob2/proj/AGENTS.md' is not in the subpath of '.../bob'\".",
+   "severity": "low"
+  },
+  {
+   "k": 18,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A pin by wire name whose model is in the registry only under a custom disabled id gets the hint 'starter entry ... does not have. Run models sync --apply', but sync treats that starter id as covered and adds nothing, so the user follows a fix that changes nothing and is not told that the entry is disabled.",
+   "caller": "puppetmaster/orchestrator.py:1957",
+   "evidence": "routing_authority.py:98-102 calls _pin_failure_detail -> unroutable_pin_hint, which looks up only `spec.id == starter_pin.registry_id` (registry_sync.py:201-203). plan_starter_sync skips a starter id with the same _execution_identity (registry_sync.py:116-119). Probed on project/: custom disabled 'claude-code/my-custom' with the starter's model, pin 'claude-haiku-4-5' gives the 'does not have. Run `puppetmaster models sync`' hint, and plan_starter_sync gives covered [('claude-code/haiku-4-5','claude-code/my-custom')], added [].",
+   "severity": "low"
+  },
+  {
+   "k": 19,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "docs/CHANGELOG.md v1.51.1 scopes the fix: 'The CLI is an npm shim that starts the real Node binary as a child' and 'The five callers in `puppetmaster/codegraph.py` use one function, `_run_cli`'. puppetmaster/codegraph_repair.py:446-452 docstring: 'We intentionally invoke CodeGraph's JS entry point through the same Node binary ... running ``codegraph status`` via the shim on PATH would invoke whatever Node owns the shim'. Line 460 runs [node_path, codegraph.js, 'status'] directly, so the direct child is the real Node process and subprocess.run kills it at the timeout. No shim, no orphan of the leak shape.",
+   "severity": "none"
+  },
+  {
+   "k": 20,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A registry entry whose adapter_model_name is a Codex '*-pro' id (for example gpt-5.6-sol-pro) binds at job start, but every task then fails at dispatch with 'executable model and pinned wire identity diverge', so the pro remap that harden_agentic_openai_payload exists for can never run.",
+   "caller": "puppetmaster/worker_runtime.py:108",
+   "evidence": "Probe (sim, registry with one agentic entry id agentic/gpt-5-6-sol-pro, adapter_model_name gpt-5.6-sol-pro): resolve_and_bind_explicit_pin (routing_authority.py:105, called from orchestrator.py:1957) gives model='gpt-5.6-sol', pinned_adapter_model_name='gpt-5.6-sol', codex_pro_remapped_from='gpt-5.6-sol-pro'; validate_pinned_dispatch on that payload raises RegistryAuthorityError at routing_authority.py:154-162 because pin.adapter_model_name ('gpt-5.6-sol-pro') != expected_wire ('gpt-5.6-sol'). openai_codex.py:259-263 remaps pinned_adapter_model_name; openai_codex.py:117 names 'gpt-5.6-luna-pro / gpt-6.1-sol-pro / gpt-6-astra-pro' as expected pin ids.",
+   "severity": "medium"
+  },
+  {
+   "k": 21,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "When the registry holds the starter model under another id (disabled), a pin on the starter id gives an error that tells the user to run `models sync --apply`, but sync puts that id in `covered` and adds nothing, so the advice loops and the real fix (enable the existing entry) is not named.",
+   "caller": "puppetmaster/routing_authority.py:25",
+   "evidence": "registry_sync.py:195-203 finds the entry by `spec.id == starter_pin.registry_id` only, while plan_starter_sync (registry_sync.py:113-118) skips a starter entry when `_execution_identity` matches another id. Probe (sim, registry = starter claude-code/haiku-4-5 renamed to claude-code/my-renamed, disabled): hint = \"'claude-code/haiku-4-5' is a starter registry entry that this registry does not have. Run `puppetmaster models sync` ... --apply to add them.\"; plan_starter_sync covered = [('claude-code/haiku-4-5', 'claude-code/my-renamed')]. Path: orchestrator.py:1957 -> resolve_and_bind_explicit_pin -> routing_authority.py:98 _pin_failure_detail -> line 25.",
+   "severity": "low"
+  },
+  {
+   "k": 22,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "A task text equal to '--format', '--max-nodes' or '--max-files' (or one that starts with '--format=' / '--max-nodes=') is read as a flag and the query is lost.",
+   "caller": null,
+   "evidence": "codegraph.py:503-505 passes the whole task as one argv token: [\"context\", task, \"--max-nodes\", ...]; codegraph.py:735-755 matches each token against flag names, so a task token equal to '--format' is dropped with the next token. The docstring (codegraph.py:718-724) says the function only maps legacy spellings, so this conflicts with its contract. Callers (job_brief.py:58, adapters/agentic.py:2484, codegraph.py:684) pass a job goal or task description; a whole task that is exactly a flag name is not a normal input, and the CodeGraph CLI would read such a token as a flag even without the translation.",
+   "severity": "low"
+  },
+  {
+   "k": 23,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A hand-edited registry saved in a non-UTF-8 encoding makes `puppetmaster doctor` show the registry-starter-sync row as status 'error' with 'check raised: UnicodeDecodeError' and not the documented 'registry unreadable' warning.",
+   "caller": "puppetmaster/diagnostics.py:81",
+   "evidence": "diagnostics.py:198-201 catches only RuntimeError. model_registry.py:243 `json.loads(resolved.read_text(encoding=\"utf-8\"))` catches only json.JSONDecodeError (line 244), so UnicodeDecodeError (a ValueError) escapes; registry_sync.py:162 docstring says it 'Raises ``RuntimeError`` when the registry file is not valid'. diagnostics.py:34-45 `_guard` converts the escape to Check(name, 'error', ...), so doctor does not crash, but the result is error, not warn.",
+   "severity": "low"
+  },
+  {
+   "k": 24,
+   "verdict": "real_unreachable",
+   "duplicate_of": null,
+   "what_goes_wrong": "PUPPETMASTER_CODEGRAPH_PROVISION_TIMEOUT_SECONDS=inf raises OverflowError out of ensure_codegraph_provisioned, which the docstring calls fully best-effort.",
+   "caller": null,
+   "evidence": "codegraph.py:374-380: `return max(30, int(float(raw)))` catches only ValueError; int(float('inf')) raises OverflowError. codegraph.py:387-388 docstring: 'fully best-effort \u2014 every failure mode falls through ... rather than raising'. The only source is an operator env value; docs/CHANGELOG.md:5100 documents it as a number of seconds ('default 300'), so no product caller or normal setup passes 'inf'.",
+   "severity": "low"
+  },
+  {
+   "k": 25,
+   "verdict": "unclear",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "tests/test_codegraph_process_group.py:52 uses timeout=3 for two interpreter starts plus a pid-file write, then asserts the pid file exists (line 54). This is a test margin, not a product path. Probed on this Mac: `pytest -q tests/test_codegraph_process_group.py` gives '3 passed in 3.07s'. No CI failure record is in the evidence. The owner must decide whether to raise the timeout (or wait for the pid file before the timeout) as margin for slow Windows or coverage runners.",
+   "severity": "low"
+  },
+  {
+   "k": 26,
+   "verdict": "intended",
+   "duplicate_of": null,
+   "what_goes_wrong": null,
+   "caller": null,
+   "evidence": "registry_sync.py:157 docstring: 'The write appends rows to the parsed JSON document' and promises 'their fields, their key order and the fields this release does not know stay as they are', not the same bytes. docs/MODEL_ROUTING.md:231-232: 'Its fields, its position and its unknown fields do not change.' tests/test_registry_sync.py:152-157 checks the parsed row (`json.dumps(rows_after[model_id]) == json.dumps(row)`), not the raw text. model_registry.py:314 save_registry writes with the same `json.dumps(payload, indent=2, sort_keys=False)`, so a file that Puppetmaster wrote keeps its bytes. Validation: _plan_for_path (registry_sync.py:138) runs load_registry, which validates the existing rows, and plan_starter_sync adds only starter specs whose id and identity are absent.",
+   "severity": "none"
+  },
+  {
+   "k": 27,
+   "verdict": "real",
+   "duplicate_of": null,
+   "what_goes_wrong": "A file with a non-ASCII name (git quotes it as \"caf\\303\\251.md\") is never found by stat, so freshness counts it as changed after the index even when it is older, and the index can show as stale for no reason.",
+   "caller": "puppetmaster/codegraph.py:1849",
+   "evidence": "codegraph.py:1724-1725 strips only the quotes, with no C-escape decode; codegraph.py:1755-1759 counts an OSError from stat as `mtime = cutoff + 1`. Probe (sim, git repo with untracked 'caf\u00e9.md', mtime 1 h before the index time): porcelain line '?? \"caf\\\\303\\\\251.md\"', _git_changes_since gives (['caf\\\\303\\\\251.md'], 1, False, None). Reached from codegraph_freshness (codegraph.py:1849), which codegraph.py:695, diagnostics.py:667 and cli/helpers.py:678 call.",
+   "severity": "low"
+  }
+ ]
+}

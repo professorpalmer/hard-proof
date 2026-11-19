@@ -1,0 +1,403 @@
+{
+ "range": "v1.50.0..v1.51.1",
+ "arms": {
+  "hpf": {
+   "findings": 15,
+   "confirmed_claims": 8,
+   "confirmed_distinct_bugs": 8,
+   "only_this_arm": 7,
+   "bugs": [
+    "covered_hint",
+    "k14",
+    "k15",
+    "k17",
+    "k18",
+    "k23",
+    "k27",
+    "k7"
+   ]
+  },
+  "claude": {
+   "findings": 10,
+   "confirmed_claims": 2,
+   "confirmed_distinct_bugs": 2,
+   "only_this_arm": 1,
+   "bugs": [
+    "covered_hint",
+    "k12"
+   ]
+  },
+  "codex": {
+   "findings": 2,
+   "confirmed_claims": 2,
+   "confirmed_distinct_bugs": 2,
+   "only_this_arm": 1,
+   "bugs": [
+    "covered_hint",
+    "k2"
+   ]
+  }
+ },
+ "union_distinct_bugs": 10,
+ "verifier_cost_usd": 7.88,
+ "claims": [
+  {
+   "k": 1,
+   "arm": "claude",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_run_cli",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "run_cli_signature"
+  },
+  {
+   "k": 2,
+   "arm": "codex",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "unroutable_pin_hint",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k2"
+  },
+  {
+   "k": 3,
+   "arm": "hpf",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "unroutable_pin_hint",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "covered_hint"
+  },
+  {
+   "k": 4,
+   "arm": "hpf",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "_synced_spec",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k4"
+  },
+  {
+   "k": 5,
+   "arm": "claude",
+   "file": "puppetmaster/cli/commands_models.py",
+   "function": "_run_models_sync",
+   "verdicts": {
+    "opus": "unclear",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "k5"
+  },
+  {
+   "k": 6,
+   "arm": "hpf",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_run_cli",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "run_cli_signature"
+  },
+  {
+   "k": 7,
+   "arm": "hpf",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_run_git",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k7"
+  },
+  {
+   "k": 8,
+   "arm": "codex",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "unroutable_pin_hint",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "covered_hint"
+  },
+  {
+   "k": 9,
+   "arm": "claude",
+   "file": "puppetmaster/diagnostics.py",
+   "function": "_registry_starter_sync_check",
+   "verdicts": {
+    "opus": "intended",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k9"
+  },
+  {
+   "k": 10,
+   "arm": "hpf",
+   "file": "puppetmaster/routing_authority.py",
+   "function": "resolve_and_bind_explicit_pin",
+   "verdicts": {
+    "opus": "intended",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k10"
+  },
+  {
+   "k": 11,
+   "arm": "hpf",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "enable_command",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "k11"
+  },
+  {
+   "k": 12,
+   "arm": "claude",
+   "file": "puppetmaster/cli/commands_models.py",
+   "function": "_run_models_sync",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k12"
+  },
+  {
+   "k": 13,
+   "arm": "claude",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_run_cli",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "k13"
+  },
+  {
+   "k": 14,
+   "arm": "hpf",
+   "file": "puppetmaster/cli/commands_models.py",
+   "function": "_run_models_subcommand",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k14"
+  },
+  {
+   "k": 15,
+   "arm": "hpf",
+   "file": "puppetmaster/diagnostics.py",
+   "function": "run_doctor",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k15"
+  },
+  {
+   "k": 16,
+   "arm": "claude",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "sync_starter_registry",
+   "verdicts": {
+    "opus": "intended",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k16"
+  },
+  {
+   "k": 17,
+   "arm": "hpf",
+   "file": "puppetmaster/diagnostics.py",
+   "function": "run_doctor",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k17"
+  },
+  {
+   "k": 18,
+   "arm": "hpf",
+   "file": "puppetmaster/routing_authority.py",
+   "function": "_pin_failure_detail",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k18"
+  },
+  {
+   "k": 19,
+   "arm": "claude",
+   "file": "puppetmaster/codegraph_repair.py",
+   "function": "_verify_native_backend",
+   "verdicts": {
+    "opus": "intended",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k19"
+  },
+  {
+   "k": 20,
+   "arm": "hpf",
+   "file": "puppetmaster/routing_authority.py",
+   "function": "validate_pinned_dispatch",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k20"
+  },
+  {
+   "k": 21,
+   "arm": "claude",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "unroutable_pin_hint",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "covered_hint"
+  },
+  {
+   "k": 22,
+   "arm": "hpf",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_codegraph_context_cached",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "k22"
+  },
+  {
+   "k": 23,
+   "arm": "hpf",
+   "file": "puppetmaster/diagnostics.py",
+   "function": "_registry_starter_sync_check",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k23"
+  },
+  {
+   "k": 24,
+   "arm": "hpf",
+   "file": "puppetmaster/codegraph.py",
+   "function": "ensure_codegraph_provisioned",
+   "verdicts": {
+    "opus": "real_unreachable",
+    "sonnet": "real_unreachable"
+   },
+   "confirmed": false,
+   "bug": "k24"
+  },
+  {
+   "k": 25,
+   "arm": "claude",
+   "file": "tests/test_codegraph_process_group.py",
+   "function": "test_timeout_ends_the_child_of_the_shim",
+   "verdicts": {
+    "opus": "unclear",
+    "sonnet": "unclear"
+   },
+   "confirmed": false,
+   "bug": "k25"
+  },
+  {
+   "k": 26,
+   "arm": "claude",
+   "file": "puppetmaster/registry_sync.py",
+   "function": "sync_starter_registry",
+   "verdicts": {
+    "opus": "intended",
+    "sonnet": "intended"
+   },
+   "confirmed": false,
+   "bug": "k26"
+  },
+  {
+   "k": 27,
+   "arm": "hpf",
+   "file": "puppetmaster/codegraph.py",
+   "function": "_run_git",
+   "verdicts": {
+    "opus": "real",
+    "sonnet": "real"
+   },
+   "confirmed": true,
+   "bug": "k27"
+  }
+ ],
+ "runs": {
+  "hpf": {
+   "tool": "hpflow 0.4.0 defaults, lean workers (stored run audit-pm-1510-lean)",
+   "seconds": 1727,
+   "cost_usd_api_equivalent": 9.44,
+   "sessions": 40
+  },
+  "claude": {
+   "tool": "Claude Code 2.1.316, /code-review high main..feature",
+   "model": "claude-opus-5-5",
+   "seconds": 171,
+   "cost_usd_api_equivalent": 0.779,
+   "tool_calls": 18,
+   "findings": 10,
+   "note": "The report says that no finding was checked by a run of code."
+  },
+  "codex": {
+   "tool": "codex-cli 0.160.0, codex review --base main",
+   "model": "gpt-6.1-sol, xhigh (config of the owner)",
+   "seconds": 192,
+   "cost_usd_api_equivalent": null,
+   "findings": 2,
+   "note": "Plan billing, no cost in the output. The report says that both cases were reproduced with focused checks."
+  }
+ },
+ "sensitivity": "If claim 18 is one bug with covered_hint, hpf has 7 distinct bugs and 6 that only it found. The two other arms do not change.",
+ "limits": [
+  "one release range",
+  "one run for each arm",
+  "the hpf run is older than the protocol",
+  "the two verifier models are Claude models",
+  "the Claude Code review ran at the level high, and higher levels exist",
+  "the models of the arms are not the same"
+ ]
+}

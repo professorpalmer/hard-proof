@@ -1,0 +1,8 @@
+{
+ "_note": "Written before the verdicts were read. Claims with one root cause get one bug name. k18 stays apart from covered_hint: the input is an adapter model name, and the function is not the same.",
+ "3": "covered_hint",
+ "8": "covered_hint",
+ "21": "covered_hint",
+ "6": "run_cli_signature",
+ "1": "run_cli_signature"
+}
