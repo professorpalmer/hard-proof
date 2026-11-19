@@ -60,6 +60,12 @@ def file_of_uri(uri: str) -> str:
     parts = urlsplit(uri)
     if parts.scheme == "file":
         path = unquote(parts.path)
+        if re.fullmatch(r"[A-Za-z]:", parts.netloc):
+            # `file://C:/x.py` has the drive in the place of the host.
+            return parts.netloc + path
+        if parts.netloc and parts.netloc != "localhost":
+            # A file on another host. It is not a file of the repository.
+            return f"//{parts.netloc}{path}"
         # `file:///C:/x.py` has the path `/C:/x.py`. The path on Windows is `C:/x.py`.
         return path[1:] if re.match(r"^/[A-Za-z]:", path) else path
     # A Windows path such as `C:\\x.py` has a one-letter scheme. It is a path, not an address.
@@ -72,7 +78,8 @@ def sarif_entries(data: Dict[str, Any], source: Optional[str]) -> List[Tuple[Opt
         if not isinstance(run, dict):
             continue
         driver = ((run.get("tool") or {}).get("driver") or {}) if isinstance(run.get("tool"), dict) else {}
-        tool = source or text_of(driver.get("name") if isinstance(driver, dict) else None) or "outside"
+        # The name that the file gives comes first, as for an entry of the hpflow form.
+        tool = text_of(driver.get("name") if isinstance(driver, dict) else None) or source or "outside"
         for result in run.get("results") or []:
             index = len(out)
             if not isinstance(result, dict):

@@ -605,17 +605,19 @@ def place_claim(ctx: Context, audit: Dict[str, Any], e: Dict[str, Any]) -> Tuple
         return None, "the file is not in the snapshot of the audit (paths: " + ", ".join(audit["paths"]) + ")"
     fns = functions_of(path.read_text(encoding="utf-8", errors="replace"))
     name, line = e["function"], e["line"]
-    # A tool can give a method with no class name.
-    named = [fn for fn in fns if fn["function"] == name] or [fn for fn in fns if fn["function"].endswith("." + name)] if name else []
-    if len(named) == 1:
-        found = named
-    elif line is None:
-        return None, f"{len(named)} functions have the name {name}: give the line" if named else f"no function {name} in the file"
+    # A tool can give a method with no class name, so a name fits its exact match and each method with that name.
+    named = [fn for fn in fns if fn["function"] == name or fn["function"].endswith("." + name)] if name else []
+    inside = [fn for fn in named or fns if line is not None and fn["start"] <= line <= fn["end"]]
+    if inside:
+        # The line is the exact place: among the functions with the name, or in the file when no function has it.
+        found = inside
+    elif not named:
+        return None, f"line {line} is in no function" if line is not None else f"no function {name} in the file"
     else:
-        # The line decides between the functions with the name. With no such name in the file, the line is the place.
-        found = [fn for fn in named or fns if fn["start"] <= line <= fn["end"]]
-        if not found:
-            return None, f"line {line} is in no function" + (f" with the name {name}" if named else "")
+        # No line, or a line outside each function with the name: the name decides, and the exact name comes first.
+        found = [fn for fn in named if fn["function"] == name] or named
+        if len(found) > 1:
+            return None, f"{len(found)} functions have the name {name}: give " + ("the line" if line is None else "a line inside one of them")
     target = make_target(file, found[0], "import", audit.get("import_root") or "")
     return {"id": digest("outside", file, target["function"], target["nth"], e["claim"]), "file": file,
             "function": target["function"], "target": target, "claim": e["claim"], "source": e["source"]}, None
@@ -867,7 +869,9 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
 
 
 def cell(x: Any) -> str:
-    return str("" if x is None else x).replace("|", "\\|").replace("\n", " ")[:300]
+    """The text of one cell of a Markdown table. A backslash in the text is doubled first, so a backslash before
+    a bar cannot take the escape of the bar."""
+    return str("" if x is None else x).replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ")[:300]
 
 
 def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, Any]], bugs: List[Dict[str, Any]]) -> str:

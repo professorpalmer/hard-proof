@@ -170,6 +170,39 @@ class ImportTest(ImportCase):
         second = [f for f in self.imports()["findings"] if f["file"] == "pkg/twice.py" and f["function"] == "f"]
         self.assertEqual(len(second), 1)
 
+    def test_the_line_decides_between_functions_with_one_name(self):
+        self.init()
+        (self.out / "src" / "pkg" / "names.py").write_text(
+            "def m():\n    return 1\n\n\nclass C:\n    def m(self):\n        return 2\n\n\nclass D:\n    def m(self):\n        return 3\n\n\ndef other():\n    return 4\n")
+        cases = [({"function": "m", "line": 7}, "C.m"), ({"function": "m", "line": 2}, "m"), ({"function": "m"}, "m"),
+                 ({"function": "m", "line": 16}, "m"), ({"function": "C.m", "line": 2}, "C.m"), ({"function": "nope", "line": 11}, "D.m"),
+                 ({"line": 16}, "other")]
+        entries = [dict(place, file="pkg/names.py", claim=f"real: case {k}") for k, (place, _) in enumerate(cases)]
+        entries += [{"file": "pkg/names.py", "function": "nope", "line": 9, "claim": "x"},
+                    {"file": "pkg/names.py", "function": "nope", "claim": "x"}]
+        code, r = self.hpf("import", "--findings", self.write(entries))
+        self.assertEqual(code, 0, r)
+        placed = {c["claim"]: c["function"] for c in self.imports()["claims"]}
+        self.assertEqual(placed, {f"real: case {k}": want for k, (_, want) in enumerate(cases)})
+        self.assertEqual({s["index"]: s["reason"] for s in r["skipped"]}, {7: "line 9 is in no function", 8: "no function nope in the file"})
+        # Two methods have the short name and no function has the exact name: the name alone does not decide.
+        (self.out / "src" / "pkg" / "two.py").write_text("class C:\n    def m(self):\n        return 2\n\n\nclass D:\n    def m(self):\n        return 3\n")
+        code, r = self.hpf("import", "--findings", self.write([{"file": "pkg/two.py", "function": "m", "claim": "x"},
+                                                             {"file": "pkg/two.py", "function": "m", "line": 5, "claim": "x"}]))
+        self.assertEqual([s["reason"] for s in r["skipped"]],
+                         ["2 functions have the name m: give the line", "2 functions have the name m: give a line inside one of them"])
+
+    def test_the_tool_name_of_a_sarif_file_comes_before_the_source_option(self):
+        self.init()
+        result = {"message": {"text": "real: wrong sum"},
+                  "locations": [{"physicalLocation": {"artifactLocation": {"uri": "pkg/mod.py"}, "region": {"startLine": 2}}}]}
+        sarif = {"version": "2.1.0", "runs": [{"tool": {"driver": {"name": "scan"}}, "results": [result]},
+                                              {"tool": {"driver": {}}, "results": [dict(result, message={"text": "real: another sum"})]}]}
+        code, r = self.hpf("import", "--findings", self.write(sarif, "scan.sarif"), "--source", "mine")
+        self.assertEqual(code, 0, r)
+        self.assertEqual(sorted((c["claim"], c["source"]) for c in self.imports()["claims"]),
+                         [("real: another sum", "mine"), ("real: wrong sum", "scan")])
+
     def test_sarif_results_are_claims(self):
         self.init()
         sarif = {"version": "2.1.0", "runs": [{"tool": {"driver": {"name": "scan"}}, "results": [
@@ -268,12 +301,25 @@ class OutsideFormTest(unittest.TestCase):
         self.assertEqual(outside.file_of_uri("pkg/a%20b.py"), "pkg/a b.py")
         self.assertEqual(outside.file_of_uri("file:///repo/pkg/a%20b.py"), "/repo/pkg/a b.py")
         self.assertEqual(outside.file_of_uri("file:///C:/repo/a.py"), "C:/repo/a.py")
+        self.assertEqual(outside.file_of_uri("file://C:/repo/a.py"), "C:/repo/a.py")
+        self.assertEqual(outside.file_of_uri("file://localhost/repo/a.py"), "/repo/a.py")
+        self.assertEqual(outside.file_of_uri("file://server/share/a.py"), "//server/share/a.py")
         self.assertEqual(outside.file_of_uri("C:\\repo\\a.py"), "C:\\repo\\a.py")
         self.assertEqual(outside.file_of_uri("https://example.com/a.py"), "https://example.com/a.py")
 
     def test_a_file_that_cannot_be_read_is_a_usage_error(self):
         with self.assertRaises(UsageError):
             outside.read(Path(tempfile.gettempdir()) / "hpflow-no-such-file.json")
+
+
+class ReportCellTest(unittest.TestCase):
+    def test_a_bar_in_a_cell_stays_text(self):
+        from hpflow.commands import cell
+        self.assertEqual(cell("a|b"), "a\\|b")
+        # The backslash of the text is doubled, so the bar keeps an escape of its own.
+        self.assertEqual(cell("a\\|b"), "a\\\\\\|b")
+        self.assertEqual(cell("C:\\x\ny"), "C:\\\\x y")
+        self.assertEqual(cell(None), "")
 
 
 class BriefTextTest(unittest.TestCase):
