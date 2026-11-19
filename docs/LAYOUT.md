@@ -10,7 +10,7 @@
 | `study/v3` | The first proof on a new product function: the swarm policy table of Marionette |
 | `tool/hpflow/proof` | The command `hp`: one proof gate for one Python function: model, link test, laws, and four kinds of certificate |
 | `tool/hpflow` | The audit ladder as one command set: targets from a git range, review, script gate, two verifiers, fix, and the release gate |
-| `site` | The build scripts of the paper and of this PDF |
+| `site` | The build scripts: `build_site.py` (the paper and the public data file), `build_page.py` (the study page, with its style and script in `site/page`), `build_pdf.py` (this PDF) |
 | `docs` | The guides of this repository, and the paper as PDF and as a print page |
 
 ## Requirements
