@@ -44,9 +44,9 @@ ORACLE = r'''
 import sys, json
 sys.path.insert(0, sys.argv[1])
 from pathlib import Path
-from hardproof.domain import Domain
-from hardproof.checks import load_adapter
-from hardproof.link import load_function
+from hpflow.proof.domain import Domain
+from hpflow.proof.checks import load_adapter
+from hpflow.proof.link import load_function
 d = Domain(Path(sys.argv[2]))
 a = load_adapter(d)
 try:

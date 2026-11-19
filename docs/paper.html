@@ -73,7 +73,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
 <p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
-<p class="small">Revision 6, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
+<p class="small">Revision 7, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
 <ol class="toc">
 <li><a href="#problem">The problem</a></li>
 <li><a href="#defs">Definitions</a></li>
@@ -762,12 +762,12 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 <h3>The gate</h3>
 <p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>
 <p>We ran the gate on the stored audit of Section 13. On the audited release (v1.51.1) the verdict was "fail" with 7 open bugs. On the next release (v1.51.2), which has the fixes, the verdict was "pass" with 7 closed. The gate is now a step before each release of our two products.</p>
-<pre>pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+<pre>pip install hpflow
 
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
 hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs
 hpf gate  --out ~/audits/next --ref HEAD</pre>
-<p>The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>
+<p>The package <code>hpflow</code> is on PyPI and has the two commands <code>hpf</code> and <code>hp</code>. The name <code>hardproof</code> on PyPI is a different project that is not related to this work. The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>
 <h3>What a pass does not say</h3><ul>
 <li>A pass says that each bug that two verifier agents confirmed is closed or waived. It does not say that the code has no bug. The best review arm of Section 12 found 44 of 95 known bugs.</li>
 <li>The fix step can make a wrong fix that passes its check and its judge. Section 13 has five. A human must review each fix before the merge, and <code>hpflow</code> does not commit or merge.</li>
@@ -852,10 +852,10 @@ B_result = [id 1; id 1]</pre>
 <h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="https://puppetmaster.gg/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
-<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>0b4a98ee906ebb4a0b7311ca1527d234a4ef0577e65824126ce2760473e05c19</code>.</li>
+<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>91fb2e70652f924aaf497cf4f0db3f351ce9a5684580b2323127ca2060882488</code>.</li>
 <li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. Our last run made 184 gate runs: 179 accept and 5 reject, and each verdict was the same as the run record. With the build caches present it took about 4 minutes with six parallel jobs. A first run builds each folder and takes longer.</li>
 <li><code>README.md</code> in the archive has a command for each experiment family. The link tests need a checkout of Puppetmaster.</li>
-<li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the tools <code>hardproof</code> and <code>hpflow</code>, the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>
+<li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the package <code>hpflow</code> (the commands <code>hp</code> and <code>hpf</code>, also on PyPI), the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>
 </ul>
 
 <div class="doc-cite">

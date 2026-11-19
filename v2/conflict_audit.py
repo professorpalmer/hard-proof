@@ -53,9 +53,9 @@ LINE = {line!r}
 
 def case():
     sys.path.insert(0, str(HERE / "_hp"))
-    from hardproof.checks import load_adapter
-    from hardproof.domain import Domain
-    from hardproof.link import load_function
+    from hpflow.proof.checks import load_adapter
+    from hpflow.proof.domain import Domain
+    from hpflow.proof.link import load_function
     domain = Domain(HERE / "domain_{k}")
     adapter = load_adapter(domain)
     _, function = load_function(domain.config(), HERE / "project")
@@ -179,7 +179,7 @@ def build(g: dict, folder: Path) -> list[dict]:
         elif src.exists():
             shutil.copy(src, folder / "project" / name)
     (folder / "_hp").mkdir()
-    shutil.copytree(TOOL / "hardproof", folder / "_hp" / "hardproof", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(TOOL / "hpflow", folder / "_hp" / "hpflow", ignore=shutil.ignore_patterns("__pycache__"))
     (folder / ".gitignore").write_text(".lake/\n__pycache__/\n*.pyc\n", encoding="utf-8")
     claims = []
     for c in g["claims"]:

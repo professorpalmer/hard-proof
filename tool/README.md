@@ -1,9 +1,22 @@
-# hardproof
+# hpflow: a proof gate and an audit ladder for Python code
 
-hardproof is one proof gate for one Python function. It replaces the
-hand-written gate scripts of the Hard Proof study (`exp12/base/gate12.py` and
-the scripts before it) with one command set and one domain contract. A new
-Python function gets a proof gate with no new gate code.
+This package has two commands.
+
+- `hpf` is the audit ladder. It takes the Python functions that changed in a
+  git range up a ladder of evidence: a review finding with a runnable repro,
+  a script run of the repro, two verifier agents, a fix with a test, and a
+  gate before the release. See the section "hpflow" below.
+- `hp` is the proof gate. It is one proof gate for one Python function, with
+  Lean 4. The first sections of this file are about `hp`.
+
+The two come from the study "Proved is not finished"
+(https://puppetmaster.gg/labs/hard-proof/). The study has the data, the costs
+and the limits. Source: https://github.com/professorpalmer/hard-proof
+
+`hp` replaces the hand-written gate scripts of the study
+(`exp12/base/gate12.py` and the scripts before it) with one command set and
+one domain contract. A new Python function gets a proof gate with no new gate
+code.
 
 The tool uses Lean 4.36.0 with no Mathlib. `lake comparator` does the
 statement match, the axiom audit and the kernel replay. The tool is Python 3.9+
@@ -12,15 +25,16 @@ with the standard library only. It makes no model call.
 ## Install
 
 ```sh
-pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+pip install hpflow
 ```
 
-This gives four commands: `hp` and `hardproof` (the proof gate), `hpf` and
-`hpflow` (the audit ladder). The package has no Python dependency. Its
-distribution name is `hpflow`, and it is not on PyPI: install it from this
-repository. A different project has the name `hardproof` on PyPI, so
-`pip install hardproof` does not give these tools. From a
-checkout, `./hp` and `./hpf` in this folder do the same with no install.
+This gives three commands: `hp` (the proof gate), and `hpf` and `hpflow` (the
+audit ladder). The package has no Python dependency. From a checkout of the
+repository, `./hp` and `./hpf` in the folder `tool` do the same with no
+install.
+
+The name of the package is `hpflow`. The name `hardproof` on PyPI is a
+different project, and it is not related to these tools.
 
 | Command | Needs |
 | --- | --- |
@@ -81,7 +95,8 @@ does not stop the check of another kind.
 ## Quick start (on `examples/clamp`)
 
 `examples/clamp` is a pure function `clamp(x, lo, hi)` in
-`examples/clamp/pycode/clampmod.py`. It needs no outside repository.
+`examples/clamp/pycode/clampmod.py`. It needs no outside repository. The examples are in the
+repository, not in the installed package.
 
 1. Copy the example to a new folder and go to it:
 
@@ -90,8 +105,8 @@ does not stop the check of another kind.
    cd /tmp/clamp-demo
    ```
 
-2. Set `HP` to the launcher of this folder, for example
-   `HP=~/Projects/hard-proof/tool/hp`.
+2. Set `HP` to the command: `HP=hp` after an install, or the full path of
+   the launcher `hp` in the folder `tool` of a checkout.
 3. Check the model (types, mirror, codec, runner and the codec round trip):
 
    ```sh
@@ -125,7 +140,7 @@ Each command prints one JSON report. The exit code is 0 for accept (or
 
 All commands take `--dir PATH` (the domain folder; the default is the current
 folder) and `--actor NAME` (the name in the run log). Run them as
-`python3 -m hardproof <command>` with `PYTHONPATH` set to this folder, or as
+`python3 -m hpflow.proof <command>` with `PYTHONPATH` set to this folder, or as
 `./hp <command>`.
 
 - `new DIR --name NAME --module PKG.MOD --function NAME`: make a domain folder
@@ -214,7 +229,7 @@ message when the clone at `~/Projects/hp-work/Puppetmaster` is absent.
 
 `hpflow` is the second package of this folder. It runs agent workers through
 the Puppetmaster command line and takes a set of Python functions up an
-evidence ladder. `hardproof` makes no model call. `hpflow` does.
+evidence ladder. The proof gate `hp` makes no model call. `hpflow` does.
 
 | Grade | Evidence | Who gives it |
 | --- | --- | --- |
@@ -353,5 +368,5 @@ the cost of one visit is the difference from the visit before it.
   45 in our study). Review each fix before you merge it.
 - Python only. The reviewer and the verifiers are Claude models through
   Claude Code. Other adapters are not tested.
-- Lean certificates (the `hardproof` gate) are not part of the ladder. Use
+- Lean certificates (the proof gate `hp`) are not part of the ladder. Use
   `hp` for a small rule that the owner states, for example a decision table.

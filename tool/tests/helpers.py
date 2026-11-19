@@ -17,10 +17,10 @@ SKIP = shutil.ignore_patterns("variants", "hardproof_runs.jsonl", "hardproof.loc
 
 
 def run_hp(domain: Path, *args: str, timeout: float = 900) -> tuple:
-    """Run `python3 -m hardproof --dir DOMAIN ARGS`. Return (exit code, JSON report)."""
+    """Run `python3 -m hpflow.proof --dir DOMAIN ARGS`. Return (exit code, JSON report)."""
     env = dict(os.environ)
     env["PYTHONPATH"] = str(TOOL)
-    proc = subprocess.run([sys.executable, "-m", "hardproof", "--dir", str(domain), "--actor", "test", *args],
+    proc = subprocess.run([sys.executable, "-m", "hpflow.proof", "--dir", str(domain), "--actor", "test", *args],
                           cwd=str(TOOL), capture_output=True, text=True, env=env, timeout=timeout)
     try:
         report = json.loads(proc.stdout)

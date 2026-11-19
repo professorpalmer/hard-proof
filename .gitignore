@@ -7,3 +7,4 @@ hardproof.lock.json
 *_runs.jsonl.tmp
 *.egg-info/
 build/
+dist/

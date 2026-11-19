@@ -40,7 +40,7 @@ code { font: 14px "SF Mono", Menlo, Consolas, monospace; }
 <a class="primary" href="paper.pdf">Paper (PDF)</a>
 <a href="https://puppetmaster.gg/labs/hard-proof/">Read the study online</a>
 <a href="https://github.com/professorpalmer/hard-proof">Code and data</a>
-<a href="https://github.com/professorpalmer/hard-proof#use-it-on-your-code">Use the tools</a>
+<a href="https://pypi.org/project/hpflow/">hpflow on PyPI</a>
 <a href="paper.html">Print page</a>
 </div>
 
@@ -69,7 +69,7 @@ code { font: 14px "SF Mono", Menlo, Consolas, monospace; }
 
 <h2>Use the tools</h2>
 <p class="note">Our recommendation from the data: a review with receipts for all code, and a proof for a small rule that the owner states. Section 14 of the paper has the reasons and the costs.</p>
-<pre><code>pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+<pre><code>pip install hpflow
 
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
 hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs

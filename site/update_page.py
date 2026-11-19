@@ -94,14 +94,14 @@ def step_use(ls: dict, pc: dict, tri: dict, gate: list) -> str:
 <tr><td>The full proof pipeline for one function</td><td>${pc['cost_mean_usd']:.2f}</td></tr>
 <tr><td>The proof of one decision table</td><td>about ten minutes, no worker</td></tr>
 </tbody></table></div>
-<p>The two tools are in the repository. <code>hpf</code> audits the functions that changed in a git range, and its last step is a gate with no model call: each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. On our stored audit, the gate failed on Puppetmaster {a['ref'].lstrip('v')} with {a['open']} open bugs and passed on {b['ref'].lstrip('v')} with {b['closed']} closed. <code>hp</code> is the proof gate for one Python function.</p>
-<pre class="hp-theorem">pip install "git+{REPO_URL}.git#subdirectory=tool"
+<p>The two tools are one package, <code>hpflow</code>, on PyPI and in the repository. <code>hpf</code> audits the functions that changed in a git range, and its last step is a gate with no model call: each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. On our stored audit, the gate failed on Puppetmaster {a['ref'].lstrip('v')} with {a['open']} open bugs and passed on {b['ref'].lstrip('v')} with {b['closed']} closed. <code>hp</code> is the proof gate for one Python function.</p>
+<pre class="hp-theorem">pip install hpflow
 
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
 hpf fix   --out ~/audits/next
 hpf gate  --out ~/audits/next --ref HEAD</pre>
 <p class="note">The audit and the fix step need the Puppetmaster command line and Claude Code. The fix step never commits: a human reviews each fix. A pass of the gate does not say that the code has no bug. The tools are a first version, for Python, with tests on our own two products only.</p>
-<div class="hp-links"><a class="button" href="{REPO_URL}#use-it-on-your-code">Get the tools</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
+<div class="hp-links"><a class="button" href="https://pypi.org/project/hpflow/">hpflow on PyPI</a><a class="button ghost" href="{REPO_URL}#use-it-on-your-code">Guide in the repository</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
 </section>"""
 
 

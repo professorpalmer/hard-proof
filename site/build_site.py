@@ -660,11 +660,11 @@ def sec_use(ls: dict) -> str:
     if len(gate) == 2:
         a, b = gate
         h.append(f"<p>We ran the gate on the stored audit of Section 13. On the audited release ({a['ref']}) the verdict was \"{a['verdict']}\" with {a['open']} open bugs. On the next release ({b['ref']}), which has the fixes, the verdict was \"{b['verdict']}\" with {b['closed']} closed. The gate is now a step before each release of our two products.</p>")
-    h += ["<pre>pip install \"git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool\"\n\n"
+    h += ["<pre>pip install hpflow\n\n"
           "hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next\n"
           "hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs\n"
           "hpf gate  --out ~/audits/next --ref HEAD</pre>",
-          "<p>The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>",
+          "<p>The package <code>hpflow</code> is on PyPI and has the two commands <code>hpf</code> and <code>hp</code>. The name <code>hardproof</code> on PyPI is a different project that is not related to this work. The audit and the fix step need the Puppetmaster command line and Claude Code with a login. The gate needs git and Python only. For a proof of one function, <code>hp</code> needs Lean 4.36.0 and makes no model call. The file <code>tool/README.md</code> of the repository has each command, the domain contract and two examples, and <code>v3/swarm_policy</code> is the decision table of Section 13 as a complete domain.</p>",
           "<h3>What a pass does not say</h3><ul>",
           "<li>A pass says that each bug that two verifier agents confirmed is closed or waived. It does not say that the code has no bug. The best review arm of Section 12 found 44 of 95 known bugs.</li>",
           "<li>The fix step can make a wrong fix that passes its check and its judge. Section 13 has five. A human must review each fix before the merge, and <code>hpflow</code> does not commit or merge.</li>",

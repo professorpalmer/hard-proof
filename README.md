@@ -51,11 +51,10 @@ Our recommendation from the data has three rules. Section 14 of the paper has th
 Install the two tools (Python 3.9 or later, no dependency):
 
 ```bash
-pip install "git+https://github.com/professorpalmer/hard-proof.git#subdirectory=tool"
+pip install hpflow
 ```
 
-The tools are not on PyPI. A different project has the name `hardproof` there, so install from this
-repository as shown.
+The package name is `hpflow`. The name `hardproof` on PyPI is a different project that is not related to this work.
 
 Audit the functions that changed since a tag, and gate the release:
 
@@ -88,7 +87,7 @@ Claude models, and tests on our own two products only.
 | `baseline` | The review with no proof duty at 48 decision points, the audit of worker transcripts, and the second run of the blind tables |
 | `v2` | The loop tests, the data set of 95 real bugs, the review arms, the proof pipeline on real bugs, the audit of findings, and the fix records |
 | `v3` | The first proof on a new product function: the swarm policy table of Marionette |
-| `tool/hardproof` | One proof gate for one Python function: model, link test, laws, and four kinds of certificate |
+| `tool/hpflow/proof` | The command `hp`: one proof gate for one Python function: model, link test, laws, and four kinds of certificate |
 | `tool/hpflow` | The audit ladder as one command set: targets from a git range, review, script gate, two verifiers, fix, and the release gate |
 | `site` | The build scripts of the paper and of this PDF |
 | `docs` | The paper as PDF and as a print page |

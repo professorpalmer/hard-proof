@@ -1,7 +1,7 @@
 {
  "function": "harness.pilot_guards.swarm_policy_table",
  "repository": "marionette",
- "commit": "19a431f3",
+ "commit": "0a592036",
  "inputs": 4,
  "input_cases": 16,
  "laws": [
@@ -41,10 +41,10 @@
       "rejected": [],
       "crashed": []
      },
-     "seconds": 6.23
+     "seconds": 6.08
     }
    ],
-   "seconds": 6.23
+   "seconds": 6.08
   },
   "complete": {
    "command": "check",
@@ -75,10 +75,10 @@
       "rejected": [],
       "crashed": []
      },
-     "seconds": 6.14
+     "seconds": 6.07
     }
    ],
-   "seconds": 6.14
+   "seconds": 6.07
   },
   "link": {
    "command": "link",
@@ -86,7 +86,7 @@
    "function": "harness.pilot_guards.swarm_policy_table",
    "repo": "~/Projects/hp-work/fix/mn-release-683",
    "seed": 1,
-   "commit": "19a431f3",
+   "commit": "0a592036",
    "generated": 2000,
    "illegal_skipped": 0,
    "cases": 2000,
@@ -102,7 +102,7 @@
     "survived": [],
     "kill_rate": 1.0
    },
-   "seconds": 0.33
+   "seconds": 0.35
   },
   "gap": {
    "command": "check",
@@ -133,10 +133,10 @@
       "rejected": [],
       "crashed": []
      },
-     "seconds": 6.15
+     "seconds": 6.07
     }
    ],
-   "seconds": 6.15
+   "seconds": 6.07
   },
   "question": {
    "command": "question",
