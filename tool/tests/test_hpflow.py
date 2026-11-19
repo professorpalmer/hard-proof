@@ -626,6 +626,20 @@ class AdapterTest(FlowCase):
         self.assertEqual(code, 2, r)
         self.assertEqual(self.runner.calls, [])
 
+    def test_a_settings_file_with_a_byte_order_mark_is_used(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            old = os.environ.get("CLAUDE_CONFIG_DIR")
+            os.environ["CLAUDE_CONFIG_DIR"] = tmp
+            try:
+                path = Path(tmp) / "settings.json"
+                path.write_bytes(b"\xef\xbb\xbf" + b'{"env": {"A": "1"}}')
+                self.assertEqual(adapters.claude_settings_file(), path.resolve())
+            finally:
+                if old is None:
+                    os.environ.pop("CLAUDE_CONFIG_DIR")
+                else:
+                    os.environ["CLAUDE_CONFIG_DIR"] = old
+
     def test_a_lean_claude_worker_gets_the_settings_file_of_the_user(self):
         self.review_ready()
         with tempfile.TemporaryDirectory() as tmp:
