@@ -562,9 +562,10 @@ the visit before it.
   counts when its repro gives a different result before and after the fix,
   so no agent is the judge; the second number adds other findings whose
   result changed in a later release): the old worker arguments on 48 of the
-  bugs, 17 and 33; the defaults of 0.5 on the same 48, 20 and 33; the defaults
-  of 0.5 on all 95, 36 and 60, against 34 and 58 for the same arguments
-  through Puppetmaster. `--short-prompt` on all 95: 35 and 56, and 29 and 51
+  bugs, 17 and 33 for 7.24 US dollars; the defaults of 0.5 on the same 48, 18
+  and 34 for 5.25; the defaults of 0.5 on all 95, 36 and 66. The runner of 0.5
+  against Puppetmaster with one set of arguments on all 95: 36 and 60 against
+  34 and 58. `--short-prompt` on all 95: 35 and 56, and 29 and 51
   in a second run. Haiku as the reviewer found 4 of 48, and a lower effort
   found 15 of 48 against 19, so neither is a default.
 - One pass finds about a third of the known bugs, and each pass finds other
