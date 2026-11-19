@@ -101,7 +101,7 @@ hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
 hpf fix   --out ~/audits/next
 hpf gate  --out ~/audits/next --ref HEAD</pre>
 <p class="note">The audit and the fix step need the Puppetmaster command line and Claude Code. The fix step never commits: a human reviews each fix. A pass of the gate does not say that the code has no bug. The tools are a first version, for Python, with tests on our own two products only.</p>
-<div class="hp-links"><a class="button" href="https://pypi.org/project/hpflow/">hpflow on PyPI</a><a class="button ghost" href="{REPO_URL}#use-it-on-your-code">Guide in the repository</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
+<div class="hp-links"><a class="button" href="https://pypi.org/project/hpflow/">hpflow on PyPI</a><a class="button ghost" href="{REPO_URL}/blob/main/docs/USE.md">Guide in the repository</a><a class="button ghost" href="/labs/hard-proof/paper/#use">The recommendation in the paper</a></div>
 </section>"""
 
 
