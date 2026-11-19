@@ -60,6 +60,8 @@ def facts(site: Path) -> dict:
     ls, pc, tri = load(v2 / "ladder_summary.json"), load(v2 / "retro_compare.json"), load(v2 / "conflict_triage.json")
     gate, cut, rel = load(v2 / "gate_live.json"), load(v2 / "cost_cut.json")["runs"], load(v2 / "release_050.json")
     table = load(STUDY / "v3" / "summary.json")
+    live = load(v2 / "import_live.json")
+    tool_version = re.search(r'^version = "([^"]+)"', (ROOT / "tool" / "pyproject.toml").read_text(encoding="utf-8"), flags=re.M)
     first, grouped, lean = cut
     now = rel["same_range"][1:]
     known = {k["arm"]: k for k in rel["known_bugs"]}
@@ -71,7 +73,9 @@ def facts(site: Path) -> dict:
     h2h = rel["head_to_head"]
     return {
         "generated": date.fromisoformat(study["generated"]),
-        "version": rel["version"],
+        "version": rel["version"], "tool_version": tool_version.group(1) if tool_version else rel["version"],
+        # The findings of another reviewer as input: the run with the brief of the release.
+        "imp": live["runs"][-1], "imp_blind": live["blind_judge"],
         # The ladder.
         "functions": ls["functions"], "findings": ls["findings_live_on_newest_dev"], "passed": ls["both_real_reachable"],
         "bugs": ls["distinct_confirmed_bugs"], "files": ls["files"],
@@ -128,7 +132,7 @@ def hero(f: dict) -> str:
 <h1>No repro, no bug. <em>No fix, no release.</em></h1>
 <p class="lead">Hard Proof is a way to accept code that AI agents write, on evidence. A review finding counts only with a repro that a script runs. A release waits until each confirmed bug is closed.</p>
 <p class="lead">We tested this on our own two products. This page has the result first. The paper has the record in the order of the work.</p>
-<p class="byline">Puppetmaster Labs · {when} · hpflow {esc(f['version'])} · <a href="{PAPER}">read the paper</a> · <a href="/labs/hard-proof/paper.pdf">PDF</a> · <a href="{REPO_URL}">code</a></p>
+<p class="byline">Puppetmaster Labs · {when} · hpflow {esc(f['tool_version'])} · <a href="{PAPER}">read the paper</a> · <a href="/labs/hard-proof/paper.pdf">PDF</a> · <a href="{REPO_URL}">code</a></p>
 <div class="hp-stats">
 <div class="hp-stat"><span>Confirmed bugs on one release range</span><strong class="accent">{arms['hpf']['confirmed_distinct_bugs']}</strong><em>Two AI review tools found {arms['claude']['confirmed_distinct_bugs']} each.</em></div>
 <div class="hp-stat"><span>Review findings cut before you read them</span><strong>{cut:.0f}%</strong><em>{f['findings'] - f['passed']} of {f['findings']} findings did not pass two verifiers.</em></div>
@@ -138,6 +142,11 @@ def hero(f: dict) -> str:
 
 
 def use(f: dict) -> str:
+    # The words "the same" are true only when the two sets of bugs are equal.
+    hit = sum(1 for v in f["imp"]["bugs_of_the_blind_judge_found"].values() if v)
+    blind = f["imp_blind"]["confirmed_distinct_bugs"]
+    imp_tail = (f": the same {blind} that a blind judge confirmed." if hit == blind == f["imp"]["confirmed_distinct_bugs"]
+                else f". A blind judge confirmed {blind} bugs among the same findings, and {hit} of them are in this result.")
     return f"""<section id="use">
 <span class="step">1 · Use it</span>
 <h2>Audit the change. Fix what is real. Gate the release.</h2>
@@ -152,6 +161,7 @@ hpf gate  --out ~/audits/next --ref HEAD</pre>
 <div class="hp-card"><span class="who">hpf fix</span><p>An agent writes a fix and a test in a separate worktree. A script check and a judge agent must accept the fix. The tool does not commit: you review each fix.</p></div>
 <div class="hp-card"><span class="who">hpf gate</span><p>This step makes no model call. Each confirmed bug must give a new result on the commit that you release, or have a waiver with a reason. If not, the gate fails.</p></div>
 </div>
+<p><strong>You have a review tool now?</strong> Keep it. <code>hpf audit --findings FILE</code> takes the findings of another review tool, or of a person. A worker must show each claim with a repro, and then the same verifiers and the same gate apply. In our test, the {f['imp_blind']['findings']} findings of two review tools became {f['imp']['claims']} claims. {f['imp']['shown_by_a_repro']} got a repro, and the verifiers confirmed {f['imp']['confirmed_distinct_bugs']} distinct bugs{imp_tail}</p>
 <p class="note">The audit and the fix step need one agent tool with a login: Claude Code, Codex, or another tool through a command template. They need no other package. The gate needs git and Python only.</p>
 <div class="hp-links"><a class="button" href="https://pypi.org/project/hpflow/">hpflow on PyPI</a><a class="button ghost" href="{REPO_URL}/blob/main/docs/USE.md">Guide in the repository</a><a class="button ghost" href="{PAPER}#use">The recommendation in the paper</a></div>
 </section>"""
@@ -353,6 +363,7 @@ def sources(f: dict) -> list:
         (f"{money(f['cost_first'])}, {money(f['cost_lean'])} and {money(f['cost_now'])}", "Cost of the audit of one range, in three versions of the tool", "use", "14", "study/v2/cost_cut.json, study/v2/release_050.json"),
         (f"{f['new48']['detected']} and {f['old48']['detected']} of {f['new48']['runs']}", "Known bugs that the worker of version 0.5 and of version 0.4 detected", "use", "14", "study/v2/release_050.json"),
         (f"{s['confirmed_bugs']} in {len(s['rounds'])} rounds", "Bugs that the tool found in its own release", "use", "14", "study/v2/release_050.json, study/v2/self_audit"),
+        (f"{f['imp']['shown_by_a_repro']} of {f['imp']['claims']}, and {f['imp']['confirmed_distinct_bugs']}", "Outside claims that got a repro, and the distinct bugs that the verifiers confirmed", "use", "14", "study/v2/import_live.json"),
         (f"{f['adv']['runs']}, {f['adv']['gap_certificates_accepted']} and {f['adv']['completeness_proofs_accepted']}", "Adversary runs, gap certificates, completeness proofs", "results", "9", "labs/data/hard-proof.json (on this site)"),
         (f"{f['blind_ok']} of {f['blind_n']}", "Correct results in the blind test with generated rules", "scale", "8", "labs/data/hard-proof.json (on this site)"),
         (f"{f['dup']['said_complete']} of {f['dup']['reviews']}", "Reviews with no proof duty that missed one gap", "baseline", "10", "labs/data/hard-proof.json (on this site)"),

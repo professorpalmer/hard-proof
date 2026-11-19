@@ -1,0 +1,80 @@
+[
+ {
+  "id": "03406700215893003506",
+  "target": "06472191850690077456",
+  "file": "tool/hpflow/commands.py",
+  "function": "place_claim",
+  "claim": "When the claim gives a function name and a line, and exactly one function has that exact name, place_claim takes it and ignores the line, even if the line is inside a different function (a method with the same short name). The claim is placed on the wrong function.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "('foo', [1, 2])",
+  "what_goes_wrong": "An imported finding that gives a short method name plus a line inside that method is placed on a same-named top-level function, so the worker tests the wrong code and the claim is judged against the wrong target.",
+  "caller": "project/tool/hpflow/commands.py:640",
+  "severity": "low",
+  "fix_idea": "When a line is given, prefer the candidate (exact or suffix match) whose range contains the line, and use the exact-name-only shortcut only when no line is given or the line is in that function.",
+  "repros": [
+   {
+    "finding": "18304300680284630510-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060/runs/18304300680284630510/finding_1.py",
+    "result_now": "('foo', [1, 2])"
+   }
+  ]
+ },
+ {
+  "id": "16271601515809998687",
+  "target": "07474856800192809990",
+  "file": "tool/hpflow/commands.py",
+  "function": "cmd_import",
+  "claim": "For a SARIF file the --source option replaces the tool name that the SARIF run itself gives (driver name), although --source is documented as the name of the tool only for a finding that does not give one.",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "['mytool']",
+  "what_goes_wrong": "With a SARIF file, `import --source X` overwrites the tool name the SARIF run gives, so findings from bandit are recorded as X, contradicting the documented fallback-only meaning of --source.",
+  "caller": "project/tool/hpflow/cli.py:180",
+  "severity": "low",
+  "fix_idea": "In sarif_entries use `text_of(driver name) or source or \"outside\"`, matching the JSON path.",
+  "repros": [
+   {
+    "finding": "07017230365714354879-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060/runs/07017230365714354879/finding_1.py",
+    "result_now": "['mytool']"
+   }
+  ]
+ },
+ {
+  "id": "12114295662845303105",
+  "target": "11814478281189362642",
+  "file": "tool/hpflow/outside.py",
+  "function": "read",
+  "claim": "For a SARIF file, the `source` argument overrides the tool name that the file gives in tool.driver.name. The docstring and the --source help say `source` is only for an entry that does not give one (the hpflow form does this right).",
+  "sources": [
+   "hpf review"
+  ],
+  "claims": [
+   1
+  ],
+  "result_now": "'other'",
+  "what_goes_wrong": "With `import --findings x.sarif --source NAME`, every SARIF result is labelled NAME instead of the tool name in tool.driver.name, so the finding source is wrong, unlike the hpflow form.",
+  "caller": "project/tool/hpflow/commands.py:637",
+  "severity": "low",
+  "fix_idea": "In sarif_entries use the driver name first and fall back to source: text_of(driver name) or source or \"outside\".",
+  "repros": [
+   {
+    "finding": "03964131261573595144-1",
+    "k": 1,
+    "path": "~/Projects/hp-work/audit-hpflow-060/runs/03964131261573595144/finding_1.py",
+    "result_now": "'other'"
+   }
+  ]
+ }
+]

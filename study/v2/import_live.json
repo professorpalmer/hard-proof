@@ -105,5 +105,89 @@
    "cost_usd": 2.19,
    "wall_seconds": 192
   }
- ]
+ ],
+ "self_audit_of_the_change": {
+  "ref": "b5f0cbb",
+  "rounds": [
+   {
+    "folder": "audit-hpflow-060",
+    "commit": "98f4a1c",
+    "range": "hpflow-v0.5.0..HEAD",
+    "targets": 21,
+    "findings": 5,
+    "confirmed_bugs": 3,
+    "confirmed_by_severity": {
+     "low": 3
+    },
+    "review_sessions": 21,
+    "verifier_sessions": 9,
+    "review_cost_usd": 2.15,
+    "verify_cost_usd": 1.33,
+    "cost_usd": 3.48,
+    "worker_seconds": 1182,
+    "wall_seconds": 228,
+    "round": 1,
+    "what": "The release range",
+    "gate": {
+     "verdict": "pass",
+     "closed": 3,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-060-delta",
+    "commit": "c8508b1",
+    "range": "98f4a1c..HEAD",
+    "targets": 4,
+    "findings": 3,
+    "confirmed_bugs": 3,
+    "confirmed_by_severity": {
+     "low": 3
+    },
+    "review_sessions": 4,
+    "verifier_sessions": 6,
+    "review_cost_usd": 0.34,
+    "verify_cost_usd": 0.83,
+    "cost_usd": 1.17,
+    "worker_seconds": 370,
+    "wall_seconds": 139,
+    "round": 2,
+    "what": "The fixes of round 1",
+    "gate": {
+     "verdict": "pass",
+     "closed": 3,
+     "open": 0,
+     "waived": 0
+    }
+   },
+   {
+    "folder": "audit-hpflow-060-delta2",
+    "commit": "b5f0cbb",
+    "range": "c8508b1..HEAD",
+    "targets": 2,
+    "findings": 0,
+    "confirmed_bugs": 0,
+    "confirmed_by_severity": {},
+    "review_sessions": 2,
+    "verifier_sessions": 0,
+    "review_cost_usd": 0.11,
+    "verify_cost_usd": 0,
+    "cost_usd": 0.11,
+    "worker_seconds": 64,
+    "wall_seconds": 34,
+    "round": 3,
+    "what": "The fixes of round 2",
+    "gate": {
+     "verdict": "pass",
+     "closed": 0,
+     "open": 0,
+     "waived": 0
+    }
+   }
+  ],
+  "confirmed_bugs": 6,
+  "closed_by_repro": 6,
+  "cost_usd": 4.76
+ }
 }

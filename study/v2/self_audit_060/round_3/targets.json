@@ -1,0 +1,52 @@
+{
+ "mode": "changed",
+ "changed": "c8508b1..HEAD",
+ "max_lines": 150,
+ "targets": [
+  {
+   "id": "12690499272655355783",
+   "file": "tool/hpflow/commands.py",
+   "function": "cell",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    871,
+    878
+   ],
+   "length": 8,
+   "source": "changed"
+  },
+  {
+   "id": "09577958454581747208",
+   "file": "tool/hpflow/outside.py",
+   "function": "file_of_uri",
+   "nth": 1,
+   "of": 1,
+   "top": "hpflow",
+   "lines": [
+    58,
+    73
+   ],
+   "length": 16,
+   "source": "changed"
+  }
+ ],
+ "skipped": [
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "OutsideFormTest.test_the_path_of_a_sarif_address",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_a_cell_is_one_line",
+   "reason": "test file"
+  },
+  {
+   "file": "tool/tests/test_import.py",
+   "function": "ReportCellTest.test_the_cut_does_not_cut_an_escape",
+   "reason": "test file"
+  }
+ ]
+}

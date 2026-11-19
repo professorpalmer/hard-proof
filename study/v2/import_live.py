@@ -4,7 +4,8 @@
 The input is the two lists of `h2h` (10 findings of Claude Code review, 2 of Codex review, on Puppetmaster
 `v1.50.0..v1.51.1`). Each run is `hpf audit --ref v1.51.1 --findings <the two lists>`: a worker must show each
 claim with a repro, then two verifiers judge the claims with a repro. This script reads the two run folders and
-writes `import_live.json`. It makes no model call.
+writes `import_live.json`. It makes no model call. With a commit as its argument, it also reads the audit of
+the change itself and runs the gate of each round on that commit.
 
 Run 1 used the first brief of the import worker. Run 2 used the brief of the release, which lets the worker
 show a claim through a caller of the function.
@@ -20,6 +21,8 @@ from bugs import WORK
 
 HERE = Path(__file__).resolve().parent
 RUNS = [("hpflow-import-live-run1", "first brief"), ("hpflow-import-live", "brief of the release")]
+SELF = [("audit-hpflow-060", "The release range"), ("audit-hpflow-060-delta", "The fixes of round 1"),
+        ("audit-hpflow-060-delta2", "The fixes of round 2")]
 # The distinct bugs that the blind judge of `h2h` confirmed among the 12 findings (h2h/result.json, bug ids
 # `covered_hint`, `k2`, `k12`), by the function and a word of the claim.
 H2H_BUGS = {"covered_hint": ("unroutable_pin_hint", "id"), "k2": ("unroutable_pin_hint", "registry path"),
@@ -50,6 +53,28 @@ def one(name: str, what: str) -> dict:
             "wall_seconds": round(max(b for _, b in spans) - min(a for a, _ in spans))}
 
 
+def self_audit(ref: str) -> dict:
+    """The audit of the import change with `hpf` itself, before the release of 0.6.0: the release range, then
+    each set of fixes. The report of each round goes into `self_audit_060`."""
+    import shutil
+
+    from release_050 import audit, gate
+    rounds = []
+    for n, (name, what) in enumerate(SELF, 1):
+        folder = WORK / name
+        if not (folder / "confirmed.json").exists():
+            continue
+        rounds.append(dict(audit(folder), round=n, what=what, gate=gate(folder, ref)))
+        keep = HERE / "self_audit_060" / f"round_{n}"
+        keep.mkdir(parents=True, exist_ok=True)
+        for item in ("REPORT.md", "confirmed.json", "targets.json"):
+            if (folder / item).exists():
+                shutil.copyfile(folder / item, keep / item)
+    return {"ref": ref, "rounds": rounds, "confirmed_bugs": sum(r["confirmed_bugs"] for r in rounds),
+            "closed_by_repro": sum(r["gate"]["closed"] or 0 for r in rounds),
+            "cost_usd": round(sum(r["cost_usd"] or 0 for r in rounds), 2)}
+
+
 def main() -> int:
     h2h = load(HERE / "h2h" / "result.json")
     outside = [c for c in h2h["claims"] if c["arm"] != "hpf"]
@@ -58,6 +83,8 @@ def main() -> int:
             "blind_judge": {"findings": len(outside), "confirmed_claims": sum(1 for c in outside if c["confirmed"]),
                             "confirmed_distinct_bugs": len({c["bug"] for c in outside if c["confirmed"]})},
             "runs": [one(name, what) for name, what in RUNS if (WORK / name / "confirmed.json").exists()]}
+    if len(sys.argv) > 1:
+        data["self_audit_of_the_change"] = self_audit(sys.argv[1])
     (HERE / "import_live.json").write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({"blind_judge": data["blind_judge"],
                       "runs": [{k: r[k] for k in ("brief", "claims", "shown_by_a_repro", "not_shown", "confirmed_claims", "confirmed_distinct_bugs",
