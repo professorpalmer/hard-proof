@@ -688,11 +688,15 @@ def sec_use(ls: dict) -> str:
         a, b = gate
         h.append(f"<p>We ran the gate on the stored audit of Section 13. On the audited release ({a['ref']}) the verdict was \"{a['verdict']}\" with {a['open']} open bugs. On the next release ({b['ref']}), which has the fixes, the verdict was \"{b['verdict']}\" with {b['closed']} closed. The gate is now a step before each release of our two products.</p>")
     if release_runs:
-        h.append("<p>Then the gate ran before a real release for the first time, one time for each product:</p>")
+        h.append("<p>Then the gate ran before each real release:</p>")
         h.append(table(["Release", "Range", "Changed functions", "Findings with a repro", "Confirmed bugs", "Gate", "Cost of the audit"],
                        [[f"{r['product']} {r['release'].lstrip('v')}", r["range"], str(r["targets"]), str(r["findings_with_a_repro_that_runs"]), str(r["confirmed_bugs"]), r["gate"],
                          money(r["review_cost_usd"] + r["verify_cost_usd"])] for r in release_runs]))
-        h.append("<p>No finding was a bug that a caller reaches, so the gate did not stop a release. In the Puppetmaster range, the two verifiers agreed on 8 findings that no caller reaches. They were 4 small faults in new code of that range, and they are corrected in that release. The gate does not require a fix for a finding of that class. We made the fixes because they were cheap.</p>")
+        h.append("<ul>" + "".join(f"<li><strong>{r['product']} {r['release'].lstrip('v')}.</strong> {r['note']}</li>" for r in release_runs if r.get("note")) + "</ul>")
+        older = live.get("older_range_against_the_newest_release")
+        if older:
+            h.append(f"<p>The gate also works on an old audit. We ran the gate of {older['audit']} against release {older['checked'].lstrip('v')}: {older['closed']} of its {older['confirmed_bugs']} confirmed bugs were closed there, and {older['open']} were still open. That is how those {older['open']} came into the next release. "
+                     "The gate does not require a fix for a finding that no caller reaches. We made those fixes because they were cheap.</p>")
     h += ["<pre>pip install hpflow\n\n"
           "hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next\n"
           "hpf fix   --out ~/audits/next      # only when REPORT.md has confirmed bugs\n"

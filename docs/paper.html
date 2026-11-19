@@ -73,7 +73,7 @@ td.ok { color: #1a6b1a; } td.bad { color: #a11; }
 <p class="claim">A machine-checked proof that code obeys its laws is not evidence that the laws are finished. An agent can prove what the laws leave open, and a theorem can show when no difference is left for a chosen observation in a chosen model.</p>
 <p>This is a feasibility result. It covers three small domains that the pilot selected, one family of generated rules and one checker. Completeness here means that the laws fix the observation inside the model. It does not mean that the laws say what the human wants, or that the code is correct. Section 17 lists the limits.</p>
 
-<p class="small">Revision 9, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
+<p class="small">Revision 10, 18 November 2026. Sections 10 to 14 are new since the first revision: a review with no proof duty, two loop tests, real bugs of our own code, an audit that takes review findings to fixes, and our recommendation with the tools. Revisions 4 and 5 have the full run of the proof pipeline on the real bugs and the audit of its conflict certificates (Section 12), the owner's decisions, the shipped fixes and the first proof on a product function (Section 13). Section 10 also corrects the blind set of Section 8: the first revision said that the adversary did not know which kind of result was true, and the folder path showed it.</p>
 <ol class="toc">
 <li><a href="#problem">The problem</a></li>
 <li><a href="#defs">Definitions</a></li>
@@ -772,14 +772,17 @@ shipped code: [id 1 (adapter 1, model 1, disabled); id 2 (adapter 2, model 2, di
 <h3>The gate</h3>
 <p>The command set <code>hpflow</code> has a last step that makes no model call. <code>hpf gate --ref REF</code> runs the repro of each confirmed bug on the commit <code>REF</code>. A bug is closed when each of its repros gives a new result there, or when the owner recorded a waiver with a reason. The gate fails when a review or a verifier run is absent, when a bug is open, or when a repro does not run.</p>
 <p>We ran the gate on the stored audit of Section 13. On the audited release (v1.51.1) the verdict was "fail" with 7 open bugs. On the next release (v1.51.2), which has the fixes, the verdict was "pass" with 7 closed. The gate is now a step before each release of our two products.</p>
-<p>Then the gate ran before a real release for the first time, one time for each product:</p>
+<p>Then the gate ran before each real release:</p>
 <div class="doc-scroll"><table>
 <thead><tr><th>Release</th><th>Range</th><th>Changed functions</th><th>Findings with a repro</th><th>Confirmed bugs</th><th>Gate</th><th>Cost of the audit</th></tr></thead>
 <tbody>
 <tr><td>Puppetmaster 1.51.3</td><td>v1.51.2..dev</td><td>7</td><td>9</td><td>0</td><td>pass</td><td>$14.43</td></tr>
 <tr><td>Marionette 0.9.686</td><td>v0.9.685..dev</td><td>1</td><td>1</td><td>0</td><td>pass</td><td>$1.90</td></tr>
+<tr><td>Puppetmaster 1.51.4</td><td>v1.51.3..dev</td><td>13</td><td>9</td><td>3</td><td>fail, then pass</td><td>$3.73</td></tr>
+<tr><td>Marionette 0.9.687</td><td>v0.9.686..dev</td><td>0</td><td>0</td><td>0</td><td>pass</td><td>$0.00</td></tr>
 </tbody></table></div>
-<p>No finding was a bug that a caller reaches, so the gate did not stop a release. In the Puppetmaster range, the two verifiers agreed on 8 findings that no caller reaches. They were 4 small faults in new code of that range, and they are corrected in that release. The gate does not require a fix for a finding of that class. We made the fixes because they were cheap.</p>
+<ul><li><strong>Puppetmaster 1.51.3.</strong> No finding was a bug that a caller reaches. The two verifiers agreed on 8 findings that no caller reaches: 4 small faults in new code of that range. They are corrected in that release.</li><li><strong>Puppetmaster 1.51.4.</strong> The gate stopped this release. The range had the fixes for 8 faults of version 1.51.3, and the audit confirmed 3 bugs in those fixes or in the functions that they changed. The 3 are corrected, and the gate passed on the next commit.</li><li><strong>Marionette 0.9.687.</strong> The range has only the new Puppetmaster version. No function changed, so the audit started no worker.</li></ul>
+<p>The gate also works on an old audit. We ran the gate of the lean audit of v1.50.0..v1.51.1 against release 1.51.3: 5 of its 8 confirmed bugs were closed there, and 3 were still open. That is how those 3 came into the next release. The gate does not require a fix for a finding that no caller reaches. We made those fixes because they were cheap.</p>
 <pre>pip install hpflow
 
 hpf audit --repo . --ref HEAD --changed v1.2.3..HEAD --out ~/audits/next
@@ -870,7 +873,7 @@ B_result = [id 1; id 1]</pre>
 <h2 id="data">18. Data and reproduction</h2>
 <ul>
 <li><a href="https://puppetmaster.gg/labs/data/hard-proof.json">hard-proof.json</a>: the runs of the main table, each loop and each scale run with outcome, visits, time and cost, the link test counts, the release history test, and the attack runs. The runs of the first five experiments are in the table as summary rows only.</li>
-<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>31a95c00a3da46045f27030a19e5fcdbb67df67fc0149bcce3a5c0c453b03a4f</code>.</li>
+<li><a href="https://puppetmaster.gg/labs/data/hard-proof-artifacts.zip">hard-proof-artifacts.zip</a>: the Lean models and laws, the challenge files, the gate scripts, the link tests, the flow graphs, and each run folder with the worker solution. SHA-256 <code>f6f2746fd117b93afa2264e33304334d9c9c73e718bb7b871cb3fd9d9229eb3f</code>.</li>
 <li>To check each stored result: install Lean 4.36.0, and run <code>python3 verify_all.py</code> in the archive. It runs each gate again with the extra kernels and compares the verdict with the run record. Our last run made 184 gate runs: 179 accept and 5 reject, and each verdict was the same as the run record. With the build caches present it took about 4 minutes with six parallel jobs. A first run builds each folder and takes longer.</li>
 <li><code>docs/CLAIMS.md</code> in the archive has a folder and a command for each claim. The link tests need a checkout of Puppetmaster.</li>
 <li><a href="https://github.com/professorpalmer/hard-proof">github.com/professorpalmer/hard-proof</a>: the same sources as a repository, with the package <code>hpflow</code> (the commands <code>hp</code> and <code>hpf</code>, also on PyPI), the records of Sections 10 to 13, and this paper as a <a href="https://puppetmaster.gg/labs/hard-proof/paper.pdf">PDF</a>. This page is the current version of the study.</li>

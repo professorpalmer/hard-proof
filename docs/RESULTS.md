@@ -24,9 +24,9 @@ Each number is in the paper, with the command that gives it.
 | Durable sessions make later rounds cheap | A later round costs $0.06 to $0.31, a first visit $0.40 to $0.49 |
 | A pointed agent review misses more than half of real bugs | The best of three review arms found 44 of 95 real bugs of two products |
 | A full proof pipeline does not replace a review, and it finds different bugs | 31 of 95 for about 8 times the cost of the best review arm; 6 of the 40 bugs that three review arms missed |
-| An audit ladder turns review findings into fixes | 211 findings gave 45 confirmed bugs; 51 fixes shipped in Puppetmaster 1.51.2 and Marionette 0.9.685, and 5 more corrections in 1.51.3 and 0.9.686 |
+| An audit ladder turns review findings into fixes | 211 findings gave 45 confirmed bugs; 51 fixes shipped in Puppetmaster 1.51.2 and Marionette 0.9.685, 5 more corrections in 1.51.3 and 0.9.686, and 11 more in 1.51.4 |
 | A conflict between code and a law is most often a fault of the law | 73 live conflicts from the pipeline: 0 reachable bugs, 3 latent faults, 2 wrong documentation sentences, 57 laws that say more than the sentence |
-| The release gate works on real releases | It fails on Puppetmaster 1.51.1 (7 open bugs) and passes on 1.51.2 (7 closed). Its first two release runs: 8 changed functions, no confirmed bug, 16.33 US dollars |
+| The release gate works on real releases | It fails on Puppetmaster 1.51.1 (7 open bugs) and passes on 1.51.2 (7 closed). In its first 4 release runs it looked at 21 changed functions for 20.06 US dollars. One time it stopped a release, with 3 confirmed bugs in our own fixes |
 | Most of the audit cost was the start text of each worker session | The same 20 functions: 28.53 US dollars with the settings of the user in each worker, 9.44 with lean workers and a staged second verifier; 7 and 8 confirmed bugs |
 | A small decision rule gets a completeness proof in minutes | The swarm policy table of Marionette: 5 laws, 16 input cases, accepted by 6 kernels; its docstring alone left one input open |
 

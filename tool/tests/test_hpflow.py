@@ -206,6 +206,29 @@ class TargetsTest(FlowCase):
         self.assertEqual(code, 2, r)
 
 
+class FixCheckTest(unittest.TestCase):
+    def test_a_very_large_related_test_file_is_not_run(self):
+        from hpflow import fixcheck
+
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            tree, info = Path(tmp) / "tree", Path(tmp) / "info"
+            (tree / "pkg").mkdir(parents=True)
+            (tree / "tests").mkdir()
+            info.mkdir()
+            (tree / "pkg" / "__init__.py").write_text("")
+            (tree / "pkg" / "mod.py").write_text("def add(a, b):\n    return a + b\n")
+            ok = "import unittest\nfrom pkg.mod import add\n\n\nclass T(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(add(1, 2), 3)\n"
+            (tree / "tests" / "test_hpfix_pkg_mod.py").write_text(ok)
+            (tree / "tests" / "test_mod_small.py").write_text(ok)
+            big = ok.replace("add(1, 2), 3", "add(1, 2), 4") + "# pad\n" * (fixcheck.MAX_RELATED_BYTES // 6 + 10)
+            (tree / "tests" / "test_mod_big.py").write_text(big)
+            (info / "spec.json").write_text(json.dumps({"file": "pkg/mod.py", "test_file": "tests/test_hpfix_pkg_mod.py", "python": sys.executable,
+                                                        "test_cmd": "{python} -m unittest {tests}", "bugs": []}))
+            result = fixcheck.check(info, tree)
+        self.assertEqual(result["verdict"], "accept", result)
+        self.assertEqual(result["large_test_files_not_run"], ["tests/test_mod_big.py"])
+
+
 class LadderTest(FlowCase):
     def test_review_grades(self):
         self.init()

@@ -341,7 +341,9 @@ runs again. A stored run with an error (launch or wait) runs again.
   the audited repository. A build worker writes the fix and the test file
   `tests/test_hpfix_<slug>.py`. A script check (`python3 -m hpflow.fixcheck`)
   runs each repro (it must give a new result), the new test file and the
-  related tests. A judge reviews the diff with a rubric. A failed check or a
+  related tests. A related test file of more than 400 KB is not run, and the
+  report names it: such a file can run for a long time, and the CI of the
+  repository runs it. A judge reviews the diff with a rubric. A failed check or a
   FAIL or PARTIAL review goes back to the builder. `hpflow` never commits,
   pushes or merges. The report lists each worktree, its diff stat, its new
   files, the check verdict and the judge verdict.
