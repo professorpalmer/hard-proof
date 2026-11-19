@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Hard Proof: build the public data file, the page data, the paper tables and the artifact archive.
+"""Hard Proof: build the public data file, the paper tables and the artifact archive.
 
 One source for each number. The first run of each cell is a constant in this
 file (each value was verified in the session that ran it). The repeat runs
 come from `reps/*.json`.
 
+The study page is the work of `build_page.py`, which reads the data file that this script writes.
+
 Usage:
     python3 build_site.py --site ~/Projects/puppetmaster-gg-hardproof
+    python3 build_page.py --site ~/Projects/puppetmaster-gg-hardproof
 """
 from __future__ import annotations
 
@@ -889,34 +892,6 @@ def main() -> int:
     out_json = site / "dist" / "labs" / "data" / "hard-proof.json"
     out_json.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
 
-    page = {
-        "stats": {"gaps": f"{gap_all} of {gap_all_n}", "complete": f"{comp_all} of {comp_all_n}",
-                  "link": "2.4M", "cheapest": money(cheapest)},
-        "history": HISTORY,
-        "loops": [{"author": l["law_author"], "first": len(l["first_laws"]), "final": len(l["final_laws"]),
-                   "questions": l["questions"], "outcome": l["outcome"], "cost": money(l["total_cost"]),
-                   "rounds": [{"question": rd["question"], "answer": rd["answer"], "law": ", ".join(rd["new_laws"].keys())}
-                              for rd in l["rounds"] if rd.get("question")]} for l in exp10()["loops"]],
-        "xvendor": [{"task": r["task"], "model": r["model"], "rate": f"{r['n_good']} of {r['n']}"} for r in cross_vendor()],
-        "loops_sync": [{"author": l["law_author"], "first": len(l["first_laws"]), "final": len(l["final_laws"]),
-                        "questions": l["questions"], "outcome": l["outcome"], "cost": money(l["total_cost"]),
-                        "rounds": [{"question": rd["question"], "answer": "the result of the shipped code",
-                                    "law": ", ".join(rd["new_laws"].keys())}
-                                   for rd in l["rounds"] if rd.get("question")]} for l in exp10("loop", "exp12")["loops"]],
-        "scale": [{"inputs": r["inputs"], "leaves": r["laws"] + (1 if r["truth"] != "complete" else 0),
-                   "cases": f"{2 ** r['inputs']:,}", "truth": r["truth"], "model": r["model"], "correct": r["correct"],
-                   "short": r["result"], "detail": f"{r['seconds']} s · {money(r['cost'])}"}
-                  for r in scale() if r["set"] == "blind"],
-        "results": [{"task": f"{r['domain']}: {r['task']}", "model": r["model"],
-                     "outcome": ("gap certificate" if "gap" in r["task_id"] and "complete" not in r["task_id"]
-                                 else "completeness proof" if "complete" in r["task_id"]
-                                 else "objection, no file changed" if r["expected"] == "objection" else "proof accepted"),
-                     "good": r["n_good"] == r["n"], "rate": f"{r['n_good']} of {r['n']}",
-                     "seconds": f"{r['median_seconds']} s", "cost": money(r["mean_cost"])} for r in rows],
-    }
-    (site / "dist" / "labs" / "hard-proof" / "data.js").write_text(
-        "window.HP_DATA = " + json.dumps(page, indent=1) + ";\n", encoding="utf-8")
-
     runs_table = table(
         ["Domain", "Task", "Model", "Example proofs", "Runs accepted", "Repair visits", "Time", "Cost"],
         [[r["domain"], r["task"] + (" (expected result: an objection)" if r["expected"] == "objection" else ""),
@@ -1003,9 +978,6 @@ def main() -> int:
                    f"and 3 Sonnet 5.5 runs that the tool allowlist stopped). No accepted result was wrong: in the scale test, "
                    f"where the truth is known, each accepted result was the correct kind.")
 
-    page["stats"]["gaps"], page["stats"]["complete"] = str(tot["gap"]), str(tot["complete"])
-    (site / "dist" / "labs" / "hard-proof" / "data.js").write_text(
-        "window.HP_DATA = " + json.dumps(page, indent=1) + ";\n", encoding="utf-8")
     data["summary"]["all_adversary_runs"] = {"runs": total_runs, "gap_certificates_accepted": tot["gap"],
                                              "completeness_proofs_accepted": tot["complete"], "no_accepted_result": tot["other"]}
     verify_path = ROOT / "verify_all.json"
