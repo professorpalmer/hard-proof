@@ -7,7 +7,7 @@ Look for inputs for which this function gives a wrong result: a result that conf
 
 Write your report into the current folder:
 - `findings.json`: a JSON list, the most certain finding first, at most 5 entries. Each entry: {{"n": 1, "claim": "what is wrong, in one or two sentences", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. An empty list when you find no problem.
-- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `project/` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
+- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `{root}` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
 
 {arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
 
@@ -19,7 +19,7 @@ Look for inputs for which one of these functions gives a wrong result: a result 
 
 Write your report into the current folder:
 - `findings.json`: a JSON list, the most certain finding first, at most {per_function} entries for each function. Each entry: {{"n": 1, "function": "the name of the function, exactly as in the list above", "claim": "what is wrong, in one or two sentences", "expected": "the result that a correct function gives for the input of the repro", "confidence": "high | medium"}}. `n` counts from 1 over all entries. An empty list when you find no problem.
-- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `project/` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
+- For each finding `n`, a file `finding_<n>.py` that defines `run()` with no arguments. `run()` imports the function from the project (the folder `{root}` is the first entry of `sys.path`, so `import {top}` works), calls it on the input of your finding, and returns a short string that shows the result (use `repr`). If the function needs small state, build it inside `run()` with the standard library only. `run()` must be deterministic: no real time, no random values, no network, no paths outside a `tempfile.TemporaryDirectory()`. If the result is an exception, catch it and return its class name.
 
 {arm_text}Do not change `project/`. End with VERDICT: PASS when the report is written."""
 
@@ -32,7 +32,7 @@ REVIEW_CHECK = "python3 -c \"import json;d=json.load(open('findings.json'));asse
 
 VERIFY = """The folder `project/` has the current source of the product `{repo}` (Python package, tests and documentation). {head}
 
-`claims.json` lists the claims. For claim `k`, the file `claim_<k>.py` defines `run()`, which calls the function on the input of the claim, and `claims.json` has the result that `run()` gives on the current source (`result_now`). You can run a claim again: `cd project && python3 -c "import sys; sys.path.insert(0, '.'); exec(open('../claim_1.py').read()); print(run())"`.
+`claims.json` lists the claims. For claim `k`, the file `claim_<k>.py` defines `run()`, which calls the function on the input of the claim, and `claims.json` has the result that `run()` gives on the current source (`result_now`). You can run a claim again: `cd project && python3 -c "import sys; sys.path.insert(0, '{imp}'); exec(open('../claim_1.py').read()); print(run())"`.
 
 Your work: decide for each claim what it is. Read the function, its docstring and comments, the documentation, the tests in `project/tests` that cover it, and each caller of the function in the product (use grep). Then give one verdict:
 

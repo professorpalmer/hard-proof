@@ -4,6 +4,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -19,13 +20,14 @@ for p in (TOOL, TESTS):
 
 from hpflow import adapters  # noqa: E402
 from hpflow.cli import main  # noqa: E402
+from hpflow.common import shell_python  # noqa: E402
 from hpflow.direct import DirectRunner  # noqa: E402
 from hpflow.runner import agent_graph  # noqa: E402
 from test_hpflow import FlowCase, gone  # noqa: E402
 
 FAKE_AGENT = r'''
 import json, os, subprocess, sys, time, uuid
-name = os.path.basename(sys.argv[0])
+name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 argv = sys.argv[1:]
 if name == "codex" and argv[:2] == ["debug", "prompt-input"]:
     # The seed of the builtin skill bundle.
@@ -33,13 +35,13 @@ if name == "codex" and argv[:2] == ["debug", "prompt-input"]:
     os.makedirs(system, exist_ok=True)
     open(os.path.join(system, ".codex-system-skills.marker"), "w").write("1")
     sys.exit(0)
-prompt = sys.stdin.read()
+prompt = sys.stdin.buffer.read().decode("utf-8")
 with open(os.environ["FAKE_AGENT_LOG"], "a") as f:
     f.write(json.dumps({"exe": name, "argv": argv, "cwd": os.getcwd(), "prompt": prompt,
                         "codex_home": os.environ.get("CODEX_HOME")}) + "\n")
 mode = os.environ.get("FAKE_AGENT_MODE", "")
 if mode == "sleep":
-    child = subprocess.Popen(["/bin/sleep", "60"])
+    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     open(os.environ["FAKE_AGENT_PID"], "w").write(str(child.pid))
     time.sleep(60)
 if name == "claude":
@@ -52,7 +54,7 @@ elif name == "codex":
         open(os.path.join(os.environ["CODEX_HOME"], "auth.json"), "w").write('{"token": "refreshed"}')
 else:
     # A command tool reads its task from the file named on its command line.
-    assert open(argv[argv.index("--task") + 1]).read() == prompt
+    assert open(argv[argv.index("--task") + 1], encoding="utf-8").read() == prompt
     resumed = False
 if os.path.exists("claims.json"):
     claims = json.load(open("claims.json"))
@@ -80,12 +82,31 @@ else:
 
 # The command line of a reviewer of hpflow 0.4.2 through Puppetmaster 1.52.0, from its dispatch receipt
 # (2026-11-19, audit-pm-1510-tools), with the path of the executable, the session id and the settings file left out.
+# One flag of that receipt is gone: `--exclude-dynamic-system-prompt-sections` (see `adapters.lean_args`).
 RECEIPT_TAIL = [
     "--model", "claude-sonnet-5-5", "--permission-mode", "acceptEdits",
     "--allowedTools", "Read,Glob,Grep,Write,Edit," + ",".join(f"Bash({c}:*)" for c in adapters.SHELL_COMMANDS),
     "--disallowedTools", "WebFetch,WebSearch,Task,Agent,NotebookEdit",
     "--setting-sources", "", "--strict-mcp-config", "--tools", "Bash,Read,Grep,Glob,Write,Edit",
-    "--exclude-dynamic-system-prompt-sections", "--effort", "medium"]
+    "--effort", "medium"]
+
+
+# The folders of `git` (and on Windows of `taskkill`), with no `puppetmaster` command.
+if os.name == "nt":
+    SYSTEM_PATH = [os.path.dirname(shutil.which("git") or "git"), os.path.join(os.environ.get("SYSTEMROOT", r"C:\Windows"), "System32")]
+else:
+    SYSTEM_PATH = ["/usr/bin", "/bin"]
+
+
+def fake_tool(folder: Path, name: str) -> None:
+    """A fake agent tool that each system can start: a `#!` file on POSIX, a `.cmd` file that runs Python on Windows."""
+    if os.name == "nt":
+        (folder / f"{name}.py").write_text(FAKE_AGENT, encoding="utf-8")
+        (folder / f"{name}.cmd").write_text(f'@"{sys.executable}" "%~dp0{name}.py" %*\r\n', encoding="utf-8")
+        return
+    exe = folder / name
+    exe.write_text("#!" + sys.executable + "\n" + FAKE_AGENT)
+    exe.chmod(0o755)
 
 
 class DirectCase(FlowCase):
@@ -95,9 +116,7 @@ class DirectCase(FlowCase):
         self.bin = root / "bin"
         self.bin.mkdir()
         for name in ("claude", "codex", "mytool"):
-            exe = self.bin / name
-            exe.write_text("#!" + sys.executable + "\n" + FAKE_AGENT)
-            exe.chmod(0o755)
+            fake_tool(self.bin, name)
         self.log = root / "agent.jsonl"
         self.codex_user = root / "codex-user"
         self.codex_user.mkdir()
@@ -107,7 +126,7 @@ class DirectCase(FlowCase):
                 "HPFLOW_CODEX_HOME", "CLAUDE_CONFIG_DIR")
         self.saved = {k: os.environ.get(k) for k in keys}
         # No `puppetmaster` command on this PATH: hpflow must not need one.
-        os.environ["PATH"] = f"{self.bin}{os.pathsep}/usr/bin{os.pathsep}/bin"
+        os.environ["PATH"] = os.pathsep.join([str(self.bin), *SYSTEM_PATH])
         os.environ["FAKE_AGENT_LOG"] = str(self.log)
         os.environ["CODEX_HOME"] = str(self.codex_user)
         os.environ["HPFLOW_CODEX_HOME"] = str(root / "codex-worker")
@@ -157,7 +176,7 @@ class DirectRunnerTest(DirectCase):
         # The contract of a Puppetmaster flow: the gate preview, the build contract and the verdict line.
         self.assertIn("Done means: every acceptance criterion is met", call["prompt"])
         self.assertIn("Write scope: create, edit, or delete only paths that match these entries.", call["prompt"])
-        self.assertIn("Command: python3 -c", call["prompt"])
+        self.assertIn("Command: " + shell_python("python3 -c"), call["prompt"])
         self.assertTrue(call["prompt"].rstrip().endswith("`VERDICT: PARTIAL - <what you could not finish or verify>`."))
         self.assertEqual(Path(call["cwd"]).parent, self.out / "runs")
         code, v = self.direct("verify")
@@ -250,7 +269,8 @@ class DirectRunnerTest(DirectCase):
 
     def test_a_missing_agent_command_is_an_error_record(self):
         self.ready()
-        (self.bin / "claude").unlink()
+        for f in self.bin.glob("claude*"):
+            f.unlink()
         code, r = self.direct("review", "--repro-timeout", "5")
         self.assertEqual(code, 1, r)
         self.assertIn("not on PATH", json.dumps(self.record()))

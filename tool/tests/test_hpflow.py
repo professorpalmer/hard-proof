@@ -125,7 +125,7 @@ class FakeRunner(Runner):
             steps = [{"node": "work", "ok": True, "verdict": "PASS", "seconds": 4, "cost_usd": 0.2}]
         else:
             kind = "review"
-            assert (folder / "project" / "pkg" / "mod.py").exists()
+            assert (folder / "project" / "pkg" / "mod.py").exists() or (folder / "project" / "src" / "pkg" / "mod.py").exists()
             findings = [{"n": n, "claim": f"claim {n}", "expected": "5", "confidence": "high"} for n in REPROS]
             if (folder / "functions.json").exists():
                 names = json.loads((folder / "functions.json").read_text())
@@ -269,6 +269,44 @@ class FixCheckTest(unittest.TestCase):
             self.assertEqual(fixcheck.check(info, tree)["verdict"], "accept")
 
 
+class ImportRootTest(FlowCase):
+    """A repository that keeps its package below `src/`."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        (self.repo / "src").mkdir()
+        git(self.repo, "mv", "pkg", "src/pkg")
+        git(self.repo, "commit", "-q", "-m", "src layout")
+        (self.repo / "src" / "pkg" / "mod.py").write_text(MOD_B + "\n\ndef twice(a):\n    return add(a, a)\n")
+        git(self.repo, "commit", "-q", "-am", "c")
+
+    def test_a_package_below_src_is_found_imported_and_graded(self):
+        code, r = self.hpf("init", "--repo", str(self.repo), "--ref", "HEAD", "--import-root", "src",
+                           "--test-cmd", "{python} -m unittest {tests}", "--python", sys.executable)
+        self.assertEqual(code, 0, r)
+        self.assertEqual(r["audit"]["paths"], ["src/pkg", "tests"])
+        self.assertEqual(r["audit"]["import_root"], "src")
+        code, r = self.hpf("targets", "--changed", "HEAD~1..HEAD")
+        self.assertEqual((code, r["targets"]), (0, ["src/pkg/mod.py:twice"]), r)
+        target = json.loads((self.out / "targets.json").read_text())["targets"][0]
+        self.assertEqual(target["top"], "pkg")
+        code, r = self.hpf("review", "--repro-timeout", "2")
+        self.assertEqual(code, 0, r)
+        task = self.runner.calls[0]["graph"]["nodes"][0]["task"]
+        self.assertIn("the folder `project/src/` is the first entry of `sys.path`, so `import pkg` works", task)
+        findings = {f["n"]: f for f in json.loads((self.out / "review.json").read_text())["findings"]}
+        # The repro imports `pkg.mod`, which is importable only with `src` on the path.
+        self.assertEqual((findings[1]["grade"], findings[1]["result"]), (1, "-1"))
+        code, r = self.hpf("verify")
+        self.assertEqual(code, 0, r)
+        verify_task = next(c for c in self.runner.calls if c["kind"] == "verify")["graph"]["nodes"][0]["task"]
+        self.assertIn("sys.path.insert(0, 'src')", verify_task)
+
+    def test_an_import_root_that_is_absent_is_a_usage_error(self):
+        code, r = self.hpf("init", "--repo", str(self.repo), "--ref", "HEAD", "--import-root", "lib")
+        self.assertEqual(code, 2, r)
+
+
 class LadderTest(FlowCase):
     def test_review_grades(self):
         self.init()
@@ -402,7 +440,7 @@ class LadderTest(FlowCase):
         self.assertEqual(payload["effort"], "medium")
         # The worker gets only the tools of its task: the schemas of all built-in tools were most of each request.
         self.assertEqual(args[args.index("--tools") + 1], "Bash,Read,Grep,Glob,Write,Edit")
-        self.assertIn("--exclude-dynamic-system-prompt-sections", args)
+        self.assertNotIn("--exclude-dynamic-system-prompt-sections", args)
         self.assertNotIn("--system-prompt", args)
         self.assertNotIn(adapters.READ_LESS.strip(), self.runner.calls[0]["graph"]["nodes"][0]["task"])
         self.runner.first_verdict = "intended"
@@ -424,7 +462,7 @@ class LadderTest(FlowCase):
         self.through_verify()
         args = next(c for c in self.runner.calls if c["kind"] == "verify")["graph"]["nodes"][0]["payload"]["extra_args"]
         self.assertNotIn("--system-prompt", args)
-        self.assertIn("--exclude-dynamic-system-prompt-sections", args)
+        self.assertEqual(args[-2:], ["--tools", "Bash,Read,Grep,Glob,Write,Edit"])
 
     def test_the_second_verifier_runs_only_where_the_first_says_real(self):
         self.init()
@@ -634,28 +672,59 @@ class CostTest(unittest.TestCase):
         self.assertNotIn("cost_usd", steps[1])
 
 
+def alive(pid: int) -> bool:
+    """True while the process `pid` runs. On Windows `os.kill(pid, 0)` ends the process, so this asks the kernel."""
+    if os.name == "nt":
+        import ctypes
+        kernel = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        kernel.OpenProcess.restype = ctypes.c_void_p
+        handle = kernel.OpenProcess(0x1000, False, pid)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not handle:
+            return False
+        code = ctypes.c_ulong()
+        ok = kernel.GetExitCodeProcess(ctypes.c_void_p(handle), ctypes.byref(code))
+        kernel.CloseHandle(ctypes.c_void_p(handle))
+        return bool(ok) and code.value == 259  # STILL_ACTIVE
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    return True
+
+
 def gone(pid: int, seconds: float = 5) -> bool:
     """True when the process `pid` ends within `seconds`."""
     end = time.monotonic() + seconds
     while time.monotonic() < end:
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
+        if not alive(pid):
             return True
         time.sleep(0.05)
     return False
 
 
+# A Python child that sleeps. The tests start it, and not `sh` or `sleep`, so they run on each system.
+SLEEPER = "[sys.executable, '-c', 'import time; time.sleep(30)']"
+
+
 class ProcessGroupTest(unittest.TestCase):
     def test_timeout_ends_the_whole_group(self):
         start = time.monotonic()
-        code, out, _ = run_group(["/bin/sh", "-c", "sleep 30 & echo $!; wait"], timeout=1)
+        leader = ("import subprocess, sys, time\n"
+                  f"p = subprocess.Popen({SLEEPER})\n"
+                  "print(p.pid, flush=True)\n"
+                  "time.sleep(30)\n")
+        code, out, _ = run_group([sys.executable, "-c", leader], timeout=3)
         self.assertIsNone(code)
-        self.assertLess(time.monotonic() - start, 10)
+        self.assertLess(time.monotonic() - start, 15)
         self.assertTrue(gone(int(out.split()[0])), "the child of the command still runs after the timeout")
 
+    @unittest.skipIf(os.name == "nt", "Windows has no process group signal: `taskkill /T` cannot find the children of "
+                                      "a leader that is gone (README, Limits)")
     def test_a_child_left_after_a_normal_exit_ends(self):
-        code, out, _ = run_group(["/bin/sh", "-c", "sleep 30 >/dev/null 2>&1 & echo $!"], timeout=10)
+        leader = ("import subprocess, sys\n"
+                  f"p = subprocess.Popen({SLEEPER}, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)\n"
+                  "print(p.pid)\n")
+        code, out, _ = run_group([sys.executable, "-c", leader], timeout=10)
         self.assertEqual(code, 0)
         self.assertTrue(gone(int(out.split()[0])))
 
@@ -664,12 +733,12 @@ class ProcessGroupTest(unittest.TestCase):
             root = Path(tmp)
             pidfile = root / "pid"
             snippet = root / "s.py"
-            snippet.write_text("def run():\n    import subprocess, time\n"
-                               f"    p = subprocess.Popen(['/bin/sleep', '30'])\n"
+            snippet.write_text("def run():\n    import subprocess, sys, time\n"
+                               f"    p = subprocess.Popen({SLEEPER})\n"
                                f"    open({str(pidfile)!r}, 'w').write(str(p.pid))\n"
                                "    time.sleep(30)\n")
-            got = run_snippet(root, snippet, root / "home", timeout=2)
-            self.assertEqual(got["error"], "timeout")
+            got = run_snippet(root, snippet, root / "home", timeout=3)
+            self.assertEqual(got["error"], "timeout", got)
             self.assertTrue(gone(int(pidfile.read_text())))
 
 

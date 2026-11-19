@@ -63,13 +63,13 @@ READ_LESS = ("The files of the project are large. Find the lines that you need w
 def lean_args(shell: bool = True, reviewer: bool = False) -> List[str]:
     """The Claude Code arguments of a lean worker: no user settings, no MCP servers, and only the tools of the task.
 
-    With `reviewer` (the option `--short-prompt` of the review step) the worker gets `REVIEW_PROMPT`. Each
-    other worker keeps the default system prompt, and
-    `--exclude-dynamic-system-prompt-sections` moves the folder and git text out of it, so the sessions of one
-    audit share one cached prompt (Claude Code ignores that flag with `--system-prompt`)."""
+    With `reviewer` (the option `--short-prompt` of the review step) the worker gets `REVIEW_PROMPT`.
+
+    The list does not have `--exclude-dynamic-system-prompt-sections`. With that flag and the tool list, three
+    audits of one range each gave 10 findings and 5 confirmed bugs. With the tool list alone, three audits gave
+    11 to 13 findings and 5 to 7 confirmed bugs, and with neither, 13 findings and 8 confirmed bugs."""
     tools = (["Bash"] if shell else []) + LEAN_TOOLS
-    tail = ["--system-prompt", REVIEW_PROMPT] if reviewer else ["--exclude-dynamic-system-prompt-sections"]
-    return [*LEAN_ARGS, "--tools", ",".join(tools), *tail]
+    return [*LEAN_ARGS, "--tools", ",".join(tools), *(["--system-prompt", REVIEW_PROMPT] if reviewer else [])]
 
 
 def review_hint(adapter: str) -> str:

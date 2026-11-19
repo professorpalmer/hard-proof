@@ -422,13 +422,19 @@ the sign-in environment and the hooks stay), and since 0.5 a tool list:
 were about 25,000 tokens, and a worker reads them again on each turn: the
 first request went from 33,500 to 8,800 tokens. On 95 known bugs a review
 session then cost 26 percent less and found the same bugs (see "Limits" for
-the numbers). A Codex worker runs in the lean Codex home. `--user-settings`
+the numbers). An audit of 20 functions cost 5.38 US dollars against 8.25
+with all tools (the mean of three audits against one), with 12 findings and
+6 confirmed bugs against 13 and 8. A Codex worker runs in the lean Codex home. `--user-settings`
 gives each worker the full profile of the user.
 
 `review --short-prompt` (Claude Code only) also gives the reviewer a short
 system prompt and one line that tells it to read less. A review then cost
 about 25 percent less again, and it found fewer bugs in our test (see
 "Limits"), so it is off by default.
+
+`init` and `audit` take `--import-root DIR` for a repository whose top-level package is not at the
+repository root: `--import-root src` for a `src/` layout, or the folder of the package in a larger
+repository. A repro then imports the package with that folder first on the import path.
 
 The commands that start workers (`review`, `verify`, `fix`, `audit`) also take
 `--adapter claude-code|codex|command`, `--agent-cmd TEMPLATE` and

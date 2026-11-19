@@ -46,6 +46,8 @@ ARMS = {
     "nudge": {"model": "sonnet", "extra": LEAN + TOOLS, "brief": NUDGE},
     # hpflow 0.5: the direct runner with no Puppetmaster, and the default worker arguments of the tool.
     "direct": {"model": "sonnet", "extra": None, "direct": True},
+    # The defaults of hpflow 0.5.0 as released: the tool list and no dynamic-section flag.
+    "direct_final": {"model": "sonnet", "extra": None, "direct": True},
     # The review worker as hpflow 0.5 starts it: short system prompt and the read-less line.
     "direct_review": {"model": "sonnet", "extra": None, "direct": True, "reviewer": True},
     "short_nudge": {"model": "sonnet", "extra": LEAN + ["--tools", "Bash,Read,Grep,Glob,Write,Edit", "--system-prompt", SHORT], "brief": NUDGE},

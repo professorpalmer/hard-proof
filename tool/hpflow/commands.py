@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import adapters, briefs
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, StepError, UsageError, copy_tree, digest, git, is_test_file,
-                     read_json, run_snippet, sh, write_json)
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, is_test_file,
+                     read_json, run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
 from .direct import check_template
 from .runner import Runner, agent_graph
@@ -146,7 +146,7 @@ def adapter_report(ctx: Context, adapter: str) -> Dict[str, Any]:
 # ---------------------------------------------------------------- init
 
 def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], python: Optional[str],
-             test_cmd: Optional[str]) -> Dict[str, Any]:
+             test_cmd: Optional[str], import_root: Optional[str] = None) -> Dict[str, Any]:
     root = Path(repo).expanduser().resolve()
     code, top = git(root, "rev-parse", "--show-toplevel")
     if code != 0:
@@ -160,17 +160,24 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
     def present(p: str) -> bool:
         return git(root, "cat-file", "-e", f"{commit}:{p}")[0] == 0
 
+    import_root = (import_root or "").strip("/")
+    if import_root in (".", ""):
+        import_root = ""
+    elif not present(import_root):
+        raise UsageError(f"the import root {import_root} is not in {commit[:12]}")
     if paths:
         missing = [p for p in paths if not present(p.rstrip("/"))]
         if missing:
             raise UsageError(f"these paths are not in {commit[:12]}: {', '.join(missing)}")
         paths = [p.rstrip("/") for p in paths]
     else:
-        _, listing = git(root, "ls-tree", "--name-only", "-d", commit)
-        paths = [d for d in listing.split() if d not in EXTRA_PATHS and present(f"{d}/__init__.py")]
+        base = f"{import_root}/" if import_root else ""
+        _, listing = git(root, "ls-tree", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
+        paths = [base + d for d in listing.split() if d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
         paths += [p for p in EXTRA_PATHS if present(p)]
         if not paths:
-            raise UsageError("no package folder (a top-level folder with __init__.py) found: give --paths")
+            raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "
+                             "found: give --paths, and --import-root for a layout such as src/")
     if python is None:
         venv = root / ".venv" / "bin" / "python"
         python = str(venv) if venv.exists() else sys.executable
@@ -179,6 +186,8 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         raise UsageError(f"{ctx.out} holds an audit of {old.get('commit', '')[:12]}: use a new --out or --redo")
     audit = {"repo": str(root), "ref": ref, "commit": commit, "paths": paths, "python": python,
              "test_cmd": test_cmd or DEFAULT_TEST_CMD, "created": (old or {}).get("created") or now()}
+    if import_root:
+        audit["import_root"] = import_root
     for key in ("adapter", "agent_cmd"):
         if (old or {}).get(key):
             audit[key] = old[key]
@@ -249,13 +258,17 @@ def overlaps(fn: Dict[str, Any], ranges: List[Tuple[int, int]]) -> bool:
     return any(a <= fn["end"] and fn["start"] <= b for a, b in ranges)
 
 
-def top_of(file: str) -> str:
+def top_of(file: str, import_root: str = "") -> str:
+    """The top-level module of a file: its first folder below the import root."""
+    if import_root and file.startswith(import_root + "/"):
+        file = file[len(import_root) + 1:]
     parts = Path(file).parts
     return parts[0] if len(parts) > 1 else Path(file).stem
 
 
-def make_target(file: str, fn: Dict[str, Any], how: str) -> Dict[str, Any]:
-    return {"id": digest("target", file, fn["function"]), "file": file, "function": fn["function"], "top": top_of(file),
+def make_target(file: str, fn: Dict[str, Any], how: str, import_root: str = "") -> Dict[str, Any]:
+    return {"id": digest("target", file, fn["function"]), "file": file, "function": fn["function"],
+            "top": top_of(file, import_root),
             "lines": [fn["start"], fn["end"]], "length": fn["end"] - fn["start"] + 1, "source": how}
 
 
@@ -266,6 +279,7 @@ def in_paths(file: str, paths: List[str]) -> bool:
 def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[str]], files: Optional[List[str]],
                 max_lines: int, max_n: Optional[int]) -> Dict[str, Any]:
     audit = ctx.audit()
+    import_root = audit.get("import_root") or ""
     repo = Path(audit["repo"])
     candidates: List[Dict[str, Any]] = []
     skipped: List[Dict[str, Any]] = []
@@ -299,7 +313,7 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                     skipped.append({"file": path, "function": fn["function"], "reason": "removed"})
             for fn in new_fns:
                 if overlaps(fn, f["new_ranges"]):
-                    candidates.append(make_target(f["new"], fn, "changed"))
+                    candidates.append(make_target(f["new"], fn, "changed", import_root))
     else:
         wanted: List[Tuple[str, Optional[str]]] = []
         for spec in functions or []:
@@ -318,7 +332,7 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                 if not fns:
                     raise UsageError(f"no function {name} in {file}")
             for fn in fns:
-                candidates.append(make_target(file, fn, "function" if name else "file"))
+                candidates.append(make_target(file, fn, "function" if name else "file", import_root))
     seen, targets = set(), []
     for t in sorted(candidates, key=lambda t: (t["file"], t["lines"][0])):
         if t["id"] in seen:
@@ -364,6 +378,9 @@ def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) ->
 def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, repro_timeout: float, group: str = "function",
                group_size: int = 6, short_prompt: bool = False) -> Dict[str, Any]:
     audit = ctx.audit()
+    import_root = audit.get("import_root") or ""
+    # The folder of a worker that is first on the import path of a repro.
+    root = "project/" + (f"{import_root}/" if import_root else "")
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     if targets is None:
         raise UsageError("no targets.json: run `targets` first")
@@ -388,13 +405,13 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
         folder = ctx.out / "runs" / rid
         prepare_folder(ctx, folder)
         if single:
-            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=arm_text)
-            check = briefs.REVIEW_CHECK
+            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=arm_text, root=root)
+            check = shell_python(briefs.REVIEW_CHECK)
         else:
             write_json(folder / "functions.json", [x["function"] for x in ts])
-            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"],
+            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"], root=root,
                                              per_function=briefs.PER_FUNCTION, arm_text=arm_text)
-            check = briefs.REVIEW_FILE_CHECK
+            check = shell_python(briefs.REVIEW_FILE_CHECK)
         graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check,
                             timeout=2400)
         r = ctx.runner.run(graph, folder)
@@ -437,7 +454,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
             if not snippet.exists():
                 row.update(grade=0, reason="no repro file")
             else:
-                got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout)
+                got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout, import_root=import_root)
                 row["run_result"] = got
                 if got.get("ok"):
                     row.update(grade=1, result=got["result"])
@@ -525,8 +542,8 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
         write_json(folder / "claims.json", claims)
         head = (briefs.VERIFY_ONE_HEAD.format(n=len(claims), function=g["function"], file=g["file"]) if group == "function"
                 else briefs.VERIFY_FILE_HEAD.format(n=len(claims), file=g["file"]))
-        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head)
-        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=briefs.VERIFY_CHECK, timeout=3000)
+        task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head, imp=audit.get("import_root") or ".")
+        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=shell_python(briefs.VERIFY_CHECK), timeout=3000)
         r = ctx.runner.run(graph, folder)
         v = read_json(folder / "verdicts.json")
         r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], adapter=adapter, model=m,
@@ -645,6 +662,16 @@ def bug_text(bugs: List[Dict[str, Any]]) -> str:
     return "\n".join(rows)
 
 
+def fixcheck_command(info: Path) -> str:
+    """The shell command of the script check of a fix. cmd.exe has no `NAME=value command` form, so on Windows the
+    command puts the folder of hpflow on the import path itself."""
+    if WINDOWS:
+        boot = (f"import runpy,sys;sys.path.insert(0,r'{TOOL_DIR}');"
+                "runpy.run_module('hpflow.fixcheck',run_name='__main__')")
+        return f'{shell_quote(sys.executable)} -X utf8 -c "{boot}" {shell_quote(str(info))}'
+    return f"PYTHONPATH={shlex.quote(str(TOOL_DIR))} {shlex.quote(sys.executable)} -m hpflow.fixcheck {shlex.quote(str(info))}"
+
+
 def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
     """The paths that a fix worker can change: the audit paths and the tests."""
     files = [f"{p}/**" if (ctx.src / p).is_dir() else p for p in audit["paths"]]
@@ -656,8 +683,7 @@ def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
 def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str, info: Path, adapter: str,
               template: Optional[str], model: str, judge_model: str, rules: str) -> Dict[str, Any]:
     py = audit["python"]
-    check = (f"PYTHONPATH={shlex.quote(str(TOOL_DIR))} {shlex.quote(sys.executable)} -m hpflow.fixcheck "
-             f"{shlex.quote(str(info))}")
+    check = fixcheck_command(info)
     test_run = audit["test_cmd"].format(python=py, tests=g["test_file"])
     fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
                info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
@@ -752,7 +778,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
                 repros.append({"k": rp["k"], "file": name, "result_now": rp["result_now"]})
             spec_bugs.append({"id": b["id"], "repros": repros})
         write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": audit["python"],
-                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit)})
+                                        "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit),
+                                        "import_root": audit.get("import_root") or ""})
         graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules or briefs.DEFAULT_RULES)
         r = ctx.runner.run(graph, tree)
         result.update(r)
@@ -913,7 +940,7 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
         elif tree is not None:
             same, unknown = [], []
             for rp in b["repros"]:
-                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout)
+                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout, import_root=audit.get("import_root") or "")
                 if got.get("ok") and got.get("result") == rp["result_now"]:
                     same.append(rp["k"])
                 elif not got.get("ok") and (got.get("error") == "timeout" or got.get("error") in MISSING):

@@ -10,13 +10,12 @@
 from __future__ import annotations
 
 import json
-import shlex
 import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .common import run_group, run_snippet
+from .common import run_group, run_snippet, shell_quote
 
 MAX_RELATED_BYTES = 400_000
 # Files that a test run leaves. They are not a change of the worker.
@@ -60,7 +59,7 @@ def out_of_scope(tree: Path, scope: List[str]) -> List[str]:
 
 
 def test_command(spec: Dict[str, Any], tests: List[str]) -> str:
-    return spec["test_cmd"].format(python=shlex.quote(spec["python"]), tests=" ".join(shlex.quote(t) for t in tests))
+    return spec["test_cmd"].format(python=shell_quote(spec["python"]), tests=" ".join(shell_quote(t) for t in tests))
 
 
 def run_tests(spec: Dict[str, Any], tree: Path, tests: List[str], timeout: int) -> subprocess.CompletedProcess:
@@ -80,7 +79,7 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
                         + ", ".join(stray[:20]) + ". Put these files back as they were, or delete the new ones")
     for b in spec["bugs"]:
         for r in b["repros"]:
-            got = run_snippet(tree, info / r["file"], info / "home")
+            got = run_snippet(tree, info / r["file"], info / "home", import_root=spec.get("import_root") or "")
             if got.get("ok") and got.get("result") == r["result_now"]:
                 problems.append(f"bug {b['id']}: the repro {r['file']} still gives the old result {r['result_now']!r}")
     test_file = tree / spec["test_file"]
@@ -100,9 +99,9 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
                 if stem in t.name or f"import {stem}" in text or f".{stem} " in text:
                     if t.stat().st_size > MAX_RELATED_BYTES:
                         # A very large test file can run for a long time. The CI of the repository runs it.
-                        skipped.append(str(t.relative_to(tree)))
+                        skipped.append(t.relative_to(tree).as_posix())
                         continue
-                    related.append(str(t.relative_to(tree)))
+                    related.append(t.relative_to(tree).as_posix())
         related = related[:12]
         if related:
             p = run_tests(spec, tree, related, 1500)

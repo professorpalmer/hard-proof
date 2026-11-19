@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from . import codexhome
 from .adapters import COMMAND
-from .common import DEFAULT_CONCURRENCY, UsageError, apply_cost_rule, run_group, write_json
+from .common import DEFAULT_CONCURRENCY, WINDOWS, UsageError, apply_cost_rule, run_group, write_json
 from .runner import Runner
 
 OUTPUT_CHARS = 6000
@@ -361,7 +361,7 @@ class DirectRunner(Runner):
         logs.mkdir(parents=True, exist_ok=True)
         stem = f"{node['id']}-{visit}"
         prompt_file = logs / f"{stem}.prompt.txt"
-        prompt_file.write_text(prompt, encoding="utf-8")
+        prompt_file.write_bytes(prompt.encode("utf-8"))
         env = dict(os.environ)
         home = None
         if adapter == "claude-code":
@@ -373,6 +373,9 @@ class DirectRunner(Runner):
             cmd = codex_command(exe, model, payload, judge, folder, session, home is not None)
         else:
             cmd = template_command(payload["command"], model, folder, prompt_file)
+            if WINDOWS:
+                # Windows starts a bare name only as `name.exe`. `shutil.which` also finds `name.cmd` (PATHEXT).
+                cmd[0] = exe
         start = time.monotonic()
         code, out, err = run_group(cmd, folder, timeout, env=env, stdin=prompt)
         seconds = round(time.monotonic() - start)

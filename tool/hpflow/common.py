@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import signal
 import subprocess
@@ -19,6 +20,34 @@ TOOL_DIR = Path(__file__).resolve().parent.parent
 
 
 WINDOWS = os.name == "nt"
+
+
+def shell_quote(text: str) -> str:
+    """One argument of a shell command line: for `sh` on POSIX, for cmd.exe on Windows (cmd.exe does not read
+    single quotes)."""
+    return subprocess.list2cmdline([text]) if WINDOWS else shlex.quote(text)
+
+
+def shell_python(command: str) -> str:
+    """A check command of a brief for this system. The briefs start a check with `python3`. A Windows machine
+    often has no `python3`, so there the check starts with the Python of hpflow, in UTF-8 mode: the default text
+    encoding of Windows cannot read every file that an agent writes. On POSIX the command stays as it is."""
+    if WINDOWS and command.startswith("python3 "):
+        return shell_quote(sys.executable) + " -X utf8" + command[len("python3"):]
+    return command
+
+
+def snippet_env(home: Path) -> Dict[str, str]:
+    """The small environment of a repro. A Python child on Windows needs SYSTEMROOT, and finds the home in
+    USERPROFILE."""
+    env = {"HOME": str(home), "PYTHONDONTWRITEBYTECODE": "1"}
+    if WINDOWS:
+        root = os.environ.get("SYSTEMROOT", r"C:\Windows")
+        env.update(SYSTEMROOT=root, PATH=os.pathsep.join([os.path.join(root, "System32"), root]),
+                   USERPROFILE=str(home), PYTHONUTF8="1")
+    else:
+        env["PATH"] = "/usr/bin:/bin"
+    return env
 
 
 class UsageError(Exception):
@@ -77,26 +106,32 @@ def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: f
     try:
         group: Dict[str, Any] = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if WINDOWS  # type: ignore[attr-defined]
                                  else {"start_new_session": True})
-        # UTF-8 on each system: the default text encoding of Windows is not UTF-8, and agent output is.
+        # Bytes, not text mode: Windows text mode writes `\n` as `\r\n`, so a tool would read on its standard input
+        # another text than the prompt file. The output is UTF-8 on each system, with the newlines of text mode.
         p = subprocess.Popen(cmd, cwd=str(cwd) if cwd else None, shell=shell, env=env,
                              stdin=subprocess.DEVNULL if stdin is None else subprocess.PIPE,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
-                             errors="replace", **group)
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, **group)
     except OSError as e:
         return 127, "", str(e)
+    data = None if stdin is None else stdin.encode("utf-8")
     try:
-        out, err = p.communicate(input=stdin, timeout=timeout)
+        out, err = p.communicate(input=data, timeout=timeout)
     except subprocess.TimeoutExpired:
         kill_group(p)
         out, err = p.communicate()
-        return None, out or "", err or ""
+        return None, decode(out), decode(err)
     except BaseException:
         kill_group(p)
         p.wait()
         raise
     # The leader can exit while a child of its group still runs. That child must end too.
     kill_group(p)
-    return p.returncode, out, err
+    return p.returncode, decode(out), decode(err)
+
+
+def decode(data: Optional[bytes]) -> str:
+    """Output as text mode reads it: UTF-8 with replacement, and each `\r\n` or `\r` as `\n`."""
+    return (data or b"").decode("utf-8", "replace").replace("\r\n", "\n").replace("\r", "\n")
 
 
 def sh(cmd: List[str], cwd: Optional[Path] = None, timeout: float = 600) -> Tuple[int, str]:
@@ -129,7 +164,7 @@ sys.path.insert(0, sys.argv[1])
 sys.dont_write_bytecode = True
 ns = {}
 try:
-    exec(compile(open(sys.argv[2]).read(), sys.argv[2], "exec"), ns)
+    exec(compile(open(sys.argv[2], encoding="utf-8").read(), sys.argv[2], "exec"), ns)
     out = ns["run"]()
     print(json.dumps({"ok": True, "result": out if isinstance(out, str) else repr(out)}))
 except BaseException as e:
@@ -140,11 +175,13 @@ except BaseException as e:
 MISSING = ("ImportError", "AttributeError", "ModuleNotFoundError", "NameError")
 
 
-def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60) -> Dict[str, Any]:
-    """Run `run()` of a snippet file with `tree` first on the import path. A separate process, no bytecode."""
+def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, import_root: str = "") -> Dict[str, Any]:
+    """Run `run()` of a snippet file with `tree` first on the import path. A separate process, no bytecode.
+
+    `import_root`: the folder inside `tree` that holds the top-level package, for example `src`."""
     home.mkdir(parents=True, exist_ok=True)
-    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str(tree), str(snippet)], tree, timeout,
-                               env={"PATH": "/usr/bin:/bin", "HOME": str(home), "PYTHONDONTWRITEBYTECODE": "1"})
+    code, out, err = run_group([sys.executable, "-I", "-c", RUNNER, str(tree / import_root), str(snippet)], tree, timeout,
+                               env=snippet_env(home))
     if code is None:
         return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}
     line = [x for x in out.splitlines() if x.startswith("{")]

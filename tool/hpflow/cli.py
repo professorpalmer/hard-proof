@@ -48,6 +48,8 @@ def add_adapter(p: argparse.ArgumentParser) -> None:
 def add_init(p: argparse.ArgumentParser) -> None:
     p.add_argument("--repo", required=True)
     p.add_argument("--ref", required=True)
+    p.add_argument("--import-root", help="the folder that holds the top-level package when it is not the repository "
+                                         "root, for example src")
     p.add_argument("--paths", nargs="+")
     p.add_argument("--python")
     p.add_argument("--test-cmd", help="template with {python} and {tests}")
@@ -134,7 +136,7 @@ def read_group(ctx: c.Context, given: Optional[str]) -> str:
 def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
     cmd = args.command
     if cmd == "init":
-        return c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd)
+        return c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root)
     if cmd == "targets":
         return c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n)
     if cmd == "review":
@@ -166,7 +168,7 @@ def run_command(args: argparse.Namespace, ctx: c.Context) -> Dict[str, Any]:
         adapters.payload(adapter, shell=args.shell, lean=ctx.lean, agent_cmd=template)
         steps: List[Dict[str, Any]] = []
         calls: List[Callable[[], Dict[str, Any]]] = [
-            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd),
+            lambda: c.cmd_init(ctx, args.repo, args.ref, args.paths, args.python, args.test_cmd, args.import_root),
             lambda: c.cmd_targets(ctx, args.changed, args.functions, args.files, args.max_lines, args.max_n),
             lambda: c.cmd_review(ctx, args.model, args.shell, args.passes, args.repro_timeout, args.group, args.group_size,
                                         args.short_prompt),
