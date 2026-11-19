@@ -91,7 +91,8 @@ def edge_matches(when: str, ok: bool, verdict: Optional[str]) -> bool:
         return ok
     if when == "fail":
         return not ok
-    return verdict == when
+    # A run that failed has no verdict to trust, even when its text ends in one.
+    return ok and verdict == when
 
 
 def gate_preview(graph: Dict[str, Any], node: Dict[str, Any]) -> str:
@@ -214,7 +215,8 @@ def check_template(template: str) -> None:
 
 def json_lines(text: str) -> List[Dict[str, Any]]:
     out = []
-    for line in text.splitlines():
+    # Only a newline ends an event: splitlines would also cut a JSON string at a raw U+2028 or \x0c.
+    for line in text.split("\n"):
         line = line.strip()
         if line.startswith("{"):
             try:
@@ -329,13 +331,18 @@ class DirectRunner(Runner):
         outgoing = [(i, e) for i, e in enumerate(graph["edges"]) if e["from"] == node["id"]]
         if not outgoing:
             return "done" if item["ok"] else "failed"
+        exhausted = False
         for i, e in outgoing:
             if not edge_matches(e.get("when", "always"), item["ok"], item["verdict"]):
                 continue
+            # A used up edge gives way to a later matching edge, such as the fallback to "failed".
             if e.get("max") is not None and counts.get(i, 0) >= e["max"]:
-                return "stuck"
+                exhausted = True
+                continue
             counts[i] = counts.get(i, 0) + 1
             return e["to"]
+        if exhausted:
+            return "stuck"
         return "failed" if not item["ok"] else "stuck"
 
     @staticmethod

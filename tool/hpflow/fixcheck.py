@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -91,12 +92,15 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
             problems.append("the new test file fails:\n" + (p.stdout + p.stderr)[-1500:])
         stem = Path(spec["file"]).stem
         related = []
-        if (tree / "tests").is_dir():
-            for t in sorted((tree / "tests").rglob("test_*.py")):
+        tests_dir = tree / (spec.get("tests_dir") or "tests")
+        if tests_dir.is_dir():
+            for t in sorted(tests_dir.rglob("test_*.py")):
                 if t == test_file:
                     continue
                 text = t.read_text(errors="replace")[:20000]
-                if stem in t.name or f"import {stem}" in text or f".{stem} " in text:
+                # A dotted import such as `import pkg.mod` can end the line right after the module name.
+                if (stem in t.name or f"import {stem}" in text or f".{stem} " in text
+                        or re.search(rf"^\s*import\s+[\w.]+\.{re.escape(stem)}\b", text, re.M)):
                     if t.stat().st_size > MAX_RELATED_BYTES:
                         # A very large test file can run for a long time. The CI of the repository runs it.
                         skipped.append(t.relative_to(tree).as_posix())

@@ -109,7 +109,8 @@ def adapter_key(adapter: str, agent_cmd: Optional[str] = None, effort: str = ada
     key = [] if adapter == adapters.DEFAULT_ADAPTER else [adapter]
     if agent_cmd:
         key.append(agent_cmd)
-    if effort != adapters.DEFAULT_EFFORT:
+    # The command adapter does not pass the effort to its tool, so the effort does not change its result.
+    if effort != adapters.DEFAULT_EFFORT and adapter != adapters.COMMAND:
         key.append(f"effort={effort}")
     return key
 
@@ -174,10 +175,11 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         base = f"{import_root}/" if import_root else ""
         _, listing = git(root, "ls-tree", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
         paths = [base + d for d in listing.split() if d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
-        paths += [p for p in EXTRA_PATHS if present(p)]
+        # Check before the extra paths: they hold no package, so an audit of only them reviews no code.
         if not paths:
             raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "
                              "found: give --paths, and --import-root for a layout such as src/")
+        paths += [p for p in EXTRA_PATHS if present(p)]
     if python is None:
         venv = root / ".venv" / "bin" / "python"
         python = str(venv) if venv.exists() else sys.executable
@@ -237,7 +239,7 @@ def parse_diff(text: str) -> List[Dict[str, Any]]:
     hunk = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
     for line in text.splitlines():
         if line.startswith("diff --git "):
-            cur = {"old": None, "new": None, "old_ranges": [], "new_ranges": []}
+            cur = {"old": None, "new": None, "old_ranges": [], "new_ranges": [], "deleted_ranges": []}
             files.append(cur)
         elif cur is None:
             continue
@@ -250,7 +252,14 @@ def parse_diff(text: str) -> List[Dict[str, Any]]:
             if m:
                 for (s, c), key in (((m.group(1), m.group(2)), "old_ranges"), ((m.group(3), m.group(4)), "new_ranges")):
                     start, count = int(s), 1 if c is None else int(c)
-                    cur[key].append((start, start + count - 1) if count else (start, start + 1))
+                    if count:
+                        cur[key].append((start, start + count - 1))
+                    elif key == "old_ranges":
+                        cur[key].append((start, start + 1))
+                    else:
+                        # A pure deletion has no new line. The old lines it removed show which functions it changed.
+                        old_start, old_count = int(m.group(1)), 1 if m.group(2) is None else int(m.group(2))
+                        cur["deleted_ranges"].append((old_start, old_start + old_count - 1))
     return files
 
 
@@ -300,8 +309,9 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                 continue
             new_fns = functions_of(git(repo, "show", f"{b}:{f['new']}")[1]) if f["new"] else []
             old_fns = functions_of(git(repo, "show", f"{a}:{f['old']}")[1]) if f["old"] else []
+            cut = {fn["function"] for fn in old_fns if overlaps(fn, f["deleted_ranges"])}
             if is_test_file(path):
-                hit = [fn for fn in new_fns if overlaps(fn, f["new_ranges"])]
+                hit = [fn for fn in new_fns if overlaps(fn, f["new_ranges"]) or fn["function"] in cut]
                 for fn in hit:
                     skipped.append({"file": path, "function": fn["function"], "reason": "test file"})
                 if not hit:
@@ -312,7 +322,7 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                 if fn["function"] not in names and (f["new"] is None or overlaps(fn, f["old_ranges"])):
                     skipped.append({"file": path, "function": fn["function"], "reason": "removed"})
             for fn in new_fns:
-                if overlaps(fn, f["new_ranges"]):
+                if overlaps(fn, f["new_ranges"]) or fn["function"] in cut:
                     candidates.append(make_target(f["new"], fn, "changed", import_root))
     else:
         wanted: List[Tuple[str, Optional[str]]] = []
@@ -333,11 +343,17 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                     raise UsageError(f"no function {name} in {file}")
             for fn in fns:
                 candidates.append(make_target(file, fn, "function" if name else "file", import_root))
-    seen, targets = set(), []
+    seen: Dict[str, List[List[int]]] = {}
+    targets: List[Dict[str, Any]] = []
     for t in sorted(candidates, key=lambda t: (t["file"], t["lines"][0])):
-        if t["id"] in seen:
+        lines = seen.setdefault(t["id"], [])
+        if t["lines"] in lines:
             continue
-        seen.add(t["id"])
+        lines.append(t["lines"])
+        if len(lines) > 1:
+            # A second function with the same qualified name (a property getter and its setter). The first keeps
+            # the id that hpflow 0.4 gave it, and each later one gets its number in the id.
+            t = dict(t, id=digest("target", t["file"], t["function"], len(lines)))
         if t["length"] > max_lines:
             skipped.append({"file": t["file"], "function": t["function"],
                             "reason": f"too long ({t['length']} lines, the limit is {max_lines})"})
@@ -388,6 +404,9 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
     mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
     payload = adapters.payload(adapter, shell=shell, lean=ctx.lean, effort=ctx.effort, agent_cmd=template, reviewer=short_prompt)
     key = adapter_key(adapter, template, ctx.effort)
+    if short_prompt:
+        # The short prompt changes the system prompt and the brief, so its records are not those of the default prompt.
+        key.append("short_prompt")
     ctx.keep_adapter()
     arm = "shell" if shell else "plain"
     arm_text = briefs.REVIEW_ARM[arm] + (adapters.review_hint(adapter) if ctx.lean and short_prompt else "")
@@ -522,8 +541,8 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
     ctx.keep_adapter()
     groups: Dict[str, Dict[str, Any]] = {}
     for f in sorted((f for f in review["findings"] if f["grade"] >= 1), key=lambda f: (f["file"], f["target"], f["run"], f["n"])):
-        key = f["target"] if group == "function" else digest("file", f["file"])
-        g = groups.setdefault(key, {"key": key, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
+        gkey = f["target"] if group == "function" else digest("file", f["file"])
+        g = groups.setdefault(gkey, {"key": gkey, "target": f["target"], "file": f["file"], "function": f["function"], "claims": []})
         g["claims"].append(dict(f, k=len(g["claims"]) + 1))
 
     def one(job: Tuple[Dict[str, Any], str]) -> Tuple[Dict[str, Any], bool]:
@@ -649,9 +668,15 @@ def report_md(audit: Dict[str, Any], models: List[str], claims: List[Dict[str, A
 
 # ---------------------------------------------------------------- fix
 
-def slug_of(file: str) -> str:
+def slug_of(file: str, unique: bool = False) -> str:
+    """The name of the worktree, branch and test file of a file. With `unique`, a part of the digest of the path
+    keeps apart the files whose plain slugs are the same (pkg/a_b.py and pkg/a/b.py give pkg-a-b)."""
     stem = file[:-3] if file.endswith(".py") else file
-    return re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-")
+    slug = re.sub(r"[^a-z0-9]+", "-", stem.lower()).strip("-")
+    # A path that is not a module path (pkg/a-b.py) cannot be imported, and its slug would take the name of one.
+    if unique or not re.fullmatch(r"[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*\.py", file):
+        return f"{slug}-{digest('slug', file)[-8:]}"
+    return slug
 
 
 def bug_text(bugs: List[Dict[str, Any]]) -> str:
@@ -664,14 +689,21 @@ def bug_text(bugs: List[Dict[str, Any]]) -> str:
     return "\n".join(rows)
 
 
+def check_script(info: Path) -> str:
+    """The text of `check.py` in the info folder of a fix: it runs `hpflow.fixcheck` on that folder.
+
+    A file, not a `PYTHONPATH=... python -m` line: the worker and the judge can then run the check with one plain
+    command that their allow list has, and the same command works in cmd.exe."""
+    return ("import runpy\nimport sys\n\n"
+            f"sys.path.insert(0, {str(TOOL_DIR)!r})\n"
+            f"sys.argv = ['hpflow.fixcheck', {str(info)!r}]\n"
+            "runpy.run_module('hpflow.fixcheck', run_name='__main__')\n")
+
+
 def fixcheck_command(info: Path) -> str:
-    """The shell command of the script check of a fix. cmd.exe has no `NAME=value command` form, so on Windows the
-    command puts the folder of hpflow on the import path itself."""
-    if WINDOWS:
-        boot = (f"import runpy,sys;sys.path.insert(0,r'{TOOL_DIR}');"
-                "runpy.run_module('hpflow.fixcheck',run_name='__main__')")
-        return f'{shell_quote(sys.executable)} -X utf8 -c "{boot}" {shell_quote(str(info))}'
-    return f"PYTHONPATH={shlex.quote(str(TOOL_DIR))} {shlex.quote(sys.executable)} -m hpflow.fixcheck {shlex.quote(str(info))}"
+    """The shell command of the script check of a fix."""
+    utf8 = " -X utf8" if WINDOWS else ""
+    return f"{shell_quote(sys.executable)}{utf8} {shell_quote(str(info / 'check.py'))}"
 
 
 def fix_scope(ctx: Context, audit: Dict[str, Any]) -> List[str]:
@@ -689,7 +721,8 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
     test_run = audit["test_cmd"].format(python=py, tests=g["test_file"])
     fmt = dict(repo=Path(audit["repo"]).name, base=base, n=len(g["bugs"]), file=g["file"], bugs=bug_text(g["bugs"]),
                info=info, test_file=g["test_file"], test_run=test_run, rules=rules, check=check)
-    commands = (*adapters.FIX_COMMANDS, py)
+    # The check command is in the list, so the worker and the judge can run it as the brief says.
+    commands = (*adapters.FIX_COMMANDS, py, check)
     payload = adapters.payload(adapter, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort, agent_cmd=template)
     judge_payload = adapters.payload(adapter, judge=True, shell=True, lean=ctx.lean, commands=commands, effort=ctx.effort,
                                      agent_cmd=template)
@@ -737,10 +770,15 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
         raise UsageError(f"the base {base_ref} is not a commit of {repo}")
     base_commit = base_commit.strip()
     groups: Dict[str, Dict[str, Any]] = {}
+    # The new test file goes into the tests folder of the audit paths (for example `tool/tests`), else `tests`.
+    tests_dir = next((p for p in audit["paths"] if Path(p).name == "tests"), "tests")
+    plain: Dict[str, set] = {}
     for b in bugs:
-        s = slug_of(b["file"])
-        g = groups.setdefault(s, {"slug": s, "file": b["file"],
-                                  "test_file": f"tests/test_hpfix_{s.replace('-', '_')}.py", "bugs": []})
+        plain.setdefault(slug_of(b["file"]), set()).add(b["file"])
+    for b in bugs:
+        s = slug_of(b["file"], unique=len(plain[slug_of(b["file"])]) > 1)
+        g = groups.setdefault(b["file"], {"slug": s, "file": b["file"],
+                                          "test_file": f"{tests_dir}/test_hpfix_{s.replace('-', '_')}.py", "bugs": []})
         g["bugs"].append(b)
 
     def one(g: Dict[str, Any]) -> Tuple[Dict[str, Any], bool]:
@@ -781,7 +819,8 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
             spec_bugs.append({"id": b["id"], "repros": repros})
         write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": audit["python"],
                                         "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit),
-                                        "import_root": audit.get("import_root") or ""})
+                                        "import_root": audit.get("import_root") or "", "tests_dir": tests_dir})
+        (info / "check.py").write_text(check_script(info), encoding="utf-8")
         graph = fix_graph(ctx, audit, g, base_commit, info, adapter, template, model, judge_model, rules or briefs.DEFAULT_RULES)
         r = ctx.runner.run(graph, tree)
         result.update(r)

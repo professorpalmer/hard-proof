@@ -9,6 +9,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -25,7 +26,15 @@ WINDOWS = os.name == "nt"
 def shell_quote(text: str) -> str:
     """One argument of a shell command line: for `sh` on POSIX, for cmd.exe on Windows (cmd.exe does not read
     single quotes)."""
-    return subprocess.list2cmdline([text]) if WINDOWS else shlex.quote(text)
+    if not WINDOWS:
+        return shlex.quote(text)
+    quoted = subprocess.list2cmdline([text])
+    # list2cmdline quotes only for spaces, but cmd.exe splits a bare argument at & | < > ^.
+    if not quoted.startswith('"') and any(c in quoted for c in "&|<>^"):
+        # A closing quote after a backslash would be read as an escaped quote, so each trailing backslash doubles.
+        tail = len(quoted) - len(quoted.rstrip("\\"))
+        quoted = '"' + quoted + "\\" * tail + '"'
+    return quoted
 
 
 def shell_python(command: str) -> str:
@@ -113,20 +122,52 @@ def run_group(cmd: Union[str, List[str]], cwd: Optional[Path] = None, timeout: f
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, **group)
     except OSError as e:
         return 127, "", str(e)
-    data = None if stdin is None else stdin.encode("utf-8")
+    # Threads read the pipes, so the wait ends when the leader exits, not when the last holder of a pipe closes it:
+    # a child left in the background can hold the pipes open until the timeout.
+    chunks: Tuple[List[bytes], List[bytes]] = ([], [])
+    threads = [threading.Thread(target=_drain, args=(s, c), daemon=True) for s, c in zip((p.stdout, p.stderr), chunks)]
+    if stdin is not None:
+        threads.append(threading.Thread(target=_feed, args=(p.stdin, stdin.encode("utf-8")), daemon=True))
+    for t in threads:
+        t.start()
     try:
-        out, err = p.communicate(input=data, timeout=timeout)
+        code: Optional[int] = p.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
-        kill_group(p)
-        out, err = p.communicate()
-        return None, decode(out), decode(err)
+        code = None
     except BaseException:
         kill_group(p)
         p.wait()
         raise
     # The leader can exit while a child of its group still runs. That child must end too.
     kill_group(p)
-    return p.returncode, decode(out), decode(err)
+    p.wait()
+    for t in threads:
+        t.join(DRAIN_TIMEOUT)
+    return code, decode(b"".join(chunks[0])), decode(b"".join(chunks[1]))
+
+
+# Seconds to read the rest of the output after the group ends. A child outside the group can hold a pipe open.
+DRAIN_TIMEOUT = 5
+
+
+def _drain(stream: Any, chunks: List[bytes]) -> None:
+    try:
+        while True:
+            data = stream.read1(65536)
+            if not data:
+                return
+            chunks.append(data)
+    except (OSError, ValueError):
+        pass
+
+
+def _feed(stream: Any, data: bytes) -> None:
+    # The command may exit without reading its input.
+    try:
+        stream.write(data)
+        stream.close()
+    except (OSError, ValueError):
+        pass
 
 
 def decode(data: Optional[bytes]) -> str:

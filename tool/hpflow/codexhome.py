@@ -56,6 +56,9 @@ def lean_config(text: str) -> str:
             if dropping:
                 continue
         if dropping:
+            # A multi-line value can have lines that start with "[", which are not table headers.
+            depth = stripped.count("[") - stripped.count("]")
+            skip_depth = depth if depth > 0 else 0
             continue
         key = stripped.split("=", 1)[0].strip() if "=" in stripped else ""
         if key in DROPPED_TOP_KEYS and not any(x.strip().startswith("[") for x in out):
@@ -144,6 +147,9 @@ def prepare(codex: str) -> Optional[Path]:
                 data = raw
             if digest(home / "AGENTS.md") != hashlib.sha256(data).hexdigest():
                 write_atomic(home / "AGENTS.md", data, 0o644)
+        else:
+            # The user removed their AGENTS.md, so the worker must not keep the old copy.
+            (home / "AGENTS.md").unlink(missing_ok=True)
         user_auth = digest(source / "auth.json")
         synced = (home / ".auth.synced").read_text(encoding="utf-8") if (home / ".auth.synced").exists() else None
         if user_auth != synced:
