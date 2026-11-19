@@ -213,7 +213,11 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
 # ---------------------------------------------------------------- targets
 
 def functions_of(source: str) -> List[Dict[str, Any]]:
-    """The functions and methods of a module: qualified name, first line (decorators included), last line."""
+    """The functions and methods of a module: qualified name, first line (decorators included), last line.
+
+    Two definitions can have one qualified name (a property getter and its setter, or a function that a later
+    `def` replaces). `nth` is the number of the definition among those with its name, in source order, and `of`
+    is how many there are. The name and `nth` together are the identity of a function in its file."""
     try:
         tree = ast.parse(source)
     except SyntaxError:
@@ -229,6 +233,12 @@ def functions_of(source: str) -> List[Dict[str, Any]]:
                 walk(node.body, prefix + node.name + ".")
 
     walk(tree.body, "")
+    count: Dict[str, int] = {}
+    for fn in out:
+        count[fn["function"]] = count.get(fn["function"], 0) + 1
+        fn["nth"] = count[fn["function"]]
+    for fn in out:
+        fn["of"] = count[fn["function"]]
     return out
 
 
@@ -276,9 +286,23 @@ def top_of(file: str, import_root: str = "") -> str:
 
 
 def make_target(file: str, fn: Dict[str, Any], how: str, import_root: str = "") -> Dict[str, Any]:
-    return {"id": digest("target", file, fn["function"]), "file": file, "function": fn["function"],
+    """The target of one function. `fn` is a record of `functions_of`.
+
+    The id comes from the identity of the function: the file, the qualified name and `nth`. The first definition
+    of a name has the id that hpflow 0.4 gave it, so an audit folder of 0.4 keeps its stored runs. A later
+    definition of the same name has its number in the id, so it is a target of its own."""
+    nth = fn["nth"]
+    identity = (file, fn["function"]) if nth == 1 else (file, fn["function"], nth)
+    return {"id": digest("target", *identity), "file": file, "function": fn["function"], "nth": nth, "of": fn["of"],
             "top": top_of(file, import_root),
             "lines": [fn["start"], fn["end"]], "length": fn["end"] - fn["start"] + 1, "source": how}
+
+
+def target_label(t: Dict[str, Any]) -> str:
+    """The name of a target for a worker. A name with more than one definition in its file gets the line of this one."""
+    if (t.get("of") or 1) == 1:
+        return t["function"]
+    return f"{t['function']} (definition {t['nth']} of {t['of']} with this name, at line {t['lines'][0]})"
 
 
 def in_paths(file: str, paths: List[str]) -> bool:
@@ -343,17 +367,11 @@ def cmd_targets(ctx: Context, changed: Optional[str], functions: Optional[List[s
                     raise UsageError(f"no function {name} in {file}")
             for fn in fns:
                 candidates.append(make_target(file, fn, "function" if name else "file", import_root))
-    seen: Dict[str, List[List[int]]] = {}
-    targets: List[Dict[str, Any]] = []
+    seen, targets = set(), []
     for t in sorted(candidates, key=lambda t: (t["file"], t["lines"][0])):
-        lines = seen.setdefault(t["id"], [])
-        if t["lines"] in lines:
+        if t["id"] in seen:
             continue
-        lines.append(t["lines"])
-        if len(lines) > 1:
-            # A second function with the same qualified name (a property getter and its setter). The first keeps
-            # the id that hpflow 0.4 gave it, and each later one gets its number in the id.
-            t = dict(t, id=digest("target", t["file"], t["function"], len(lines)))
+        seen.add(t["id"])
         if t["length"] > max_lines:
             skipped.append({"file": t["file"], "function": t["function"],
                             "reason": f"too long ({t['length']} lines, the limit is {max_lines})"})
@@ -424,11 +442,11 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
         folder = ctx.out / "runs" / rid
         prepare_folder(ctx, folder)
         if single:
-            task = briefs.REVIEW.format(function=t["function"], file=t["file"], top=t["top"], arm_text=arm_text, root=root)
+            task = briefs.REVIEW.format(function=target_label(t), file=t["file"], top=t["top"], arm_text=arm_text, root=root)
             check = shell_python(briefs.REVIEW_CHECK)
         else:
-            write_json(folder / "functions.json", [x["function"] for x in ts])
-            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{x['function']}`" for x in ts), file=t["file"], top=t["top"], root=root,
+            write_json(folder / "functions.json", [target_label(x) for x in ts])
+            task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{target_label(x)}`" for x in ts), file=t["file"], top=t["top"], root=root,
                                              per_function=briefs.PER_FUNCTION, arm_text=arm_text)
             check = shell_python(briefs.REVIEW_FILE_CHECK)
         graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check,
@@ -454,7 +472,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
             return []
         out = []
         mine = [by_id[i] for i in (r.get("targets") or [r["target"]])]
-        by_name = {t["function"]: t for t in mine}
+        by_name = {target_label(t): t for t in mine}
         seen: Dict[str, int] = {}
         for i, f in enumerate(items[:5] if len(mine) == 1 else items):
             if not isinstance(f, dict):

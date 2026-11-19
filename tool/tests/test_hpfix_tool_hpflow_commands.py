@@ -161,33 +161,48 @@ class VerifyKeyTest(unittest.TestCase):
         self.assertEqual(a, b)
 
 
+GETTER_SETTER = ("class C:\n    @property\n    def x(self):\n        return 1\n\n"
+                 "    @x.setter\n    def x(self, v):\n        pass\n")
+
+
 class TargetIdTest(unittest.TestCase):
-    def test_the_first_definition_keeps_the_id_of_hpflow_0_4(self):
-        # The id of a target has no line number, so an audit folder of hpflow 0.4 keeps its stored runs.
-        a = commands.make_target("pkg/m.py", {"function": "C.x", "start": 3, "end": 5}, "file")
-        self.assertEqual(a["id"], commands.digest("target", "pkg/m.py", "C.x"))
+    """The identity of a function is its file, its qualified name and its number among the definitions of that name."""
+
+    def test_the_parser_numbers_the_definitions_of_one_name(self):
+        fns = commands.functions_of(GETTER_SETTER + "\n\ndef f():\n    pass\n")
+        self.assertEqual([(f["function"], f["nth"], f["of"]) for f in fns], [("C.x", 1, 2), ("C.x", 2, 2), ("f", 1, 1)])
+
+    def test_a_getter_and_a_setter_are_two_targets(self):
+        getter, setter = (commands.make_target("pkg/m.py", fn, "file") for fn in commands.functions_of(GETTER_SETTER))
+        self.assertNotEqual(getter["id"], setter["id"])
+        # The first definition keeps the id of hpflow 0.4, so an audit folder of 0.4 keeps its stored runs.
+        self.assertEqual(getter["id"], commands.digest("target", "pkg/m.py", "C.x"))
+
+    def test_a_record_with_no_identity_is_not_a_target(self):
+        # A record that does not come from the parser has no `nth`, so it cannot get the id of another function.
+        with self.assertRaises(KeyError):
+            commands.make_target("pkg/m.py", {"function": "C.x", "start": 3, "end": 5}, "file")
 
     def test_one_function_named_twice_is_one_target(self):
-        fn = {"function": "C.x", "start": 3, "end": 5}
+        fn = commands.functions_of("def f():\n    pass\n")[0]
         self.assertEqual(commands.make_target("pkg/m.py", fn, "file")["id"],
                          commands.make_target("pkg/m.py", dict(fn), "function")["id"])
 
     def test_targets_lists_the_getter_and_the_setter(self):
-        src = ("class C:\n    @property\n    def x(self):\n        return 1\n\n"
-               "    @x.setter\n    def x(self, v):\n        pass\n")
         with tempfile.TemporaryDirectory() as d:
             out = Path(d)
             (out / "src" / "pkg").mkdir(parents=True)
-            (out / "src" / "pkg" / "m.py").write_text(src)
+            (out / "src" / "pkg" / "m.py").write_text(GETTER_SETTER)
             (out / "audit.json").write_text(json.dumps({"commit": "abc", "repo": d, "paths": ["pkg"]}))
             rep = commands.cmd_targets(commands.Context(out, None), None, None, ["pkg/m.py"], 100, None)
             self.assertEqual(rep["targets"], ["pkg/m.py:C.x", "pkg/m.py:C.x"])
-            ids = [x["id"] for x in json.loads((out / "targets.json").read_text())["targets"]]
-            # The getter keeps the plain id, and the setter gets an id of its own.
-            self.assertEqual(ids[0], commands.digest("target", "pkg/m.py", "C.x"))
-            self.assertEqual(len(set(ids)), 2)
+            targets = json.loads((out / "targets.json").read_text())["targets"]
+            self.assertEqual(len({x["id"] for x in targets}), 2)
             rep = commands.cmd_targets(commands.Context(out, None), None, ["pkg/m.py:C.x"], ["pkg/m.py"], 100, None)
             self.assertEqual(len(rep["targets"]), 2)
+            # A worker must know which of the two definitions is its target.
+            self.assertEqual(commands.target_label(targets[1]), "C.x (definition 2 of 2 with this name, at line 6)")
+            self.assertEqual(commands.target_label({"function": "f", "of": 1}), "f")
 
 
 class FixCheckCommandTest(unittest.TestCase):
