@@ -6,11 +6,14 @@ puts a plain print style on it, and prints it to PDF with headless Chrome.
 
 Usage:
     python3 build_pdf.py --paper <site>/dist/labs/hard-proof/paper/index.html --out <repo>/docs
+
+It also replaces `<site>/dist/labs/hard-proof/paper.pdf`, the copy that the site serves.
 """
 from __future__ import annotations
 
 import argparse
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -77,8 +80,17 @@ def main() -> int:
     pdf = out / "paper.pdf"
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--print-to-pdf={pdf}",
                     (out / "paper.html").resolve().as_uri()], capture_output=True, text=True, timeout=180)
-    print(f"{pdf} {pdf.stat().st_size // 1024} KB" if pdf.exists() else "no pdf")
-    return 0 if pdf.exists() else 1
+    if not pdf.exists():
+        print("no pdf")
+        return 1
+    print(f"{pdf} {pdf.stat().st_size // 1024} KB")
+    # The site serves its own copy, beside the folder of the paper page. One build writes the two copies,
+    # so the copy on the site cannot stay at an older revision.
+    site_copy = args.paper.expanduser().resolve().parent.parent / "paper.pdf"
+    if site_copy.exists() and site_copy.resolve() != pdf.resolve():
+        shutil.copyfile(pdf, site_copy)
+        print(f"{site_copy} (site copy)")
+    return 0
 
 
 if __name__ == "__main__":
