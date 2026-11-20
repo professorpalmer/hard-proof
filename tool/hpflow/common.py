@@ -99,19 +99,29 @@ def write_python_shims(folder: Path, python: str) -> Path:
     """Write the shim folder of `python` (see `shim_texts`) and return it. Parallel workers can call it: a file
     that has the right text stays, and a new file comes into place in one rename."""
     folder.mkdir(parents=True, exist_ok=True)
-    for name, text in shim_texts(python, WINDOWS).items():
-        path = folder / name
+
+    def right(path: Path, data: bytes) -> bool:
+        # Bytes, not text: a text read turns the CRLF of a .cmd file into LF, and the file would never match.
         try:
-            same = path.read_text(encoding="utf-8") == text and (WINDOWS or os.access(path, os.X_OK))
+            return path.read_bytes() == data and (WINDOWS or os.access(path, os.X_OK))
         except OSError:
-            same = False
-        if same:
+            return False
+
+    for name, text in shim_texts(python, WINDOWS).items():
+        path, data = folder / name, text.encode("utf-8")
+        if right(path, data):
             continue
         tmp = folder / f".{name}.{os.getpid()}.{threading.get_ident()}"
-        with open(tmp, "w", encoding="utf-8", newline="") as handle:
-            handle.write(text)
+        tmp.write_bytes(data)
         tmp.chmod(0o755)
-        os.replace(tmp, path)
+        try:
+            os.replace(tmp, path)
+        except OSError:
+            # Windows refuses to replace a file that another worker runs. Another call wrote the same text, so it
+            # is not an error.
+            tmp.unlink(missing_ok=True)
+            if not right(path, data):
+                raise
     return folder
 
 

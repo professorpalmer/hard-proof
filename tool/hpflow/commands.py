@@ -192,7 +192,9 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         base = f"{import_root}/" if import_root else ""
         # With -z git does not quote a name with non-ASCII characters, and a name can hold a space.
         _, listing = git(root, "ls-tree", "-z", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
-        paths = [base + d for d in listing.split("\0") if d and d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
+        # The extra paths are names at the repository root. Below --import-root a package can have such a name.
+        paths = [base + d for d in listing.split("\0")
+                 if d and (import_root or d not in EXTRA_PATHS) and present(f"{base}{d}/__init__.py")]
         # Check before the extra paths: they hold no package, so an audit of only them reviews no code.
         if not paths:
             raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "

@@ -181,6 +181,17 @@ class ShimTextTest(unittest.TestCase):
             self.assertIn("/y/python", first.read_text())
             self.assertEqual(sorted(p.name for p in folder.iterdir()), names)
 
+    def test_a_right_cmd_shim_is_not_written_again(self):
+        # The local audit confirmed this bug: the text check read the CRLF of a .cmd file as LF, so each worker
+        # start replaced both files, also while another worker ran them.
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp, mock.patch.object(common, "WINDOWS", True):
+            folder = Path(tmp) / "bin"
+            common.write_python_shims(folder, r"C:\v\python.exe")
+            before = {p.name: p.stat().st_ino for p in folder.iterdir()}
+            common.write_python_shims(folder, r"C:\v\python.exe")
+            self.assertEqual({p.name: p.stat().st_ino for p in folder.iterdir()}, before)
+            self.assertEqual((folder / "python3.cmd").read_bytes(), b'@"C:\\v\\python.exe" %*\r\n')
+
 
 class StoredPythonTest(FlowCase):
     def test_an_audit_with_no_python_is_a_usage_error(self):
@@ -256,6 +267,28 @@ class InitPythonTest(FlowCase):
         code, r = self.hpf("init", "--repo", str(self.repo), "--ref", "HEAD")
         self.assertEqual(code, 0, r)
         self.assertEqual(r["audit"]["python"], sys.executable)
+
+
+class ImportRootPackageTest(unittest.TestCase):
+    """The audit job in CI confirmed this bug: the names of the extra paths (tests, docs) are names at the
+    repository root. Below --import-root, a package with such a name is a package of the product."""
+
+    def test_a_package_named_tests_or_docs_below_the_import_root_is_audited(self):
+        from hpflow import commands
+
+        with tempfile.TemporaryDirectory(prefix="hpflow-") as tmp:
+            repo = Path(tmp) / "repo"
+            for d in ("src/pkg", "src/docs", "src/tests"):
+                (repo / d).mkdir(parents=True)
+                (repo / d / "__init__.py").write_text("")
+            (repo / "tests").mkdir()
+            (repo / "tests" / "test_x.py").write_text("")
+            git(repo, "init", "-q", "-b", "main")
+            git(repo, "add", "-A")
+            git(repo, "commit", "-q", "-m", "a")
+            ctx = commands.Context(Path(tmp) / "out", None)
+            r = commands.cmd_init(ctx, str(repo), "HEAD", None, sys.executable, None, "src")
+            self.assertEqual(r["audit"]["paths"], ["src/docs", "src/pkg", "src/tests", "tests"])
 
 
 class VenvLayoutTest(unittest.TestCase):
