@@ -20,10 +20,12 @@ class Runner:
 
 
 def agent_graph(flow_id: str, task: str, files: List[str], adapter: str, model: str, payload: Dict[str, Any],
-                check: Optional[str] = None, repairs: int = 1, timeout: int = 3600, node: str = "work") -> Dict[str, Any]:
+                check: Optional[str] = None, repairs: int = 1, timeout: int = 3600, node: str = "work",
+                python: Optional[str] = None) -> Dict[str, Any]:
     """One agent node, an optional shell check with a repair edge, then end.
 
-    `payload` comes from `adapters.payload`: the graph does not know the keys of an adapter."""
+    `payload` comes from `adapters.payload`: the graph does not know the keys of an adapter.
+    `python`: the Python of the project. It is `python3` and `python` in the shell of the worker."""
     nodes: List[Dict[str, Any]] = [
         {"id": node, "kind": "agent", "role": "code", "files": files, "task": task, "payload": payload},
         {"id": "done", "kind": "end", "status": "pass"}, {"id": "failed", "kind": "end", "status": "fail"}]
@@ -34,6 +36,7 @@ def agent_graph(flow_id: str, task: str, files: List[str], adapter: str, model: 
                  {"from": "check", "to": "failed", "when": "fail"}, {"from": node, "to": "failed"}]
     else:
         edges = [{"from": node, "to": "done", "when": "ok"}, {"from": node, "to": "failed"}]
-    return {"id": flow_id, "entry": node,
-            "defaults": {"adapter": adapter, "model": model, "timeout_seconds": timeout, "finish": "criteria"},
-            "nodes": nodes, "edges": edges}
+    defaults: Dict[str, Any] = {"adapter": adapter, "model": model, "timeout_seconds": timeout, "finish": "criteria"}
+    if python:
+        defaults["python"] = python
+    return {"id": flow_id, "entry": node, "defaults": defaults, "nodes": nodes, "edges": edges}

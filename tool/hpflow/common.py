@@ -64,6 +64,80 @@ class UsageError(Exception):
     """A bad argument or a missing input. Exit code 2."""
 
 
+def venv_python(root: Path) -> Optional[Path]:
+    """The Python of the venv `.venv` in `root`, or None. A venv on Windows keeps it in `Scripts`."""
+    path = root / ".venv" / ("Scripts/python.exe" if WINDOWS else "bin/python")
+    return path if path.is_file() else None
+
+
+def project_python(python: Optional[str]) -> str:
+    """The Python of the project under audit (the key `python` of audit.json). It runs each repro, so a repro can
+    import the dependencies of the project.
+
+    There is no fallback to the Python of hpflow: that Python often cannot import a dependency of the project, and
+    a repro that cannot import its code counts as no answer. So a bad value is a usage error that names the repair."""
+    repair = "run `hpf init` again with the same --repo and --ref, and give --python"
+    if not python:
+        raise UsageError(f"audit.json has no `python` (the Python that runs the repros): {repair}")
+    if not os.path.isfile(python) or not os.access(python, os.X_OK):
+        raise UsageError(f"the Python of the project {python} does not exist or cannot run: {repair}")
+    return python
+
+
+def shim_texts(python: str, windows: bool) -> Dict[str, str]:
+    """The files of the shim folder: `python3` and `python` start `python` with the same arguments. A script, not a
+    symbolic link: Python finds its venv from `pyvenv.cfg` beside the path that started it, so a link from another
+    folder does not load the venv. On Windows the files are `.cmd` files."""
+    if windows:
+        line = '@"' + python.replace("%", "%%") + '" %*\r\n'
+        return {"python3.cmd": line, "python.cmd": line}
+    text = "#!/bin/sh\nexec " + shlex.quote(python) + ' "$@"\n'
+    return {"python3": text, "python": text}
+
+
+def write_python_shims(folder: Path, python: str) -> Path:
+    """Write the shim folder of `python` (see `shim_texts`) and return it. Parallel workers can call it: a file
+    that has the right text stays, and a new file comes into place in one rename."""
+    folder.mkdir(parents=True, exist_ok=True)
+    for name, text in shim_texts(python, WINDOWS).items():
+        path = folder / name
+        try:
+            same = path.read_text(encoding="utf-8") == text and (WINDOWS or os.access(path, os.X_OK))
+        except OSError:
+            same = False
+        if same:
+            continue
+        tmp = folder / f".{name}.{os.getpid()}.{threading.get_ident()}"
+        with open(tmp, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+        tmp.chmod(0o755)
+        os.replace(tmp, path)
+    return folder
+
+
+def find_python(python: Optional[str], root: Path) -> str:
+    """The Python that `init` stores: `--python` (a bare name is found on PATH), else the venv of the repository,
+    else the Python of hpflow. The value is an absolute path, because a repro runs with a small PATH. A symbolic
+    link stays as it is: the link of a venv is what makes it a venv."""
+    if python is None:
+        venv = venv_python(root)
+        path = str(venv) if venv else sys.executable
+    else:
+        found = shutil.which(python)
+        if not found:
+            raise UsageError(f"--python {python}: no such program")
+        path = os.path.abspath(found)
+    try:
+        p = subprocess.run([path, "-I", "-c", "import sys; print(sys.version_info[0])"], capture_output=True,
+                           text=True, timeout=60)
+        major = p.stdout.strip() if p.returncode == 0 else ""
+    except (OSError, subprocess.SubprocessError):
+        major = ""
+    if major != "3":
+        raise UsageError(f"the Python {path} does not run or is not Python 3: give --python")
+    return path
+
+
 class StepError(Exception):
     """A step that failed. Exit code 1."""
 
@@ -268,8 +342,12 @@ MISSING = ("ImportError", "AttributeError", "ModuleNotFoundError", "NameError")
 NO_ANSWER = ("timeout", "no output") + MISSING
 
 
-def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, import_root: str = "") -> Dict[str, Any]:
+def run_snippet(tree: Path, snippet: Path, home: Path, python: str, timeout: float = 60,
+                import_root: str = "") -> Dict[str, Any]:
     """Run `run()` of a snippet file with `tree` first on the import path. A separate process, no bytecode.
+
+    `python`: the Python of the project (see `project_python`). RUNNER must run on each Python 3 that a project can
+    have, so it uses no new syntax.
 
     `import_root`: the folder inside `tree` that holds the top-level package, for example `src`.
     The child writes its result to a file of its own. So text that the snippet or the code under test prints
@@ -278,7 +356,7 @@ def run_snippet(tree: Path, snippet: Path, home: Path, timeout: float = 60, impo
     with tempfile.TemporaryDirectory(prefix="hpflow-repro-") as tmp:
         result_file = Path(tmp) / "result.json"
         # The child runs in `tree`, so each path that it gets is absolute.
-        code, _, err = run_group([sys.executable, "-I", "-c", RUNNER, str((tree / import_root).resolve()),
+        code, _, err = run_group([python, "-I", "-c", RUNNER, str((tree / import_root).resolve()),
                                   str(snippet.resolve()), str(result_file)], tree, timeout, env=snippet_env(home))
         if code is None:
             return {"ok": False, "error": "timeout", "message": f"run() did not return in {timeout} seconds"}

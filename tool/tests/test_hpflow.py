@@ -786,7 +786,7 @@ class ProcessGroupTest(unittest.TestCase):
                                f"    p = subprocess.Popen({SLEEPER})\n"
                                f"    open({str(pidfile)!r}, 'w').write(str(p.pid))\n"
                                "    time.sleep(30)\n")
-            got = run_snippet(root, snippet, root / "home", timeout=3)
+            got = run_snippet(root, snippet, root / "home", sys.executable, timeout=3)
             self.assertEqual(got["error"], "timeout", got)
             self.assertTrue(gone(int(pidfile.read_text())))
 
