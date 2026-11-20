@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from .common import git_status, repro_state, run_group, run_snippet, shell_quote
+from .common import UsageError, git_status, project_python, repro_state, run_group, run_snippet, shell_quote
 
 MAX_RELATED_BYTES = 400_000
 # The number of related test files in one test command.
@@ -96,6 +96,11 @@ def run_tests(spec: Dict[str, Any], tree: Path, tests: List[str], timeout: int) 
 
 def check(info: Path, tree: Path) -> Dict[str, Any]:
     spec = json.loads((info / "spec.json").read_text(encoding="utf-8"))
+    try:
+        python = project_python(spec.get("python"))
+    except UsageError as e:
+        # With no Python of the project, no repro and no test can run, so nothing shows that the fix is good.
+        return {"verdict": "reject", "problems": [str(e)], "large_test_files_not_run": []}
     problems = []
     skipped: List[str] = []
     stray = out_of_scope(tree, spec["scope"]) if spec.get("scope") else []
@@ -107,7 +112,7 @@ def check(info: Path, tree: Path) -> Dict[str, Any]:
                         + ", ".join(stray[:20]) + ". Put these files back as they were, or delete the new ones")
     for b in spec["bugs"]:
         for r in b["repros"]:
-            got = run_snippet(tree, info / r["file"], info / "home", import_root=spec.get("import_root") or "")
+            got = run_snippet(tree, info / r["file"], info / "home", python, import_root=spec.get("import_root") or "")
             state = repro_state(got, r["result_now"])
             if state == "same":
                 problems.append(f"bug {b['id']}: the repro {r['file']} still gives the old result {r['result_now']!r}")

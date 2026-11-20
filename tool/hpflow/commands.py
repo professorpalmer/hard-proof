@@ -14,8 +14,9 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import adapters, briefs, outside
-from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest, git, git_status,
-                     is_test_file, lines_of, read_json, repro_state, run_snippet, sh, shell_python, shell_quote, write_json)
+from .common import (COST_NOTE, DEFAULT_CONCURRENCY, MISSING, TOOL_DIR, WINDOWS, StepError, UsageError, copy_tree, digest,
+                     find_python, git, git_status, is_test_file, lines_of, project_python, read_json, repro_state,
+                     run_snippet, sh, shell_python, shell_quote, write_json)
 from .fixcheck import check as fix_check
 from .direct import check_template
 from .runner import Runner, agent_graph
@@ -53,6 +54,10 @@ class Context:
         if not a:
             raise UsageError(f"no audit in {self.out}: run `init` first")
         return a
+
+    def python(self) -> str:
+        """The Python of the project that runs the repros. A usage error when audit.json has none that runs."""
+        return project_python(self.audit().get("python"))
 
     def adapter(self) -> str:
         """The adapter of the workers of this call.
@@ -187,15 +192,15 @@ def cmd_init(ctx: Context, repo: str, ref: str, paths: Optional[List[str]], pyth
         base = f"{import_root}/" if import_root else ""
         # With -z git does not quote a name with non-ASCII characters, and a name can hold a space.
         _, listing = git(root, "ls-tree", "-z", "--name-only", "-d", f"{commit}:{import_root}" if import_root else commit)
-        paths = [base + d for d in listing.split("\0") if d and d not in EXTRA_PATHS and present(f"{base}{d}/__init__.py")]
+        # The extra paths are names at the repository root. Below --import-root a package can have such a name.
+        paths = [base + d for d in listing.split("\0")
+                 if d and (import_root or d not in EXTRA_PATHS) and present(f"{base}{d}/__init__.py")]
         # Check before the extra paths: they hold no package, so an audit of only them reviews no code.
         if not paths:
             raise UsageError("no package folder (a folder with __init__.py at the top level or below --import-root) "
                              "found: give --paths, and --import-root for a layout such as src/")
         paths += [p for p in EXTRA_PATHS if present(p)]
-    if python is None:
-        venv = root / ".venv" / "bin" / "python"
-        python = str(venv) if venv.exists() else sys.executable
+    python = find_python(python, root)
     old = read_json(ctx.out / "audit.json")
     if old and old.get("commit") != commit and not ctx.redo:
         raise UsageError(f"{ctx.out} holds an audit of {old.get('commit', '')[:12]}: use a new --out or --redo")
@@ -461,12 +466,12 @@ def review_groups(targets: List[Dict[str, Any]], group: str, group_size: int) ->
     return out
 
 
-def repro_grade(ctx: Context, snippet: Path, repro_timeout: float, import_root: str) -> Dict[str, Any]:
+def repro_grade(ctx: Context, snippet: Path, python: str, repro_timeout: float, import_root: str) -> Dict[str, Any]:
     """The script gate of one finding: grade 1 and the result when the repro runs on the source under audit,
     else grade 0 and the reason. No model call."""
     if not snippet.exists():
         return {"grade": 0, "reason": "no repro file"}
-    got = run_snippet(ctx.src, snippet, ctx.home, timeout=repro_timeout, import_root=import_root)
+    got = run_snippet(ctx.src, snippet, ctx.home, python, timeout=repro_timeout, import_root=import_root)
     if got.get("ok"):
         return {"run_result": got, "grade": 1, "result": got["result"]}
     if got.get("error") == "timeout":
@@ -487,6 +492,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
     targets = (read_json(ctx.out / "targets.json") or {}).get("targets")
     if targets is None:
         raise UsageError("no targets.json: run `targets` first")
+    python = ctx.python()
     adapter, template = ctx.check_adapter()
     mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
     payload = adapters.payload(adapter, shell=shell, lean=ctx.lean, effort=ctx.effort, agent_cmd=template, reviewer=short_prompt)
@@ -518,7 +524,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
             task = briefs.REVIEW_FILE.format(functions="\n".join(f"- `{target_label(x)}`" for x in ts), file=t["file"], top=t["top"], root=root,
                                              per_function=briefs.PER_FUNCTION, arm_text=arm_text)
             check = shell_python(briefs.REVIEW_FILE_CHECK)
-        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check,
+        graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py"], adapter, mid, payload, check=check, python=python,
                             timeout=2400)
         r = ctx.runner.run(graph, folder)
         r.update(kind="review", run=rid, folder=str(folder), target=t["id"], targets=[x["id"] for x in ts], pass_n=p,
@@ -560,7 +566,7 @@ def cmd_review(ctx: Context, model: Optional[str], shell: bool, passes: int, rep
                    "function": t["function"], "model": r["model"], "claim": str(f.get("claim"))[:600],
                    "expected": str(f.get("expected"))[:300], "confidence": f.get("confidence"),
                    "repro": str(folder / f"finding_{n}.py")}
-            row.update(repro_grade(ctx, folder / f"finding_{n}.py", repro_timeout, import_root))
+            row.update(repro_grade(ctx, folder / f"finding_{n}.py", python, repro_timeout, import_root))
             out.append(row)
         return out
 
@@ -629,6 +635,7 @@ def cmd_import(ctx: Context, files: List[str], source: Optional[str], model: Opt
     audit = ctx.audit()
     import_root = audit.get("import_root") or ""
     root = "project/" + (f"{import_root}/" if import_root else "")
+    python = ctx.python()
     adapter, template = ctx.check_adapter()
     mid = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "sonnet", "--model"))
     payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
@@ -663,7 +670,7 @@ def cmd_import(ctx: Context, files: List[str], source: Optional[str], model: Opt
         task = briefs.IMPORT.format(n=len(cs), function=target_label(t), file=t["file"], top=t["top"], root=root,
                                     arm_text=briefs.REVIEW_ARM["shell"])
         graph = agent_graph(f"hpf-{rid}", task, ["findings.json", "finding_*.py", "not_shown.json"], adapter, mid, payload,
-                            check=shell_python(briefs.IMPORT_CHECK), timeout=2400)
+                            check=shell_python(briefs.IMPORT_CHECK), timeout=2400, python=python)
         r = ctx.runner.run(graph, folder)
         r.update(kind="import", run=rid, folder=str(folder), target=t["id"], claims=[c["id"] for c in cs], adapter=adapter,
                  model=mid, finished=now())
@@ -691,7 +698,7 @@ def cmd_import(ctx: Context, files: List[str], source: Optional[str], model: Opt
             if n in by_n:
                 f = by_n[n]
                 row.update(claim=str(f.get("claim"))[:600], expected=str(f.get("expected"))[:300], confidence=f.get("confidence"))
-                row.update(repro_grade(ctx, folder / f"finding_{n}.py", repro_timeout, import_root))
+                row.update(repro_grade(ctx, folder / f"finding_{n}.py", python, repro_timeout, import_root))
             elif n in no_n:
                 row.update(claim=c["claim"][:600], grade=0, not_shown=True,
                            reason="not shown by a repro: " + str(no_n[n].get("reason"))[:400])
@@ -771,6 +778,7 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
     findings = all_findings(ctx)
     if findings is None:
         raise UsageError("no review.json and no imports.json: run `review` or `import` first")
+    python = ctx.python()
     adapter, template = ctx.check_adapter()
     mids = verifier_models(adapter, models)
     payload = adapters.payload(adapter, shell=True, lean=ctx.lean, effort=ctx.effort, agent_cmd=template)
@@ -801,7 +809,8 @@ def cmd_verify(ctx: Context, models: Optional[List[str]], group: str = "function
         head = (briefs.VERIFY_ONE_HEAD.format(n=len(claims), function=g["function"], file=g["file"]) if group == "function"
                 else briefs.VERIFY_FILE_HEAD.format(n=len(claims), file=g["file"]))
         task = briefs.VERIFY.format(repo=Path(audit["repo"]).name, head=head, imp=audit.get("import_root") or ".")
-        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=shell_python(briefs.VERIFY_CHECK), timeout=3000)
+        graph = agent_graph(f"hpf-{rid}", task, ["verdicts.json"], adapter, m, payload, check=shell_python(briefs.VERIFY_CHECK),
+                            timeout=3000, python=python)
         r = ctx.runner.run(graph, folder)
         v = read_json(folder / "verdicts.json")
         r.update(kind="verify", run=rid, folder=str(folder), target=g["target"], group=g["key"], adapter=adapter, model=m,
@@ -947,7 +956,8 @@ def check_script(info: Path) -> str:
 
 
 def fixcheck_command(info: Path) -> str:
-    """The shell command of the script check of a fix."""
+    """The shell command of the script check of a fix. The Python of hpflow runs it, because the check is code of
+    hpflow. The check then runs the repros and the tests with the Python of the project (`python` of spec.json)."""
     utf8 = " -X utf8" if WINDOWS else ""
     return f"{shell_quote(sys.executable)}{utf8} {shell_quote(str(info / 'check.py'))}"
 
@@ -986,7 +996,7 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
     fid = digest("fixflow", g["slug"], base, *adapter_key(adapter, template, ctx.effort),
                  *fix_key(adapter, model, judge_model, rules), *sorted(b["id"] for b in g["bugs"]))
     return {"id": f"hpf-{fid}", "entry": "build",
-            "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria"},
+            "defaults": {"adapter": adapter, "model": model, "timeout_seconds": 5400, "finish": "criteria", "python": py},
             "nodes": [
                 {"id": "build", "kind": "agent", "role": "code", "files": files, "task": briefs.BUILD.format(**fmt),
                  "payload": payload},
@@ -1009,6 +1019,7 @@ def fix_graph(ctx: Context, audit: Dict[str, Any], g: Dict[str, Any], base: str,
 def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model: Optional[str], judge_model: Optional[str],
             rules: Optional[str]) -> Dict[str, Any]:
     audit = ctx.audit()
+    python = ctx.python()
     adapter, template = ctx.check_adapter()
     model = adapters.model_id(adapter, adapters.model_or_default(adapter, model, "opus", "--model"))
     judge_model = adapters.model_id(adapter, adapters.model_or_default(adapter, judge_model, "sonnet", "--judge-model"))
@@ -1079,7 +1090,7 @@ def cmd_fix(ctx: Context, base: Optional[str], only: Optional[List[str]], model:
                 shutil.copy(rp["path"], info / name)
                 repros.append({"k": rp["k"], "file": name, "result_now": rp["result_now"]})
             spec_bugs.append({"id": b["id"], "repros": repros})
-        write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": audit["python"],
+        write_json(info / "spec.json", {"file": g["file"], "test_file": g["test_file"], "python": python,
                                         "test_cmd": audit["test_cmd"], "bugs": spec_bugs, "scope": fix_scope(ctx, audit),
                                         "import_root": audit.get("import_root") or "", "tests_dir": tests_dir})
         (info / "check.py").write_text(check_script(info), encoding="utf-8")
@@ -1233,7 +1244,9 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
     fixed = accepted_fixes([r for r in (read_json(ctx.record_path(i)) for i in (fix or {}).get("runs") or []) if r])
     tree: Optional[Path] = None
     commit: Optional[str] = None
+    python = ""
     if ref:
+        python = ctx.python()
         repo = Path(audit["repo"])
         code, out = git(repo, "rev-parse", "--verify", f"{ref}^{{commit}}")
         if code != 0:
@@ -1260,7 +1273,8 @@ def cmd_gate(ctx: Context, ref: Optional[str], repro_timeout: float) -> Dict[str
         elif tree is not None:
             same, unknown = [], []
             for rp in b["repros"]:
-                got = run_snippet(tree, Path(rp["path"]), ctx.home, timeout=repro_timeout, import_root=audit.get("import_root") or "")
+                got = run_snippet(tree, Path(rp["path"]), ctx.home, python, timeout=repro_timeout,
+                                  import_root=audit.get("import_root") or "")
                 state = repro_state(got, rp["result_now"])
                 if state == "same":
                     same.append(rp["k"])

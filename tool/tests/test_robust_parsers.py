@@ -284,7 +284,7 @@ class SnippetPathTest(unittest.TestCase):
             before = os.getcwd()
             os.chdir(root)
             try:
-                got = run_snippet(Path("tree"), Path("info") / "r.py", root / "home", import_root="src")
+                got = run_snippet(Path("tree"), Path("info") / "r.py", root / "home", sys.executable, import_root="src")
             finally:
                 os.chdir(before)
             self.assertEqual((got.get("ok"), got.get("result")), (True, "3"), got)
@@ -296,7 +296,7 @@ class ReproResultTest(unittest.TestCase):
             root = Path(tmp)
             (root / "tree").mkdir()
             (root / "r.py").write_text(code)
-            return run_snippet(root / "tree", root / "r.py", root / "home", timeout=timeout)
+            return run_snippet(root / "tree", root / "r.py", root / "home", sys.executable, timeout=timeout)
 
     def test_text_that_the_snippet_prints_is_not_the_result(self):
         for code in ("import sys\n\n\ndef run():\n    sys.stdout.write('no line end')\n    return 1\n",

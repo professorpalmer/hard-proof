@@ -14,6 +14,7 @@ import os
 import re
 import shlex
 import shutil
+import sys
 import threading
 import time
 import uuid
@@ -22,7 +23,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from . import codexhome
 from .adapters import COMMAND
-from .common import DEFAULT_CONCURRENCY, WINDOWS, UsageError, apply_cost_rule, lines_of, run_group, write_json
+from .common import (DEFAULT_CONCURRENCY, WINDOWS, UsageError, apply_cost_rule, lines_of, run_group, write_json,
+                     write_python_shims)
 from .runner import Runner
 
 OUTPUT_CHARS = 6000
@@ -372,6 +374,13 @@ class DirectRunner(Runner):
         prompt_file = logs / f"{stem}.prompt.txt"
         prompt_file.write_bytes(prompt.encode("utf-8"))
         env = dict(os.environ)
+        python = defaults.get("python")
+        if python and python != sys.executable:
+            # The briefs say `python3`, and the allow lists name `python3`. The shim folder first on PATH makes that
+            # name the Python of the project, so a worker can import the dependencies of the project. With the
+            # Python of hpflow as the project Python, the worker keeps the `python3` of the machine, as before 0.6.1.
+            shims = write_python_shims(self.graph_dir.parent / "bin", python)
+            env["PATH"] = str(shims) + os.pathsep + env.get("PATH", "")
         home = None
         if adapter == "claude-code":
             cmd = claude_command(exe, model, payload, judge, session, str(uuid.uuid4()))

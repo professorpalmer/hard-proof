@@ -51,7 +51,10 @@ def add_init(p: argparse.ArgumentParser) -> None:
     p.add_argument("--import-root", help="the folder that holds the top-level package when it is not the repository "
                                          "root, for example src")
     p.add_argument("--paths", nargs="+")
-    p.add_argument("--python")
+    p.add_argument("--python", help="the Python of the project: it runs each repro and the {python} of --test-cmd, and "
+                                     "it is python3 in the shell of each worker, so it must import the dependencies "
+                                     "of the project. Default: .venv/bin/python of "
+                                     "the repository (.venv\\Scripts\\python.exe on Windows), else the Python of hpflow")
     p.add_argument("--test-cmd", help="template with {python} and {tests}")
 
 

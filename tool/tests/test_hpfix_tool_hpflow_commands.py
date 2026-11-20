@@ -140,7 +140,7 @@ class VerifyKeyTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d) / "out"
             (out / "src").mkdir(parents=True)
-            (out / "audit.json").write_text(json.dumps({"commit": "abc", "repo": "/r/repo"}))
+            (out / "audit.json").write_text(json.dumps({"commit": "abc", "repo": "/r/repo", "python": sys.executable}))
             rep = Path(d) / "repro.py"
             rep.write_text("def run():\n    return 1\n")
             f = {"id": "1", "grade": 1, "file": "a.py", "target": "a.py::f", "function": "f", "run": "r", "n": 1,
@@ -260,7 +260,7 @@ class ShortPromptTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d)
             (out / "src").mkdir()
-            (out / "audit.json").write_text(json.dumps({"commit": "abc", "paths": ["."]}))
+            (out / "audit.json").write_text(json.dumps({"commit": "abc", "paths": ["."], "python": sys.executable}))
             t = {"id": "1", "file": "m.py", "function": "f", "top": "m", "lines": [1, 2]}
             (out / "targets.json").write_text(json.dumps({"targets": [t]}))
             r = CountingRunner()
@@ -375,7 +375,7 @@ class FileChunkReviewTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             out = Path(d)
             (out / "src").mkdir()
-            (out / "audit.json").write_text(json.dumps({"commit": "abc", "paths": ["."]}))
+            (out / "audit.json").write_text(json.dumps({"commit": "abc", "paths": ["."], "python": sys.executable}))
             targets = [{"id": f"t{i}", "file": "a.py", "function": f"f{i}", "top": "a", "lines": [i * 10, i * 10 + 5]}
                        for i in range(1, n_functions + 1)]
             (out / "targets.json").write_text(json.dumps({"targets": targets}))

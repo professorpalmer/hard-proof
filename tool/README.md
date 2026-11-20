@@ -267,6 +267,35 @@ starts that command itself in the folder of each worker.
   `codex login --help`, codex-cli 0.160.0).
 - Any other agent tool (`--adapter command --agent-cmd "..."`, see below).
 
+The Python of the project runs each repro and each test command, not the
+Python of `hpflow`. It is also `python3` and `python` in the shell of each
+worker, so a reviewer or a verifier that runs a claim again can import the
+dependencies of the project. So `hpflow` can be a tool install (`uv tool
+install hpflow` or `pipx install hpflow`). `init` finds the Python of the
+project in this order:
+
+1. `--python PATH`. A bare name is found on `PATH`.
+2. The venv `.venv` of the repository: `.venv/bin/python`, or
+   `.venv\Scripts\python.exe` on Windows.
+3. The Python that runs `hpflow`.
+
+`init` stores the absolute path in `audit.json` (key `python`) and checks that
+it runs Python 3. A later command that runs repros or workers (`review`,
+`import`, `verify`, `fix`, `gate --ref`) stops with a usage error when that
+Python is gone. There is no fallback to the Python of `hpflow`, because that
+Python often cannot import a dependency of the project, and a repro that
+cannot import its code counts as no answer. To repair an audit folder, run
+`init` again with the same options and `--python`.
+
+For the shell of a worker, `hpflow` writes the folder `bin` in the audit
+folder. It holds two small scripts, `python3` and `python`, that start the
+Python of the project. This folder is first on the `PATH` of each worker. So
+the briefs and the allow lists keep the name `python3`. When the Python of
+the project is the Python of `hpflow`, there is no such folder, and a worker
+gets the `python3` of the machine. On Windows the scripts are `python3.cmd`
+and `python.cmd`. We tested their text, but we did not run a worker on
+Windows with them.
+
 A CI job:
 
 ```sh
@@ -521,8 +550,11 @@ runs again. A stored run with a launch error runs again.
   write `audit.json` and the snapshot `src/` (`git archive` of the paths at
   the commit of `REF`). The default paths are each top-level folder with an
   `__init__.py`, and `tests`, `docs`, `README.md` and `pyproject.toml` when
-  they are present. The default Python is `.venv/bin/python` of the
-  repository, else the Python that runs `hpflow`. The test command is a
+  they are present. `--python` is the Python of the project: it runs each
+  repro and the test command, and it is `python3` in the shell of each
+  worker. The default is `.venv/bin/python` of the
+  repository (`.venv\Scripts\python.exe` on Windows), else the Python that
+  runs `hpflow`. The test command is a
   template with `{python}` and `{tests}`; the default is
   `{python} -m pytest -q -p no:cacheprovider {tests}`.
 - `targets (--changed A..B | --function FILE:NAME ... | --file FILE ...) [--max-lines 150] [--max N]`:
